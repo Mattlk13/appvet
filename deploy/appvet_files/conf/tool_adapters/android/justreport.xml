@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appvet:ToolAdapter xmlns:appvet="https://appsec.nist.gov/appvet"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://appsec.nist.gov/appvet/ToolAdapter.xsd ">
+
+	<!-- This example shows how to create a tool that is not directly accessible, 
+		but we can manually upload reports for it. -->
+		
+	<appvet:Description>
+		<appvet:Name>Just Report</appvet:Name>
+		<!-- Audits will always have Id = 'audit' -->
+		<appvet:Id>justreport</appvet:Id>
+		<appvet:Category>REPORT</appvet:Category>
+		<appvet:OS>ANDROID</appvet:OS>
+		<appvet:VendorName>NIST</appvet:VendorName>
+		<appvet:VendorWebsite>http://127.0.0.1:8080/appvet/tool_descriptions/justrreport.html</appvet:VendorWebsite>
+		<appvet:ReportFile>TXT</appvet:ReportFile>
+		<appvet:AppSubmit>NONE</appvet:AppSubmit>
+		<appvet:AuthenticationRequired>false</appvet:AuthenticationRequired>
+	</appvet:Description>
+	
+	<appvet:Protocol>
+		<appvet:Internal/>
+	</appvet:Protocol>
+	
+</appvet:ToolAdapter>

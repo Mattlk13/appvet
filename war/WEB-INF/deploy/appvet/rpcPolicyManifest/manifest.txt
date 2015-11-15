@@ -1,0 +1,3 @@
+# Module appvet
+# RPC service class, partial path of RPC policy file
+gov.nist.appvet.gwt.client.GWTService, 755C808540A146A378D622E11D2F6CE5.gwt.rpc

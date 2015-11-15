@@ -1,0 +1,2 @@
+serviceClass: gov.nist.appvet.gwt.client.GWTService
+path: 755C808540A146A378D622E11D2F6CE5.gwt.rpc
