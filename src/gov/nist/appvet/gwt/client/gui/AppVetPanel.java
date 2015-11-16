@@ -697,8 +697,9 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_6.setCellVerticalAlignment(searchButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		Image image = new Image("images/nist-gray.png");
+		Image image = new Image("images/org_logo.png");
 		horizontalPanel_5.add(image);
+		image.setSize("27", "27");
 		horizontalPanel_5.setCellHorizontalAlignment(image,
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		horizontalPanel_5.setCellWidth(image, "33%");
@@ -882,12 +883,6 @@ public class AppVetPanel extends DockLayoutPanel {
 			timeStampObject = initialApps.remove(0);
 			lastAppsListUpdate = timeStampObject.getLastAppUpdate();
 		}
-		final HorizontalPanel horizontalPanel_2 = new HorizontalPanel();
-		horizontalPanel_2
-				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_2.setStyleName("footerPanel");
-		addSouth(horizontalPanel_2, 35.0);
-		horizontalPanel_2.setSize("100%", "");
 		final HorizontalSplitPanel centerAppVetSplitPanel = new HorizontalSplitPanel();
 		centerAppVetSplitPanel.setSplitPosition("64%");
 		centerAppVetSplitPanel.setSize("", "");
@@ -1214,6 +1209,18 @@ public class AppVetPanel extends DockLayoutPanel {
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		toolResultsHtml.setStyleName("toolResultsHtml");
 		add(centerAppVetSplitPanel);
+		final HorizontalPanel horizontalPanel_2 = new HorizontalPanel();
+		horizontalPanel_2
+				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_2.setStyleName("footerPanel");
+		addSouth(horizontalPanel_2, 35.0);
+		horizontalPanel_2.setSize("100%", "");
+		
+		Image nistLogo = new Image("images/nist-gray.png");
+		horizontalPanel_2.add(nistLogo);
+		horizontalPanel_2.setCellVerticalAlignment(nistLogo, HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_2.setCellHorizontalAlignment(nistLogo, HasHorizontalAlignment.ALIGN_RIGHT);
+		nistLogo.setSize("96", "27");
 		if ((initialApps != null) && (initialApps.size() > 0)) {
 			appSelectionModel.setSelected(initialApps.get(0), true);
 		} else {
