@@ -170,7 +170,7 @@ searchPanel {
 	padding: 5px;
 	border-top: White;
 	border-right: White;
-	border-bottom: 1px solid Silver;
+	border-bottom: white;
 	border-left: White;
 }
 
@@ -514,6 +514,8 @@ searchPanel {
 }
 
 .gwt-Image {
+	padding-top: 5px;
+	padding-right: 5px;
 	
 }
 
@@ -566,7 +568,7 @@ searchPanel {
 }
 
 .footerPanel {
-	padding: 5px;
+	padding-bottom: 5px;
 	border: solid White;
 }
 
@@ -750,8 +752,10 @@ searchPanel {
 
 .
 {
-	margin-left: 5px;
-	border: 0px solid Maroon;
+	border-top: 5px solid Background;
+	border-right: 0px solid Maroon;
+	border-bottom: 0px solid Maroon;
+	border-left: 0px solid Maroon;
 }
 .appInfoHtml2 {
 	border: 1px dashed Red;
@@ -818,14 +822,11 @@ searchPanel {
 }
 
 .appVetHeaderPanel {
-	padding-right: 5px;
-	padding-left: 5px;
 	border-bottom: 1px solid Silver;
 }
 
 .nistLoginLogo {
-	padding-top: 5px;
-	padding-right: 5px;
+	margin: 5px;
 }
 
 .appInfoDecoratePanel {

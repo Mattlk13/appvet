@@ -284,7 +284,7 @@ public class AppVetPanel extends DockLayoutPanel {
 							public String getHtmlToolResults(String appId,
 									List<ToolStatusGwt> toolResults) {
 								/* Get pre-processing analysis results */
-								String statuses = "<hr><div id=\"appInfoSectionHeader\">PreProcessing&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbspStatus&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbspResults</div>\n";
+								String statuses = "<hr><div id=\"appInfoSectionHeader\">PreProcessing</div>\n";
 								int preprocessorToolCount = 0;
 								
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -303,7 +303,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 								
 								// Get tool and manually-uploaded results.
-								statuses += "<hr><div id=\"appInfoSectionHeader\">Tools&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbspRisk&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbspResults</div>\n";
+								statuses += "<hr><div id=\"appInfoSectionHeader\">Tools</div>\n";
 								int analysisToolCount = 0;
 								
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -323,7 +323,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 								
 								/* Get audit results */
-								statuses += "<hr><div id=\"appInfoSectionHeader\">Override&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbspRisk&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbspResults</div>\n";
+								statuses += "<hr><div id=\"appInfoSectionHeader\">Override</div>\n";
 								int auditCount = 0;
 								
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -623,14 +623,15 @@ public class AppVetPanel extends DockLayoutPanel {
 		northAppVetPanel.add(horizontalPanel_5);
 		northAppVetPanel.setCellVerticalAlignment(horizontalPanel_5,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_5.setWidth("100%");
+		horizontalPanel_5.setSize("100%", "");
 		northAppVetPanel.setCellWidth(horizontalPanel_5, "100%");
 		final InlineHTML nlnhtmlNewInlinehtml_1 = new InlineHTML(
-				"<img border=\"0\" width=\"192px\" src=\"images/appvet_logo.png\" alt=\"appvet\" />");
+				"<img border=\"0\" width=\"185px\" src=\"images/appvet_logo.png\" alt=\"appvet\" />");
 		nlnhtmlNewInlinehtml_1
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		nlnhtmlNewInlinehtml_1.setStyleName("");
 		horizontalPanel_5.add(nlnhtmlNewInlinehtml_1);
+		nlnhtmlNewInlinehtml_1.setHeight("");
 		horizontalPanel_5.setCellWidth(nlnhtmlNewInlinehtml_1, "33%");
 		horizontalPanel_5.setCellVerticalAlignment(nlnhtmlNewInlinehtml_1,
 				HasVerticalAlignment.ALIGN_MIDDLE);
@@ -697,27 +698,30 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_6.setCellVerticalAlignment(searchButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		Image image = new Image("images/org_logo.png");
-		horizontalPanel_5.add(image);
-		image.setSize("27", "27");
-		horizontalPanel_5.setCellHorizontalAlignment(image,
-				HasHorizontalAlignment.ALIGN_RIGHT);
-		horizontalPanel_5.setCellWidth(image, "33%");
+		
+		Image orgLogo = new Image("images/org_logo.png");
+		horizontalPanel_5.add(orgLogo);
+		horizontalPanel_5.setCellVerticalAlignment(orgLogo, HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_5.setCellHorizontalAlignment(orgLogo, HasHorizontalAlignment.ALIGN_RIGHT);
+		orgLogo.setSize("85px", "85px");
 		final HorizontalPanel horizontalPanel_3 = new HorizontalPanel();
 		northAppVetPanel.add(horizontalPanel_3);
+		northAppVetPanel.setCellVerticalAlignment(horizontalPanel_3, HasVerticalAlignment.ALIGN_MIDDLE);
 		northAppVetPanel.setCellHorizontalAlignment(horizontalPanel_3,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_3.setWidth("100%");
+		horizontalPanel_3.setSize("100%", "");
 		northAppVetPanel.setCellWidth(horizontalPanel_3, "100%");
 		final MenuBar appVetMenuBar = new MenuBar(false);
 		horizontalPanel_3.add(appVetMenuBar);
+		horizontalPanel_3.setCellVerticalAlignment(appVetMenuBar, HasVerticalAlignment.ALIGN_MIDDLE);
 		appVetMenuBar.setStyleName("appVetMenuBar");
 		appVetMenuBar.setAutoOpen(true);
-		appVetMenuBar.setWidth("250px");
+		appVetMenuBar.setSize("250px", "");
 		appVetMenuBar.setAnimationEnabled(false);
 		final MenuBar userMenuBar = new MenuBar(true);
 		accountMenuItem = new MenuItem(userInfo.getFirstName(), true,
 				userMenuBar);
+		userMenuBar.setHeight("");
 		accountMenuItem.setStyleName("AccountMenuItem");
 		final MenuItem accountSettingsMenuItem = new MenuItem(
 				"Account Settings", false, new Command() {
@@ -727,6 +731,7 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				});
 		userMenuBar.addItem(accountSettingsMenuItem);
+		accountSettingsMenuItem.setHeight("");
 		final MenuItem myAppsMenuItem = new MenuItem("My Apps", false,
 				new Command() {
 					@Override
@@ -739,8 +744,10 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				});
 		userMenuBar.addItem(myAppsMenuItem);
+		myAppsMenuItem.setHeight("");
 		final MenuItemSeparator separator = new MenuItemSeparator();
 		userMenuBar.addSeparator(separator);
+		separator.setHeight("");
 		final MenuItem logoutMenuItem = new MenuItem("Logout", false,
 				new Command() {
 					@Override
@@ -797,9 +804,12 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				});
 		userMenuBar.addItem(logoutMenuItem);
+		logoutMenuItem.setHeight("");
 		appVetMenuBar.addItem(accountMenuItem);
+		accountMenuItem.setHeight("");
 		final MenuBar helpMenuBar = new MenuBar(true);
 		final MenuItem helpMenuItem = new MenuItem("Help", true, helpMenuBar);
+		helpMenuBar.setHeight("");
 		final MenuItem aboutMenuItem = new MenuItem("About", false,
 				new Command() {
 					@Override
@@ -827,8 +837,11 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				});
 		helpMenuBar.addItem(documentationMenuItem);
+		documentationMenuItem.setHeight("");
 		appVetMenuBar.addItem(helpMenuItem);
+		helpMenuItem.setHeight("");
 		helpMenuBar.addItem(aboutMenuItem);
+		aboutMenuItem.setHeight("");
 		horizontalPanel_3.add(statusMessageLabel);
 		horizontalPanel_3.setCellVerticalAlignment(statusMessageLabel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
@@ -885,17 +898,17 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 		final HorizontalSplitPanel centerAppVetSplitPanel = new HorizontalSplitPanel();
 		centerAppVetSplitPanel.setSplitPosition("64%");
-		centerAppVetSplitPanel.setSize("", "");
+		centerAppVetSplitPanel.setSize("", "100%");
 		final SimplePanel leftCenterPanel = new SimplePanel();
 		centerAppVetSplitPanel.setLeftWidget(leftCenterPanel);
-		leftCenterPanel.setSize("", "95%");
+		leftCenterPanel.setSize("", "100%");
 		final DockPanel dockPanel_1 = new DockPanel();
 		dockPanel_1.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		leftCenterPanel.setWidget(dockPanel_1);
 		dockPanel_1.setSize("100%", "");
 		rightCenterPanel = new SimplePanel();
 		centerAppVetSplitPanel.setRightWidget(rightCenterPanel);
-		rightCenterPanel.setSize("", "630px");
+		rightCenterPanel.setSize("", "95%");
 		final VerticalPanel appInfoVerticalPanel = new VerticalPanel();
 		appInfoVerticalPanel
 				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
@@ -948,9 +961,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsLabel = new InlineLabel("Apps");
 		appsLabel.setStyleName("AppsLabel");
 		appsListButtonPanel.add(appsLabel);
+		appsListButtonPanel.setCellVerticalAlignment(appsLabel, HasVerticalAlignment.ALIGN_MIDDLE);
 		appsListButtonPanel.setCellWidth(appsLabel, "50%");
-		appsListButtonPanel.setCellVerticalAlignment(appsLabel,
-				HasVerticalAlignment.ALIGN_MIDDLE);
 		appsLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		appsLabel.setWidth("60px");
 		final HorizontalPanel horizontalPanel = new HorizontalPanel();
@@ -1201,6 +1213,22 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsListTable.dataGrid.setSelectionModel(appSelectionModel);
 		uploadReportButton.setVisible(true);
 		logButton.setVisible(true);
+		
+		SimplePanel simplePanel = new SimplePanel();
+		addSouth(simplePanel, 21.0);
+		simplePanel.setHeight("");
+		
+		HorizontalPanel horizontalPanel_2 = new HorizontalPanel();
+		horizontalPanel_2.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_2.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		simplePanel.setWidget(horizontalPanel_2);
+		horizontalPanel_2.setSize("100%", "20px");
+		
+		Image nistLogo = new Image("images/nist_logo_darkgrey.png");
+		horizontalPanel_2.add(nistLogo);
+		horizontalPanel_2.setCellVerticalAlignment(nistLogo, HasVerticalAlignment.ALIGN_BOTTOM);
+		horizontalPanel_2.setCellHorizontalAlignment(nistLogo, HasHorizontalAlignment.ALIGN_RIGHT);
+		nistLogo.setSize("50px", "13px");
 		toolResultsHtml = new HTML("", true);
 		appInfoVerticalPanel.add(toolResultsHtml);
 		appInfoVerticalPanel.setCellWidth(toolResultsHtml, "100%");
@@ -1209,18 +1237,6 @@ public class AppVetPanel extends DockLayoutPanel {
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		toolResultsHtml.setStyleName("toolResultsHtml");
 		add(centerAppVetSplitPanel);
-		final HorizontalPanel horizontalPanel_2 = new HorizontalPanel();
-		horizontalPanel_2
-				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_2.setStyleName("footerPanel");
-		addSouth(horizontalPanel_2, 35.0);
-		horizontalPanel_2.setSize("100%", "");
-		
-		Image nistLogo = new Image("images/nist-gray.png");
-		horizontalPanel_2.add(nistLogo);
-		horizontalPanel_2.setCellVerticalAlignment(nistLogo, HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_2.setCellHorizontalAlignment(nistLogo, HasHorizontalAlignment.ALIGN_RIGHT);
-		nistLogo.setSize("96", "27");
 		if ((initialApps != null) && (initialApps.size() > 0)) {
 			appSelectionModel.setSelected(initialApps.get(0), true);
 		} else {
