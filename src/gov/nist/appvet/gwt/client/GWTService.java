@@ -41,7 +41,7 @@ public interface GWTService extends RemoteService {
 	List<UserInfoGwt> adminSetUser(UserInfoGwt userInfo)
 			throws IllegalArgumentException;
 
-	ConfigInfoGwt authenticate(String username, String password)
+	ConfigInfoGwt authenticate(String username, String password, boolean sso)
 			throws IllegalArgumentException;
 
 	Boolean deleteApp(DeviceOS os, String appId, String username)

@@ -36,6 +36,7 @@ public class UserInfoGwt implements IsSerializable {
 	private String lastName = null;
 	private String firstName = null;
 	private String organization = null;
+	private String department = null;
 	private String email = null;
 	private boolean changePassword = false;
 	private String password = null;
@@ -80,6 +81,10 @@ public class UserInfoGwt implements IsSerializable {
 
 	public String getOrganization() {
 		return organization;
+	}
+	
+	public String getDepartment() {
+		return department;
 	}
 
 	public String getPassword() {
@@ -132,6 +137,10 @@ public class UserInfoGwt implements IsSerializable {
 
 	public void setOrganization(String organization) {
 		this.organization = organization;
+	}
+	
+	public void setDepartment(String department) {
+		this.department = department;
 	}
 
 	public void setPassword(String password) {

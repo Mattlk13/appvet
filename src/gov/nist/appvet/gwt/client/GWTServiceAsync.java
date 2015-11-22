@@ -40,7 +40,7 @@ public interface GWTServiceAsync {
 			AsyncCallback<List<UserInfoGwt>> callback)
 			throws IllegalArgumentException;
 
-	void authenticate(String username, String password,
+	void authenticate(String username, String password, boolean sso, 
 			AsyncCallback<ConfigInfoGwt> callback)
 			throws IllegalArgumentException;
 

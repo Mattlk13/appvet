@@ -363,6 +363,8 @@ public class UserListDialogBox extends DialogBox {
 				userInfo.setPasswords(newPassword1, newPassword2);
 				userInfo.setOrganization(userInfoDialogBox.organizationTextBox
 						.getText());
+				userInfo.setOrganization(userInfoDialogBox.departmentTextBox
+						.getText());				
 				userInfo.setEmail(userInfoDialogBox.emailTextBox.getText());
 				final int selectedRoleIndex = userInfoDialogBox.roleComboBox
 						.getSelectedIndex();
@@ -416,6 +418,13 @@ public class UserListDialogBox extends DialogBox {
 			showMessageDialog("AppVet Error", "Invalid Organization", true);
 			return false;
 		}
+		
+		if (!Validate.isPrintable(userInfoDialogBox.departmentTextBox
+				.getText())) {
+			showMessageDialog("AppVet Error", "Invalid Department", true);
+			return false;
+		}
+		
 		if (!Validate.isValidEmail(userInfoDialogBox.emailTextBox.getText())) {
 			showMessageDialog("AppVet Error", "Invalid Email", true);
 			return false;

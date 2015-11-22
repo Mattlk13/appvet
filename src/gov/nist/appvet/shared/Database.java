@@ -111,6 +111,7 @@ public class Database {
 					+ "lastName, firstName) " + "values (?, ?, ?, ?, ?, ?)");
 			preparedStatement.setString(1, userInfo.getUserName());
 			preparedStatement.setString(2, userInfo.getOrganization());
+			preparedStatement.setString(11, userInfo.getDepartment());
 			preparedStatement.setString(3, userInfo.getEmail());
 			preparedStatement.setString(4, userInfo.getRole());
 			preparedStatement.setString(5, userInfo.getLastName());
@@ -153,7 +154,8 @@ public class Database {
 			statement = connection.createStatement();
 			statement.executeUpdate("UPDATE users SET " + "username='"
 					+ userInfo.getUserName() + "', org='"
-					+ userInfo.getOrganization() + "', email='"
+					+ userInfo.getOrganization() + "', dept='"
+					+ userInfo.getDepartment() + "', email='"
 					+ userInfo.getEmail() + "', role='" + userInfo.getRole()
 					+ "', lastName='" + userInfo.getLastName()
 					+ "', firstName='" + userInfo.getFirstName()
@@ -220,6 +222,8 @@ public class Database {
 				updateToolCredentials(username, toolCredentialsList, tools);
 			}
 			userInfo.setToolCredentials(toolCredentialsList);
+			userInfo.setDepartment(resultSet.getString(11));
+
 			return userInfo;
 		} catch (final Exception e) {
 			log.error(e.toString());
@@ -508,6 +512,7 @@ public class Database {
 				userInfo.setFromHost(getAttributeValue(resultSet.getString(7)));
 				userInfo.setLastName(getAttributeValue(resultSet.getString(8)));
 				userInfo.setFirstName(getAttributeValue(resultSet.getString(9)));
+				userInfo.setDepartment(getAttributeValue(resultSet.getString(11)));
 				arrayList.add(userInfo);
 			}
 		} catch (final SQLException e) {
@@ -1284,6 +1289,8 @@ public class Database {
 			return true;
 		}
 	}
+	
+
 
 	private Database() {
 	}

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <AppVet xmlns="https://appsec.nist.gov/appvet" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="https://appsec.nist.gov/appvet AppVetProperties.xsd">
-	
+
 	<Admin>
 		<!-- Initial username does not have to be 'admin'. -->
 		<Username>johndoe</Username>
 		<Password>JoHnDoE</Password>
 	</Admin>
-	
+
 	<Host>
 		<!-- Hostname examples: 'myhost.example.gov' or '123.45.6.7'. For local 
 			development, use 'localhost'. Make sure that these parameters match your 
@@ -16,25 +16,38 @@
 		<SSL>false</SSL>
 		<Port>8080</Port>
 	</Host>
-	
+
 	<Logging>
 		<Level>DEBUG</Level>
 		<!-- For development, set ToConsole to true to view logging in Eclipse 
 			console. For production deployment, set to false. -->
 		<ToConsole>true</ToConsole>
 	</Logging>
-	
+
+	<SingleSignOn>
+		<SSOActive>true</SSOActive>
+		<SSOUserNameParamName>CAS_Email-Address</SSOUserNameParamName>
+		<SSOPasswordParamName>CAS_Email-Address</SSOPasswordParamName>
+		<SSOLastNameParamName>CAS_Last-Name</SSOLastNameParamName>
+		<SSOFirstNameParamName>CAS_First-Name</SSOFirstNameParamName>
+		<SSOEmailParamName>CAS_Email-Address</SSOEmailParamName>
+		<SSOPhoneParamName>CAS_Phone</SSOPhoneParamName>
+		<SSOOrganizationParamName>CAS_Org-Agency-Name</SSOOrganizationParamName>
+		<SSODepartmentParamName>CAS_Org-Bureau-Name</SSODepartmentParamName>
+		<SSORoleParamName>CAS_Email-Address</SSORoleParamName>
+	</SingleSignOn>
+
 	<Sessions>
 		<Timeout>1800000</Timeout>
 		<GetUpdatesDelay>5000</GetUpdatesDelay>
 	</Sessions>
-	
+
 	<Database>
 		<URL>jdbc:mysql://localhost</URL>
 		<UserName>root</UserName>
 		<Password>appvet123</Password>
 	</Database>
-	
+
 	<ToolServices>
 		<PollingInterval>2000</PollingInterval>
 		<StaggerInterval>1000</StaggerInterval>
@@ -44,9 +57,9 @@
 			timeout which may be less or greater than this timeout. -->
 		<Timeout>3600000</Timeout>
 	</ToolServices>
-	
+
 	<Apps>
 		<KeepApps>false</KeepApps>
 	</Apps>
-	
+
 </AppVet>

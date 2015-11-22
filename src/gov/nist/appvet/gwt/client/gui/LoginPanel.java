@@ -1,95 +1,48 @@
 /* This software was developed by employees of the National Institute of
-
  * Standards and Technology (NIST), an agency of the Federal Government.
-
  * Pursuant to title 15 United States Code Section 105, works of NIST
-
  * employees are not subject to copyright protection in the United States
-
  * and are considered to be in the public domain.  As a result, a formal
-
  * license is not needed to use the software.
-
  * 
-
  * This software is provided by NIST as a service and is expressly
-
  * provided "AS IS".  NIST MAKES NO WARRANTY OF ANY KIND, EXPRESS, IMPLIED
-
  * OR STATUTORY, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTY OF
-
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT
-
  * AND DATA ACCURACY.  NIST does not warrant or make any representations
-
  * regarding the use of the software or the results thereof including, but
-
  * not limited to, the correctness, accuracy, reliability or usefulness of
-
  * the software.
-
  * 
-
  * Permission to use this software is contingent upon your acceptance
-
  * of the terms of this agreement.
-
  */
 
 package gov.nist.appvet.gwt.client.gui;
 
-
-
 import gov.nist.appvet.gwt.client.GWTService;
-
 import gov.nist.appvet.gwt.client.GWTServiceAsync;
-
 import gov.nist.appvet.gwt.client.gui.dialog.MessageDialogBox;
-
 import gov.nist.appvet.gwt.shared.AppInfoGwt;
-
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
-
 import gov.nist.appvet.shared.validate.Validate;
-
-
-
 import java.util.List;
-
 import java.util.logging.Logger;
-
-
-
 import com.google.gwt.core.client.GWT;
-
 import com.google.gwt.dom.client.Style.Unit;
-
 import com.google.gwt.event.dom.client.ClickEvent;
-
 import com.google.gwt.event.dom.client.ClickHandler;
-
 import com.google.gwt.event.dom.client.KeyCodes;
-
 import com.google.gwt.event.dom.client.KeyPressEvent;
-
 import com.google.gwt.event.dom.client.KeyPressHandler;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
-
 import com.google.gwt.user.client.ui.Button;
-
 import com.google.gwt.user.client.ui.DecoratorPanel;
-
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-
 import com.google.gwt.user.client.ui.DockPanel;
-
 import com.google.gwt.user.client.ui.Grid;
-
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
-
 import com.google.gwt.user.client.ui.Image;
 
 import com.google.gwt.user.client.ui.Label;
@@ -106,12 +59,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.SimpleCheckBox;
 
-
-
 /**
-
+ * 
  * @author steveq@nist.gov
-
  */
 
 public class LoginPanel extends DockLayoutPanel {
@@ -132,8 +82,6 @@ public class LoginPanel extends DockLayoutPanel {
 
 	private static MessageDialogBox messageDialogBox = null;
 
-
-
 	public LoginPanel(Unit unit) {
 
 		super(Unit.PX);
@@ -143,42 +91,45 @@ public class LoginPanel extends DockLayoutPanel {
 		// COMPILE WITH GOOGLE COMPILER!
 
 		setSize("100%", "");
-		
+
 		SimplePanel simplePanel_2 = new SimplePanel();
 		addNorth(simplePanel_2, 132.0);
 		simplePanel_2.setHeight("100px");
-		
+
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		simplePanel_2.setWidget(horizontalPanel);
 		horizontalPanel.setSize("100%", "100%");
-		
+
 		Image orgLogo = new Image("images/org_logo.png");
 		orgLogo.setStyleName("nistLoginLogo");
 		horizontalPanel.add(orgLogo);
-		horizontalPanel.setCellHorizontalAlignment(orgLogo, HasHorizontalAlignment.ALIGN_RIGHT);
-		horizontalPanel.setCellVerticalAlignment(orgLogo, HasVerticalAlignment.ALIGN_MIDDLE);
-		
+		horizontalPanel.setCellHorizontalAlignment(orgLogo,
+				HasHorizontalAlignment.ALIGN_RIGHT);
+		horizontalPanel.setCellVerticalAlignment(orgLogo,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+
 		SimplePanel simplePanel = new SimplePanel();
 		addSouth(simplePanel, 23.0);
-		
+
 		HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
 		simplePanel.setWidget(horizontalPanel_1);
 		horizontalPanel_1.setSize("100%", "100%");
-		
+
 		Image image = new Image("images/nist_logo_darkgrey.png");
 		horizontalPanel_1.add(image);
-		horizontalPanel_1.setCellHorizontalAlignment(image, HasHorizontalAlignment.ALIGN_RIGHT);
+		horizontalPanel_1.setCellHorizontalAlignment(image,
+				HasHorizontalAlignment.ALIGN_RIGHT);
 		image.setSize("50px", "13px");
 
 		final VerticalPanel centerVerticalPanel = new VerticalPanel();
 
 		centerVerticalPanel
 
-				.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
+		.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
 
 		centerVerticalPanel
 
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
 		add(centerVerticalPanel);
 		centerVerticalPanel.setSize("100%", "80%");
@@ -193,11 +144,11 @@ public class LoginPanel extends DockLayoutPanel {
 
 		centerVerticalPanel.setCellHorizontalAlignment(decoratorPanel,
 
-				HasHorizontalAlignment.ALIGN_CENTER);
+		HasHorizontalAlignment.ALIGN_CENTER);
 
 		centerVerticalPanel.setCellVerticalAlignment(decoratorPanel,
 
-				HasVerticalAlignment.ALIGN_MIDDLE);
+		HasVerticalAlignment.ALIGN_MIDDLE);
 
 		final DockPanel dockPanel = new DockPanel();
 
@@ -215,7 +166,7 @@ public class LoginPanel extends DockLayoutPanel {
 
 		verticalPanel
 
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
 		dockPanel.add(verticalPanel, DockPanel.NORTH);
 
@@ -223,11 +174,11 @@ public class LoginPanel extends DockLayoutPanel {
 
 		dockPanel.setCellVerticalAlignment(verticalPanel,
 
-				HasVerticalAlignment.ALIGN_MIDDLE);
+		HasVerticalAlignment.ALIGN_MIDDLE);
 
 		dockPanel.setCellHorizontalAlignment(verticalPanel,
 
-				HasHorizontalAlignment.ALIGN_CENTER);
+		HasHorizontalAlignment.ALIGN_CENTER);
 
 		verticalPanel.setSize("300px", "90px");
 
@@ -239,11 +190,11 @@ public class LoginPanel extends DockLayoutPanel {
 
 		verticalPanel.setCellHorizontalAlignment(appVetImage,
 
-				HasHorizontalAlignment.ALIGN_CENTER);
+		HasHorizontalAlignment.ALIGN_CENTER);
 
 		verticalPanel.setCellVerticalAlignment(appVetImage,
 
-				HasVerticalAlignment.ALIGN_MIDDLE);
+		HasVerticalAlignment.ALIGN_MIDDLE);
 
 		appVetImage.setSize("192px", "73px");
 
@@ -257,7 +208,7 @@ public class LoginPanel extends DockLayoutPanel {
 
 		verticalPanel.setCellHorizontalAlignment(loginStatusLabel,
 
-				HasHorizontalAlignment.ALIGN_CENTER);
+		HasHorizontalAlignment.ALIGN_CENTER);
 
 		final Grid grid = new Grid(2, 2);
 
@@ -271,11 +222,11 @@ public class LoginPanel extends DockLayoutPanel {
 
 		dockPanel.setCellVerticalAlignment(grid,
 
-				HasVerticalAlignment.ALIGN_MIDDLE);
+		HasVerticalAlignment.ALIGN_MIDDLE);
 
 		dockPanel.setCellHorizontalAlignment(grid,
 
-				HasHorizontalAlignment.ALIGN_CENTER);
+		HasHorizontalAlignment.ALIGN_CENTER);
 
 		final Label usernameLabel = new Label("USERNAME");
 
@@ -287,22 +238,22 @@ public class LoginPanel extends DockLayoutPanel {
 
 		grid.getCellFormatter().setHorizontalAlignment(0, 0,
 
-				HasHorizontalAlignment.ALIGN_LEFT);
+		HasHorizontalAlignment.ALIGN_LEFT);
 
 		grid.getCellFormatter().setVerticalAlignment(0, 0,
 
-				HasVerticalAlignment.ALIGN_MIDDLE);
+		HasVerticalAlignment.ALIGN_MIDDLE);
 
 		grid.setWidget(0, 1, userNameTextBox);
 		userNameTextBox.setSize("180px", "15px");
 
 		grid.getCellFormatter().setHorizontalAlignment(0, 1,
 
-				HasHorizontalAlignment.ALIGN_RIGHT);
+		HasHorizontalAlignment.ALIGN_RIGHT);
 
 		grid.getCellFormatter().setVerticalAlignment(0, 1,
 
-				HasVerticalAlignment.ALIGN_MIDDLE);
+		HasVerticalAlignment.ALIGN_MIDDLE);
 
 		final Label passwordLabel = new Label("PASSWORD");
 
@@ -314,11 +265,11 @@ public class LoginPanel extends DockLayoutPanel {
 
 		grid.getCellFormatter().setHorizontalAlignment(1, 0,
 
-				HasHorizontalAlignment.ALIGN_LEFT);
+		HasHorizontalAlignment.ALIGN_LEFT);
 
 		grid.getCellFormatter().setVerticalAlignment(1, 0,
 
-				HasVerticalAlignment.ALIGN_MIDDLE);
+		HasVerticalAlignment.ALIGN_MIDDLE);
 
 		grid.setWidget(1, 1, passwordTextBox);
 
@@ -326,21 +277,20 @@ public class LoginPanel extends DockLayoutPanel {
 
 		grid.getCellFormatter().setHorizontalAlignment(1, 1,
 
-				HasHorizontalAlignment.ALIGN_RIGHT);
+		HasHorizontalAlignment.ALIGN_RIGHT);
 
 		grid.getCellFormatter().setVerticalAlignment(1, 1,
 
-				HasVerticalAlignment.ALIGN_MIDDLE);
+		HasVerticalAlignment.ALIGN_MIDDLE);
 
 		passwordTextBox.addKeyPressHandler(new KeyPressHandler() {
 
 			@Override
-
 			public void onKeyPress(KeyPressEvent event_) {
 
 				final boolean enterPressed = KeyCodes.KEY_ENTER == event_
 
-						.getNativeEvent().getKeyCode();
+				.getNativeEvent().getKeyCode();
 
 				if (enterPressed) {
 
@@ -362,16 +312,15 @@ public class LoginPanel extends DockLayoutPanel {
 
 		dockPanel.setCellVerticalAlignment(simplePanel_3,
 
-				HasVerticalAlignment.ALIGN_MIDDLE);
+		HasVerticalAlignment.ALIGN_MIDDLE);
 
 		dockPanel.setCellHorizontalAlignment(simplePanel_3,
 
-				HasHorizontalAlignment.ALIGN_CENTER);
+		HasHorizontalAlignment.ALIGN_CENTER);
 
 		loginButton.addClickHandler(new ClickHandler() {
 
 			@Override
-
 			public void onClick(ClickEvent event) {
 
 				getUserInput();
@@ -388,57 +337,49 @@ public class LoginPanel extends DockLayoutPanel {
 
 	}
 
-
-
 	public void authenticate(final String username, final String password) {
 
-		appVetService.authenticate(username, password,
+		appVetService.authenticate(username, password, false, 
 
-				new AsyncCallback<ConfigInfoGwt>() {
+		new AsyncCallback<ConfigInfoGwt>() {
 
-					@Override
+			@Override
+			public void onFailure(Throwable caught) {
 
-					public void onFailure(Throwable caught) {
+				showMessageDialog("AppVet Error",
 
-						showMessageDialog("AppVet Error",
+				"Authentication system error", true);
 
-								"Authentication system error", true);
+				return;
 
-						return;
+			}
 
-					}
+			@Override
+			public void onSuccess(final ConfigInfoGwt result) {
 
+				if (result == null) {
 
+					showMessageDialog("AppVet Login Error",
 
-					@Override
+					"Unknown username or password", true);
 
-					public void onSuccess(final ConfigInfoGwt result) {
+					return;
 
-						if (result == null) {
+				} else {
 
-							showMessageDialog("AppVet Login Error",
+					loginStatusLabel.setText("Retrieving data...");
 
-									"Unknown username or password", true);
+					// checkConfigInfo(result);
 
-							return;
+					startAppVet(result);
 
-						} else {
+				}
 
-							loginStatusLabel.setText("Retrieving data...");
+			}
 
-							//checkConfigInfo(result);
-
-							startAppVet(result);
-
-						}
-
-					}
-
-				});
+		});
 
 	}
-
-
 
 	public void getUserInput() {
 
@@ -450,11 +391,11 @@ public class LoginPanel extends DockLayoutPanel {
 
 		if (!Validate.isValidUserName(userName)
 
-				|| !Validate.isValidPassword(password)) {
+		|| !Validate.isValidPassword(password)) {
 
 			showMessageDialog("AppVet Login Error",
 
-					"Invalid Username or Password", true);
+			"Invalid Username or Password", true);
 
 			return;
 
@@ -464,11 +405,9 @@ public class LoginPanel extends DockLayoutPanel {
 
 	}
 
-
-
 	private void showMessageDialog(String windowTitle, String message,
 
-			boolean isError) {
+	boolean isError) {
 
 		messageDialogBox = new MessageDialogBox(message, isError);
 
@@ -481,7 +420,6 @@ public class LoginPanel extends DockLayoutPanel {
 		messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
 
 			@Override
-
 			public void onClick(ClickEvent event) {
 
 				userNameTextBox.setText("");
@@ -502,8 +440,6 @@ public class LoginPanel extends DockLayoutPanel {
 
 	}
 
-
-
 	public void startAppVet(final ConfigInfoGwt configInfo) {
 
 		final String userName = configInfo.getUserInfo().getUserName();
@@ -512,7 +448,7 @@ public class LoginPanel extends DockLayoutPanel {
 
 			log.warning("Error retrieving apps list: "
 
-					+ "username is null or empty");
+			+ "username is null or empty");
 
 			return;
 
@@ -520,61 +456,56 @@ public class LoginPanel extends DockLayoutPanel {
 
 		appVetService.getAllApps(userName,
 
-				new AsyncCallback<List<AppInfoGwt>>() {
+		new AsyncCallback<List<AppInfoGwt>>() {
 
-					@Override
+			@Override
+			public void onFailure(Throwable caught) {
 
-					public void onFailure(Throwable caught) {
+				caught.printStackTrace();
 
-						caught.printStackTrace();
+				showMessageDialog(
 
-						showMessageDialog(
+				"AppVet Error",
 
-								"AppVet Error",
+				"Apps list retrieval error: "
 
-								"Apps list retrieval error: "
+				+ caught.getMessage(), true);
 
-										+ caught.getMessage(), true);
+				return;
 
-						return;
+			}
 
-					}
+			@Override
+			public void onSuccess(List<AppInfoGwt> appsList) {
 
+				if (appsList == null) {
 
+					showMessageDialog("AppVet Error",
 
-					@Override
+					"No apps are available", true);
 
-					public void onSuccess(List<AppInfoGwt> appsList) {
+					return;
 
-						if (appsList == null) {
+				} else {
 
-							showMessageDialog("AppVet Error",
+					final AppVetPanel appVetPanel = new AppVetPanel(
 
-									"No apps are available", true);
+					Unit.PX, configInfo, appsList);
 
-							return;
+					final RootLayoutPanel rootLayoutPanel = RootLayoutPanel
 
-						} else {
+					.get();
 
-							final AppVetPanel appVetPanel = new AppVetPanel(
+					rootLayoutPanel.clear();
 
-									Unit.PX, configInfo, appsList);
+					rootLayoutPanel.add(appVetPanel);
 
-							final RootLayoutPanel rootLayoutPanel = RootLayoutPanel
+				}
 
-									.get();
+			}
 
-							rootLayoutPanel.clear();
-
-							rootLayoutPanel.add(appVetPanel);
-
-						}
-
-					}
-
-				});
+		});
 
 	}
 
 }
-

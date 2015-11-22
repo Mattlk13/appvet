@@ -44,6 +44,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -78,7 +79,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	}
 
 	@Override
-	public ConfigInfoGwt authenticate(String username, String password)
+	public ConfigInfoGwt authenticate(String username, String password, boolean sso)
 			throws IllegalArgumentException {
 		String sql = "SELECT * FROM users " + "where username='" + username
 				+ "'";
@@ -105,6 +106,13 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					clientIpAddress);
 			final long sessionExpiration = Database.getSessionExpiration(
 					sessionId, clientIpAddress);
+			// If SSO login, randomly change current password so it cannot 
+			// be copied by another user and used as a query parameter to 
+			// directly access AppVet.
+			if (sso) {
+				UUID newPassword = UUID.randomUUID();
+				Database.setPBKDF2Password(username, newPassword.toString());
+			}
 			return getConfigInfo(username, sessionId, sessionExpiration);
 		} else {
 			AppVetProperties.log.warn("Could not authenticate user: "

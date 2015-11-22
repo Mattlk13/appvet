@@ -1517,6 +1517,8 @@ public class AppVetPanel extends DockLayoutPanel {
 						.getText();
 				final String newOrganization = userAcctDialogBox.organizationTextBox
 						.getText();
+				final String newDepartment = userAcctDialogBox.departmentTextBox
+						.getText();
 				final String newEmail = userAcctDialogBox.emailTextBox
 						.getText();
 				final String newPassword1 = userAcctDialogBox.password1TextBox
@@ -1528,6 +1530,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				updatedUserInfo.setLastName(newLastName);
 				updatedUserInfo.setFirstName(newFirstName);
 				updatedUserInfo.setOrganization(newOrganization);
+				updatedUserInfo.setDepartment(newDepartment);
 				updatedUserInfo.setEmail(newEmail);
 				updatedUserInfo.setChangePassword(true);
 				updatedUserInfo.setPasswords(newPassword1, newPassword2);
@@ -1558,6 +1561,7 @@ public class AppVetPanel extends DockLayoutPanel {
 											.getFirstName());
 									userInfo.setOrganization(updatedUserInfo
 											.getOrganization());
+									userInfo.setDepartment(updatedUserInfo.getDepartment());
 									userInfo.setEmail(updatedUserInfo
 											.getEmail());
 									updatedUserInfo.setChangePassword(false);

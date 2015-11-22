@@ -58,6 +58,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 	public PasswordTextBox password1TextBox = null;
 	public PasswordTextBox password2TextBox = null;
 	public TextBox organizationTextBox = null;
+	public TextBox departmentTextBox = null;
 	public TextBox emailTextBox = null;
 	public ListBox roleComboBox = null;
 	public List<UserInfoGwt> allUsers = null;
@@ -228,6 +229,29 @@ public class UserAcctAdminDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_6.setCellWidth(organizationTextBox, "50%");
 		organizationTextBox.setWidth("180px");
+		
+		HorizontalPanel horizontalPanel_14 = new HorizontalPanel();
+		horizontalPanel_14.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_14.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		verticalPanel_1.add(horizontalPanel_14);
+		
+		Label lblDepartment = new Label("Department: ");
+		lblDepartment.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		horizontalPanel_14.add(lblDepartment);
+		lblDepartment.setWidth("170px");
+		
+		departmentTextBox = new TextBox();
+		departmentTextBox.addChangeHandler(new ChangeHandler() {
+			public void onChange(ChangeEvent arg0) {
+				if (allFieldsFilled()) {
+					okButton.setEnabled(true);
+				}
+			}
+		});
+		departmentTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
+		departmentTextBox.setAlignment(TextAlignment.LEFT);
+		horizontalPanel_14.add(departmentTextBox);
+		departmentTextBox.setWidth("180px");
 		final HorizontalPanel horizontalPanel_7 = new HorizontalPanel();
 		verticalPanel_1.add(horizontalPanel_7);
 		horizontalPanel_7
@@ -495,6 +519,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 			lastLogonTextBox.setText(userInfo.getLastLogon());
 			fromHostTextBox.setText(userInfo.getFromHost());
 			organizationTextBox.setText(userInfo.getOrganization());
+			departmentTextBox.setText(userInfo.getDepartment());
 			emailTextBox.setText(userInfo.getEmail());			
 			if (userInfo.getRole().equals(Role.ADMIN.name())) {
 				roleComboBox.setSelectedIndex(0);
@@ -530,6 +555,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 				!firstNameTextBox.getText().isEmpty() &&
 				!userIdTextBox.getText().isEmpty() &&
 				!organizationTextBox.getText().isEmpty() &&
+				!departmentTextBox.getText().isEmpty() &&
 				!emailTextBox.getText().isEmpty()) {
 			if (newUser) {
 				if (!password1TextBox.getText().isEmpty() &&

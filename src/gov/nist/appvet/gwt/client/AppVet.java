@@ -19,24 +19,174 @@
  */
 package gov.nist.appvet.gwt.client;
 
+import java.util.List;
+import java.util.logging.Logger;
+
+import gov.nist.appvet.gwt.client.gui.AppVetPanel;
 import gov.nist.appvet.gwt.client.gui.LoginPanel;
+import gov.nist.appvet.gwt.client.gui.dialog.MessageDialogBox;
+import gov.nist.appvet.gwt.shared.AppInfoGwt;
+import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 /**
  * @author steveq@nist.gov
  */
 public class AppVet implements EntryPoint {
+	private static Logger log = Logger.getLogger("AppVet");
+	private final GWTServiceAsync appVetService = GWT.create(GWTService.class);
+	private static MessageDialogBox messageDialogBox = null;
 
 	@Override
 	public void onModuleLoad() {
 
-		final LoginPanel loginPanel = new LoginPanel(Unit.PX);
-		final RootLayoutPanel rootPanel = RootLayoutPanel.get();
-		rootPanel.add(loginPanel);
+		String username = Window.Location.getParameter("ssou");
+		String password = Window.Location.getParameter("ssop");
+
+		if (username == null || password == null) {
+			// Login attempt is not via single sign-on (SSO), so users must
+			// login manually through AppVet login page
+			final LoginPanel loginPanel = new LoginPanel(Unit.PX);
+			final RootLayoutPanel rootPanel = RootLayoutPanel.get();
+			rootPanel.add(loginPanel);
+		} else if (username != null && password != null) {
+			// Login attempt is via single sign-on (SSO)
+			log.info("AppVet GWT got: name=" + username);
+			log.info("AppVet GWT got: password=" + password);
+			// Authenticate and start AppVet
+			authenticateSSO(username, password);
+		}
+	}
+
+	public void authenticateSSO(final String username, final String password) {
+
+		appVetService.authenticate(username, password, true, 
+
+		new AsyncCallback<ConfigInfoGwt>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+
+				showMessageDialog("AppVet Error",
+
+				"Authentication system error", true);
+
+				return;
+
+			}
+
+			@Override
+			public void onSuccess(final ConfigInfoGwt result) {
+
+				if (result == null) {
+
+					showMessageDialog("AppVet Login Error",
+
+					"Unknown username or password", true);
+
+					return;
+
+				} else {
+					// checkConfigInfo(result);
+					startAppVet(result);
+
+				}
+
+			}
+
+		});
 
 	}
 	
+	public void startAppVet(final ConfigInfoGwt configInfo) {
+
+		final String userName = configInfo.getUserInfo().getUserName();
+
+		if ((userName == null) || userName.isEmpty()) {
+
+			log.warning("Error retrieving apps list: "
+
+			+ "username is null or empty");
+
+			return;
+
+		}
+
+		appVetService.getAllApps(userName,
+
+		new AsyncCallback<List<AppInfoGwt>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+
+				caught.printStackTrace();
+
+				showMessageDialog(
+
+				"AppVet Error",
+
+				"Apps list retrieval error: "
+
+				+ caught.getMessage(), true);
+
+				return;
+
+			}
+
+			@Override
+			public void onSuccess(List<AppInfoGwt> appsList) {
+
+				if (appsList == null) {
+
+					showMessageDialog("AppVet Error",
+
+					"No apps are available", true);
+
+					return;
+
+				} else {
+
+					final AppVetPanel appVetPanel = new AppVetPanel(
+
+					Unit.PX, configInfo, appsList);
+
+					final RootLayoutPanel rootLayoutPanel = RootLayoutPanel
+
+					.get();
+
+					rootLayoutPanel.clear();
+
+					rootLayoutPanel.add(appVetPanel);
+
+				}
+
+			}
+
+		});
+
+	}
+
+	private void showMessageDialog(String windowTitle, String message,
+	boolean isError) {
+		messageDialogBox = new MessageDialogBox(message, isError);
+		messageDialogBox.setText(windowTitle);
+		messageDialogBox.center();
+		messageDialogBox.closeButton.setFocus(true);
+		messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				messageDialogBox.hide();
+				messageDialogBox = null;
+			}
+		});
+	}
 }
