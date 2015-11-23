@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.44, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.16, for Win64 (x86_64)
 --
 -- Host: localhost    Database: appvet
 -- ------------------------------------------------------
--- Server version	5.5.44-0ubuntu0.14.04.1
+-- Server version	5.6.16-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -27,6 +27,10 @@ CREATE TABLE `androidtoolstatus` (
   `registration` varchar(120) DEFAULT NULL,
   `appinfo` varchar(120) DEFAULT NULL,
   `audit` varchar(120) DEFAULT NULL,
+  `example_justreport` varchar(120) DEFAULT 'NA',
+  `certverify` varchar(120) DEFAULT 'NA',
+  `masterkeyextrafield` varchar(120) DEFAULT 'NA',
+  `justreport` varchar(120) DEFAULT 'NA',
   PRIMARY KEY (`appid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -131,8 +135,8 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
-  `username` varchar(32) NOT NULL DEFAULT '',
-  `password` varchar(102) DEFAULT NULL,
+  `username` varchar(254) NOT NULL DEFAULT '',
+  `password` varchar(128) DEFAULT NULL,
   `org` varchar(120) DEFAULT NULL,
   `email` varchar(120) DEFAULT NULL,
   `role` varchar(48) DEFAULT NULL,
@@ -141,6 +145,7 @@ CREATE TABLE `users` (
   `lastName` varchar(32) DEFAULT NULL,
   `firstName` varchar(32) DEFAULT NULL,
   `toolsAuth` varchar(1000) DEFAULT NULL,
+  `dept` varchar(120) DEFAULT NULL,
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -163,4 +168,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-11 15:37:01
+-- Dump completed on 2015-11-23 11:40:29
