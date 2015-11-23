@@ -170,7 +170,7 @@ public class UserAcctDialogBox extends DialogBox {
 		label_1.setWidth("170px");
 		
 		organizationTextBox = new TextBox();
-		organizationTextBox.setText((String) null);
+		organizationTextBox.setText(userInfoGwt.getOrganization());
 		organizationTextBox.setEnabled(false);
 		organizationTextBox.setAlignment(TextAlignment.LEFT);
 		horizontalPanel_10.add(organizationTextBox);
@@ -196,6 +196,7 @@ public class UserAcctDialogBox extends DialogBox {
 		lblDepartment
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		departmentTextBox = new TextBox();
+		departmentTextBox.setText(userInfoGwt.getDepartment());
 		departmentTextBox.setEnabled(false);
 		departmentTextBox.setAlignment(TextAlignment.LEFT);
 		horizontalPanel_4.add(departmentTextBox);
@@ -205,7 +206,6 @@ public class UserAcctDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_4.setCellWidth(departmentTextBox, "50%");
 		departmentTextBox.setSize("180px", "20px");
-		departmentTextBox.setText(userInfoGwt.getDepartment());
 		
 		final HorizontalPanel horizontalPanel_5 = new HorizontalPanel();
 		horizontalPanel_5

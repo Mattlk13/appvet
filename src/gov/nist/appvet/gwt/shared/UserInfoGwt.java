@@ -33,14 +33,14 @@ public class UserInfoGwt implements IsSerializable {
 	private boolean newUser = false;
 	// -------------- Updated by user/admin -------------
 	private String userName = null;
+	private String password = null;
+	private String passwordAgain = null;
+	private boolean changePassword = false;
 	private String lastName = null;
 	private String firstName = null;
 	private String organization = null;
 	private String department = null;
 	private String email = null;
-	private boolean changePassword = false;
-	private String password = null;
-	private String passwordAgain = null;
 	private String role = null;
 	private ArrayList<UserToolCredentialsGwt> toolCredentials = null;
 	// private String toolsCredentials = null;

@@ -353,17 +353,17 @@ public class UserListDialogBox extends DialogBox {
 				final String newPassword2 = userInfoDialogBox.password2TextBox
 						.getValue();
 				final UserInfoGwt userInfo = new UserInfoGwt();
-				userInfo.setLastName(userInfoDialogBox.lastNameTextBox
-						.getText());
-				userInfo.setFirstName(userInfoDialogBox.firstNameTextBox
-						.getText());
 				userInfo.setUserName(userInfoDialogBox.userIdTextBox.getText());
 				userInfo.setChangePassword(userInfoDialogBox.changePasswordCheckBox
 						.getValue().booleanValue());
 				userInfo.setPasswords(newPassword1, newPassword2);
+				userInfo.setLastName(userInfoDialogBox.lastNameTextBox
+						.getText());
+				userInfo.setFirstName(userInfoDialogBox.firstNameTextBox
+						.getText());
 				userInfo.setOrganization(userInfoDialogBox.organizationTextBox
 						.getText());
-				userInfo.setOrganization(userInfoDialogBox.departmentTextBox
+				userInfo.setDepartment(userInfoDialogBox.departmentTextBox
 						.getText());				
 				userInfo.setEmail(userInfoDialogBox.emailTextBox.getText());
 				final int selectedRoleIndex = userInfoDialogBox.roleComboBox

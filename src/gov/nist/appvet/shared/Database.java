@@ -104,20 +104,22 @@ public class Database {
 	public static boolean adminAddNewUser(UserInfoGwt userInfo) {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
+		final String username = userInfo.getUserName();
+
 		try {
 			connection = getConnection();
-			preparedStatement = connection.prepareStatement(""
-					+ "REPLACE INTO users (username," + "org, email, role, "
-					+ "lastName, firstName) " + "values (?, ?, ?, ?, ?, ?)");
-			preparedStatement.setString(1, userInfo.getUserName());
-			preparedStatement.setString(2, userInfo.getOrganization());
-			preparedStatement.setString(11, userInfo.getDepartment());
-			preparedStatement.setString(3, userInfo.getEmail());
-			preparedStatement.setString(4, userInfo.getRole());
-			preparedStatement.setString(5, userInfo.getLastName());
-			preparedStatement.setString(6, userInfo.getFirstName());
+			preparedStatement = connection
+					.prepareStatement(""
+							+ "REPLACE INTO users (username, lastName, firstName, org, dept, email, role) values "
+							+ "(?, ?, ?, ?, ?, ?, ?)");
+			preparedStatement.setString(1, username);
+			preparedStatement.setString(2, userInfo.getLastName());
+			preparedStatement.setString(3, userInfo.getFirstName());
+			preparedStatement.setString(4, userInfo.getOrganization());
+			preparedStatement.setString(5, userInfo.getDepartment());
+			preparedStatement.setString(6, userInfo.getEmail());
+			preparedStatement.setString(7, userInfo.getRole());
 			preparedStatement.executeUpdate();
-			final String username = userInfo.getUserName();
 			if (userInfo.isChangePassword()) {
 				final String password = userInfo.getPassword();
 				try {
@@ -201,14 +203,16 @@ public class Database {
 			resultSet.next();
 			userInfo.setUserName(resultSet.getString(1));
 			userInfo.setPassword(getAttributeValue(resultSet.getString(2)));
-			userInfo.setOrganization(getAttributeValue(resultSet.getString(3)));
-			userInfo.setEmail(getAttributeValue(resultSet.getString(4)));
-			userInfo.setRole(getAttributeValue(resultSet.getString(5)));
-			userInfo.setLastLogon(getAttributeValue(resultSet.getString(6)));
-			userInfo.setFromHost(getAttributeValue(resultSet.getString(7)));
-			userInfo.setLastName(getAttributeValue(resultSet.getString(8)));
-			userInfo.setFirstName(getAttributeValue(resultSet.getString(9)));
-			String toolCredentialsStr = resultSet.getString(10);
+			userInfo.setLastName(getAttributeValue(resultSet.getString(3)));
+			userInfo.setFirstName(getAttributeValue(resultSet.getString(4)));
+			userInfo.setOrganization(getAttributeValue(resultSet.getString(5)));
+			userInfo.setDepartment(getAttributeValue(resultSet.getString(6)));
+			userInfo.setEmail(getAttributeValue(resultSet.getString(7)));
+			userInfo.setRole(getAttributeValue(resultSet.getString(8)));
+			userInfo.setLastLogon(getAttributeValue(resultSet.getString(9)));
+			userInfo.setFromHost(getAttributeValue(resultSet.getString(10)));
+			String toolCredentialsStr = resultSet.getString(11);
+			
 			ArrayList<UserToolCredentialsGwt> toolCredentialsList = null;
 			// TODO: Problem with NO CREDENTIALS SHOWING UP FOR TOOL IS IN HERE
 			// SOMEWHERE
@@ -222,7 +226,6 @@ public class Database {
 				updateToolCredentials(username, toolCredentialsList, tools);
 			}
 			userInfo.setToolCredentials(toolCredentialsList);
-			userInfo.setDepartment(resultSet.getString(11));
 
 			return userInfo;
 		} catch (final Exception e) {
@@ -504,15 +507,16 @@ public class Database {
 				userInfo = new UserInfoGwt();
 				userInfo.setUserName(resultSet.getString(1));
 				userInfo.setPassword(getAttributeValue(resultSet.getString(2)));
+				userInfo.setLastName(getAttributeValue(resultSet.getString(3)));
+				userInfo.setFirstName(getAttributeValue(resultSet.getString(4)));
 				userInfo.setOrganization(getAttributeValue(resultSet
-						.getString(3)));
-				userInfo.setEmail(getAttributeValue(resultSet.getString(4)));
-				userInfo.setRole(getAttributeValue(resultSet.getString(5)));
-				userInfo.setLastLogon(getAttributeValue(resultSet.getString(6)));
-				userInfo.setFromHost(getAttributeValue(resultSet.getString(7)));
-				userInfo.setLastName(getAttributeValue(resultSet.getString(8)));
-				userInfo.setFirstName(getAttributeValue(resultSet.getString(9)));
-				userInfo.setDepartment(getAttributeValue(resultSet.getString(11)));
+						.getString(5)));
+				userInfo.setDepartment(getAttributeValue(resultSet
+						.getString(6)));
+				userInfo.setEmail(getAttributeValue(resultSet.getString(7)));
+				userInfo.setRole(getAttributeValue(resultSet.getString(8)));
+				userInfo.setLastLogon(getAttributeValue(resultSet.getString(9)));
+				userInfo.setFromHost(getAttributeValue(resultSet.getString(10)));
 				arrayList.add(userInfo);
 			}
 		} catch (final SQLException e) {
@@ -570,37 +574,37 @@ public class Database {
 		return null;
 	}
 
-//	// Called by AppVet installer
-//	public synchronized static boolean createAppVetDb(String url,
-//			String username, String password) {
-//		Connection connection = null;
-//		Statement statement = null;
-//		try {
-//			Class.forName("com.mysql.jdbc.Driver");
-//			connection = DriverManager.getConnection(url + "?user=" + username
-//					+ "&password=" + password);
-//			if (connection != null) {
-//				connection.setAutoCommit(true); // No need to manually commit
-//			} else {
-//				log.error("Could not connect to database.");
-//			}
-//		} catch (final Exception e) {
-//			log.error(e.toString());
-//		}
-//		String sql = null;
-//		try {
-//			statement = connection.createStatement();
-//			sql = "create database appvet";
-//			statement.executeUpdate(sql);
-//			return true;
-//		} catch (final SQLException e) {
-//			log.error(e.toString() + " using: " + sql);
-//			return false;
-//		} finally {
-//			cleanUpStatement(statement);
-//			cleanUpConnection(connection);
-//		}
-//	}
+	// // Called by AppVet installer
+	// public synchronized static boolean createAppVetDb(String url,
+	// String username, String password) {
+	// Connection connection = null;
+	// Statement statement = null;
+	// try {
+	// Class.forName("com.mysql.jdbc.Driver");
+	// connection = DriverManager.getConnection(url + "?user=" + username
+	// + "&password=" + password);
+	// if (connection != null) {
+	// connection.setAutoCommit(true); // No need to manually commit
+	// } else {
+	// log.error("Could not connect to database.");
+	// }
+	// } catch (final Exception e) {
+	// log.error(e.toString());
+	// }
+	// String sql = null;
+	// try {
+	// statement = connection.createStatement();
+	// sql = "create database appvet";
+	// statement.executeUpdate(sql);
+	// return true;
+	// } catch (final SQLException e) {
+	// log.error(e.toString() + " using: " + sql);
+	// return false;
+	// } finally {
+	// cleanUpStatement(statement);
+	// cleanUpConnection(connection);
+	// }
+	// }
 
 	public synchronized static boolean update(String sql) {
 		Connection connection = null;
@@ -647,7 +651,7 @@ public class Database {
 		}
 		return false;
 	}
-	
+
 	public static boolean otherAppProcessing() {
 		Connection connection = null;
 		Statement statement = null;
@@ -657,7 +661,8 @@ public class Database {
 			statement = connection.createStatement();
 			// Check if an app is PROCESSING
 			String sql = "SELECT appid FROM apps " + "where appstatus='"
-					+ AppStatus.PROCESSING.name() + "' ORDER BY " + "submittime ASC";
+					+ AppStatus.PROCESSING.name() + "' ORDER BY "
+					+ "submittime ASC";
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				return true;
@@ -965,10 +970,10 @@ public class Database {
 		}
 		return userRole;
 	}
-	
+
 	public static String getOrganization(String username) {
-		return getString("SELECT org FROM users "
-				+ "where username='" + username + "'");
+		return getString("SELECT org FROM users " + "where username='"
+				+ username + "'");
 	}
 
 	public static long getSessionExpiration(String sessionId,
@@ -1173,10 +1178,11 @@ public class Database {
 		return update("UPDATE users SET fromhost ='" + host
 				+ "' WHERE username = '" + username + "'");
 	}
-	
+
 	public static boolean updateUserLogonTime(String username) {
 		Date logonDate = new Date();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss");
 		String currentTime = dateFormat.format(logonDate);
 		return update("UPDATE users SET lastlogon='" + currentTime
 				+ "' WHERE username = '" + username + "'");
@@ -1259,8 +1265,7 @@ public class Database {
 		}
 	}
 
-	public static boolean cleanUpBufferedWriter(
-			BufferedWriter bufferedWriter) {
+	public static boolean cleanUpBufferedWriter(BufferedWriter bufferedWriter) {
 		if (bufferedWriter != null) {
 			try {
 				bufferedWriter.close();
@@ -1289,8 +1294,6 @@ public class Database {
 			return true;
 		}
 	}
-	
-
 
 	private Database() {
 	}
