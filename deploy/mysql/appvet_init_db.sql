@@ -27,10 +27,6 @@ CREATE TABLE `androidtoolstatus` (
   `registration` varchar(120) DEFAULT NULL,
   `appinfo` varchar(120) DEFAULT NULL,
   `audit` varchar(120) DEFAULT NULL,
-  `example_justreport` varchar(120) DEFAULT 'NA',
-  `certverify` varchar(120) DEFAULT 'NA',
-  `masterkeyextrafield` varchar(120) DEFAULT 'NA',
-  `justreport` varchar(120) DEFAULT 'NA',
   PRIMARY KEY (`appid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -137,15 +133,15 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `username` varchar(254) NOT NULL DEFAULT '',
   `password` varchar(128) DEFAULT NULL,
+  `lastName` varchar(32) DEFAULT NULL,
+  `firstName` varchar(32) DEFAULT NULL,
   `org` varchar(120) DEFAULT NULL,
+  `dept` varchar(120) DEFAULT NULL,
   `email` varchar(120) DEFAULT NULL,
   `role` varchar(48) DEFAULT NULL,
   `lastlogon` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `fromhost` varchar(120) DEFAULT NULL,
-  `lastName` varchar(32) DEFAULT NULL,
-  `firstName` varchar(32) DEFAULT NULL,
   `toolsAuth` varchar(1000) DEFAULT NULL,
-  `dept` varchar(120) DEFAULT NULL,
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -168,4 +164,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-23 11:40:29
+-- Dump completed on 2015-11-23 12:51:30
