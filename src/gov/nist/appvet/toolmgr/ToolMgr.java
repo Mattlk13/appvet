@@ -120,12 +120,11 @@ public class ToolMgr implements Runnable {
 	@Override
 	public void run() {
 		for (;;) {
+			delay();
 			if (Database.otherAppProcessing()) {
 				// If another app has a status of PROCESSING, no other apps
 				// will be processed. If app is stuck in a PROCESSING status,
 				// manually delete the app from the AppVet GUI.
-				delay();
-				// continue mainLoop;
 			} else {
 				AppInfo appInfo = null;
 				final String appid = Database.getNextApp(AppStatus.PENDING);
@@ -232,7 +231,6 @@ public class ToolMgr implements Runnable {
 						}
 						Database.setLastUpdate(appid);
 					}
-					delay(); // for
 				}
 			}
 		}

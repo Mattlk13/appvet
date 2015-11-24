@@ -154,15 +154,32 @@ public class Logger {
 		Date date = null;
 		StackTraceElement[] stackTraceElements = null;
 		String formattedDate = null;
-		String logData = null;
+		String logData = "";
 		try {
 			if (level.getPriority() >= userLevel.getPriority()) {
 				date = new Date();
 				stackTraceElements = new Throwable().getStackTrace();
 				formattedDate = format.format(date);
-				logData = stackTraceElements[2].getClassName() + ":"
-						+ stackTraceElements[2].getMethodName() + " " + "line "
-						+ stackTraceElements[2].getLineNumber();
+				
+				if (level == Level.ERROR){
+					for (int i = 2; i < stackTraceElements.length; i++) {
+						String className = stackTraceElements[i].getClassName();
+						if (className.indexOf("gov.nist.appvet") > -1) {
+							logData += "\n" + 
+									stackTraceElements[i].getClassName() + ":"
+									+ stackTraceElements[i].getMethodName() + " " + "line "
+									+ stackTraceElements[i].getLineNumber();
+						} else {
+							break;
+						}
+					}	
+				} else {
+					logData = stackTraceElements[2].getClassName() + ":"
+					+ stackTraceElements[2].getMethodName() + " " + "line "
+					+ stackTraceElements[2].getLineNumber()
+					;
+				}
+	
 				if (showLogData) {
 					writer.write(formattedDate + " " + logData + "\n");
 				}

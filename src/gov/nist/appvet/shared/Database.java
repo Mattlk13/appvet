@@ -469,15 +469,12 @@ public class Database {
 		boolean foundAdmin = false;
 		try {
 			connection = getConnection();
-			sql = "SELECT * FROM users";
+			sql = "SELECT * FROM users WHERE role='ADMIN'";
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
-				String role = getAttributeValue(resultSet.getString(5));
-				if (role.equals(Role.ADMIN.name())) {
-					foundAdmin = true;
-					break;
-				}
+				foundAdmin = true;
+				break;
 			}
 		} catch (final SQLException e) {
 			log.error(e.toString());
@@ -530,6 +527,27 @@ public class Database {
 			cleanUpConnection(connection);
 		}
 		return arrayList;
+	}
+	
+	public static long getConnectionCount(Connection connection, String sql) {
+		//Connection connection = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			//connection = getConnection();
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				return resultSet.getInt(1);
+			}
+		} catch (final SQLException e) {
+			log.error(e.toString() + " using: " + sql);
+		} finally {
+			cleanUpResultSet(resultSet);
+			cleanUpStatement(statement);
+			//cleanUpConnection(connection);
+		}
+		return -1;
 	}
 
 	public static long getLong(String sql) {
@@ -753,6 +771,13 @@ public class Database {
 			} else {
 				log.error("Could not connect to database.");
 			}
+			
+			/**
+			 // Check connection count to ensure we have not maxed out 
+			 // JDBC connections.
+			String sql = "SELECT COUNT(*) FROM information_schema.PROCESSLIST";
+			log.error("CONNECTION COUNT: " + getConnectionCount(connection, sql));
+			 */
 		} catch (final Exception e) {
 			log.error("Could not connect to database: " + e.toString());
 		}
@@ -765,7 +790,6 @@ public class Database {
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
-			connection = getConnection();
 			appsList = new ArrayList<AppInfoGwt>();
 			String sql = null;
 			final Role userRole = getRole(username);
@@ -775,6 +799,7 @@ public class Database {
 			} else {
 				sql = "SELECT * FROM apps ORDER BY submittime DESC";
 			}
+			connection = getConnection();
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
 			Timestamp mostRecentUpdateTimestamp = null;
@@ -838,7 +863,6 @@ public class Database {
 		AppInfoGwt appInfo = null;
 		ArrayList<AppInfoGwt> appsList = null;
 		try {
-			connection = getConnection();
 			userRole = getRole(username);
 			if (userRole == Role.USER) {
 				sql = "SELECT * FROM apps where username='" + username
@@ -848,6 +872,8 @@ public class Database {
 			}
 			lastClientUpdateTimestamp = new Timestamp(lastClientUpdateDate);
 			appsList = new ArrayList<AppInfoGwt>();
+			
+			connection = getConnection();
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
 			String analystGroup = null;
