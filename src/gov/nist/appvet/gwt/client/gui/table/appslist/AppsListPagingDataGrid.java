@@ -116,33 +116,21 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 				if (appStatus == null) {
 					log.warning("App status is null");
 					return sb.toSafeHtml();
-				} else {
-					// log.info("App status in table is: " + appStatus.name());
-				}
-				if (appStatus == AppStatus.REGISTERING) {
+					
+				} else if (appStatus == AppStatus.REGISTERING ||
+						appStatus == AppStatus.PROCESSING) {
 					iconVersion++; // Forces refresh of icon
 					final String iconPath = appVetHostUrl + "/appvet_images/"
 							+ defaultLargeAppIcon + "?v" + iconVersion;
 					sb.appendHtmlConstant("<img width=\"20\" src=\"" + iconPath
 							+ "\" alt=\"\" />");
-				} else if (appStatus == AppStatus.PENDING) {
-					final String iconPath = appVetHostUrl + "/appvet_images/"
-							+ defaultLargeAppIcon + "";
-					sb.appendHtmlConstant("<img width=\"20\" src=\"" + iconPath
-							+ "\" alt=\"\" />");
-				} else if (appStatus == AppStatus.PROCESSING) {
-					iconVersion++;
-					final String iconPath = appVetHostUrl + "/appvet_images/"
-							+ appId + ".png?v" + iconVersion;
-					sb.appendHtmlConstant("<img width=\"20\" src=\"" + iconPath
-							+ "\" alt=\"\" />");
-				} else {
-					iconVersion++;
-					final String iconPath = appVetHostUrl + "/appvet_images/"
-							+ appId + ".png";
-					sb.appendHtmlConstant("<img width=\"20\" src=\"" + iconPath
-							+ "\" alt=\"\" />");
-				}
+					} else {
+						iconVersion++;
+						final String iconPath = appVetHostUrl + "/appvet_images/"
+								+ appId + ".png?v" + iconVersion;
+						sb.appendHtmlConstant("<img width=\"20\" src=\"" + iconPath
+								+ "\" alt=\"\" />");
+					}
 				return sb.toSafeHtml();
 			}
 		};
@@ -196,6 +184,9 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 					statusHtml = "<div id=\"error\" style='color: black'>"
 							+ appStatus.name() + "</div>";
 				}
+				
+				
+				
 				sb.appendHtmlConstant(statusHtml);
 				return sb.toSafeHtml();
 			}

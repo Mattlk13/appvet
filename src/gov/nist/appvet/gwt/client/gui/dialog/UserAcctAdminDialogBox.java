@@ -315,7 +315,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		roleComboBox.addItem(Role.ADMIN.name());
 		roleComboBox.addItem(Role.ANALYST.name());
-		roleComboBox.addItem(Role.GROUP_ANALYST.name());
+		roleComboBox.addItem(Role.ORG_ANALYST.name());
 		roleComboBox.addItem(Role.TOOL_PROVIDER.name());
 		roleComboBox.addItem(Role.USER.name());
 		roleComboBox.addItem(Role.CLIENT.name());
@@ -525,7 +525,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 				roleComboBox.setSelectedIndex(0);
 			} else if (userInfo.getRole().equals(Role.ANALYST.name())) {
 				roleComboBox.setSelectedIndex(1);
-			} else if (userInfo.getRole().equals(Role.GROUP_ANALYST.name())) {
+			} else if (userInfo.getRole().equals(Role.ORG_ANALYST.name())) {
 				roleComboBox.setSelectedIndex(2);
 			} else if (userInfo.getRole().equals(Role.TOOL_PROVIDER.name())) {
 				roleComboBox.setSelectedIndex(3);

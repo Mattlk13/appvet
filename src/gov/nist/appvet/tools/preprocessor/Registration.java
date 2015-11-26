@@ -75,41 +75,41 @@ public class Registration {
 
 				// Add app metadata to database.
 				preparedStatement = connection
-						.prepareStatement("REPLACE INTO apps (appid, appname, "
+						.prepareStatement("REPLACE INTO apps (appid, updated, appname, "
 						+ "packagename, versioncode, versionname, filename, "
 						+ "submittime, appstatus, "
-						+ "statustime, username, clienthost, os"
+						+ "username, clienthost, os"
 						+ ") "
 						+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 				
 				// Set app ID.
 				preparedStatement.setString(1, appInfo.appId);
+				// Set updated (to signal GET requests of this update)
+				preparedStatement.setBoolean(2, true);
 				// Set app name.
 				if (appInfo.appName == null) {
 					// Displayed when first uploaded to AppVet.
 					appInfo.appName = "Received";
 				}
-				preparedStatement.setString(2, appInfo.appName);
+				preparedStatement.setString(3, appInfo.appName);
 				// Set package name. If file submission, package name will be 
 				// null at this point.*/
-				preparedStatement.setString(3, appInfo.packageName);
+				preparedStatement.setString(4, appInfo.packageName);
 				// Set version code.
-				preparedStatement.setString(4, null);
+				preparedStatement.setString(5, null);
 				// Set version name. If file submission, version name will be 
 				// null at this point.
-				preparedStatement.setString(5, appInfo.versionName);
+				preparedStatement.setString(6, appInfo.versionName);
 				// Set file name (note that filename uses underscores to
 				// replace spaces. If app metdata submission, filename will 
 				// be null.
-				preparedStatement.setString(6, appInfo.getAppFileName());
+				preparedStatement.setString(7, appInfo.getAppFileName());
 				final java.sql.Timestamp timeStamp = new java.sql.Timestamp(
 						new java.util.Date().getTime());
 				// Set submission timestamp.
-				preparedStatement.setTimestamp(7, timeStamp);
+				preparedStatement.setTimestamp(8, timeStamp);
 				// Set app status.
-				preparedStatement.setString(8, AppStatus.REGISTERING.name());
-				// Set received timestamp.
-				preparedStatement.setTimestamp(9, timeStamp);
+				preparedStatement.setString(9, AppStatus.REGISTERING.name());
 				// Set username.
 				preparedStatement.setString(10, appInfo.ownerName);
 				// Set client hostname.
@@ -154,7 +154,7 @@ public class Registration {
 				}
 				
 				// Set last update
-				Database.setLastUpdate(appInfo.appId);
+				Database.setAppIsUpdated(appInfo.appId, true);
 				
 				// Create registration report.
 

@@ -34,7 +34,7 @@ import org.apache.commons.fileupload.FileItem;
  * 
  * @author steveq@nist.gov
  */
-public class AppInfo extends AppInfoCore {
+public class AppInfo extends AppInfoBase {
 	public static final long serialVersionUID = 1L;
 	/** Used to log all app-specific output to global AppVet log. */
 	private static final Logger appvetLog = AppVetProperties.log;
@@ -45,6 +45,7 @@ public class AppInfo extends AppInfoCore {
 	 * the content of the file and is not associated with a filename.
 	 */
 	public FileItem fileItem = null;
+	
 	/*---------------------- For Tool Reports/Risks Only ---------------------*/
 	/**
 	 * Tool ID for an uploaded report file. Used only for submitting tool

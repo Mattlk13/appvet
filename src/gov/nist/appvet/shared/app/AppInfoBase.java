@@ -31,10 +31,15 @@ import java.io.Serializable;
  * 
  * @author steveq@nist.gov
  */
-public class AppInfoCore implements Serializable {
+public class AppInfoBase implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/** The AppVet ID of the app. */
 	public String appId = null;
+	/** Used by AppVet to determine if an app's status was recently updated 
+	 * (but not yet consumed by AppVet). Rarely used within an AppInfoCore 
+	 * object.
+	 */
+	public boolean updated = false;
 	/** The display name of the app. */
 	public String appName = null;
 	/** The package of bundle name of the app. */
@@ -62,13 +67,13 @@ public class AppInfoCore implements Serializable {
 	public long submitTime = 0;
 	/** The status of the app. */
 	public AppStatus appStatus = null;
-	/** Time of the last status update. */
-	public long statusTime = 0;
 	/** The client host from which this app was submitted. */
 	public String clientHost = null;
+	/** The icon name (default or actual) */
+	//public String iconFileName = null;
 
 	/** Empty constructor. */
-	public AppInfoCore() {
+	public AppInfoBase() {
 	}
 
 	/** Set the app filename and project name. */

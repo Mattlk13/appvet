@@ -19,7 +19,9 @@
  */
 package gov.nist.appvet.shared.status;
 
+import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.shared.Database;
+import gov.nist.appvet.shared.Logger;
 
 /**
  * This class supports the setting and getting of an app's status.
@@ -27,7 +29,8 @@ import gov.nist.appvet.shared.Database;
  * @author steveq@nist.gov
  */
 public class AppStatusManager {
-	// private static final Logger log = AppVetProperties.log;
+	private static final Logger log = AppVetProperties.log;
+	
 	private AppStatusManager() {
 	}
 
@@ -42,7 +45,7 @@ public class AppStatusManager {
 			final String sql = "UPDATE apps SET appstatus='" + appStatus.name()
 					+ "' where appid='" + appId + "'";
 			if (Database.update(sql)) {
-				Database.setLastUpdate(appId);
+				Database.setAppIsUpdated(appId, true);
 			}
 		}
 		return;

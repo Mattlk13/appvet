@@ -44,7 +44,9 @@ import gov.nist.appvet.shared.validate.Validate;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -86,6 +88,8 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.view.client.HasData;
+import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
@@ -286,30 +290,30 @@ public class AppVetPanel extends DockLayoutPanel {
 								/* Get pre-processing analysis results */
 								String statuses = "<hr><div id=\"appInfoSectionHeader\">PreProcessing</div>\n";
 								int preprocessorToolCount = 0;
-								
+
 								for (int i = 0; i < toolResults.size(); i++) {
 									AnalysisType analysisType = toolResults
 											.get(i).getAnalysisType();
-									
+
 									if (analysisType == AnalysisType.PREPROCESSOR) {
 										preprocessorToolCount++;
 										statuses += getPreprocessorStatusHtmlDisplay(toolResults
 												.get(i));
 									}
 								}
-								
+
 								if (preprocessorToolCount == 0) {
 									statuses += getNAStatus();
 								}
-								
+
 								// Get tool and manually-uploaded results.
 								statuses += "<hr><div id=\"appInfoSectionHeader\">Tools</div>\n";
 								int analysisToolCount = 0;
-								
+
 								for (int i = 0; i < toolResults.size(); i++) {
 									AnalysisType analysisType = toolResults
 											.get(i).getAnalysisType();
-									
+
 									if (analysisType == AnalysisType.TESTTOOL
 											|| analysisType == AnalysisType.REPORT) {
 										analysisToolCount++;
@@ -317,30 +321,30 @@ public class AppVetPanel extends DockLayoutPanel {
 												.get(i));
 									}
 								}
-								
+
 								if (analysisToolCount == 0) {
 									statuses += getNAStatus();
 								}
-								
+
 								/* Get audit results */
 								statuses += "<hr><div id=\"appInfoSectionHeader\">Override</div>\n";
 								int auditCount = 0;
-								
+
 								for (int i = 0; i < toolResults.size(); i++) {
 									AnalysisType analysisType = toolResults
 											.get(i).getAnalysisType();
-									
+
 									if (analysisType == AnalysisType.AUDIT) {
 										auditCount++;
 										statuses += getToolStatusHtmlDisplay(toolResults
 												.get(i));
 									}
 								}
-								
+
 								if (auditCount == 0) {
 									statuses += getNAStatus();
 								}
-								
+
 								return statuses;
 							}
 
@@ -355,13 +359,13 @@ public class AppVetPanel extends DockLayoutPanel {
 							public String getPreprocessorStatusHtmlDisplay(
 									ToolStatusGwt toolStatus) {
 								String status = null;
-								
+
 								if (toolStatus.getStatusHtml().indexOf("LOW") > -1) {
 									status = "<div id=\"tabledim\" style='color: black'>COMPLETED</div>";
 								} else {
 									status = toolStatus.getStatusHtml();
 								}
-								
+
 								return "<table>" + "<tr>\n"
 										+ "<td align=\"left\" width=\"185\">"
 										+ toolStatus.getToolDisplayName()
@@ -698,22 +702,26 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_6.setCellVerticalAlignment(searchButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		
+
 		Image orgLogo = new Image("images/org_logo.png");
 		horizontalPanel_5.add(orgLogo);
-		horizontalPanel_5.setCellVerticalAlignment(orgLogo, HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_5.setCellHorizontalAlignment(orgLogo, HasHorizontalAlignment.ALIGN_RIGHT);
+		horizontalPanel_5.setCellVerticalAlignment(orgLogo,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_5.setCellHorizontalAlignment(orgLogo,
+				HasHorizontalAlignment.ALIGN_RIGHT);
 		orgLogo.setSize("85px", "85px");
 		final HorizontalPanel horizontalPanel_3 = new HorizontalPanel();
 		northAppVetPanel.add(horizontalPanel_3);
-		northAppVetPanel.setCellVerticalAlignment(horizontalPanel_3, HasVerticalAlignment.ALIGN_MIDDLE);
+		northAppVetPanel.setCellVerticalAlignment(horizontalPanel_3,
+				HasVerticalAlignment.ALIGN_MIDDLE);
 		northAppVetPanel.setCellHorizontalAlignment(horizontalPanel_3,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_3.setSize("100%", "");
 		northAppVetPanel.setCellWidth(horizontalPanel_3, "100%");
 		final MenuBar appVetMenuBar = new MenuBar(false);
 		horizontalPanel_3.add(appVetMenuBar);
-		horizontalPanel_3.setCellVerticalAlignment(appVetMenuBar, HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_3.setCellVerticalAlignment(appVetMenuBar,
+				HasVerticalAlignment.ALIGN_MIDDLE);
 		appVetMenuBar.setStyleName("appVetMenuBar");
 		appVetMenuBar.setAutoOpen(true);
 		appVetMenuBar.setSize("250px", "");
@@ -892,10 +900,10 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 		// Remove first element containing the lastUpdate timestamp
 		AppInfoGwt timeStampObject = null;
-		if (initialApps != null && initialApps.size() > 0) {
-			timeStampObject = initialApps.remove(0);
-			lastAppsListUpdate = timeStampObject.getLastAppUpdate();
-		}
+//		if (initialApps != null && initialApps.size() > 0) {
+//			timeStampObject = initialApps.remove(0);
+//			lastAppsListUpdate = timeStampObject.getLastAppUpdate();
+//		}
 		final HorizontalSplitPanel centerAppVetSplitPanel = new HorizontalSplitPanel();
 		centerAppVetSplitPanel.setSplitPosition("64%");
 		centerAppVetSplitPanel.setSize("", "100%");
@@ -961,7 +969,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsLabel = new InlineLabel("Apps");
 		appsLabel.setStyleName("AppsLabel");
 		appsListButtonPanel.add(appsLabel);
-		appsListButtonPanel.setCellVerticalAlignment(appsLabel, HasVerticalAlignment.ALIGN_MIDDLE);
+		appsListButtonPanel.setCellVerticalAlignment(appsLabel,
+				HasVerticalAlignment.ALIGN_MIDDLE);
 		appsListButtonPanel.setCellWidth(appsLabel, "50%");
 		appsLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		appsLabel.setWidth("60px");
@@ -1213,21 +1222,25 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsListTable.dataGrid.setSelectionModel(appSelectionModel);
 		uploadReportButton.setVisible(true);
 		logButton.setVisible(true);
-		
+
 		SimplePanel simplePanel = new SimplePanel();
 		addSouth(simplePanel, 21.0);
 		simplePanel.setHeight("");
-		
+
 		HorizontalPanel horizontalPanel_2 = new HorizontalPanel();
-		horizontalPanel_2.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_2.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		horizontalPanel_2
+				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_2
+				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		simplePanel.setWidget(horizontalPanel_2);
 		horizontalPanel_2.setSize("100%", "20px");
-		
+
 		Image nistLogo = new Image("images/nist_logo_darkgrey.png");
 		horizontalPanel_2.add(nistLogo);
-		horizontalPanel_2.setCellVerticalAlignment(nistLogo, HasVerticalAlignment.ALIGN_BOTTOM);
-		horizontalPanel_2.setCellHorizontalAlignment(nistLogo, HasHorizontalAlignment.ALIGN_RIGHT);
+		horizontalPanel_2.setCellVerticalAlignment(nistLogo,
+				HasVerticalAlignment.ALIGN_BOTTOM);
+		horizontalPanel_2.setCellHorizontalAlignment(nistLogo,
+				HasHorizontalAlignment.ALIGN_RIGHT);
 		nistLogo.setSize("50px", "13px");
 		toolResultsHtml = new HTML("", true);
 		appInfoVerticalPanel.add(toolResultsHtml);
@@ -1317,8 +1330,9 @@ public class AppVetPanel extends DockLayoutPanel {
 				new AsyncCallback<List<AppInfoGwt>>() {
 					@Override
 					public void onFailure(Throwable caught) {
-						log.severe("Error retrieving updated apps: "
-								+ caught.getMessage());
+						log.severe("Error retrieving updated apps. Server might be down: "
+								+ caught.toString());
+						pollingTimer.cancel();
 					}
 
 					@Override
@@ -1328,13 +1342,9 @@ public class AppVetPanel extends DockLayoutPanel {
 									"Could not retrieve updated apps", true);
 						} else {
 							if (updatedAppsList.size() > 0) {
-								final AppInfoGwt timeStampObject = updatedAppsList
-										.remove(0);
-								lastAppsListUpdate = timeStampObject
-										.getLastAppUpdate();
-								if (updatedAppsList.size() > 0) {
-									setUpdatedApps(updatedAppsList);
-								}
+								setUpdatedApps(updatedAppsList);
+							} else {
+								//log.info("No app updates available");
 							}
 						}
 					}
@@ -1427,6 +1437,65 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsListTable.setDataList(allApps);
 	}
 
+	/**
+	 * Check to make sure that the displayed app status is reflecting the latest
+	 * updated app status. This is needed since a race condition exists where an
+	 * app's status will change from PROCESSING to some other status and the
+	 * table misses the opportunity to refresh the screen.
+	 * 
+	 * @param latestApps
+	 *            The latest updated apps information.
+	 * @param numApps
+	 *            The number of apps, starting from the most recent, to check.
+	 */
+
+	public void refreshLastApp(List<AppInfoGwt> latestApps, int numAppsToCheck) {
+
+		ListDataProvider<AppInfoGwt> appsTableList = appsListTable
+				.getDataProvider();
+		Set<HasData<AppInfoGwt>> displayedApps = appsTableList
+				.getDataDisplays();
+		Iterator<HasData<AppInfoGwt>> displayedAppsIterator = displayedApps
+				.iterator();
+
+		int numApps = 0;
+
+		if (numAppsToCheck > latestApps.size()) {
+			numApps = latestApps.size();
+		}
+
+		for (int i = 0; i < numApps; i++) {
+			AppInfoGwt app = latestApps.get(i);
+			AppStatus actualAppStatus = app.appStatus;
+
+			// Check this app against the app status that is displayed
+			while (displayedAppsIterator.hasNext()) {
+				HasData<AppInfoGwt> displayedApp = displayedAppsIterator.next();
+				Iterable<AppInfoGwt> displayedAppItems = displayedApp
+						.getVisibleItems();
+				for (AppInfoGwt displayedAppItem : displayedAppItems) { // Match
+																		// on
+																		// app
+																		// ID
+					if (displayedAppItem.appId.equals(app.appId)) {
+						AppStatus displayedAppStatus = displayedAppItem.appStatus;
+						log.info("Displayed app status: "
+								+ displayedAppStatus.name()
+								+ " and Actual app status: "
+								+ actualAppStatus.name());
+						if (displayedAppStatus != actualAppStatus) {
+							log.info("CHANGING DISPLAYED STATUS TO: "
+									+ actualAppStatus.name());
+							appsListTable.set(0, app);
+
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// TODO
 	public void setUpdatedApps(List<AppInfoGwt> updatedAppsList) {
 		for (int i = 0; i < updatedAppsList.size(); i++) {
 			final AppInfoGwt updatedAppInfo = updatedAppsList.get(i);
@@ -1561,7 +1630,8 @@ public class AppVetPanel extends DockLayoutPanel {
 											.getFirstName());
 									userInfo.setOrganization(updatedUserInfo
 											.getOrganization());
-									userInfo.setDepartment(updatedUserInfo.getDepartment());
+									userInfo.setDepartment(updatedUserInfo
+											.getDepartment());
 									userInfo.setEmail(updatedUserInfo
 											.getEmail());
 									updatedUserInfo.setChangePassword(false);

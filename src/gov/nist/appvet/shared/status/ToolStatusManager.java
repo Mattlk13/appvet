@@ -68,10 +68,8 @@ public class ToolStatusManager {
 			Database.update("UPDATE iostoolstatus SET " + toolId + "='"
 					+ toolStatus.name() + "' where appid='" + appId + "'");
 		}
-		Database.setLastUpdate(appId);
-		//if (changeAppStatus) {
-			computeAppStatus(os, appId);
-		//}
+		Database.setAppIsUpdated(appId, true);
+		computeAppStatus(os, appId);
 	}
 
 	/**
@@ -166,7 +164,6 @@ public class ToolStatusManager {
 					numToolNAs++; 
 				}
 				
-
 			}
 
 		}
@@ -184,27 +181,5 @@ public class ToolStatusManager {
 		} else {
 			AppStatusManager.setAppStatus(appId, AppStatus.NA);
 		}
-		
-/*		// log.debug("numTools: " + numTools);
-		// log.debug("numToolNAs: " + numToolNAs);
-		// log.debug("numToolErrors: " + numToolErrors);
-		// log.debug("numToolFails: " + numToolFails);
-		// log.debug("numToolWarnings: " + numToolWarnings);
-		// log.debug("numToolsSubmitted: " + numToolsSubmitted);
-		// log.debug("numToolPasses: " + numToolPasses);
-		// log.debug("numTools: " + numTools);
-*/		
-		
-		// No tools should be submitted when this called by ToolMgr. If any
-		// tools have a status of SUBMITTED, log an error.
-//		if (numToolSubmitted > 0) {
-//			AppStatusManager.setAppStatus(appId, AppStatus.PROCESSING);
-//			return;
-//		}
-		
-		// No tools should still be in submitted state, so compute app 
-		// status based on the following conditions.
-
-
 	}
 }

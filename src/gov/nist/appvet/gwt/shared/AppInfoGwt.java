@@ -19,22 +19,15 @@
  */
 package gov.nist.appvet.gwt.shared;
 
-import gov.nist.appvet.shared.app.AppInfoCore;
+import gov.nist.appvet.shared.app.AppInfoBase;
 
 /**
  * This class defines app metadata that may be used by a GWT client.
  * 
  * @author steveq@nist.gov
  */
-public class AppInfoGwt extends AppInfoCore {
+public class AppInfoGwt extends AppInfoBase {
 	private static final long serialVersionUID = 1L;
-	/**
-	 * This field is used to indicate the Date/Time that a list of AppInfoGwt
-	 * objects is retrieved by the GWT server. When this field is used, all
-	 * other fields in this object are null and this object is placed at the
-	 * beginning of a list of AppInfoGwt objects.
-	 */
-	public long lastListUpdate = -1;
 
 	public AppInfoGwt() {
 		super();
@@ -44,17 +37,17 @@ public class AppInfoGwt extends AppInfoCore {
 	 * Get the time/date of the last updated apps list. Used to refresh the list
 	 * of displayed apps.
 	 */
-	public long getLastAppUpdate() {
-		return lastListUpdate;
-	}
+//	public long getLastAppUpdate() {
+//		return lastListUpdate;
+//	}
 
 	/**
 	 * Set the time/date of the last updated apps list. Used to refresh the list
 	 * of displayed apps.
 	 */
-	public void setLastAppUpdate(long lastListUpdate) {
-		this.lastListUpdate = lastListUpdate;
-	}
+//	public void setLastAppUpdate(long lastListUpdate) {
+//		this.lastListUpdate = lastListUpdate;
+//	}
 
 	/** This method matches keyword tokens for searching. */
 	public boolean tokenMatch(String token) {

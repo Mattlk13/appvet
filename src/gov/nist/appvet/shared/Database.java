@@ -202,20 +202,18 @@ public class Database {
 			userInfo = new UserInfoGwt();
 			resultSet.next();
 			userInfo.setUserName(resultSet.getString(1));
-			userInfo.setPassword(getAttributeValue(resultSet.getString(2)));
-			userInfo.setLastName(getAttributeValue(resultSet.getString(3)));
-			userInfo.setFirstName(getAttributeValue(resultSet.getString(4)));
-			userInfo.setOrganization(getAttributeValue(resultSet.getString(5)));
-			userInfo.setDepartment(getAttributeValue(resultSet.getString(6)));
-			userInfo.setEmail(getAttributeValue(resultSet.getString(7)));
-			userInfo.setRole(getAttributeValue(resultSet.getString(8)));
-			userInfo.setLastLogon(getAttributeValue(resultSet.getString(9)));
-			userInfo.setFromHost(getAttributeValue(resultSet.getString(10)));
+			userInfo.setPassword(getNonNullAttributeValue(resultSet.getString(2)));
+			userInfo.setLastName(getNonNullAttributeValue(resultSet.getString(3)));
+			userInfo.setFirstName(getNonNullAttributeValue(resultSet.getString(4)));
+			userInfo.setOrganization(getNonNullAttributeValue(resultSet.getString(5)));
+			userInfo.setDepartment(getNonNullAttributeValue(resultSet.getString(6)));
+			userInfo.setEmail(getNonNullAttributeValue(resultSet.getString(7)));
+			userInfo.setRole(getNonNullAttributeValue(resultSet.getString(8)));
+			userInfo.setLastLogon(getNonNullAttributeValue(resultSet.getString(9)));
+			userInfo.setFromHost(getNonNullAttributeValue(resultSet.getString(10)));
 			String toolCredentialsStr = resultSet.getString(11);
 			
 			ArrayList<UserToolCredentialsGwt> toolCredentialsList = null;
-			// TODO: Problem with NO CREDENTIALS SHOWING UP FOR TOOL IS IN HERE
-			// SOMEWHERE
 			if (toolCredentialsStr == null) {
 				// Create new tool credentials list
 				toolCredentialsList = createToolCredentialsList(username, tools);
@@ -469,7 +467,7 @@ public class Database {
 		boolean foundAdmin = false;
 		try {
 			connection = getConnection();
-			sql = "SELECT * FROM users WHERE role='ADMIN'";
+			sql = "SELECT * FROM users WHERE role='" + Role.ADMIN.name() + "'";
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
@@ -503,17 +501,17 @@ public class Database {
 			while (resultSet.next()) {
 				userInfo = new UserInfoGwt();
 				userInfo.setUserName(resultSet.getString(1));
-				userInfo.setPassword(getAttributeValue(resultSet.getString(2)));
-				userInfo.setLastName(getAttributeValue(resultSet.getString(3)));
-				userInfo.setFirstName(getAttributeValue(resultSet.getString(4)));
-				userInfo.setOrganization(getAttributeValue(resultSet
+				userInfo.setPassword(getNonNullAttributeValue(resultSet.getString(2)));
+				userInfo.setLastName(getNonNullAttributeValue(resultSet.getString(3)));
+				userInfo.setFirstName(getNonNullAttributeValue(resultSet.getString(4)));
+				userInfo.setOrganization(getNonNullAttributeValue(resultSet
 						.getString(5)));
-				userInfo.setDepartment(getAttributeValue(resultSet
+				userInfo.setDepartment(getNonNullAttributeValue(resultSet
 						.getString(6)));
-				userInfo.setEmail(getAttributeValue(resultSet.getString(7)));
-				userInfo.setRole(getAttributeValue(resultSet.getString(8)));
-				userInfo.setLastLogon(getAttributeValue(resultSet.getString(9)));
-				userInfo.setFromHost(getAttributeValue(resultSet.getString(10)));
+				userInfo.setEmail(getNonNullAttributeValue(resultSet.getString(7)));
+				userInfo.setRole(getNonNullAttributeValue(resultSet.getString(8)));
+				userInfo.setLastLogon(getNonNullAttributeValue(resultSet.getString(9)));
+				userInfo.setFromHost(getNonNullAttributeValue(resultSet.getString(10)));
 				arrayList.add(userInfo);
 			}
 		} catch (final SQLException e) {
@@ -527,27 +525,6 @@ public class Database {
 			cleanUpConnection(connection);
 		}
 		return arrayList;
-	}
-	
-	public static long getConnectionCount(Connection connection, String sql) {
-		//Connection connection = null;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			//connection = getConnection();
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()) {
-				return resultSet.getInt(1);
-			}
-		} catch (final SQLException e) {
-			log.error(e.toString() + " using: " + sql);
-		} finally {
-			cleanUpResultSet(resultSet);
-			cleanUpStatement(statement);
-			//cleanUpConnection(connection);
-		}
-		return -1;
 	}
 
 	public static long getLong(String sql) {
@@ -592,38 +569,16 @@ public class Database {
 		return null;
 	}
 
-	// // Called by AppVet installer
-	// public synchronized static boolean createAppVetDb(String url,
-	// String username, String password) {
-	// Connection connection = null;
-	// Statement statement = null;
-	// try {
-	// Class.forName("com.mysql.jdbc.Driver");
-	// connection = DriverManager.getConnection(url + "?user=" + username
-	// + "&password=" + password);
-	// if (connection != null) {
-	// connection.setAutoCommit(true); // No need to manually commit
-	// } else {
-	// log.error("Could not connect to database.");
-	// }
-	// } catch (final Exception e) {
-	// log.error(e.toString());
-	// }
-	// String sql = null;
-	// try {
-	// statement = connection.createStatement();
-	// sql = "create database appvet";
-	// statement.executeUpdate(sql);
-	// return true;
-	// } catch (final SQLException e) {
-	// log.error(e.toString() + " using: " + sql);
-	// return false;
-	// } finally {
-	// cleanUpStatement(statement);
-	// cleanUpConnection(connection);
-	// }
-	// }
 
+
+	public static boolean exists(String sql) {
+		if (getString(sql) != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public synchronized static boolean update(String sql) {
 		Connection connection = null;
 		Statement statement = null;
@@ -640,15 +595,7 @@ public class Database {
 			cleanUpConnection(connection);
 		}
 	}
-
-	public static boolean exists(String sql) {
-		if (getString(sql) != null) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
+	
 	public static boolean getBoolean(String sql) {
 		Connection connection = null;
 		Statement statement = null;
@@ -669,6 +616,7 @@ public class Database {
 		}
 		return false;
 	}
+	
 
 	public static boolean otherAppProcessing() {
 		Connection connection = null;
@@ -786,59 +734,66 @@ public class Database {
 
 	public static List<AppInfoGwt> getAllApps(String username) {
 		Connection connection = null;
-		ArrayList<AppInfoGwt> appsList = null;
+		ArrayList<AppInfoGwt> appsList = new ArrayList<AppInfoGwt>();
 		Statement statement = null;
 		ResultSet resultSet = null;
+		String sql = null;
+		Role userRole = getRole(username);
+		String organization = null;
+		String department = null;
 		try {
-			appsList = new ArrayList<AppInfoGwt>();
-			String sql = null;
-			final Role userRole = getRole(username);
-			if (userRole == Role.USER) {
-				sql = "SELECT * FROM apps where username='" + username
-						+ "' ORDER BY submittime DESC";
-			} else {
+			// Get apps based on user's role
+			userRole = getRole(username);
+			switch (userRole) {
+			case ADMIN: 
+				// Admin can view all apps
 				sql = "SELECT * FROM apps ORDER BY submittime DESC";
+				break;
+			case ANALYST: 
+				// Analyst can view all apps
+				sql = "SELECT * FROM apps ORDER BY submittime DESC";
+				break;
+			case ORG_ANALYST: 
+				// Organizational analyst can view all organizational apps
+				organization = Database.getOrganization(username);
+				sql = "SELECT * FROM apps where org='" + organization + "' "
+						+ "ORDER BY submittime DESC";
+				break;
+			case DEPT_ANALYST: 
+				// Dept analyst can view all dept apps for an organization
+				organization = Database.getOrganization(username);
+				department = Database.getDepartment(username); 
+				sql = "SELECT * FROM apps where org='" + organization + "' "
+						+ " and dept='" + department + "' ORDER BY submittime DESC";
+				break;
+			case TOOL_PROVIDER: 
+				// Tool provider can only view apps submitted by them (for testing)
+				sql = "SELECT * FROM apps where username='" + username + 
+					"' ORDER BY submittime DESC";
+				break; 
+			case CLIENT: 
+				// Clients can only view apps submitted by them
+				sql = "SELECT * FROM apps where username='" + username + 
+					"' ORDER BY submittime DESC";
+				break;
+			case USER: 
+				// Users can only see apps they have submitted
+				sql = "SELECT * FROM apps where username='" + username + 
+					"' ORDER BY submittime DESC";
+				break;
+			default: 
+				log.error("Unknown user role: " + userRole);
+				return null;
 			}
+			
 			connection = getConnection();
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
-			Timestamp mostRecentUpdateTimestamp = null;
-			Timestamp appUpdateTimestamp = null;
-			String analystGroup = null;
-			if (userRole == Role.GROUP_ANALYST) {
-				analystGroup = Database.getOrganization(username);
-			}
+
 			while (resultSet.next()) {
-				final AppInfoGwt appInfo = getAppInfo(resultSet);
-				if (appUpdateTimestamp == null) {
-					appUpdateTimestamp = new Timestamp(appInfo.statusTime);
-				} else {
-					appUpdateTimestamp.setTime(appInfo.statusTime);
-				}
-				if ((mostRecentUpdateTimestamp == null)
-						|| appUpdateTimestamp.after(mostRecentUpdateTimestamp)) {
-					mostRecentUpdateTimestamp = new Timestamp(
-							appUpdateTimestamp.getTime());
-				}
-				if (analystGroup != null) {
-					// Get apps for specific organizational group
-					String appOwner = appInfo.ownerName;
-					String ownerGroup = Database.getOrganization(appOwner);
-					if (ownerGroup.equals(analystGroup)) {
-						appsList.add(appInfo);
-					}
-				} else {
-					appsList.add(appInfo);
-				}
+				AppInfoGwt appInfo = getAppInfo(resultSet);
+				appsList.add(appInfo);
 			}
-			final AppInfoGwt clientUpdateTimestamp = new AppInfoGwt();
-			if (mostRecentUpdateTimestamp == null) {
-				mostRecentUpdateTimestamp = new Timestamp(new Date().getTime());
-			}
-			clientUpdateTimestamp.setLastAppUpdate(mostRecentUpdateTimestamp
-					.getTime());
-			// Add time stamp to beginning of list
-			appsList.add(0, clientUpdateTimestamp);
 		} catch (final SQLException e) {
 			log.error(username + ": " + e.toString());
 			appsList = null;
@@ -857,113 +812,109 @@ public class Database {
 		ResultSet resultSet = null;
 		Role userRole = null;
 		String sql = null;
-		Timestamp lastClientUpdateTimestamp = null;
-		Timestamp newLastClientUpdateTimestamp = null;
-		Timestamp appUpdateTimestamp = null;
 		AppInfoGwt appInfo = null;
-		ArrayList<AppInfoGwt> appsList = null;
+		ArrayList<AppInfoGwt> appsList = new ArrayList<AppInfoGwt>();
+		String organization = null;
+		String department = null;
 		try {
+			// Get apps based on user's role
 			userRole = getRole(username);
-			if (userRole == Role.USER) {
-				sql = "SELECT * FROM apps where username='" + username
-						+ "' ORDER BY statustime DESC";
-			} else {
-				sql = "SELECT * FROM apps ORDER BY statustime DESC";
+			switch (userRole) {
+			case ADMIN: 
+				// Admin can view all apps
+				sql = "SELECT * FROM apps where updated='1'";
+				break;
+			case ANALYST: 
+				// Analyst can view all apps
+				sql = "SELECT * FROM apps where updated='1'";
+				break;
+			case ORG_ANALYST: 
+				// Organizational analyst can view all organizational apps
+				organization = Database.getOrganization(username);
+				sql = "SELECT * FROM apps where org='" + organization + "' "
+						+ " and updated='1'";
+				break;
+			case DEPT_ANALYST:
+				// Dept analyst can view all dept apps for an organization
+				organization = Database.getOrganization(username);
+				department = Database.getDepartment(username); 
+				sql = "SELECT * FROM apps where org='" + organization + "' "
+						+ " and dept='" + department + "' and updated='1'";
+				break;
+			case TOOL_PROVIDER:
+				// Tool provider can only view apps submitted by them (for testing)
+				sql = "SELECT * FROM apps where username='" + username + 
+					"' and updated='1'";
+				break; 
+			case CLIENT: 
+				// Clients can only view apps submitted by them
+				sql = "SELECT * FROM apps where username='" + username + 
+					"' and updated='1'";
+				break;
+			case USER: 
+				// Users can only see apps they have submitted
+				sql = "SELECT * FROM apps where username='" + username + 
+					"' and updated='1'";
+				break;
+			default: 
+				log.error("Unknown user role: " + userRole);
+				return null;
 			}
-			lastClientUpdateTimestamp = new Timestamp(lastClientUpdateDate);
-			appsList = new ArrayList<AppInfoGwt>();
-			
+
 			connection = getConnection();
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
-			String analystGroup = null;
-			if (userRole == Role.GROUP_ANALYST) {
-				analystGroup = Database.getOrganization(username);
+			if (resultSet.wasNull()) {
+				log.debug("resultSet was null");
 			}
+			
 			while (resultSet.next()) {
 				appInfo = getAppInfo(resultSet);
-				if (appUpdateTimestamp == null) {
-					appUpdateTimestamp = new Timestamp(appInfo.statusTime);
-				} else {
-					appUpdateTimestamp.setTime(appInfo.statusTime);
-				}
-				if (appUpdateTimestamp.after(lastClientUpdateTimestamp)) {
-					if (analystGroup != null) {
-						// Only update apps for specific organizational group
-						String appOwner = appInfo.ownerName;
-						String ownerGroup = Database.getOrganization(appOwner);
-						if (ownerGroup.equals(analystGroup)) {
-							appsList.add(appInfo);
-							if (newLastClientUpdateTimestamp == null) {
-								newLastClientUpdateTimestamp = new Timestamp(
-										appUpdateTimestamp.getTime());
-							}
-						}
-					} else {
-						appsList.add(appInfo);
-						if (newLastClientUpdateTimestamp == null) {
-							newLastClientUpdateTimestamp = new Timestamp(
-									appUpdateTimestamp.getTime());
-						}
-					}
-				} else {
-					// Since resultSet is ordered in statustime-descending
-					// order, we have reached the end of possible updates.
-					break;
-				}
+				appsList.add(appInfo);
 			}
-			// This object containing the last updated timestamp will be
-			// removed first by the AppVet client.
-			final AppInfoGwt updatedTimestamp = new AppInfoGwt();
-			updatedTimestamp.appId = "lastServerUpdateTimestamp";
-			if (newLastClientUpdateTimestamp == null) {
-				newLastClientUpdateTimestamp = new Timestamp(
-						lastClientUpdateDate);
-			}
-			updatedTimestamp.setLastAppUpdate(newLastClientUpdateTimestamp
-					.getTime());
-			appsList.add(0, updatedTimestamp);
+			return appsList;
 		} catch (final SQLException e) {
 			log.error(username + ": " + e.toString());
-			appsList = null;
+			return null;
 		} finally {
-			appInfo = null;
-			appUpdateTimestamp = null;
-			newLastClientUpdateTimestamp = null;
-			lastClientUpdateTimestamp = null;
 			sql = null;
 			userRole = null;
 			cleanUpConnection(connection);
 			cleanUpStatement(statement);
 			cleanUpResultSet(resultSet);
 		}
-		return appsList;
 	}
 
 	public static AppInfoGwt getAppInfo(ResultSet resultSet) {
 		final AppInfoGwt appInfo = new AppInfoGwt();
 		try {
 			appInfo.appId = resultSet.getString(1);
-			appInfo.appName = getAttributeValue(resultSet.getString(2));
-			appInfo.packageName = getAttributeValue(resultSet.getString(3));
-			appInfo.versionCode = getAttributeValue(resultSet.getString(4));
-			appInfo.versionName = getAttributeValue(resultSet.getString(5));
-			appInfo.submitTime = resultSet.getTimestamp(7).getTime();
-			String appStatusString = resultSet.getString(8);
+			appInfo.updated = resultSet.getBoolean(2);
+			if (appInfo.updated) {
+				// Reset updated back to false
+				Database.setAppIsUpdated(appInfo.appId, false);
+				appInfo.updated = false;
+			}
+			appInfo.appName = getNonNullAttributeValue(resultSet.getString(3));
+			appInfo.packageName = getNonNullAttributeValue(resultSet.getString(4));
+			appInfo.versionCode = getNonNullAttributeValue(resultSet.getString(5));
+			appInfo.versionName = getNonNullAttributeValue(resultSet.getString(6));
+			// Skip file and project name until end			
+			appInfo.submitTime = resultSet.getTimestamp(8).getTime();
+			String appStatusString = resultSet.getString(9);
 			appInfo.appStatus = AppStatus.getStatus(appStatusString);
-			appInfo.statusTime = resultSet.getTimestamp(9).getTime();
-			appInfo.ownerName = getAttributeValue(resultSet.getString(10));
-			appInfo.clientHost = getAttributeValue(resultSet.getString(11));
-			String osName = getAttributeValue(resultSet.getString(12));
+			appInfo.ownerName = getNonNullAttributeValue(resultSet.getString(10));
+			appInfo.clientHost = getNonNullAttributeValue(resultSet.getString(11));
+			String osName = getNonNullAttributeValue(resultSet.getString(12));
 			appInfo.os = DeviceOS.getOS(osName);
-			appInfo.setAppFileAndProjectName(resultSet.getString(6), appInfo.os);
+			appInfo.setAppFileAndProjectName(resultSet.getString(7), appInfo.os);
 		} catch (final SQLException e) {
 			log.error(e.toString());
 		}
 		return appInfo;
 	}
 
-	public static String getAttributeValue(String string) {
+	public static String getNonNullAttributeValue(String string) {
 		return (string == null) ? "" : string;
 	}
 
@@ -999,6 +950,11 @@ public class Database {
 
 	public static String getOrganization(String username) {
 		return getString("SELECT org FROM users " + "where username='"
+				+ username + "'");
+	}
+	
+	public static String getDepartment(String username) {
+		return getString("SELECT dept FROM users " + "where username='"
 				+ username + "'");
 	}
 
@@ -1116,19 +1072,14 @@ public class Database {
 				+ clientIpAddress + "' OR clientaddress='127.0.0.1') "
 				+ "AND sessionid='" + sessionId + "'");
 	}
+	
+	public synchronized static boolean getAppIsUpdated(String appId) {
+		return getBoolean("SELECT updated FROM apps WHERE appid='" + appId + "'");
+	}
 
-	public synchronized static void setLastUpdate(String appId) {
-		Date date = null;
-		java.sql.Timestamp timeStamp = null;
-		try {
-			date = new Date();
-			timeStamp = new java.sql.Timestamp(date.getTime());
-			update("UPDATE apps SET statustime='" + timeStamp
-					+ "' where appid='" + appId + "'");
-		} finally {
-			timeStamp = null;
-			date = null;
-		}
+	public synchronized static void setAppIsUpdated(String appId, boolean updated) {
+		int boolInt = updated ? 1: 0;
+		update("UPDATE apps SET updated='" + boolInt + "' WHERE appid='" + appId + "'");
 	}
 
 	public static String getPBKDF2Password(String password) {
@@ -1192,7 +1143,7 @@ public class Database {
 		return sessionId;
 	}
 
-	public static boolean updateApp(String appid, String appName,
+	public static boolean updateAppMetadata(String appid, String appName,
 			String packageName, String versionCode, String versionName) {
 		return update("UPDATE apps SET appname='" + appName
 				+ "', packagename='" + packageName + "', versioncode='"
@@ -1240,8 +1191,7 @@ public class Database {
 	// Deleting an app will not be immediately reflected to users
 	// (other than the user deleting the app) until a new AppVet session is
 	// started. A better but more complex approach is to
-	// update the app's status to "DELETED" and update users' display. However,
-	// it is not clear when the app should be deleted.
+	// update the app's status to "DELETED" and update users' display.
 	public static boolean deleteApp(DeviceOS os, String appid) {
 		final boolean appDeleted = update("DELETE FROM apps " + "where appid='"
 				+ appid + "'");

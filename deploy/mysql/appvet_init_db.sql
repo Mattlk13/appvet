@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.6.16, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.27, for Linux (x86_64)
 --
--- Host: localhost    Database: appvet
+-- Host: 127.0.0.1    Database: appvet
 -- ------------------------------------------------------
--- Server version	5.6.16-log
+-- Server version	5.6.27
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -27,6 +27,11 @@ CREATE TABLE `androidtoolstatus` (
   `registration` varchar(120) DEFAULT NULL,
   `appinfo` varchar(120) DEFAULT NULL,
   `audit` varchar(120) DEFAULT NULL,
+  `fireeye` varchar(120) DEFAULT 'NA',
+  `appollo` varchar(120) DEFAULT 'NA',
+  `androwarn` varchar(120) DEFAULT 'NA',
+  `androidcert` varchar(120) DEFAULT 'NA',
+  `androidmkef` varchar(120) DEFAULT 'NA',
   PRIMARY KEY (`appid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -49,14 +54,14 @@ DROP TABLE IF EXISTS `apps`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `apps` (
   `appid` varchar(32) NOT NULL DEFAULT '',
+  `updated` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `appname` varchar(120) DEFAULT NULL,
   `packagename` varchar(120) DEFAULT NULL,
   `versioncode` varchar(120) DEFAULT NULL,
   `versionname` varchar(120) DEFAULT NULL,
   `filename` varchar(120) DEFAULT NULL,
-  `submittime` timestamp NULL DEFAULT NULL,
+  `submittime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `appstatus` varchar(120) DEFAULT NULL,
-  `statustime` timestamp NULL DEFAULT NULL,
   `username` varchar(120) DEFAULT NULL,
   `clienthost` varchar(120) DEFAULT NULL,
   `os` varchar(10) DEFAULT NULL,
@@ -164,4 +169,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-23 12:51:30
+-- Dump completed on 2015-11-26 11:08:43

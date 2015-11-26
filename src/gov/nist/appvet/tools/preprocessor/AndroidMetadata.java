@@ -429,7 +429,7 @@ public class AndroidMetadata {
 					}
 				}
 				// Update metadata in DB.
-				Database.updateApp(appInfo.appId, appInfo.appName,
+				Database.updateAppMetadata(appInfo.appId, appInfo.appName,
 						appInfo.packageName, appInfo.versionCode,
 						appInfo.versionName);
 				bufferedReader.close();

@@ -37,23 +37,12 @@ import gov.nist.appvet.tools.preprocessor.IOSMetadata;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Random;
 
 /**
  * @author steveq@nist.gov
  */
 public class ToolMgr implements Runnable {
 	private static final Logger log = AppVetProperties.log;
-
-	public static void staggerStart(int maxStagger) {
-		final Random generator = new Random();
-		final int i = maxStagger - generator.nextInt(maxStagger);
-		try {
-			Thread.sleep(i);
-		} catch (final InterruptedException e) {
-			log.error(e.toString());
-		}
-	}
 
 	public ToolMgr() {
 		log.info("*** Starting AppVet Tool Manager "
@@ -120,7 +109,7 @@ public class ToolMgr implements Runnable {
 	@Override
 	public void run() {
 		for (;;) {
-			delay();
+			delay(1000); // Wait to see if another app is processing
 			if (Database.otherAppProcessing()) {
 				// If another app has a status of PROCESSING, no other apps
 				// will be processed. If app is stuck in a PROCESSING status,
@@ -172,7 +161,7 @@ public class ToolMgr implements Runnable {
 											+ " starting " + tool.name);
 									thread.start();
 									// Delay to keep processes from blocking
-									delay();
+									delay(AppVetProperties.TOOL_MGR_STAGGER_INTERVAL);
 								}
 							}
 						}
@@ -206,21 +195,6 @@ public class ToolMgr implements Runnable {
 						}
 						final long endTime = new Date().getTime();
 						final long elapsedTime = endTime - startTime;
-						// AppStatus appStatus =
-						// AppStatusManager.getAppStatus(appid);
-						// if (appStatus == AppStatus.PENDING) {
-						// // If app is still PENDING, an error occurred (e.g.,
-						// there
-						// // were no tools for processing metadata submissions
-						// only).
-						// log.error("App status is still PENDING after tool shutdown. "
-						// + "Setting app status to ERROR.");
-						// AppStatusManager.setAppStatus(appInfo.appId,
-						// AppStatus.ERROR);
-						// } else {
-						// appInfo.log.info("App " + appInfo.appId + " status: "
-						// + appStatus.name());
-						// }
 						appInfo.log.info("Total elapsed: "
 								+ Logger.formatElapsed(elapsedTime));
 						appInfo.log.debug(MemoryUtil
@@ -229,16 +203,16 @@ public class ToolMgr implements Runnable {
 						if (!AppVetProperties.KEEP_APPS) {
 							removeAppFiles(appInfo);
 						}
-						Database.setLastUpdate(appid);
+
 					}
 				}
 			}
 		}
 	}
-
-	public void delay() {
+	
+	public void delay(long ms) {
 		try {
-			Thread.sleep(AppVetProperties.TOOL_MGR_POLLING_INTERVAL);
+			Thread.sleep(ms);
 		} catch (final InterruptedException e) {
 			log.error(e.toString());
 		}
