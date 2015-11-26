@@ -98,6 +98,12 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			}
 		}
 		final String clientIpAddress = getThreadLocalRequest().getRemoteAddr();
+		boolean userExists = 
+				Database.exists("SELECT * FROM users WHERE username='" + username + "'");
+		if (!userExists) {
+			log.error("No such user: " + username);
+			return null;
+		}
 		if (Authenticate.isAuthenticated(username, password)) {
 			Database.updateClientHost(username, clientIpAddress);
 			Database.updateUserLogonTime(username);

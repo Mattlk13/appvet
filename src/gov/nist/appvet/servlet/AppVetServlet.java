@@ -668,6 +668,12 @@ public class AppVetServlet extends HttpServlet {
 	/** This method authenticates a user based on session information. */
 	private boolean authenticateUserNameAndPassword(
 			String userName, String password) {
+		boolean userExists = 
+				Database.exists("SELECT * FROM users WHERE username='" + userName + "'");
+		if (!userExists) {
+			log.error("No such user: " + userName);
+			return false;
+		}
 		if (Authenticate.isAuthenticated(userName, password)) {
 			Database.updateUserLogonTime(userName);
 			return true;

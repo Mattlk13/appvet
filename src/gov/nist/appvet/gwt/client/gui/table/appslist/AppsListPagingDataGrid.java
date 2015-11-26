@@ -118,7 +118,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 					return sb.toSafeHtml();
 					
 				} else if (appStatus == AppStatus.REGISTERING ||
-						appStatus == AppStatus.PROCESSING) {
+						appStatus == AppStatus.PENDING) {
 					iconVersion++; // Forces refresh of icon
 					final String iconPath = appVetHostUrl + "/appvet_images/"
 							+ defaultLargeAppIcon + "?v" + iconVersion;
