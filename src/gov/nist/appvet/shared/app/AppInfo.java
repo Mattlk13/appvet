@@ -23,8 +23,11 @@ import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.shared.Database;
 import gov.nist.appvet.shared.Logger;
 import gov.nist.appvet.shared.os.DeviceOS;
+
 import java.io.File;
+
 import org.apache.commons.fileupload.FileItem;
+import org.apache.http.entity.mime.content.ByteArrayBody;
 
 /**
  * This class is used to define metadata of an app or other uploaded file
