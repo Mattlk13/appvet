@@ -17,49 +17,46 @@
 				<xs:element name="Admin" type="AdminType" maxOccurs="1"
 					minOccurs="1">
 					<xs:annotation>
-						<xs:documentation>The default admin username and password.
+						<xs:documentation>
+							The default admin username and password.
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
 				<xs:element name="Host" type="HostType" maxOccurs="1"
 					minOccurs="1">
 					<xs:annotation>
-						<xs:documentation>The Host element defines properties of the
-							AppVet
-							host.
+						<xs:documentation>
+							The Host element defines properties of the
+							AppVet host.
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-				<xs:element name="Logging" type="LoggingType" maxOccurs="1"
-					minOccurs="1">
-					<xs:annotation>
-						<xs:documentation>The Logging element defines properties of the
-							AppVet logger.
-						</xs:documentation>
-					</xs:annotation>
-				</xs:element>
-				<xs:element name="SingleSignOn" type="SingleSignOnType"
+				<xs:element name="Logging" type="LoggingType"
 					maxOccurs="1" minOccurs="1">
 					<xs:annotation>
-						<xs:documentation>The SingleSignOn defines properties of a single
-							sign-on environment.
+						<xs:documentation>
+							The Logging element defines properties of
+							the AppVet logger.
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
 
-				<xs:element name="Sessions" type="SessionType" maxOccurs="1"
-					minOccurs="1">
+				<xs:element name="UseSSO" type="xs:boolean" maxOccurs="1" minOccurs="1"></xs:element>
+				<xs:element name="Sessions" type="SessionType"
+					maxOccurs="1" minOccurs="1">
 					<xs:annotation>
-						<xs:documentation>The Sessions defines properties of AppVet user
-							sessions.
+						<xs:documentation>
+							The Sessions defines properties of AppVet
+							user sessions.
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
 				<xs:element name="Database" type="DatabaseType"
 					maxOccurs="1" minOccurs="1">
 					<xs:annotation>
-						<xs:documentation>The Database element defines properties of the
-							AppVet database.
+						<xs:documentation>
+							The Database element defines properties of
+							the AppVet database.
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
@@ -67,17 +64,18 @@
 				<xs:element name="ToolServices" type="ToolServicesType"
 					maxOccurs="1" minOccurs="1">
 					<xs:annotation>
-						<xs:documentation>The ToolServices element defines properties
-							common
-							to all AppVet tool service adapters.
+						<xs:documentation>
+							The ToolServices element defines properties
+							common to all AppVet tool service adapters.
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
 				<xs:element name="Apps" type="AppsType" maxOccurs="1"
 					minOccurs="1">
 					<xs:annotation>
-						<xs:documentation>The Apps element defines properties of AppVet
-							apps.
+						<xs:documentation>
+							The Apps element defines properties of
+							AppVet apps.
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
@@ -139,35 +137,6 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:complexType name="SingleSignOnType">
-        <xs:annotation>
-        	<xs:documentation>This value should be set to true ONLY if AppVet is running in a secured single sign-on (SSO) environment. 
-If AppVet is not running in a secured environment and this value is set to true, anyone will be able to log into AppVet.
-</xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-			<xs:element name="SSOActive" type="xs:boolean" maxOccurs="1"
-				minOccurs="1">
-				<xs:annotation>
-					<xs:documentation>
-						The URL element defines the URL of the JDBC
-						database connector. For example,
-						<URL>jdbc:mysql://localhost/appvet</URL>
-						.
-					</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="SSOUserNameParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
-			<xs:element name="SSOPasswordParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
-			<xs:element name="SSOLastNameParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
-			<xs:element name="SSOFirstNameParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
-			<xs:element name="SSOEmailParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
-			<xs:element name="SSOPhoneParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
-			<xs:element name="SSOOrganizationParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
-			<xs:element name="SSODepartmentParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
-			<xs:element name="SSORoleParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
-		</xs:sequence>
-	</xs:complexType>
 
 	<xs:complexType name="DatabaseType">
 		<xs:sequence>

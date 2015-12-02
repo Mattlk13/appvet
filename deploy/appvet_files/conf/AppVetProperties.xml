@@ -23,20 +23,7 @@
 			console. For production deployment, set to false. -->
 		<ToConsole>true</ToConsole>
 	</Logging>
-
-	<SingleSignOn>
-		<SSOActive>true</SSOActive>
-		<SSOUserNameParamName>CAS_Email-Address</SSOUserNameParamName>
-		<SSOPasswordParamName>CAS_Email-Address</SSOPasswordParamName>
-		<SSOLastNameParamName>CAS_Last-Name</SSOLastNameParamName>
-		<SSOFirstNameParamName>CAS_First-Name</SSOFirstNameParamName>
-		<SSOEmailParamName>CAS_Email-Address</SSOEmailParamName>
-		<SSOPhoneParamName>CAS_Phone</SSOPhoneParamName>
-		<SSOOrganizationParamName>CAS_Org-Agency-Name</SSOOrganizationParamName>
-		<SSODepartmentParamName>CAS_Org-Bureau-Name</SSODepartmentParamName>
-		<SSORoleParamName>CAS_Email-Address</SSORoleParamName>
-	</SingleSignOn>
-
+	<UseSSO>true</UseSSO>
 	<Sessions>
 		<Timeout>1800000</Timeout>
 		<GetUpdatesDelay>5000</GetUpdatesDelay>

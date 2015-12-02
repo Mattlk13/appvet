@@ -54,6 +54,7 @@ public class AppVetProperties {
 	public static String APKTOOL_HOME = null;  // For Android only
 	public static String APPVET_SOURCE_HOME = null;
 	public static String APPVET_FILES_HOME = null;
+	public static boolean useSSO = false;
 
 	static {
 		JAVA_HOME = System.getenv("JAVA_HOME");
@@ -197,6 +198,7 @@ public class AppVetProperties {
 		TOOL_TIMEOUT = new Integer(
 				xml.getXPathValue("/AppVet/ToolServices/Timeout")).intValue();
 		printVal("TOOL_TIMEOUT", TOOL_TIMEOUT);
+		useSSO = new Boolean(xml.getXPathValue("/AppVet/UseSSO")).booleanValue();
 		MAX_SESSION_IDLE_DURATION = new Long(
 				xml.getXPathValue("/AppVet/Sessions/Timeout")).longValue();
 		printVal("MAX_SESSION_IDLE_DURATION", MAX_SESSION_IDLE_DURATION);
