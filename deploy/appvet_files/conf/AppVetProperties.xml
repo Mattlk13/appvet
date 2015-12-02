@@ -32,7 +32,7 @@
 	<Database>
 		<URL>jdbc:mysql://localhost</URL>
 		<UserName>root</UserName>
-		<Password>appvet123</Password>
+		<Password>dbpassword1</Password>
 	</Database>
 
 	<ToolServices>
