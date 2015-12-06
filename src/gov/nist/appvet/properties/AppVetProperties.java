@@ -30,6 +30,7 @@ import gov.nist.appvet.toolmgr.ToolAdapter;
 import gov.nist.appvet.xml.XmlUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class AppVetProperties {
 	// Logging
 	public static Logger log = null;
 	private static String APPVET_LOG_NAME = "appvet_log.txt";
-	public static String LOG_PATH = null;
+	public static String APPVET_LOG_PATH = null;
 	public static String LOG_LEVEL = null;
 	public static String LOG_TO_CONSOLE = null;
 	public static String APP_LOG_NAME = "app_log.txt";
@@ -145,10 +146,10 @@ public class AppVetProperties {
 			System.err.println("ERROR: AppVet config file does not exist.");
 		}
 		final XmlUtil xml = new XmlUtil(configFile);
-		LOG_PATH = APPVET_FILES_HOME + "/logs/" + APPVET_LOG_NAME;
+		APPVET_LOG_PATH = APPVET_FILES_HOME + "/logs/" + APPVET_LOG_NAME;
 		LOG_LEVEL = xml.getXPathValue("/AppVet/Logging/Level");
 		LOG_TO_CONSOLE = xml.getXPathValue("/AppVet/Logging/ToConsole");
-		log = new Logger(LOG_PATH, "APPVET");
+		log = new Logger(APPVET_LOG_PATH, "APPVET");
 		log.debug("---------- START AppVet PROPERTIES -------------------",
 				false);
 		printVal("APPVET VERSION", APPVET_VERSION);
@@ -159,12 +160,17 @@ public class AppVetProperties {
 		printVal("APKTOOL_HOME", APKTOOL_HOME);
 		printVal("APPVET_SOURCE_HOME", APPVET_SOURCE_HOME);
 		printVal("APPVET_FILES_HOME", APPVET_FILES_HOME);
-		printVal("LOG_PATH", LOG_PATH);
+		printVal("LOG_PATH", APPVET_LOG_PATH);
 		printVal("LOG_LEVEL", LOG_LEVEL);
 		printVal("LOG_TO_CONSOLE", LOG_TO_CONSOLE);
 		printVal("APP_LOG_NAME", APP_LOG_NAME);
 		APPS_ROOT = APPVET_FILES_HOME + "/apps";
 		printVal("APPS_ROOT", APPS_ROOT);
+		File appsDir = new File(APPS_ROOT);
+		if (!appsDir.exists()) {
+			appsDir.mkdir();	
+			System.out.println("Created apps directory");
+		}
 		TEMP_ROOT = APPVET_FILES_HOME + "/tmp";
 		printVal("TEMP_ROOT", TEMP_ROOT);
 		CONF_ROOT = APPVET_FILES_HOME + "/conf";

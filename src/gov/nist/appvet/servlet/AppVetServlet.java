@@ -738,7 +738,7 @@ public class AppVetServlet extends HttpServlet {
 						"Unauthorized access to AppVet log", true);
 				return;
 			}
-			String appVetLogPath = AppVetProperties.LOG_PATH;
+			String appVetLogPath = AppVetProperties.APPVET_LOG_PATH;
 			File logFile = new File(appVetLogPath);
 			try {
 				if (!logFile.exists()) {
