@@ -1,5 +1,10 @@
+html *
+{
+   font-family: Arial;
+}
+
 h1 {
-	color: blue;
+	color: #707070;
 	font-family: arial;
 	font-size: 42px;
 }
@@ -25,3 +30,4 @@ h4 {
 a:link {
     text-decoration: none;
 }
+
