@@ -33,6 +33,10 @@ import com.google.gwt.user.cellview.client.DataGrid;
  * @author steveq@nist.gov
  */
 public class UsersListPagingDataGrid<T> extends PagingDataGrid<T> {
+	
+	// Turn off sorting of columns for 508 Compliance
+	private final boolean SORTING_ON = false;
+	
 	@Override
 	public void initTableColumns(DataGrid<T> dataGrid,
 			ListHandler<T> sortHandler) {
@@ -45,7 +49,7 @@ public class UsersListPagingDataGrid<T> extends PagingDataGrid<T> {
 				return ((UserInfoGwt) object).getLastName();
 			}
 		};
-		lastNameColumn.setSortable(true);
+		lastNameColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(lastNameColumn, new Comparator<T>() {
 			@Override
 			public int compare(T o1, T o2) {
@@ -64,7 +68,7 @@ public class UsersListPagingDataGrid<T> extends PagingDataGrid<T> {
 				return ((UserInfoGwt) object).getFirstName();
 			}
 		};
-		firstNameColumn.setSortable(true);
+		firstNameColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(firstNameColumn, new Comparator<T>() {
 			@Override
 			public int compare(T o1, T o2) {
@@ -83,7 +87,7 @@ public class UsersListPagingDataGrid<T> extends PagingDataGrid<T> {
 				return ((UserInfoGwt) object).getUserName();
 			}
 		};
-		userIdColumn.setSortable(true);
+		userIdColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(userIdColumn, new Comparator<T>() {
 			@Override
 			public int compare(T o1, T o2) {

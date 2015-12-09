@@ -170,7 +170,7 @@ public class Registration {
 				String appVetImagesUrl = AppVetProperties.URL
 						+ "/images/appvet_logo.png";
 				regReportWriter.write("<img border=\"0\" width=\"192px\" src=\""
-						+ appVetImagesUrl + "\" alt=\"appvet\" />");
+						+ appVetImagesUrl + "\" alt=\"AppVet Mobile App Vetting System\" />");
 				regReportWriter.write("<HR>\n");
 				regReportWriter.write("<h3>Registration Report</h3>\n");
 				regReportWriter.write("<pre>\n");

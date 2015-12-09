@@ -125,16 +125,18 @@ public class ReportUploadDialogBox extends DialogBox {
 		verticalPanel.setCellHorizontalAlignment(grid,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.setCellWidth(grid, "100%");
-		final Label labelAnalyst = new Label("User:");
-		labelAnalyst.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		labelAnalyst.setStyleName("reportUploadLabel");
-		grid.setWidget(0, 0, labelAnalyst);
-		labelAnalyst.setWidth("");
+		final Label userLabel = new Label("User:");
+		userLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		userLabel.setStyleName("reportUploadLabel");
+		grid.setWidget(0, 0, userLabel);
+		userLabel.setWidth("");
 		final TextBox analystTextBox = new TextBox();
+		analystTextBox.setName("User");
+		analystTextBox.setTitle("User is non-editable");
 		analystTextBox.setAlignment(TextAlignment.LEFT);
 		analystTextBox.setText(username);
-		analystTextBox.setEnabled(true);
-		analystTextBox.setReadOnly(true);
+		analystTextBox.setEnabled(false);
+		//analystTextBox.setReadOnly(true);
 		grid.setWidget(0, 1, analystTextBox);
 		grid.getCellFormatter().setHeight(0, 1, "18px");
 		grid.getCellFormatter().setWidth(0, 1, "200px");
@@ -147,10 +149,12 @@ public class ReportUploadDialogBox extends DialogBox {
 		grid.getCellFormatter().setHeight(1, 1, "18px");
 		grid.getCellFormatter().setWidth(1, 1, "300px");
 		final TextBox appIdTextBox = new TextBox();
+		appIdTextBox.setName("App ID");
+		appIdTextBox.setTitle("App ID is non-editable");
 		appIdTextBox.setAlignment(TextAlignment.LEFT);
 		appIdTextBox.setText(appid);
-		appIdTextBox.setEnabled(true);
-		appIdTextBox.setReadOnly(true);
+		appIdTextBox.setEnabled(false);
+		//appIdTextBox.setReadOnly(true);
 		grid.setWidget(1, 1, appIdTextBox);
 		grid.getCellFormatter().setStyleName(1, 1, "reportUploadWidget");
 		appIdTextBox.setSize("220px", "18px");
@@ -160,6 +164,8 @@ public class ReportUploadDialogBox extends DialogBox {
 		toolNameLabel.setWidth("90px");
 		grid.getCellFormatter().setWidth(2, 1, "200px");
 		toolNamesComboBox = new ListBox();
+		toolNamesComboBox.setName("Tool");
+		toolNamesComboBox.setTitle("Select tool for uploaded report");
 		grid.setWidget(2, 1, toolNamesComboBox);
 		grid.getCellFormatter().setHeight(2, 1, "18px");
 		grid.getCellFormatter().setStyleName(2, 1, "reportUploadWidget");
@@ -200,6 +206,7 @@ public class ReportUploadDialogBox extends DialogBox {
 			}
 		});
 		fileUpload.setName("fileupload");
+		fileUpload.setTitle("Select report to upload");
 		grid.setWidget(3, 1, fileUpload);
 		grid.getCellFormatter().setHeight(3, 1, "18px");
 		grid.getCellFormatter().setStyleName(3, 1, "reportUploadWidget");
@@ -252,7 +259,8 @@ public class ReportUploadDialogBox extends DialogBox {
 		grid.getCellFormatter().setVerticalAlignment(4, 1,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		ListBox toolRiskComboBox = new ListBox();
-		toolRiskComboBox.setName("toolrisk");
+		toolRiskComboBox.setName("Risk");
+		toolRiskComboBox.setTitle("Select security risk");
 		toolRiskComboBox.addItem("LOW");
 		toolRiskComboBox.addItem("MODERATE");
 		toolRiskComboBox.addItem("HIGH");

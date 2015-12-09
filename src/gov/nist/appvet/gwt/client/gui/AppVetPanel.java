@@ -144,6 +144,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	private static boolean searchMode = false;
 	private MenuItem accountMenuItem = null;
 	private boolean newBrowserEvent = true;
+	
 
 	class AppListHandler implements SelectionChangeEvent.Handler {
 
@@ -192,6 +193,7 @@ public class AppVetPanel extends DockLayoutPanel {
 									String appNameHtml = null;
 									// Set app icon
 									appInfoIcon.setVisible(true);
+									appInfoIcon.setAltText("App Icon");
 
 									if (selectedApp.appStatus == AppStatus.REGISTERING) {
 										//log.info("Displaying REGISTERING");
@@ -295,7 +297,7 @@ public class AppVetPanel extends DockLayoutPanel {
 							public String getHtmlToolResults(String appId,
 									List<ToolStatusGwt> toolResults) {
 								/* Get pre-processing analysis results */
-								String statuses = "<hr><div id=\"appInfoSectionHeader\">PreProcessing</div>\n";
+								String statuses = "<hr><div title=\"PreProcessing\" id=\"appInfoSectionHeader\">PreProcessing</div>\n";
 								int preprocessorToolCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -314,7 +316,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 
 								// Get tool and manually-uploaded results.
-								statuses += "<hr><div id=\"appInfoSectionHeader\">Tools</div>\n";
+								statuses += "<hr><div title=\"Tools\"  id=\"appInfoSectionHeader\">Tools</div>\n";
 								int analysisToolCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -334,7 +336,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 
 								/* Get audit results */
-								statuses += "<hr><div id=\"appInfoSectionHeader\">Override</div>\n";
+								statuses += "<hr><div title=\"Override\" id=\"appInfoSectionHeader\">Override</div>\n";
 								int auditCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -637,9 +639,10 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel_5.setSize("100%", "");
 		northAppVetPanel.setCellWidth(horizontalPanel_5, "100%");
 		final InlineHTML nlnhtmlNewInlinehtml_1 = new InlineHTML(
-				"<img border=\"0\" width=\"185px\" src=\"images/appvet_logo.png\" alt=\"appvet\" />");
+				"<img border=\"0\" width=\"185px\" src=\"images/appvet_logo.png\" alt=\"AppVet Mobile App Vetting System\" />");
 		nlnhtmlNewInlinehtml_1
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		nlnhtmlNewInlinehtml_1.setTitle("AppVet Mobile App Vetting System");
 		nlnhtmlNewInlinehtml_1.setStyleName("");
 		horizontalPanel_5.add(nlnhtmlNewInlinehtml_1);
 		nlnhtmlNewInlinehtml_1.setHeight("");
@@ -711,6 +714,8 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 
 		Image orgLogo = new Image("images/org_logo.png");
+		orgLogo.setAltText("Organizational logo here");
+		orgLogo.setTitle("Organizational logo here");
 		horizontalPanel_5.add(orgLogo);
 		horizontalPanel_5.setCellVerticalAlignment(orgLogo,
 				HasVerticalAlignment.ALIGN_MIDDLE);
@@ -730,10 +735,16 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel_3.setCellVerticalAlignment(appVetMenuBar,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appVetMenuBar.setStyleName("appVetMenuBar");
-		appVetMenuBar.setAutoOpen(true);
+		appVetMenuBar.setAutoOpen(false);
 		appVetMenuBar.setSize("250px", "");
 		appVetMenuBar.setAnimationEnabled(false);
+		appVetMenuBar.setFocusOnHoverEnabled(true);
+		
+		
+		
 		final MenuBar userMenuBar = new MenuBar(true);
+		userMenuBar.setFocusOnHoverEnabled(true);
+
 		accountMenuItem = new MenuItem(userInfo.getFirstName(), true,
 				userMenuBar);
 		userMenuBar.setHeight("");
@@ -823,6 +834,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		appVetMenuBar.addItem(accountMenuItem);
 		accountMenuItem.setHeight("");
 		final MenuBar helpMenuBar = new MenuBar(true);
+		helpMenuBar.setFocusOnHoverEnabled(true);
+		
 		final MenuItem helpMenuItem = new MenuItem("Help", true, helpMenuBar);
 		helpMenuBar.setHeight("");
 		final MenuItem aboutMenuItem = new MenuItem("About", false,
@@ -854,6 +867,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		helpMenuBar.addItem(documentationMenuItem);
 		documentationMenuItem.setHeight("");
 		appVetMenuBar.addItem(helpMenuItem);
+
+	              
 		helpMenuItem.setHeight("");
 		helpMenuBar.addItem(aboutMenuItem);
 		aboutMenuItem.setHeight("");
@@ -868,6 +883,8 @@ public class AppVetPanel extends DockLayoutPanel {
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 		statusMessageLabel.setSize("420px", "18");
 		final MenuBar adminMenuBar = new MenuBar(true);
+		adminMenuBar.setFocusOnHoverEnabled(true);
+		
 		final MenuItem adminMenuItem = new MenuItem("Admin", true, adminMenuBar);
 		final MenuItem mntmAppVetLog = new MenuItem("AppVet Log", false,
 				new Command() {
@@ -974,6 +991,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsListButtonPanel.setStyleName("appListButtonPanel");
 		appsListButtonPanel.setSize("100%", "");
 		appsLabel = new InlineLabel("Apps");
+		appsLabel.setTitle("List of apps");
 		appsLabel.setStyleName("AppsLabel");
 		appsListButtonPanel.add(appsLabel);
 		appsListButtonPanel.setCellVerticalAlignment(appsLabel,
@@ -1004,7 +1022,7 @@ public class AppVetPanel extends DockLayoutPanel {
 						SERVLET_URL);
 				appUploadDialogBox.setText("Submit App");
 				appUploadDialogBox.center();
-				appUploadDialogBox.cancelButton.setFocus(true);
+				//appUploadDialogBox.cancelButton.setFocus(true);
 				appUploadDialogBox.cancelButton
 						.addClickHandler(new ClickHandler() {
 							@Override
@@ -1128,7 +1146,9 @@ public class AppVetPanel extends DockLayoutPanel {
 						reportUploadDialogBox.setText("Upload Report for "
 								+ selected.appName);
 						reportUploadDialogBox.center();
-						reportUploadDialogBox.cancelButton.setFocus(true);
+						//reportUploadDialogBox.cancelButton.setFocus(true);
+						reportUploadDialogBox.toolNamesComboBox.setFocus(true);
+
 						reportUploadDialogBox.cancelButton
 								.addClickHandler(new ClickHandler() {
 									@Override
@@ -1577,7 +1597,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		userAcctDialogBox = new UserAcctDialogBox(configInfo);
 		userAcctDialogBox.setText("Account Settings");
 		userAcctDialogBox.center();
-		userAcctDialogBox.okButton.setFocus(true);
+		userAcctDialogBox.password1TextBox.setFocus(true);
 		userAcctDialogBox.okButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

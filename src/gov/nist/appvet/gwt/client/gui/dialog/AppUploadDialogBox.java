@@ -77,6 +77,7 @@ public class AppUploadDialogBox extends DialogBox {
 		mainLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		mainLabel.setSize("366px", "18px");
 		uploadAppFileForm = new FormPanel();
+	
 		verticalPanel.add(uploadAppFileForm);
 		uploadAppFileForm.setAction(servletURL);
 		uploadAppFileForm.setMethod(FormPanel.METHOD_POST);
@@ -99,6 +100,7 @@ public class AppUploadDialogBox extends DialogBox {
 		hiddenParamsPanel.add(hiddenSessionId);
 		hiddenSessionId.setWidth("");
 		fileUpload = new FileUpload();
+		
 		fileUpload.addChangeHandler(new ChangeHandler() {
 			public void onChange(ChangeEvent arg0) {
 				submitButton.setEnabled(true);

@@ -260,6 +260,7 @@ public class UserAcctDialogBox extends DialogBox {
 		horizontalPanel_6.setCellWidth(lblNewLabel_3, "50%");
 		lblNewLabel_3.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		password1TextBox = new PasswordTextBox();
+		password1TextBox.setTitle("Type new password");
 		password1TextBox.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -295,6 +296,8 @@ public class UserAcctDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		lblNewLabel_4.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		password2TextBox = new PasswordTextBox();
+		password2TextBox.setTitle("Type new password again");
+
 		password2TextBox.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

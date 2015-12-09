@@ -42,6 +42,10 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
  * @author steveq@nist.gov
  */
 public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
+	
+	// Turn off sorting of columns for 508 Compliance
+	private final boolean SORTING_ON = false;
+	
 	private final DateTimeFormat dateTimeFormat = DateTimeFormat
 			.getFormat("yyyy-MM-dd HH:mm:ss");
 	private String appVetHostUrl = null;
@@ -59,7 +63,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 				return ((AppInfoGwt) object).appId;
 			}
 		};
-		appIdColumn.setSortable(true);
+		appIdColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(appIdColumn, new Comparator<T>() {
 			@Override
 			public int compare(T o1, T o2) {
@@ -70,7 +74,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		appIdColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dataGrid.addColumn(appIdColumn, "ID");
 		dataGrid.setColumnWidth(appIdColumn, "50px");
-		
+		dataGrid.setTitle("Apps list");
 		// Platform/OS Icon 
 		final SafeHtmlCell osIconCell = new SafeHtmlCell();
 		final Column<T, SafeHtml> osIconColumn = new Column<T, SafeHtml>(
@@ -86,9 +90,9 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 					// log.info("App status in table is: " + os);
 				}
 				if (os == DeviceOS.ANDROID) {
-					sb.appendHtmlConstant("<img width=\"10\" src=\"images/android_logo_black.png\"  alt=\"\" />");
+					sb.appendHtmlConstant("<img width=\"10\" src=\"images/android_logo_black.png\"  alt=\"Android\" />");
 				} else if (os == DeviceOS.IOS) {
-					sb.appendHtmlConstant("<img width=\"10\" src=\"images/ios_logo_black.png\"  alt=\"\" />");
+					sb.appendHtmlConstant("<img width=\"10\" src=\"images/ios_logo_black.png\"  alt=\"iOS\" />");
 				}
 				return sb.toSafeHtml();
 			}
@@ -123,19 +127,19 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 					final String iconPath = appVetHostUrl + "/appvet_images/"
 							+ defaultLargeAppIcon + "?v" + iconVersion;
 					sb.appendHtmlConstant("<img width=\"20\" src=\"" + iconPath
-							+ "\" alt=\"\" />");
+							+ "\" alt=\"App Icon\" />");
 					} else {
 						iconVersion++;
 						final String iconPath = appVetHostUrl + "/appvet_images/"
 								+ appId + ".png?v" + iconVersion;
 						sb.appendHtmlConstant("<img width=\"20\" src=\"" + iconPath
-								+ "\" alt=\"\" />");
+								+ "\" alt=\"App Icon\" />");
 					}
 				return sb.toSafeHtml();
 			}
 		};
 		iconColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		iconColumn.setSortable(false);
+		iconColumn.setSortable(SORTING_ON);
 		dataGrid.addColumn(iconColumn, "");
 		dataGrid.setColumnWidth(iconColumn, "25px");
 		
@@ -147,7 +151,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 				return ((AppInfoGwt) object).appName;
 			}
 		};
-		appNameColumn.setSortable(true);
+		appNameColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(appNameColumn, new Comparator<T>() {
 			@Override
 			public int compare(T o1, T o2) {
@@ -192,7 +196,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 			}
 		};
 		statusColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		statusColumn.setSortable(true);
+		statusColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(statusColumn, new Comparator<T>() {
 			@Override
 			public int compare(T o1, T o2) {
@@ -211,7 +215,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 				return ((AppInfoGwt) object).ownerName;
 			}
 		};
-		submitterColumn.setSortable(true);
+		submitterColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(submitterColumn, new Comparator<T>() {
 			@Override
 			public int compare(T o1, T o2) {
@@ -235,7 +239,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 				return dateString;
 			}
 		};
-		submitTimeColumn.setSortable(true);
+		submitTimeColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(submitTimeColumn, new Comparator<T>() {
 			@Override
 			public int compare(T o1, T o2) {

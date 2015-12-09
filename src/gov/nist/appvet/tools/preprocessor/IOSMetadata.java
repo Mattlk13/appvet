@@ -199,7 +199,7 @@ public class IOSMetadata {
 			String appVetImagesUrl = AppVetProperties.URL
 					+ "/images/appvet_logo.png";
 			appinfoReport.write("<img border=\"0\" width=\"192px\" src=\""
-					+ appVetImagesUrl + "\" alt=\"appvet\" />");
+					+ appVetImagesUrl + "\" alt=\"AppVet Mobile App Vetting System\" />");
 			appinfoReport.write("<HR>\n");
 			appinfoReport
 					.write("<h3>iOS Metadata Pre-Processing Report</h3>\n");

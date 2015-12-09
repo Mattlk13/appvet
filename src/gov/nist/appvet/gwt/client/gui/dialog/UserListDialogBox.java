@@ -328,16 +328,20 @@ public class UserListDialogBox extends DialogBox {
 			userInfoDialogBox.changePasswordCheckBox.setEnabled(false);
 			userInfoDialogBox.password1TextBox.setEnabled(true);
 			userInfoDialogBox.password2TextBox.setEnabled(true);
+			userInfoDialogBox.lastNameTextBox.setFocus(true);
 		} else {
 			user = usersSelectionModel.getSelectedObject();
 			userInfoDialogBox = new UserAcctAdminDialogBox(user,
 					usersListTable, allUsers);
+			
 			userInfoDialogBox.changePasswordCheckBox.setChecked(false);
 			userInfoDialogBox.password1TextBox.setEnabled(false);
 			userInfoDialogBox.password2TextBox.setEnabled(false);
+			userInfoDialogBox.lastNameTextBox.setFocus(true);
+
 		}
 		userInfoDialogBox.center();
-		userInfoDialogBox.cancelButton.setFocus(true);
+		//userInfoDialogBox.cancelButton.setFocus(true);
 		userInfoDialogBox.cancelButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

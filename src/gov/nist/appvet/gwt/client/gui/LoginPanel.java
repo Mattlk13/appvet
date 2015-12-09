@@ -101,6 +101,8 @@ public class LoginPanel extends DockLayoutPanel {
 		horizontalPanel.setSize("100%", "100%");
 
 		Image orgLogo = new Image("images/org_logo.png");
+		orgLogo.setAltText("Organizational logo here");
+		orgLogo.setTitle("Organizational logo here");
 		orgLogo.setStyleName("nistLoginLogo");
 		horizontalPanel.add(orgLogo);
 		horizontalPanel.setCellHorizontalAlignment(orgLogo,
@@ -183,6 +185,8 @@ public class LoginPanel extends DockLayoutPanel {
 		verticalPanel.setSize("300px", "90px");
 
 		final Image appVetImage = new Image("images/appvet_logo.png");
+		appVetImage.setTitle("AppVet Mobile App Vetting System");
+		appVetImage.setAltText("AppVet Mobile App Vetting System");
 
 		appVetImage.setStyleName("loginPanelLogo");
 
