@@ -31,7 +31,7 @@ h1 {
 }
 
 .serverResponseLabelError {
-	color: red;
+	color: #990000;
 }
 
 /** Set ids using widget.getElement().setId("idOfElement") */
@@ -113,14 +113,14 @@ h1 {
 }
 
 .errorDialogBox {
-	color: red;
+	color: #990000;
 	font-size: 14px;
 	vertical-align: middle;
 	text-align: center;
 }
 
 errorMessage {
-	color: red;
+	color: #990000;
 	font-size: 14px;
 	font-weight: bold;
 	vertical-align: middle;
@@ -142,7 +142,7 @@ searchPanel {
 
 .splitPanel {
 	color: White;
-	border: 1px Red;
+	border: 1px #990000;
 	background-color: White;
 }
 
@@ -205,7 +205,7 @@ searchPanel {
 }
 
 .appLogoError {
-	color: Red;
+	color: #990000;
 	padding-bottom: 10px;
 	padding-left: 10px;
 	font-size: 18px;
@@ -248,7 +248,7 @@ searchPanel {
 
 .tableitembad {
 	text-align: left;
-	color: red;
+	color: #990000;
 	font-size: 12px
 }
 
@@ -413,11 +413,11 @@ searchPanel {
 }
 
 .devModeIndicator {
-	color: Red;
+	color: #990000;
 }
 
 .deleteConfirmDialog {
-	color: Red;
+	color: #990000;
 	font-size: 16px;
 }
 
@@ -758,11 +758,11 @@ searchPanel {
 	border-left: 0px solid Maroon;
 }
 .appInfoHtml2 {
-	border: 1px dashed Red;
+	border: 1px dashed #990000;
 }
 
 .eastDockPanel {
-	border: 1px dashed Red;
+	border: 1px dashed #990000;
 }
 
 .leftCenterPanel {
