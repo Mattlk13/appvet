@@ -15,24 +15,14 @@
 	<hr>
 	<h2 id="app_vetting">What is App Vetting?</h2>
 	App vetting is a process for ensuring the security, reliability, and
-	efficiency of mobile applications. This process is performed on an app
+	efficiency of mobile applications (or <i>apps</i>). This process is performed on an app
 	after the app has been developed and released for distribution but
-	prior to its deployment on an organization's mobile device. Thus, an
+	prior to its deployment on an organization&lsquo;s mobile device. Thus, an
 	app vetting process is distinguished from software assurance processes
 	that may occur during the software development life cycle of an app.
 	Note that an app vetting process typically involves analysis of an
-	app’s compiled, binary representation but can also involve analysis of
-	the app’s source code if it is available. Figure 1 shows a general app
-	vetting process:
-	<br>
-	<br>
-	<center>
-		<img src="images/app_vetting_process.png" alt="App Vetting Process"
-			style="height: 400px;"> <br> <br>
-		<p class="cap">Figure 1. General App Vetting Process.</p>
-	</center>
-	<br>
-	<br> An app vetting process comprises a sequence of activities:
+	app&lsquo;s compiled, binary representation but can also involve analysis of
+	the app&lsquo;s source code if it is available. An app vetting process comprises a sequence of activities:
 
 	<ul>
 		<li>App Submission</li>
@@ -42,29 +32,29 @@
 		<li>App Deployment</li>
 	</ul>
 
+
 	<p>
 		An app vetting process begins when an app is submitted by an <i>Administrator</i>
 		or <i>Mobile Device Administrator (MDM)</i> to an <i>Analyst</i> for
-		processing. testing. An Administrator/MDM is a member of the
+		processing. An Administrator or MDM is a member of the
 		organization who is responsible for deploying, maintaining, and
-		securing an organization's mobile devices as well as ensuring that
+		securing an organization&lsquo;s mobile devices as well as ensuring that
 		deployed devices and their installed apps conform to the
-		organization's security requirements. An Analyst is a member of the
+		organization&lsquo;s security requirements. An Analyst is a member of the
 		organization that is responsible for managing the app vetting process.
-		Apps that are submitted by an Administrator/MDM for testing may be
+		Apps that are submitted by an Administrator or MDM for testing may be
 		acquired from a number of third-party sources including app stores,
 		web sites, or directly from developers. Note that the activities
-		surrounding an Administrator's acquisition of an app are not part of
+		surrounding an Administrator&lsquo;s acquisition of an app are not part of
 		an app vetting process.
 	</p>
 
 	<p>
 		When an Analyst receives an app for processing, the Analyst may
-		conduct some pre-processing of the app that may include decompiling
-		the app and extracting meta-data from the app. After an app has been
-		pre-processed by an Analyst, the Analyst then tests the app for the
-		presence of software vulnerabilities by submitting the app to one or
-		more <i>Analyzers</i>. An Analyzer is a tool, service, or human that
+		conduct some pre-processing of the app to extra meta-data from the app and
+		to ensure that the app is fit for processing. After an app has been
+		pre-processed, the Analyst then submits the app to one or
+		more <i>Analyzers</i> for testing. An Analyzer is a testing tool, testing service, or human that
 		tests an app for specific software vulnerabilities. After testing an
 		app, an Analyzer will generates a report that identifies detected
 		software vulnerabilities. In addition, the analyzer generates a risk
@@ -72,7 +62,7 @@
 		will be exploited and the impact that the detected vulnerability may
 		have on the app or its related device or network. Risk assessments are
 		typically represented as ordinal values indicating the severity of the
-		risk (e.g., low-, moderate-, and high-risk).
+		risk (e.g., low-, moderate-, or high-risk).
 	</p>
 
 	<p>
@@ -83,7 +73,8 @@
 		an app meets the security requirements of the organization. An Auditor
 		also evaluates additional criteria to determine if the app violates
 		any organization-specific security requirements that cannot be
-		ascertained by the Analyzers (e.g., Apps must not record audio or
+		ascertained by the Analyzers. Such requirements typically pertain to 
+		restrictions surrounding the use of the app (e.g., Apps must not record audio or
 		video).
 	</p>
 	<p>
@@ -94,23 +85,31 @@
 		security posture of the app. This recommendation is made available to
 		an <i>Approver</i> who is a high-level member of the organization
 		responsible for determining which apps may be deployed on the
-		organization's mobile devices. An Approver uses the recommendations
-		provided by one or more Auditors that describe the security posture of
-		the app, as well as other non-security-related criteria, to determine
-		the organization's official approval or rejection of an app. If an app
+		organization&lsquo;s mobile devices. An Approver uses the recommendations
+		provided by one or more Auditors, as well as possibly other criteria, to determine
+		the organization&lsquo;s official approval or rejection of an app. If an app
 		is approved by the Approver, the Administrator is then permitted to
 		deploy the app on the organization's mobile devices. If, however, the
 		app is rejected, the organization will follow specified procedures for
 		identifying a suitable alternative app or rectifying issues with the
-		problematic app.
+		problematic app.Figure 1 shows this general app vetting process:
 	</p>
+	<br>
+	<br>
+	<center>
+		<img src="images/app_vetting_process.png" alt="App Vetting Process"
+			style="height: 400px;"> <br> <br>
+		<p class="cap">Figure 1. General App Vetting Process.</p>
+	</center>
+	<br>
+	<br> 
 
 	<h2 id="appvet">AppVet</h2>
 	AppVet is a web application and service for managing and automating the
 	app vetting process. AppVet facilitates the app vetting workflow by
 	providing an intuitive user interface for submitting and testing apps,
-	managing reports, and assessing risk. Through the specification of APIs
-	and requirements, AppVet is designed to easily and seamlessly integrate
+	managing reports, and assessing risk. Through the specification of APIs, 
+	schemas and requirements, AppVet is designed to easily and seamlessly integrate
 	with a wide variety of clients including users, apps stores, and
 	continuous integration environments as well as third-party tools
 	including static and dynamic analyzers, anti-virus scanners, and
@@ -121,19 +120,23 @@
 		clients. In an AppVet system, the app vetting workflow begins when a
 		client submits an app to AppVet. When AppVet receives an app, it
 		registers the app and performs some pre-processing of the app. After
-		preprocessing an app, AppVet sends the app and related information to
-		one or more Analyzers for testing and evaluation. When an Analyzer
+		pre-processing an app, AppVet sends the app and related information to
+		one or more Analyzers for testing. When an Analyzer
 		completes its testing, it returns a report and risk assessment to
-		AppVet which, in turn, makes them available to the user or client. In
-		addition, AppVet can compute an overall risk assessment based on risk
-		assessments from all Analyzers. The AppVet system distributed
+		AppVet. When AppVet receives reports and risk assessments from all 
+		Analyzers, it then computes an overall risk assessment and make this
+		information, along with all reports and risk assessments, available to 
+		one or more Auditors that, in turn, will use this information to derive a recommendation 
+		for approving or rejecting an app. This recommendation will then be used 
+		by an Approver to officially approve or reject the app for deployment on 
+		the organization's mobile devices. The AppVet system 
 		architecture is shown in Figure 2.</p>
 	<br>
 	<br>
 	<center>
 		<img src="images/appvet_system.png" alt="AppVet"
 			style="height: 400px;"> <br> <br>
-		<p class="cap">Figure 2. AppVet system distributed architecture.</p>
+		<p class="cap">Figure 2. AppVet system architecture.</p>
 	</center>
 	<br>
 	<br>
@@ -143,7 +146,7 @@
 		as Administrators/MDMs, developers and analysts) and applications
 		(such as app stores and continuous integration environments). Using a
 		web browser, users access AppVet via the AppVet User Interface (UI)
-		shown in Figure 3. The AMI provides support for uploading apps,
+		shown in Figure 3. The AppVet UI provides support for uploading apps,
 		accessing reports and assessing risk. Client applications, on the
 		other hand, access AppVet through the AppVet API.</p>
 	<br>
@@ -159,20 +162,15 @@
 
 	An AppVet system comprises Analyzers that test apps for software
 	vulnerabilities. In a manual app vetting process, an Analyzer may be a
-	third-party tool, service, or human that tests an app for specific
+	third-party testing tool, testing service, or human that tests an app for specific
 	software vulnerabilities. To facilitate automated testing of an app,
-	however, AppVet requires that Analyzers be made available as an online
-	service. In some cases, third-party vendors will provide app testing as
-	a service. In other cases, however, a service must be created that
-	"wraps" an existing standalone tool, allowing the tool to receive apps
-	from AppVet and send reports and risk assessments to AppVet. AppVet
-	supports the integration of third-party tool services by providing
-	APIs, protocols, and other specifications. In the case of standalone
-	tools, AppVet also provides a
+	however, AppVet requires that Analyzers be made available as online
+	testing services. AppVet
+	supports the integration of third-party testing services by providing
+	APIs, protocols, and other specifications. For standalone tools, 
+	AppVet also provides a
 	<i>service wrapper</i> that can be used to convert a standalone tool
-	into an online tool service.
-
-
+	into an online testing service.
 
 </body>
 

@@ -25,9 +25,10 @@
 	<h3>Installation</h3>
 
 	AppVet requires Oracle Java JDK 8 to be installed. Note that some Linux
-	platforms may come preinstalled with OpenJDK Java packages which must
-	first be uninstalled and removed. To view a list of preinstalled
-	OpenJDK packages of Java, run:
+	platforms may come preinstalled with OpenJDK Java packages which may
+	need to be uninstalled and removed so that they do not conflict with
+	Oracle Java. To view a list of preinstalled OpenJDK packages of Java,
+	run:
 
 	<p style="text-indent: 5em;">
 		<code># rpm -aq | grep -i java</code>
@@ -40,15 +41,17 @@
 		<code># sudo rpm -e &lt;package_name&gt;</code>
 	</p>
 
-	for each OpenJDK Java. Note that other applications (e.g., libreoffice)
-	might be dependent on OpenJDK and should be uninstalled (e.g., using
+	for each OpenJDK Java package. Note that other applications (e.g.,
+	libreoffice) might be dependent on OpenJDK and should be uninstalled
+	(e.g., using
 	<code>yum remove libraoffice*</code>
-	) prior to uninstalling OpenJDK.
-	<br> Next, download Oracle Java JDK 8 from:
+	) prior to uninstalling OpenJDK. After OpenJDK has been uninstalled and
+	removed, download Oracle Java JDK 8 from:
 
 	<p style="text-indent: 5em;">
 		<a
-			href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">
+			href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html"
+			target="_blank">
 			http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 		</a>
 	</p>
@@ -71,7 +74,7 @@
 	</p>
 
 
-	For Oracle JDK 8, the correct version should be 1.8.0_60. 1.2.1.2.
+	For Oracle JDK 8, the correct version should be 1.8.x.
 
 	<h3>Environment Variables</h3>
 
@@ -80,11 +83,11 @@
 	and
 	<code>$JRE_HOME</code>
 	(Java Runtime Environment) environment variables must be globally
-	defined. Edit (using
+	defined. Using
 	<code>sudo</code>
-	)
+	, edit
 	<code>/etc/profile</code>
-	by adding the following at the end of the file:
+	by adding the following to the end of the file:
 
 	<p>
 		<code>
@@ -95,10 +98,15 @@
 		</code>
 	</p>
 
-	then reload
+	Next, reload
 	<code>/etc/profile</code>
 	by running:
-	<code># source /etc/profile</code>
+
+	<p style="text-indent: 5em;">
+		<code># source /etc/profile</code>
+	</p>
+
+
 	in all open terminals. To verify that
 	<code>$JAVA_HOME</code>
 	and
@@ -106,7 +114,11 @@
 	have been added to your
 	<code>$PATH</code>
 	variable, run:
-	<code># printenv PATH</code>
+
+	<p style="text-indent: 5em;">
+		<code># printenv PATH</code>
+	</p>
+
 	Next, to allow
 	<code>$JAVA_HOME</code>
 	and
@@ -114,11 +126,21 @@
 	to be accessed when using
 	<code>sudo</code>
 	, open a terminal and run:
-	<code># sudo visudo</code>
+
+
+	<p style="text-indent: 5em;">
+		<code># sudo visudo</code>
+	</p>
+
+
 	From
 	<code>visudo</code>
 	, add the following line:
-	<code>Defaults env_keep += "JAVA_HOME JRE_HOME"</code>
+
+	<p style="text-indent: 5em;">
+		<code>Defaults env_keep += "JAVA_HOME JRE_HOME"</code>
+	</p>
+
 	This will force
 	<code>sudo</code>
 	to preserve and use the
@@ -136,9 +158,18 @@
 	are now accessible to
 	<code>sudo</code>
 	, run:
-	<code># sudo printenv JAVA_HOME</code>
+
+	<p style="text-indent: 5em;">
+		<code># sudo printenv JAVA_HOME</code>
+	</p>
+
 	and
-	<code># sudo printenv JRE_HOME</code>
+
+	<p style="text-indent: 5em;">
+		<code># sudo printenv JRE_HOME</code>
+	</p>
+
+
 
 	<h2 id="mysql">MySQL</h2>
 
@@ -147,7 +178,7 @@
 	data. To install MySQL 5, open a browser and go to:
 
 	<p style="text-indent: 5em;">
-		<a href="http://dev.mysql.com/downloads/mysql/">
+		<a href="http://dev.mysql.com/downloads/mysql/" target="_blank">
 			http://dev.mysql.com/downloads/mysql/ </a>
 	</p>
 
@@ -188,28 +219,23 @@
 
 	<h2 id="tomcat">Apache Tomcat</h2>
 	<h3>Installation</h3>
-	Installation AppVet requires Apache Tomcat 8 to be installed. Tomcat is
-	used to host AppVet as a web application and service. For AppVet, it is
-	recommended to install Tomcat into the user's
+	AppVet requires Apache Tomcat 8 to be installed. Tomcat is used to host
+	AppVet as a web application and service. For AppVet, it is recommended
+	to install Tomcat into the user's
 	<code>$HOME</code>
 	directory. To install Apache Tomcat 8 under CentOS/RedHat, open a
 	browser and go to:
 
 	<p style="text-indent: 5em;">
-		<a href="http://tomcat.apache.org/download-80.cgi">
-			http://dev.mysql.com/downloads/mysql/ </a>
+		<a href="https://tomcat.apache.org/download-80.cgi" target="_blank">
+			https://tomcat.apache.org/download-80.cgi </a>
 	</p>
 
 
 
-	Next, download the Apache Tomcat 8.0.26 Binary Distribution Core
+	Next, download the Apache Tomcat 8.x Binary Distribution Core
 	<code>tar.gz</code>
-	file and move the downloaded file from your
-	<code>$HOME/Downloads</code>
-	to your
-	<code>$HOME</code>
-	directory. Then, open a terminal to extract the compressed tar file
-	into
+	file and extract the compressed tar file into
 	<code>$HOME</code>
 	:
 
@@ -226,7 +252,8 @@
 	Then, open a web browser and go to:
 
 	<p style="text-indent: 5em;">
-		<a href="http://127.0.0.1:8080"> http://127.0.0.1:8080 </a>
+		<a href="http://127.0.0.1:8080" target="_blank">
+			http://127.0.0.1:8080 </a>
 	</p>
 
 
@@ -234,26 +261,19 @@
 	or
 
 	<p style="text-indent: 5em;">
-		<a href="http://localhost:8080"> http://localhost:8080 </a>
+		<a href="http://localhost:8080" target="_blank">
+			http://localhost:8080 </a>
 	</p>
 
 
 
-	If the Apache Tomcat 8.0.26 web page is displayed, then Tomcat was
+	If the Apache Tomcat 8.x web page is displayed, then Tomcat was
 	installed correctly. To shut down Tomcat, run:
 
 	<p style="text-indent: 5em;">
 		<code># $HOME/apache-tomcat-8.0.26/bin/shutdown.sh</code>
 	</p>
 
-	Note that the command
-	<code>source /etc/profile</code>
-	ensures that when running Tomcat using
-	<code>sudo</code>
-	that Tomcat will have access to required AppVet environment variables
-	defined in
-	<code>/etc/profile</code>
-	.
 
 	<h3>Environment Variables</h3>
 
@@ -261,7 +281,10 @@
 	<code>$CATALINA_HOME</code>
 	and
 	<code>$CATALINA_BASE</code>
-	environment variables must be globally defined. Edit (using sudo)
+	environment variables must be globally defined. Using
+	<code>sudo</code>
+	, edit
+
 	<code>/etc/profile</code>
 	by adding the following (in bold):
 
@@ -286,64 +309,84 @@
 	<code>$CATALINA_BASE</code>
 	to be accessed when using
 	<code>sudo</code>
-	, open a terminal and run: 
-	
-	
-	
-		<p style="text-indent: 5em;">
-		<code># sudo visudo</code>
-	</p>
-	
-	
-	
-	From <code>visudo</code>, add
-	<code>$CATALINA_HOME</code> and <code>$CATALINA_BASE</code> to the <code>env_keep</code> variable: 
-	
-			<p style="text-indent: 5em;">
-		<code>Defaults
-	env_keep += "JAVA_HOME JRE_HOME CATALINA_HOME CATALINA_BASE"</code>
-	</p>
-	
-	
-	<h2 id="apktool">Android Apktool</h2>
-	
-	<h3>Installation</h3>
-	
-	For Android app analysis, AppVet
-	requires Android Apktool 2.0.x to be installed. The Android Apktool is
-	used to extract metadata information from Android applications. To
-	install Apktool, download it as a zip archive from:
+	, open a terminal and run:
+
+
 
 	<p style="text-indent: 5em;">
-		<a href="http://www.mediafire.com/download/56fhlu6wnbtfdna/apktool.zip"> http://www.mediafire.com/download/56fhlu6wnbtfdna/apktool.zip </a>
+		<code># sudo visudo</code>
 	</p>
-	
-	
-	 and unzip
-	the <code>apktool.zip</code> file. Next, navigate to the extracted <code>/apktool</code>
-	directory and change the permissions of the <code>apktool</code> and <code>apktool.jar</code>
-	files as follows: 
-	
-				<p style="text-indent: 5em;">
-		<code># chmod 555 apktool</code><br>
-		<code># chmod 555 apktool.jar</code>
+
+
+
+	From
+	<code>visudo</code>
+	, add
+	<code>$CATALINA_HOME</code>
+	and
+	<code>$CATALINA_BASE</code>
+	to the
+	<code>env_keep</code>
+	variable:
+
+	<p style="text-indent: 5em;">
+		<code>Defaults env_keep += "JAVA_HOME JRE_HOME CATALINA_HOME
+			CATALINA_BASE"</code>
 	</p>
-	
-	  Next, using <code>sudo</code>, 
+
+
+	<h2 id="apktool">Android Apktool</h2>
+
+	<h3>Installation</h3>
+
+	For Android app analysis, AppVet requires Android Apktool 2.0.x to be
+	installed. The Android Apktool is used to extract metadata information
+	from Android applications. To install Apktool, download it as a zip
+	archive from:
+
+	<p style="text-indent: 5em;">
+		<a
+			href="http://www.mediafire.com/download/56fhlu6wnbtfdna/apktool.zip"
+			target="_blank">
+			http://www.mediafire.com/download/56fhlu6wnbtfdna/apktool.zip </a>
+	</p>
+
+
+	and unzip the
+	<code>apktool.zip</code>
+	file. Next, navigate to the extracted
+	<code>/apktool</code>
+	directory and change the permissions of the
+	<code>apktool</code>
+	and
+	<code>apktool.jar</code>
+	files as follows:
+
+	<p style="text-indent: 5em;">
+		<code># chmod 555 apktool</code>
+		<p style="text-indent: 5em;">
+
+
+
+
+		Next, using
+		<code>sudo</code>, 
 	move both files to <code>/usr/local/bin</code>.
+	
 	
 	<h3>Environment Variables</h3>
 	
 	To ensure proper operation of AppVet, the
-	<code>$APKTOOL_HOME</code> environment variables must be globally defined. Edit
-	(using sudo) <code>/etc/profile</code> by adding the path for <code>$APKTOOL_HOME</code> as done 
-	for the environment variables above. In addition, add <code>APKTOOL_HOME</code> to 
-	<code>env_keep</code> variable using <code>sudo visudo</code>.
+	<code>$APKTOOL_HOME</code> environment variables must be globally defined. Using <code>sudo</code>, edit 
+	<code>/etc/profile</code> by adding the path for <code>$APKTOOL_HOME</code> as done 
+	for <code>$JAVA_HOME</code> and <code>$CATALINA_HOME</code> above. In addition, add <code>APKTOOL_HOME</code> to 
+	the <code>env_keep</code> variable in <code>visudo</code>.
 	<p>
 	To
 	ensure proper installation of Android Apktool, run: 
 	
-				<p style="text-indent: 5em;">
+				
+	<p style="text-indent: 5em;">
 		<code># sudo apktool</code>
 	</p>
 	
