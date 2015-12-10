@@ -6,7 +6,7 @@
 
 <body>
 
-	<h1>Configuration</h1>
+	<h1>Single Sign-On (SSO)</h1>
 
 	<ul>
 		<li class="big"><a href="#appvet_properties" target="rightframe">AppVet
@@ -57,54 +57,47 @@
 	
 	The <code>UseSSO</code> parameter specifies whether AppVet should use 
 	Single Sign-On (SSO) for all transactions. If SSO is used, a separate URL 
-	that supports SSO will be used for AppVet to provide authentication. For more 
-	information, see <a href="sso.html">AppVet Single Sign-On (SSO)</a>.
+	that supports SSO will be used for AppVet to provide authentication.
 
 	<h3>Sessions</h3>
-	
-	The <code>Sessions</code> parameter specifies sessions-related configurations 
-	including the <code>Timeout</code> that specifies the maximum amount of idle time by a 
-	user (in milliseconds) and the <code>GetUpdatesDelay</code> that specifies the 
-	delay (in milliseconds) that AppVet will check for app-related updates (e.g.,
-	app processing status updates).
-	
+
 	<h3>Database</h3>
-	
-	The <code>Database</code> parameter specifies database-related settings 
-	including the <code>URL</code> of the database as well as the 
-	<code>username</code> and <code>password</code> to use to authenticate with 
-	the database.
 
 	<h3>ToolServices</h3>
-	
-	The <code>ToolServices</code> parameter specifies tool-related settings concerned 
-	with delays and timeouts. The <code>PollingInterval</code> specifies the delay 
-	(in milliseconds) that AppVet waits before checking for the next app to process. 
-	The <code>StaggarInterval</code> specifies the delay (in milliseconds) that 
-	AppVet waits before submitting an app to a testing service. The <code>ConnectionTimeout</code> 
-	specifies the time to wait (in milliseconds) for a connection to a testing service before timing out. 
-	The <code>SocketTimeout</code> specifies the time to wait (in milliseconds) for incoming data from 
-	a testing service before timing out.
 
 	<h3>Apps</h3>
 
-The <code>Apps</code> parameter specifies app-related settings. Currently, 
-only the <code>KeepApps</code> property is used to indicate whether AppVet should 
-keep uploaded apps on the system. Note that keeping uploaded apps on the system 
-can quickly use up disk storage on the system. By default, <code>KeepApps</code> 
-is set to <code>false</code>.
 
+	The AppVet binary release requires the installation of platform
+	dependencies. See instructions for installing
+	<a href="dependencies.html" target="rightframe">AppVet dependencies</a>.
 
 	<h2 id="example">Example</h2>
-
-See example <a href="/schemas/AppVetProperties.xml" target="_blank">AppVetProperties.xml</a>.
+	After AppVet dependencies have been installed, download the AppVet
+	binary release Web Application Resource (WAR) file. After downloading
+	the AppVet binary release, extract the compressed file onto your local
+	machine.
 
 	<h2 id="schema">AppVetProperties XML Schema</h2>
-TBD
+	The AppVet binary release contains the following directories:
+
+	<ul>
+		<li><code>appvet.war</code>: The AppVet web application.</li>
+		<li><code>appvet.images</code>: AppVet images.</li>
+		<li><code>appvet.files</code>: AppVet configuration files.</li>
+	</ul>
 
 	<h2 id="tool_adapters">Tool Adapters</h2>
 
-TBD
+	To install AppVet, copy the
+	<code>appvet.war</code>
+	and
+	<code>appvet.images</code>
+	files to your
+	<code>$CATALINA_HOME/webapps</code>
+	directory. Next, copy the
+	<code>appvet.files</code>
+	directory to your local machine.
 
 </body>
 
