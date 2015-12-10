@@ -933,9 +933,12 @@ public class AppVetPanel extends DockLayoutPanel {
 //			lastAppsListUpdate = timeStampObject.getLastAppUpdate();
 //		}
 		final HorizontalSplitPanel centerAppVetSplitPanel = new HorizontalSplitPanel();
+		centerAppVetSplitPanel.setTitle("AppVet split pane");
 		centerAppVetSplitPanel.setSplitPosition("64%");
 		centerAppVetSplitPanel.setSize("", "100%");
 		final SimplePanel leftCenterPanel = new SimplePanel();
+		leftCenterPanel.setTitle("AppVet apps list pane");
+
 		centerAppVetSplitPanel.setLeftWidget(leftCenterPanel);
 		leftCenterPanel.setSize("", "100%");
 		final DockPanel dockPanel_1 = new DockPanel();
@@ -943,6 +946,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		leftCenterPanel.setWidget(dockPanel_1);
 		dockPanel_1.setSize("100%", "");
 		rightCenterPanel = new SimplePanel();
+		rightCenterPanel.setTitle("AppVet app info panel");
+
 		centerAppVetSplitPanel.setRightWidget(rightCenterPanel);
 		rightCenterPanel.setSize("", "95%");
 		final VerticalPanel appInfoVerticalPanel = new VerticalPanel();
