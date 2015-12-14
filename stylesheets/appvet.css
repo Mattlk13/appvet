@@ -80,8 +80,56 @@ a:active {
 	text-decoration: none;
 }
 
+a:link.underline {
+	color: #606060;
+	text-decoration: underline;
+}
+
+/* visited link */
+a:visited.underline {
+	color: green;
+	text-decoration: underline;
+}
+
+/* mouse over link */
+a:hover.underline {
+	color: blue;
+	text-decoration: underline;
+}
+
+/* selected link */
+a:active.underline {
+	color: blue;
+	text-decoration: underline;
+}
+
 
 p.cap {
 	font-size: 14px;
 	font-weight: bold;
+}
+
+table {
+	width: 75%;
+	border: 1px solid black;
+		    padding: 0px;
+		        border-collapse: collapse;
+		    
+
+}
+
+th {
+	    background-color: #E6E6E6;
+	    padding: 0px;
+	    border-collapse: collapse;
+	
+		border: 1px solid black;
+	
+}
+
+tr, td {
+	    border-collapse: collapse;
+	
+			border: 1px solid black;
+	
 }

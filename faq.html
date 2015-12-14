@@ -6,71 +6,100 @@
 
 <body>
 	<h1>FAQ</h1>
+	<ul>
+		<li><a href="#appvetting" target="rightframe">What is app
+				vetting?</a></li>
+		<li><a href="#appvet" target="rightframe">What is AppVet?</a></li>
+		<li><a href="#nistservice" target="rightframe">Is there a
+				NIST AppVet service where I can submit my app for testing?</a></li>
+		<li><a href="#accredit" target="rightframe">Does NIST
+				accredit or approve apps?</a></li>
+		<li><a href="#analytic" target="rightframe">What analytic
+				capability does AppVet provide out-of-the-box?</a></li>
+
+		<li><a href="#availableservices" target="rightframe">What
+				tool services does AppVet come with?</a></li>
+		<li><a href="#integrate" target="rightframe">How do I
+				integrate my tool with AppVet?</a></li>
+		<li><a href="#platforms" target="rightframe">Does AppVet
+				support iOS, Windows Mobile, etc. apps?</a></li>
+		<li><a href="#riskassessment" target="rightframe">How is risk assessment derived by a tool?</a></li>
+		<li><a href="#overallrisk" target="rightframe">How does AppVet derive an overall risk assessment for an app?</a></li>
+		<li><a href="#riskuse" target="rightframe">Does an overall risk assessment of PASS or LOW mean that it is ok to use?</a></li>
+		<li><a href="#free" target="rightframe">Is AppVet free?</a></li>
+		<li><a href="#opensource" target="rightframe">Is AppVet open source?</a></li>
+
+	</ul>
 
 	<hr>
-	<h3>What is App Vetting?</h3>
+	<h3 id="appvetting">What is app vetting?</h3>
 	App vetting is a process for ensuring the security, reliability, and
 	efficiency of mobile applications.
-	
-<h3>What is AppVet?</h3>
-AppVet is a web application for managing and automating an app vetting process. 
-AppVet helps decision-makers approve or reject apps based on risk assessments 
-from multiple test tools.
 
-<h3>Is there a NIST AppVet service where I can submit my app for testing?</h3>
-No. NIST does not maintain an operational AppVet service.
+	<h3 id="appvet">What is AppVet?</h3>
+	AppVet is a web application for managing and automating an app vetting
+	process. AppVet helps decision-makers approve or reject apps based on
+	risk assessments from multiple test tools.
 
-<h3>Does NIST accredit or approve apps?</h3>
-No. NIST does not accredit or approve apps.
+	<h3 id="nistservice">Is there a NIST AppVet service where I can submit my app for
+		testing?</h3>
+	No. NIST does not maintain an operational AppVet service.
 
-<h3>What analytic capability does AppVet provide out-of-the-box?</h3>
-The power of AppVet lies in its ability to easily integrate third-party tools to 
-provide tailored analytic capability. AppVet itself provides little analytic 
-capability.
+	<h3 id="accredit">Does NIST accredit or approve apps?</h3>
+	No. NIST does not accredit or approve apps.
 
-<h3>What tool services does AppVet come with?</h3>
-The following tool services can be downloaded from GitHub:
-<ul>
-<li>Android certification tester</li>
-<li>Master-Key ExtraField tester</li>
-<li>Androwarn</li>
-</ul>
+	<h3 id="analytic">What analytic capability does AppVet provide out-of-the-box?</h3>
+	The power of AppVet lies in its ability to easily integrate third-party
+	tools to provide tailored analytic capability. AppVet itself provides
+	little analytic capability.
 
-<h3>How do I integrate my tool with AppVet?</h3>
-See HYPERLINK HERE.
+	<h3 id="availableservices">What tool services does AppVet come with?</h3>
+	The following tool services can be downloaded from GitHub:
+	<ul>
+		<li>Android certification tester</li>
+		<li>Master-Key ExtraField tester</li>
+		<li>Androwarn</li>
+	</ul>
 
-<h3>Does AppVet support iOS, Windows Mobile, etc. apps?</h3>
-AppVet can support apps from different platforms so long as there are tools 
-available to analyze those apps.
+	<h3 id="integrate">How do I integrate my tool with AppVet?</h3>
+	See HYPERLINK HERE.
 
-<h3>How is risk assessment derived by a tool?</h3>
-The risk assessment of an app by a tool is dependent on the vendor or 
-developer of the tool. Here, it is strongly recommended that vendors or tool 
-developers adopt a standardized approach such as the Common Vulnerability 
-Scoring System (CVSS) to derive risk assessments. AppVet requires that risk 
-assessments by a tool be mapped to one of three categories: PASS (low-risk), 
-WARNING (moderate-risk), and FAIL (high-risk).
+	<h3 id="platforms">Does AppVet support iOS, Windows Mobile, etc. apps?</h3>
+	AppVet can support apps from different platforms so long as there are
+	tools available to analyze those apps.
 
-<h3>How does AppVet derive an overall risk assessment for an app?</h3>
-AppVet takes a simple approach to deriving an app's risk assessment based on
- the risk assessments from multiple tools. If an app receives low-risk 
- assessments from all tools, then AppVet assigns an overall risk assessment 
- of PASS (low-risk). If an app receives a high-risk assessment from at least
-  one tool, then AppVet assigns an overall risk assessment of FAIL (high-risk).
-   If an app receives a moderate-risk assessment from at least one tool, but 
-   does not receive any high-risk assessments, AppVet assigns an overall risk 
-   assessment of WARNING (moderate-risk).
-   
-<h3>Does an overall risk assessment of PASS or LOW mean that it is ok to use?</h3>
-The decision to approve or reject an app is based on the policies and 
-requirements of the organization that owns and operates the instance of AppVet, 
-regardless of the overall risk assessment generated by AppVet.
+	<h3 id="riskassessment">How is risk assessment derived by a tool?</h3>
+	The risk assessment of an app by a tool is dependent on the vendor or
+	developer of the tool. Here, it is strongly recommended that vendors or
+	tool developers adopt a standardized approach such as the Common
+	Vulnerability Scoring System (CVSS) to derive risk assessments. AppVet
+	requires that risk assessments by a tool be mapped to one of three
+	categories: PASS (low-risk), WARNING (moderate-risk), and FAIL
+	(high-risk).
 
-<h3>Is AppVet free?</h3>
-Yes, AppVet is freely available per the following agreement (HYPERLINK HERE).
+	<h3 id="overallrisk">How does AppVet derive an overall risk assessment for an app?</h3>
+	AppVet takes a simple approach to deriving an app's risk assessment
+	based on the risk assessments from multiple tools. If an app receives
+	low-risk assessments from all tools, then AppVet assigns an overall
+	risk assessment of PASS (low-risk). If an app receives a high-risk
+	assessment from at least one tool, then AppVet assigns an overall risk
+	assessment of FAIL (high-risk). If an app receives a moderate-risk
+	assessment from at least one tool, but does not receive any high-risk
+	assessments, AppVet assigns an overall risk assessment of WARNING
+	(moderate-risk).
 
-<h3>Is AppVet open source?</h3>
-Yes,  AppVet is open source and available at GitHub (HYPERLINK HERE).
+	<h3 id="riskuse">Does an overall risk assessment of PASS or LOW mean that it is
+		ok to use?</h3>
+	The decision to approve or reject an app is based on the policies and
+	requirements of the organization that owns and operates the instance of
+	AppVet, regardless of the overall risk assessment generated by AppVet.
+
+	<h3 id="free">Is AppVet free?</h3>
+	Yes, AppVet is freely available per the following agreement (HYPERLINK
+	HERE).
+
+	<h3 id="opensource">Is AppVet open source?</h3>
+	Yes, AppVet is open source and available at GitHub (HYPERLINK HERE).
 </body>
 
 </html>

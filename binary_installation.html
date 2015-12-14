@@ -11,12 +11,14 @@
 	<ul>
 		<li class="big"><a href="#dependencies" target="rightframe">Dependencies</a>
 		<li class="big"><a href="#download" target="rightframe">Download</a>
-		<li class="big"><a href="#tomcat" target="rightframe">Installating AppVet</a>
+		<li class="big"><a href="#tomcat" target="rightframe">Installating
+				AppVet</a>
 		<li class="big"><a href="#envvar" target="rightframe">Environment
 				variables</a>
-				<li class="big"><a href="#mysql" target="rightframe">AppVet Database</a>
-				<li class="big"><a href="#conf" target="rightframe">Configuration</a>
-		
+		<li class="big"><a href="#mysql" target="rightframe">AppVet
+				Database</a>
+		<li class="big"><a href="#conf" target="rightframe">Configuration</a>
+
 
 
 		</li>
@@ -25,12 +27,16 @@
 	<h2 id="dependencies">Dependencies</h2>
 	The AppVet binary release requires the installation of platform
 	dependencies. See instructions for installing
-	<a href="dependencies.html" target="rightframe"><i>AppVet dependencies</i></a>.
+	<a class="underline" href="dependencies.html" target="rightframe">AppVet
+		Dependencies</a>.
 
 	<h2 id="download">Download</h2>
-	After AppVet dependencies have been installed, download the AppVet binary release  
-	<a href="https://github.com/AppVet/appvet/releases" target="_blank"><i>appvet_2.x_release.tar.gz</i></a> file. After downloading the AppVet binary
-	release file, extract the compressed file onto your local machine.
+	After AppVet dependencies have been installed, download the latest AppVet
+	binary release (<code>tar.gz</code>) file from 
+	<a class="underline" href="https://github.com/AppVet/appvet/releases"
+		target="_blank">https://github.com/AppVet/appvet/releases</a>. After downloading
+	the AppVet binary release file, extract the compressed file onto your
+	local machine.
 
 	<h2 id="tomcat">Installing AppVet</h2>
 	The AppVet binary release contains the following directories:
@@ -38,45 +44,46 @@
 	<ul>
 		<li><code>appvet.war</code>: The AppVet web application.</li>
 		<li><code>appvet.images</code>: AppVet images.</li>
-		<li><code>appvet.files</code>: AppVet files including configuration, log, and app files.</li>
+		<li><code>appvet.files</code>: AppVet files including
+			configuration, log, and app files.</li>
 	</ul>
 
 	To install AppVet, copy the
-	<code>appvet.war</code> file 
-	and
+	<code>appvet.war</code>
+	file and
 	<code>appvet.images</code>
 	directory to your
 	<code>$CATALINA_HOME/webapps</code>
 	directory. Next, copy the
 	<code>appvet.files</code>
 	directory to your local machine.
+
+
 	
-
-
 	<h2 id="envvar">Environment Variable</h2>
 
 
 	To ensure proper operation of AppVet, the
 	<code>$APPVET_FILES_HOME</code>
-	environment variable must be set to the installation path of your 
+	environment variable must be set to the installation path of your
 	<code>appvet.files</code>
-	directory. For examples, if you copied 
+	directory. For examples, if you copied
 	<code>appvet.files</code>
 	to
 	<code>$HOME/jdoe</code>
 	, then:
-
+<br><br>
 	<p style="text-indent: 5em;">
 		<code>$APPVET_FILES_HOME=/home/jdoe/appvet.files</code>
 	</p>
-
+<br>
 
 	Using
 	<code>sudo</code>
 	, edit
 	<code>/etc/profile</code>
 	by adding the following:
-
+<br><br>
 	<p>
 		<code>
 			#Global Environment Variables<br>
@@ -85,15 +92,15 @@
 			export PATH <br>
 		</code>
 	</p>
-
+<br>
 	Next, reload
 	<code>/etc/profile</code>
 	by running:
-
+<br><br>
 	<p style="text-indent: 5em;">
 		<code># source /etc/profile</code>
 	</p>
-
+<br>
 
 	in all open terminals. To verify that
 	<code>$APPVET_FILES_HOME</code>
@@ -101,32 +108,32 @@
 	has been added to your
 	<code>$PATH</code>
 	variable, run:
-
+<br><br>
 	<p style="text-indent: 5em;">
 		<code># printenv APPVET_FILES_HOME</code>
 	</p>
-
+<br>
 	Next, to allow
 	<code>$APPVET_FILES_HOME</code>
 
 	to be accessed when using
 	<code>sudo</code>
 	, open a terminal and run:
-
+<br><br>
 
 	<p style="text-indent: 5em;">
 		<code># sudo visudo</code>
 	</p>
-
+<br>
 
 	From
 	<code>visudo</code>
 	, add the following line:
-
+<br><br>
 	<p style="text-indent: 5em;">
 		<code>Defaults env_keep += "APPVET_FILES_HOME"</code>
 	</p>
-
+<br>
 	This will force
 	<code>sudo</code>
 	to preserve and use the
@@ -141,70 +148,88 @@
 	is now accessible to
 	<code>sudo</code>
 	, run:
-
+<br><br>
 	<p style="text-indent: 5em;">
 		<code># sudo printenv APPVET_FILES_HOME</code>
 	</p>
-	
-			<h2 id="mysql">AppVet Database</h2>
-	To use AppVet, the AppVet database must be created and configured in MySQL. 
-	
-	<h3>Create Database</h3>
-To create the appvet database, log into MySQL by opening a terminal and running:
+<br>
+	<h2 id="mysql">AppVet Database</h2>
+	To use AppVet, the AppVet database must be created and configured in
+	MySQL.
 
+	<h3>Create Database</h3>
+	To create the appvet database, log into MySQL by opening a terminal and
+	running:
+<br><br>
 	<p style="text-indent: 5em;">
 		<code># mysql -u root -p&lt;password&gt;</code>
 	</p>
-	
 
+<br>
 
-Next, at the mysql prompt, enter:
-
+	Next, at the mysql prompt, enter:
+<br><br>
 	<p style="text-indent: 5em;">
 		<code>mysql&gt create database appvet;</code>
 	</p>
-	
-	
-
-Note that all MySQL statements must end with a semicolon. Next, type <code>exit</code> to exit MySQL.
-
 <br>
-<br>
-To create the tables for the <code>appvet</code> database, open a terminal and navigate to 
-<code>$APPVET_FILES_HOME/conf/mysql</code> then run:
 
+
+	Note that all MySQL statements must end with a semicolon. Next, type
+	<code>exit</code>
+	to exit MySQL.
+
+	<br>
+	<br>
+	<h3>Create Tables</h3>
+
+	To create the tables for the
+	<code>appvet</code>
+	database, open a terminal and navigate to
+	<code>$APPVET_FILES_HOME/conf/mysql</code>
+	then run:
+<br><br>
 	<p style="text-indent: 5em;">
-		<code># mysql -u root -p&lt;password&gt; appvet &lt; appvet_init_db.sql</code>
+		<code># mysql -u root -p&lt;password&gt; appvet &lt;
+			appvet_init_db.sql</code>
 	</p>
-	
+<br>
 
-Note that there will be no notification that the appvet tables were loaded successfully. 
-To verify the loading of the appvet tables, log back into MySQL and enter:
-
+	Note that there will be no notification that the appvet tables were
+	loaded successfully. To verify the loading of the appvet tables, log
+	back into MySQL and enter:
+<br><br>
 	<p style="text-indent: 5em;">
-		<code>mysql&gt; use appvet;</code><br>
+		<code>mysql&gt; use appvet;</code>
+		<br>
 	<p style="text-indent: 5em;">
 		<code>mysql&gt; show tables;</code>
 	</p>
+<br>
 
+	The tables in the appvet database should include:
 
-The tables in the appvet database should include:
+	<ul>
+		<li>apps</li>
+		<li>users</li>
+		<li>sessions</li>
+		<li>androidtoolstatus</li>
+		<li>iostoolstatus</li>
+	</ul>
 
-<ul>
-<li>androidtoolstatus</li>
-<li>apps</li>
-<li>iostoolstatus</li>
-<li>sessions</li>
-<li>users</li>
-</ul>
-
-See <a href="database_schema.html" target="rightframe"><i>AppVet database schema</i></a> for more information about these tables.
+	See the 
+	<a class="underline" href="database_schema.html" target="rightframe">AppVet
+		Database Schema</a> for a complete specification of the AppVet database.
 
 
 	<h2 id="conf">Configuration</h2>
 
-	To configure AppVet, follow the instructions for AppVet
-	<a href="configuration.html">Configuration</a>.
+	To configure AppVet, edit the AppVet properties file located in your
+	<code>$APPVET_FILES_HOME/conf/AppVetProperties.xml</code>
+	file. This file conforms to the the
+	<a class="underline" href="schemas/AppVetProperties.html">AppVet
+		Properties XML Schema</a>.
+
 
 
 
