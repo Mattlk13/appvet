@@ -20,7 +20,6 @@
 	first. The following instructions focus primarily on Linux, but should
 	be similar (if not easier) on Windows.
 	<hr>
-
 	<h2 id="java">Oracle JDK</h2>
 	<h3>Installation</h3>
 
@@ -29,52 +28,55 @@
 	need to be uninstalled and removed so that they do not conflict with
 	Oracle Java. To view a list of preinstalled OpenJDK packages of Java,
 	run:
-
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code># rpm -aq | grep -i java</code>
 	</p>
-
-
-	To uninstall and remove OpenJDK Java packages, open a console and run:
-
+	<br>
+	<br> To uninstall and remove OpenJDK Java packages, open a console
+	and run:
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code># sudo rpm -e &lt;package_name&gt;</code>
 	</p>
-
-	for each OpenJDK Java package. Note that other applications (e.g.,
-	libreoffice) might be dependent on OpenJDK and should be uninstalled
-	(e.g., using
+	<br>
+	<br> for each OpenJDK Java package. Note that other applications
+	(e.g., libreoffice) might be dependent on OpenJDK and should be
+	uninstalled (e.g., using
 	<code>yum remove libraoffice*</code>
 	) prior to uninstalling OpenJDK. After OpenJDK has been uninstalled and
 	removed, download Oracle Java JDK 8 from:
-
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
-		<a
-			  class="underline" href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html"
+		<a class="underline"
+			href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html"
 			target="_blank">
 			http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 		</a>
 	</p>
-
-
-	To install the Oracle JDK
+	<br>
+	<br> To install the Oracle JDK
 	<code>.rpm</code>
 	file under Linux, open a terminal and run:
-
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code># sudo rpm -ivh /path/to/jdk-8u60-linux-x64.rpm</code>
 	</p>
-
-	This will install Oracle JDK in
+	<br>
+	<br> This will install Oracle JDK in
 	<code>/usr/java/jdk1.8.0_60</code>
 	. To ensure proper installation, open a console and run:
-
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code># java -version</code>
 	</p>
-
-
-	For Oracle JDK 8, the correct version should be 1.8.x.
+	<br>
+	<br> For Oracle JDK 8, the correct version should be 1.8.x.
 
 	<h3>Environment Variables</h3>
 
@@ -88,7 +90,8 @@
 	, edit
 	<code>/etc/profile</code>
 	by adding the following to the end of the file:
-
+	<br>
+	<br>
 	<p>
 		<code>
 			#Global Environment Variables<br>
@@ -97,29 +100,30 @@
 			JAVA_HOME<br> export JRE_HOME <br> export PATH <br>
 		</code>
 	</p>
-
-	Next, reload
+	<br>
+	<br> Next, reload
 	<code>/etc/profile</code>
 	by running:
-
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code># source /etc/profile</code>
 	</p>
-
-
-	in all open terminals. To verify that
+	<br>
+	<br> in all open terminals. To verify that
 	<code>$JAVA_HOME</code>
 	and
 	<code>$JRE_HOME</code>
 	have been added to your
 	<code>$PATH</code>
 	variable, run:
-
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code># printenv PATH</code>
 	</p>
-
-	Next, to allow
+	<br>
+	<br> Next, to allow
 	<code>$JAVA_HOME</code>
 	and
 	<code>$JRE_HOME</code>
@@ -127,21 +131,22 @@
 	<code>sudo</code>
 	, open a terminal and run:
 
-
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code># sudo visudo</code>
 	</p>
-
-
-	From
+	<br>
+	<br> From
 	<code>visudo</code>
 	, add the following line:
-
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code>Defaults env_keep += "JAVA_HOME JRE_HOME"</code>
 	</p>
-
-	This will force
+	<br>
+	<br> This will force
 	<code>sudo</code>
 	to preserve and use the
 	<code>$JAVA_HOME</code>
@@ -158,17 +163,20 @@
 	are now accessible to
 	<code>sudo</code>
 	, run:
-
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code># sudo printenv JAVA_HOME</code>
 	</p>
-
-	and
-
+	<br>
+	<br> and
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code># sudo printenv JRE_HOME</code>
 	</p>
-
+	<br>
+	<br>
 
 
 	<h2 id="mysql">MySQL</h2>
@@ -176,46 +184,46 @@
 	AppVet requires MySQL 5 to be installed. MySQL is used to store
 	AppVet-related data including user accounts, app statuses, and session
 	data. To install MySQL 5, open a browser and go to:
-
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
-		<a   class="underline" href="http://dev.mysql.com/downloads/mysql/" target="_blank">
-			http://dev.mysql.com/downloads/mysql/ </a>
+		<a class="underline" href="http://dev.mysql.com/downloads/mysql/"
+			target="_blank"> http://dev.mysql.com/downloads/mysql/ </a>
 	</p>
-
-
-
-
-	For CentOS/RedHat, download the MySQL Red Hat Enterprise Linux 7 /
-	Oracle Linux 7 RPM (
+	<br>
+	<br> For CentOS/RedHat, download the MySQL Red Hat Enterprise
+	Linux 7 / Oracle Linux 7 RPM (
 	<code>mysql-community-release-el7-5.noarch.rpm</code>
 	). To install the MySQL Yum Repository, run:
-
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code># sudo yum localinstall
 			mysql-community-release-el7-5.noarch.rpm</code>
 	</p>
-
-	To verify the MySQL Yum Repository installation, run:
-
+	<br>
+	<br> To verify the MySQL Yum Repository installation, run:
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code># sudo yum repolist enabled | grep "mysql.*-community.*"</code>
 	</p>
-
-	Next, install MySQL by running:
-
+	<br>
+	<br> Next, install MySQL by running:
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code># sudo yum install mysql-community-server</code>
 	</p>
-
-
-
-
-	To set the root password for MySQL, open a terminal and run:
-
+	<br>
+	<br> To set the root password for MySQL, open a terminal and run:
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code># sudo mysql_secure_installation</code>
 	</p>
-
+	<br>
+	<br>
 
 	<h2 id="tomcat">Apache Tomcat</h2>
 	<h3>Installation</h3>
@@ -225,55 +233,56 @@
 	<code>$HOME</code>
 	directory. To install Apache Tomcat 8 under CentOS/RedHat, open a
 	browser and go to:
-
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
-		<a   class="underline" href="https://tomcat.apache.org/download-80.cgi" target="_blank">
-			https://tomcat.apache.org/download-80.cgi </a>
+		<a class="underline" href="https://tomcat.apache.org/download-80.cgi"
+			target="_blank"> https://tomcat.apache.org/download-80.cgi </a>
 	</p>
-
-
-
-	Next, download the Apache Tomcat 8.x Binary Distribution Core
+	<br>
+	<br> Next, download the Apache Tomcat 8.x Binary Distribution Core
 	<code>tar.gz</code>
 	file and extract the compressed tar file into
 	<code>$HOME</code>
 	:
-
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code># tar xvzf apache-tomat-8.0.26.tar.gz</code>
 	</p>
-
-	To ensure proper installation of Tomcat, run:
-
+	<br>
+	<br> To ensure proper installation of Tomcat, run:
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code># $HOME/apache-tomcat-8.0.26/bin/startup.sh</code>
 	</p>
-
-	Then, open a web browser and go to:
-
+	<br>
+	<br> Then, open a web browser and go to:
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
-		<a   class="underline" href="http://127.0.0.1:8080" target="_blank">
+		<a class="underline" href="http://127.0.0.1:8080" target="_blank">
 			http://127.0.0.1:8080 </a>
 	</p>
-
-
-
-	or
-
+	<br>
+	<br> or
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
-		<a   class="underline"  href="http://localhost:8080" target="_blank">
+		<a class="underline" href="http://localhost:8080" target="_blank">
 			http://localhost:8080 </a>
 	</p>
-
-
-
-	If the Apache Tomcat 8.x web page is displayed, then Tomcat was
-	installed correctly. To shut down Tomcat, run:
-
+	<br>
+	<br> If the Apache Tomcat 8.x web page is displayed, then Tomcat
+	was installed correctly. To shut down Tomcat, run:
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code># $HOME/apache-tomcat-8.0.26/bin/shutdown.sh</code>
 	</p>
-
+	<br>
+	<br>
 
 	<h3>Environment Variables</h3>
 
@@ -287,7 +296,8 @@
 
 	<code>/etc/profile</code>
 	by adding the following (in bold):
-
+	<br>
+	<br>
 	<p>
 		<code>
 			#Global Environment Variables<br>
@@ -300,10 +310,8 @@
 			export PATH <br>
 		</code>
 	</p>
-
-
-
-	To allow
+	<br>
+	<br> To allow
 	<code>$CATALINA_HOME</code>
 	and
 	<code>$CATALINA_BASE</code>
@@ -312,14 +320,13 @@
 	, open a terminal and run:
 
 
-
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code># sudo visudo</code>
 	</p>
-
-
-
-	From
+	<br>
+	<br> From
 	<code>visudo</code>
 	, add
 	<code>$CATALINA_HOME</code>
@@ -328,12 +335,14 @@
 	to the
 	<code>env_keep</code>
 	variable:
-
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code>Defaults env_keep += "JAVA_HOME JRE_HOME CATALINA_HOME
 			CATALINA_BASE"</code>
 	</p>
-
+	<br>
+	<br>
 
 	<h2 id="apktool">Android Apktool</h2>
 
@@ -343,16 +352,16 @@
 	installed. The Android Apktool is used to extract metadata information
 	from Android applications. To install Apktool, download it as a zip
 	archive from:
-
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
-		<a
-			  class="underline" href="http://www.mediafire.com/download/56fhlu6wnbtfdna/apktool.zip"
+		<a class="underline"
+			href="http://www.mediafire.com/download/56fhlu6wnbtfdna/apktool.zip"
 			target="_blank">
 			http://www.mediafire.com/download/56fhlu6wnbtfdna/apktool.zip </a>
 	</p>
-
-
-	and unzip the
+	<br>
+	<br> and unzip the
 	<code>apktool.zip</code>
 	file. Next, navigate to the extracted
 	<code>/apktool</code>
@@ -361,37 +370,46 @@
 	and
 	<code>apktool.jar</code>
 	files as follows:
-
+	<br>
+	<br>
 	<p style="text-indent: 5em;">
 		<code># chmod 555 apktool</code>
-		<p style="text-indent: 5em;">
-
-
-
-
-		Next, using
-		<code>sudo</code>, 
-	move both files to <code>/usr/local/bin</code>.
-	
-	
+	<p style="text-indent: 5em;">
+		<br> <br> Next, using
+		<code>sudo</code>
+		, move both files to
+		<code>/usr/local/bin</code>
+		.
 	<h3>Environment Variables</h3>
-	
+
 	To ensure proper operation of AppVet, the
-	<code>$APKTOOL_HOME</code> environment variables must be globally defined. Using <code>sudo</code>, edit 
-	<code>/etc/profile</code> by adding the path for <code>$APKTOOL_HOME</code> as done 
-	for <code>$JAVA_HOME</code> and <code>$CATALINA_HOME</code> above. In addition, add <code>APKTOOL_HOME</code> to 
-	the <code>env_keep</code> variable in <code>visudo</code>.
+	<code>$APKTOOL_HOME</code>
+	environment variables must be globally defined. Using
+	<code>sudo</code>
+	, edit
+	<code>/etc/profile</code>
+	by adding the path for
+	<code>$APKTOOL_HOME</code>
+	as done for
+	<code>$JAVA_HOME</code>
+	and
+	<code>$CATALINA_HOME</code>
+	above. In addition, add
+	<code>APKTOOL_HOME</code>
+	to the
+	<code>env_keep</code>
+	variable in
+	<code>visudo</code>
+	.
 	<p>
-	To
-	ensure proper installation of Android Apktool, run: 
-	
-				
+		To ensure proper installation of Android Apktool, run: <br> <br>
 	<p style="text-indent: 5em;">
 		<code># sudo apktool</code>
 	</p>
-	
-	
-	
+	<br>
+	<br>
+
+
 	</p>
 </body>
 
