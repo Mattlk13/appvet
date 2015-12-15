@@ -361,7 +361,7 @@ public class AppVetPanel extends DockLayoutPanel {
 							public String getNAStatus() {
 								return "<table>\n"
 										+ "<tr>\n"
-										+ "<td align=\"left\" style='color: dimgray; size:18; weight: bold'width=\"185\">"
+										+ "<td title=\"NA status\" align=\"left\" style='color: dimgray; size:18; weight: bold'width=\"185\">"
 										+ "N/A" + "</td>\n" + "</tr>\n"
 										+ "</table>\n";
 							}
@@ -377,12 +377,12 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 
 								return "<table>" + "<tr>\n"
-										+ "<td align=\"left\" width=\"185\">"
+										+ "<td title=\"Tool name\" align=\"left\" width=\"185\">"
 										+ toolStatus.getToolDisplayName()
 										+ "</td>\n"
-										+ "<td align=\"left\" width=\"120\">"
+										+ "<td title=\"Tool status\"  align=\"left\" width=\"120\">"
 										+ status + "</td>\n"
-										+ "<td align=\"left\" width=\"45\">"
+										+ "<td title=\"Tool report\" align=\"left\" width=\"45\">"
 										+ toolStatus.getReport() + "</td>\n"
 										+ "</tr>\n" + "</table>";
 							}
@@ -390,13 +390,13 @@ public class AppVetPanel extends DockLayoutPanel {
 							public String getToolStatusHtmlDisplay(
 									ToolStatusGwt toolStatus) {
 								return "<table>" + "<tr>\n"
-										+ "<td align=\"left\" width=\"185\">"
+										+ "<td title=\"Tool name\" align=\"left\" width=\"185\">"
 										+ toolStatus.getToolDisplayName()
 										+ "</td>\n"
-										+ "<td align=\"left\" width=\"120\">"
+										+ "<td title=\"Tool status\" align=\"left\" width=\"120\">"
 										+ toolStatus.getStatusHtml()
 										+ "</td>\n"
-										+ "<td align=\"left\" width=\"45\">"
+										+ "<td title=\"Tool report\" align=\"left\" width=\"45\">"
 										+ toolStatus.getReport() + "</td>\n"
 										+ "</tr>\n" + "</table>";
 							}
@@ -519,7 +519,9 @@ public class AppVetPanel extends DockLayoutPanel {
 			public void onClick(ClickEvent event) {
 				killDialogBox(messageDialogBox);
 				final LoginPanel loginPanel = new LoginPanel(Unit.PX);
+				loginPanel.setTitle("Login panel");
 				final RootLayoutPanel rootLayoutPanel = RootLayoutPanel.get();
+				rootLayoutPanel.setTitle("Root panel");
 				rootLayoutPanel.clear();
 				rootLayoutPanel.add(loginPanel);
 			}
@@ -844,8 +846,10 @@ public class AppVetPanel extends DockLayoutPanel {
 											pollingTimer.cancel();
 											final LoginPanel loginPanel = new LoginPanel(
 													Unit.PX);
+											loginPanel.setTitle("Login panel");
 											final RootLayoutPanel rootLayoutPanel = RootLayoutPanel
 													.get();
+											rootLayoutPanel.setTitle("Root panel");
 											rootLayoutPanel.clear();
 											rootLayoutPanel.add(loginPanel);
 											System.gc();
@@ -954,9 +958,12 @@ public class AppVetPanel extends DockLayoutPanel {
 //			lastAppsListUpdate = timeStampObject.getLastAppUpdate();
 //		}
 		final HorizontalSplitPanel centerAppVetSplitPanel = new HorizontalSplitPanel();
+		centerAppVetSplitPanel.setTitle("AppVet split pane");
 		centerAppVetSplitPanel.setSplitPosition("64%");
 		centerAppVetSplitPanel.setSize("", "100%");
 		final SimplePanel leftCenterPanel = new SimplePanel();
+		leftCenterPanel.setTitle("AppVet apps list pane");
+
 		centerAppVetSplitPanel.setLeftWidget(leftCenterPanel);
 		leftCenterPanel.setSize("", "100%");
 		final DockPanel dockPanel_1 = new DockPanel();
@@ -964,6 +971,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		leftCenterPanel.setWidget(dockPanel_1);
 		dockPanel_1.setSize("100%", "");
 		rightCenterPanel = new SimplePanel();
+		rightCenterPanel.setTitle("AppVet app info panel");
+
 		centerAppVetSplitPanel.setRightWidget(rightCenterPanel);
 		rightCenterPanel.setSize("", "95%");
 		final VerticalPanel appInfoVerticalPanel = new VerticalPanel();
@@ -1047,7 +1056,7 @@ public class AppVetPanel extends DockLayoutPanel {
 						SERVLET_URL);
 				appUploadDialogBox.setText("Submit App");
 				appUploadDialogBox.center();
-				//appUploadDialogBox.cancelButton.setFocus(true);
+				appUploadDialogBox.cancelButton.setFocus(true);
 				appUploadDialogBox.cancelButton
 						.addClickHandler(new ClickHandler() {
 							@Override
@@ -1288,6 +1297,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel_2.setSize("100%", "20px");
 
 		Image nistLogo = new Image("images/nist_logo_darkgrey.png");
+		nistLogo.setAltText("NIST logo");
+		nistLogo.setTitle("NIST logo");
 		horizontalPanel_2.add(nistLogo);
 		horizontalPanel_2.setCellVerticalAlignment(nistLogo,
 				HasVerticalAlignment.ALIGN_BOTTOM);

@@ -55,7 +55,9 @@ public class AppVet implements EntryPoint {
 			// Login attempt is not via single sign-on (SSO), so users must
 			// login manually through AppVet login page
 			final LoginPanel loginPanel = new LoginPanel(Unit.PX);
+			loginPanel.setTitle("Login panel");
 			final RootLayoutPanel rootPanel = RootLayoutPanel.get();
+			rootPanel.setTitle("Root panel");
 			rootPanel.add(loginPanel);
 		} else if (username != null && password != null) {
 			// Login attempt is via single sign-on (SSO)
@@ -157,10 +159,12 @@ public class AppVet implements EntryPoint {
 					final AppVetPanel appVetPanel = new AppVetPanel(
 
 					Unit.PX, configInfo, appsList);
+					appVetPanel.setTitle("AppVet Panel");
 
 					final RootLayoutPanel rootLayoutPanel = RootLayoutPanel
 
 					.get();
+					rootLayoutPanel.setTitle("Root panel");
 
 					rootLayoutPanel.clear();
 
