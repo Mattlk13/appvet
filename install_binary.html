@@ -17,7 +17,7 @@
 				variables</a>
 		<li class="big"><a href="#mysql" target="rightframe">AppVet Database</a>
 		<li class="big"><a href="#conf" target="rightframe">Configuration</a>
-		<li class="big"><a href="#services" target="rightframe">Adding Testing Services</a>
+		<li class="big"><a href="#tools" target="rightframe">Adding Tools</a>
 		
 		<li class="big"><a href="install_sso.html" target="rightframe">Single Sign-On (SSO)</a>
 
@@ -236,13 +236,20 @@
 	<a class="underline" href="schemas/AppVetProperties.html">AppVet
 		Properties XML Schema</a>.
 
-	<h2 id="services">Adding Testing Services</h2>
+	<h2 id="tools">Adding Tools</h2>
 	
-	To add testing services to AppVet, you must have an AppVet tool adapter for
-	the specific testing service. A tool adapter is an XML file provided by a 
+	To add an online tool to AppVet, you must have an AppVet tool adapter for
+	the specific online tool. A tool adapter is an XML file provided by a 
 	vendor that is used by AppVet to understand how to connect to the (online) 
-	testing service. For more information, see the AppVet 
+	tool. To add an online tool to AppVet, place the tool adapter XML file 
+	in your <code>$APPVET_FILES_HOME/conf/tool_adapters/[os]</code> directory and then
+	restart AppVet.
+	
+	For more information, see the AppVet 
 	<a href="schemas/ToolAdapter.html">Tool Adapter</a> specification.
+	<br>
+	<br>
+	
 
 </body>
 

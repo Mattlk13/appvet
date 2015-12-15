@@ -43,7 +43,8 @@ h2.menu {
 	color: #606060;
 	font-size: 16px;
 	margin-top: 5px;
-	margin-bottom: 10px;
+	margin-bottom: 5px;
+	
 }
 
 h3 {
@@ -133,3 +134,8 @@ tr, td {
 			border: 1px solid black;
 	
 }
+
+ul.menu {
+	  margin: 0px;
+    padding-left:30;
+}​

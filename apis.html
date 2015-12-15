@@ -6,25 +6,718 @@
 
 <body>
 
-	<h1>AppVet APIs</h1>
+	<h1>APIs</h1>
 
 	<ul>
-		<li class="big"><a href="#androidtoolstatus" target="rightframe">AppVet API</a>
-		<li class="big"><a href="#apps" target="rightframe">Tool Services API Requirements</a>
+		<li class="big"><a href="#appvetapi">AppVet API</a></li>
+		<li class="big"><a href="#toolapis">Tool APIs</a></li>
 
-		</li>
 	</ul>
 	<hr>
-	<h2 id="androidtoolstatus">AppVet API</h2>
+	<h2 id="appvetapi">AppVet API</h2>
+
+	<h3 id="AUTHENTICATE">AUTHENTICATE</h3>
+
+	The
+	<code>AUTHENTICATE</code>
+	service accepts a username and password for authenticating a client
+	with AppVet and returns an AppVet session ID. This session ID may then
+	be used by the client for further interaction with AppVet until the
+	session expires. The
+	<code>AUTHENTICATE</code>
+	HTTP Request API is shown in Table 1a.
+
+	<br>
+	<br>
+	<br>
+	<center>
+		<br> <br>
+		<p class="cap">Table 1a. AUTHENTICATE request.</p>
+
+		<table>
+			<tr>
+				<th>Entity</th>
+				<th>Name and/or Value</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>Method</td>
+				<td><code>GET</code></td>
+				<td>HTTP Request method.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>command = AUTHENTICATE</code></td>
+				<td>AppVet command.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>username = &lt;username&gt;</code></td>
+				<td>AppVet username.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>password = &lt;password&gt;</code></td>
+				<td>AppVet password.</td>
+			</tr>
+		</table>
+	</center>
+	<br>
+	<br>
+	<br> The HTTP Response for an
+	<code>AUTHENTICATE</code>
+	HTTP Request is shown in Table 1b.
+
+
+	<br>
+	<br>
+	<br>
+	<center>
+		<p class="cap">Table 1b. HTTP response.</p>
+
+		<table>
+			<tr>
+				<th>Entity</th>
+				<th>Name and/or Value</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>Status Code</td>
+				<td><code>&lt;statuscode&gt;</code></td>
+				<td>HTTP status code.</td>
+			</tr>
+			<tr>
+				<td>Payload</td>
+				<td><code>&lt;sessionid&gt;</code></td>
+				<td>AppVet session ID.</td>
+			</tr>
+		</table>
+	</center>
+	<br>
+	<br>
+	<br>
+
+
+	<h3 id="GET_STATUS">GET_STATUS</h3>
+
+	The
+	<code>GET_STATUS</code>
+	service retrieves the current status or risk assessment of an app. App
+	status descriptions are described in
+	<a href="users_guide.html#AppStatus">App Status</a>. The
+	<code>GET_STATUS</code>
+	HTTP Request API is shown in Table 2a.
+
+	<br>
+	<br>
+	<br>
+	<center>
+		<p class="cap">Table 2a. GET_STATUS request.</p>
+
+		<br> <br>
+		<table>
+			<tr>
+				<th>Entity</th>
+				<th>Name and/or Value</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>Method</td>
+				<td><code>GET</code></td>
+				<td>HTTP Request method.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>command = GET_STATUS</code></td>
+				<td>AppVet command.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>sessionid = &lt;sessionid&gt;</code></td>
+				<td>AppVet username.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>appid = &lt;appid&gt;</code></td>
+				<td>AppVet app ID.</td>
+			</tr>
+		</table>
+	</center>
+	<br>
+	<br>
+	<br> The HTTP Response for an
+	<code>GET_STATUS</code>
+	HTTP Request is shown in Table 2b.
+
+
+	<br>
+	<br>
+	<br>
+	<center>
+		<p class="cap">Table 2b. HTTP response.</p>
+
+		<table>
+			<tr>
+				<th>Entity</th>
+				<th>Name and/or Value</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>Status Code</td>
+				<td><code>&lt;statuscode&gt;</code></td>
+				<td>HTTP status code.</td>
+			</tr>
+			<tr>
+				<td>Payload</td>
+				<td><code>&lt;appstatus&gt;</code></td>
+				<td>AppVet app status or risk assessment.</td>
+			</tr>
+		</table>
+	</center>
+	<br>
+	<br>
+	<br>
 
 
 
-	<h2 id="apps">Tool Services API Requirements</h2>
+	<h3 id="GET_TOOL_REPORT">GET_TOOL_REPORT</h3>
+
+	The
+	<code>GET_TOOL_REPORT</code>
+	service retrieves the tool report for the specified app. The
+	<code>GET_STATUS</code>
+	HTTP Request API is shown in Table 3a.
+
+	<br>
+	<br>
+	<br>
+	<center>
+		<p class="cap">Table 3a. GET_STATUS request.</p>
 
 
+		<br> <br>
+		<table>
+			<tr>
+				<th>Entity</th>
+				<th>Name and/or Value</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>Method</td>
+				<td><code>GET</code></td>
+				<td>HTTP Request method.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>command = GET_TOOL_REPORT</code></td>
+				<td>AppVet command.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>sessionid = &lt;sessionid&gt;</code></td>
+				<td>AppVet username.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>appid = &lt;appid&gt;</code></td>
+				<td>AppVet app ID.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>toolid = &lt;toolid&gt;</code></td>
+				<td>AppVet tool ID.</td>
+			</tr>
+		</table>
+	</center>
+	<br>
+	<br>
+	<br> The HTTP Response for an
+	<code>GET_TOOL_REPORT</code>
+	HTTP Request is shown in Table 3b.
 
 
+	<br>
+	<br>
+	<br>
+	<center>
+		<p class="cap">Table 3b. HTTP response.</p>
 
+		<br> <br>
+		<table>
+			<tr>
+				<th>Entity</th>
+				<th>Name and/or Value</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>Status Code</td>
+				<td><code>&lt;statuscode&gt;</code></td>
+				<td>HTTP status code.</td>
+			</tr>
+			<tr>
+				<td>Payload</td>
+				<td><code>&lt;reportfile&gt;</code></td>
+				<td>Report file.</td>
+			</tr>
+		</table>
+	</center>
+	<br>
+	<br>
+	<br>
+
+
+	<h3 id="GET_APP_LOG">GET_APP_LOG</h3>
+
+	The
+	<code>GET_APP_LOG</code>
+	service retrieves the log for the specified app. The
+	<code>GET_APP_LOG</code>
+	HTTP Request API is shown in Table 4a.
+
+	<br>
+	<br>
+	<br>
+	<center>
+		<p class="cap">Table 4a. GET_APP_LOG request.</p>
+
+		<br> <br>
+		<table>
+			<tr>
+				<th>Entity</th>
+				<th>Name and/or Value</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>Method</td>
+				<td><code>GET</code></td>
+				<td>HTTP Request method.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>command = GET_APP_LOG</code></td>
+				<td>AppVet command.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>sessionid = &lt;sessionid&gt;</code></td>
+				<td>AppVet username.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>appid = &lt;appid&gt;</code></td>
+				<td>AppVet app ID.</td>
+			</tr>
+		</table>
+	</center>
+	<br>
+	<br>
+	<br> The HTTP Response for an
+	<code>GET_APP_LOG</code>
+	HTTP Request is shown in Table 4b.
+
+
+	<br>
+	<br>
+	<br>
+	<center>
+		<p class="cap">Table 8-4b. HTTP response.</p>
+
+		<br> <br>
+		<table>
+			<tr>
+				<th>Entity</th>
+				<th>Name and/or Value</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>Status Code</td>
+				<td><code>&lt;statuscode&gt;</code></td>
+				<td>HTTP status code.</td>
+			</tr>
+			<tr>
+				<td>Payload</td>
+				<td><code>&lt;applogfile&gt;</code></td>
+				<td>App log file.</td>
+			</tr>
+		</table>
+	</center>
+	<br>
+	<br>
+	<br>
+
+
+	<h3 id="GET_APPVET_LOG">GET_APPVET_LOG</h3>
+
+	The
+	<code>GET_APPVET_LOG</code>
+	service retrieves the AppVet log. The
+	<code>GET_APPVET_LOG</code>
+	HTTP Request API is shown in Table 5a.
+
+	<br>
+	<br>
+	<br>
+	<center>
+		<p class="cap">Table 5a. GET_APPVET_LOG request.</p>
+
+
+		<br> <br>
+		<table>
+			<tr>
+				<th>Entity</th>
+				<th>Name and/or Value</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>Method</td>
+				<td><code>GET</code></td>
+				<td>HTTP Request method.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>command = GET_APPVET_LOG</code></td>
+				<td>AppVet command.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>sessionid = &lt;sessionid&gt;</code></td>
+				<td>AppVet username.</td>
+			</tr>
+		</table>
+	</center>
+	<br>
+	<br>
+	<br> The HTTP Response for an
+	<code>GET_APPVET_LOG</code>
+	HTTP Request is shown in Table 5b.
+
+
+	<br>
+	<br>
+	<br>
+	<center>
+		<p class="cap">Table 8-5b. HTTP response.</p>
+
+
+		<br> <br>
+		<table>
+			<tr>
+				<th>Entity</th>
+				<th>Name and/or Value</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>Status Code</td>
+				<td><code>&lt;statuscode&gt;</code></td>
+				<td>HTTP status code.</td>
+			</tr>
+			<tr>
+				<td>Payload</td>
+				<td><code>&lt;appvetlogfile&gt;</code></td>
+				<td>AppVet log file.</td>
+			</tr>
+		</table>
+	</center>
+	<br>
+	<br>
+	<br>
+
+
+	<h3 id="DOWNLOAD_REPORTS">DOWNLOAD_REPORTS</h3>
+
+	The
+	<code>DOWNLOAD_REPORTS</code>
+	service retrieves a zipped file containing all reports and logs for the
+	specified app. The
+	<code>DOWNLOAD_REPORTS</code>
+	HTTP Request API is shown in Table 6a.
+
+	<br>
+	<br>
+	<br>
+	<center>
+		<p class="cap">Table 6a. DOWNLOAD_REPORTS request.</p>
+
+		<br> <br>
+		<table>
+			<tr>
+				<th>Entity</th>
+				<th>Name and/or Value</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>Method</td>
+				<td><code>GET</code></td>
+				<td>HTTP Request method.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>command = DOWNLOAD_REPORTS</code></td>
+				<td>AppVet command.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>sessionid = &lt;sessionid&gt;</code></td>
+				<td>AppVet username.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>appid = &lt;appid&gt;</code></td>
+				<td>AppVet app ID.</td>
+			</tr>
+		</table>
+	</center>
+	<br>
+	<br>
+	<br> The HTTP Response for an
+	<code>DOWNLOAD_REPORTS</code>
+	HTTP Request is shown in Table 6b.
+
+
+	<br>
+	<br>
+	<br>
+	<center>
+		<p class="cap">Table 8-6b. HTTP response.</p>
+
+
+		<br> <br>
+		<table>
+			<tr>
+				<th>Entity</th>
+				<th>Name and/or Value</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>Status Code</td>
+				<td><code>&lt;statuscode&gt;</code></td>
+				<td>HTTP status code.</td>
+			</tr>
+			<tr>
+				<td>Payload</td>
+				<td><code>&lt;reportfile&gt;</code></td>
+				<td>AppVet reports file.</td>
+			</tr>
+		</table>
+	</center>
+	<br>
+	<br>
+	<br>
+
+
+	<h3 id="SUBMIT_APP">SUBMIT_APP</h3>
+
+	The
+	<code>SUBMIT_APP</code>
+	service submits an app to AppVet. The
+	<code>SUBMIT_APP</code>
+	HTTP Request API is shown in Table 7a.
+
+	<br>
+	<br>
+	<br>
+	<center>
+		<p class="cap">Table 7a. SUBMIT_APP request.</p>
+
+
+		<br> <br>
+		<table>
+			<tr>
+				<th>Entity</th>
+				<th>Name and/or Value</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>Method</td>
+				<td><code>POST</code></td>
+				<td>HTTP Request method.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>command = SUBMIT_APP</code></td>
+				<td>AppVet command.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>sessionid = &lt;sessionid&gt;</code></td>
+				<td>AppVet username.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>file = &lt;appfile&gt;</code></td>
+				<td>App file.</td>
+			</tr>
+		</table>
+	</center>
+	<br>
+	<br>
+	<br> The HTTP Response for an
+	<code>SUBMIT_APP</code>
+	HTTP Request is shown in Table 7b.
+
+
+	<br>
+	<br>
+	<br>
+	<center>
+
+		<p class="cap">Table 7b. HTTP response.</p>
+
+		<br> <br>
+		<table>
+			<tr>
+				<th>Entity</th>
+				<th>Name and/or Value</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>Status Code</td>
+				<td><code>&lt;statuscode&gt;</code></td>
+				<td>HTTP status code.</td>
+			</tr>
+			<tr>
+				<td>Response Header</td>
+				<td><code>&lt;appid&gt;</code></td>
+				<td>App ID of the submitted app.</td>
+			</tr>
+		</table>
+	</center>
+	<br>
+	<br>
+	<br>
+
+
+	<h3 id="SUBMIT_REPORT">SUBMIT_REPORT</h3>
+
+	The
+	<code>SUBMIT_REPORT</code>
+	service submits (or overrides an existing) tool report for the
+	specified app. This service is used by asynchronous and push services
+	to submit reports as well as analysts for overriding existing tool
+	reports. The
+	<code>SUBMIT_REPORT</code>
+	HTTP Request API is shown in Table 9a.
+
+	<br>
+	<br>
+	<br>
+	<center>
+		<p class="cap">Table 8-9a. SUBMIT_REPORT request.</p>
+
+		<br> <br>
+		<table>
+			<tr>
+				<th>Entity</th>
+				<th>Name and/or Value</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>Method</td>
+				<td><code>POST</code></td>
+				<td>HTTP Request method.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>command = SUBMIT_REPORT</code></td>
+				<td>AppVet command.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>appid = &lt;appid&gt;</code></td>
+				<td>AppVet app ID.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>username = &lt;username&gt;</code></td>
+				<td>AppVet username.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>password = &lt;password&gt;</code></td>
+				<td>AppVet password.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>toolrisk = &lt;toolrisk&gt;</code></td>
+				<td>The risk assessment <code>PASS</code>, <code>WARNING</code>,
+					or <code>FAIL</code>. If the service could not process the app,
+					then risk should have a value of <code>ERROR</code>.
+				</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>file = &lt;reportfile&gt;</code></td>
+				<td>Report file.</td>
+			</tr>
+		</table>
+	</center>
+	<br>
+	<br>
+	<br> The HTTP Response for an
+	<code>SUBMIT_REPORT</code>
+	HTTP Request is shown in Table 9b.
+
+
+	<br>
+	<br>
+	<br>
+	<center>
+		<p class="cap">Table 9b. HTTP response.</p>
+
+
+		<br> <br>
+		<table>
+			<tr>
+				<th>Entity</th>
+				<th>Name and/or Value</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>Status Code</td>
+				<td><code>&lt;statuscode&gt;</code></td>
+				<td>HTTP status code.</td>
+			</tr>
+		</table>
+	</center>
+	<br>
+	<br>
+	<br>
+
+	<h2 id="toolapis">Tool APIs</h2>
+
+	Although different online tools with have different APIs, AppVet requires that
+	at the very least, the online tool accept an app ID and an app file. The app ID 
+	must be returned with a report and risk assessment by the online tool in order 
+	for AppVet to associate the report/risk assessment with the proper app. Table 10 
+	shows the minimum requirements for a tool API.
+	
+			<br> <br>
+		<table>
+			<tr>
+				<th>Entity</th>
+				<th>Name and/or Value</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>appid = &lt;appid&gt;</code></td>
+				<td>App ID.</td>
+			</tr>
+			<tr>
+				<td>Parameter</td>
+				<td><code>file = &lt;appfile&gt;</code></td>
+				<td>App file.</td>
+			</tr>
+		</table>
+	</center>
+	<br>
+	<br>
+	
+	When an online tool sends a report and risk assessment back to AppVet, it 
+	does so through the AppVet <a class="underline" href="#SUBMIT_REPORT"><code>SUBMIT_REPORT</code></a> API.
+
+<br>
+<br>
 </body>
 
 </html>
