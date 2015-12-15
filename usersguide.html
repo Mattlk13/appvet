@@ -1,0 +1,312 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="stylesheets/appvet.css">
+</head>
+
+<body>
+
+	<h1>User's Guide</h1>
+
+	<ul>
+		<li class="big"><a href="#starting" target="rightframe">Starting
+				AppVet</a>
+		<li class="big"><a href="#ui" target="rightframe">AppVet UI</a></li>
+	</ul>
+	<hr>
+
+
+
+	<h2 id="starting">Starting AppVet</h2>
+
+	<p>
+		To start AppVet, start the Tomcat service. After Tomcat is started,
+		open a browser to your AppVet URL
+		<code>https://&lt;host&gt;:&lt;port&gt;/appvet where
+			&lt;host&gt;:&lt;port&gt;</code>
+		is the hostname or IP address and port number of your server. The
+		AppVet login screen should be visible as shown in Figure 1.
+	</p>
+
+	<br>
+	<br>
+	<center>
+		<img src="images/login.png" alt="AppVet login" style="height: 400px;">
+		<br> <br>
+		<p class="cap">Figure 1. AppVet login screen.</p>
+	</center>
+	<br>
+	<br>
+
+	<h2 id="ui">AppVet UI</h2>
+	<p>After logging into AppVet, the AppVet app management interface
+		is displayed as shown in Figure 2.</p>
+	<br>
+	<br>
+	<center>
+		<img src="images/appvet_ui.png" alt="AppVet UI" style="height: 400px;">
+		<br> <br>
+		<p class="cap">Figure 2. AppVet UI.</p>
+	</center>
+	<br>
+	<br>
+	<p>
+		The AppVet app management interface comprises two main panels: an <i>apps
+			list</i> panel on the left and an app information panel on the right. The
+		apps list panel displays apps that have been uploaded to the system
+		while the app information panel displays information about the
+		selected app. The apps list panel displays general information about
+		uploaded apps including their AppVet-generated app ID, app name,
+		current status and risk assessment, user (app owner), and the
+		date/time when the app was uploaded to the system. The app info panel
+		contains information about a selected app including:
+	</p>
+	<ul>
+		<li>App name and icon
+		<li>Version number
+		<li>Registration and app pre-processing statuses
+		<li>Tool service reports
+		<li>Tool service status and risk assessments
+	</ul>
+
+	<h3>Operation Buttons</h3>
+	The apps list panel contains operation buttons used to manage apps and
+	their related reports. Table 1 describes the functions of AppVet
+	operation buttons.
+	<br>
+	<br>
+	<center>
+		<table>
+			<p class="cap">Table 1. Operation buttons.</p>
+
+			<tbody>
+				<tr>
+					<th>Icon</th>
+					<th>Name</th>
+					<th>Description</th>
+				</tr>
+				<tr>
+					<td align="center"><img width="20px"
+						src="images/button_view_all.png" alt="button_view_all"></td>
+					<td>View All</td>
+					<td>View all apps.</td>
+				</tr>
+				<tr>
+					<td align="center"><img width="20px"
+						src="images/button_upload_app.png" alt="button_upload_app"></td>
+					<td>Upload</td>
+					<td>Upload app file.</td>
+				</tr>
+				<tr>
+					<td align="center"><img width="20px"
+						src="images/button_download_reports.png"
+						alt="button_download_reports"></td>
+					<td>Download</td>
+					<td>Download report files.</td>
+				</tr>
+				<tr>
+					<td align="center"><img width="20px"
+						src="images/button_override_reports.png"
+						alt="button_override_reports"></td>
+					<td>Override report</td>
+					<td>Override a report for the selected app.</td>
+				</tr>
+				<tr>
+					<td align="center"><img width="20px"
+						src="images/button_delete_app.png" alt="button_delete_app"></td>
+					<td>Delete App</td>
+					<td>Deletes the selected app.</td>
+				</tr>
+				<tr>
+					<td align="center"><img width="20px"
+						src="images/button_view_log.png" alt="button_view_log"></td>
+					<td>View Log</td>
+					<td>View app processing log for the selected app.</td>
+				</tr>
+			</tbody>
+		</table>
+	</center>
+	<br>
+	<br>
+	<h3>Menus</h3>
+	<p>
+		AppVet provides three menus: <b>User</b>, <b>Help</b>, and <b>Admin</b>.
+		The <b>User</b> menu is displayed as the user's first name and first
+		letter of the last name in the top left corner as shown in Figure 3.
+	</p>
+
+	<br>
+	<br>
+	<center>
+		<img src="images/menu_user.png" alt="AppVet Menus"> <br> <br>
+		<p class="cap">Figure 3. AppVet Menu.</p>
+	</center>
+	<br>
+	<br> The
+	<b>User</b> menu allows users to edit their account information (via
+	Account Settings), view apps that they have uploaded (via
+	<b>My Apps</b>), or log out (via
+	<b>Logout</b>).
+	<p>
+		The <b>Help</b> menu provides help-related information including a
+		link to the AppVet website.
+	<p>
+		For AppVet administrators, the <b>Admin</b> menu provides access to
+		the AppVet system log and user management functions. In the app
+		information panel, each tool service is associated with a processing
+		status or risk assessment as shown in Figure 5-4.
+	<h3>Tool Status</h3>
+
+	In the app information panel, each tool service is associated with a
+	processing status or risk assessment as shown in Figure 4.
+
+	<br>
+	<br>
+	<center>
+		<img src="images/tool_status_screenshot.png" alt="AppVet Tool Status">
+		<br> <br>
+		<p class="cap">Figure 4. App Tools Status.</p>
+	</center>
+	<br>
+	<br> A tool service status indicates the current processing status
+	of, or the risk assessment generated by, a tool service. In general,
+	the risk assessment generated by a tool service should conform to a
+	standardized risk scoring system, such as the Common Vulnerability
+	Scoring System (CVSS). AppVet requires that these assessments be mapped
+	to one of three risk categories: LOW , MODERATE , or HIGH . Table 2
+	describes these risk assessment categories and AppVet tool service
+	statuses.
+	<p>
+	<br>
+<br>
+<center>
+		<p class="cap">Table 2. Tool statuses and risk assessments.</p>
+	<table>
+		<tbody><tr>
+			<th>Type</th>
+			<th>Tool Status</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td rowspan="5">Processing Status</td>
+			<td>N/A</td>
+			<td>No status information is available for the tool service.</td>
+		</tr>
+		<tr>
+			<td>PENDING</td>
+			<td>App is waiting to be submitted to the tool service.</td>
+		</tr>
+		<tr>
+			<td>SUBMITTED</td>
+			<td>App has been submitted to the tool service.</td>
+		</tr>
+		<tr>
+			<td>PROCESSING</td>
+			<td>The tool service is analyzing the app.</td>
+		</tr>
+		<tr>
+			<td>ERROR</td>
+			<td>The tool service could not analyze the app.</td>
+		</tr>
+		<tr>
+			<td rowspan="3">Risk Assessment</td>
+			<td>LOW</td>
+			<td>The tool service designates the app as low-risk.</td>
+		</tr>
+		<tr>
+			<td>MODERATE</td>
+			<td>The tool service designates the app as moderate-risk.</td>
+		</tr>
+		<tr>
+			<td>HIGH</td>
+			<td>The tool service designates the app as high-risk.</td>
+		</tr>
+	</tbody></table>
+</center>
+<br>
+<br>
+<br> Note that a risk assessment is only displayed after the tool
+has successfully completed processing. Further note that risk
+assessments generated by a tool service can be later overridden if
+needed. This feature is used to mitigate false positive analysis
+results.
+	
+		<h3>App Status</h3>
+	In the apps list panel, each app is associated with a status or risk
+assessment as shown in Figure 5.
+
+<br>
+<br>
+<br>
+<center>
+	<img width="700px" src="images/app_status.png" alt="app_status">
+	<br> <br> 
+			<p class="cap">Figure 5. App status.</p>
+	
+</center>
+<br>
+<br>
+<br> An app status indicates the current status or risk assessment
+of an app which, in turn, is based on the statuses and risk assessments
+of the tool services. Table 3 describes the AppVet app statuses and
+risk assessments.
+<br>
+<br>
+<br>
+<center>
+			<p class="cap">Table 5-3. App status and risk assessments.</p>
+</b> <br> <br>
+	<table border="1" style="width: 470px">
+		<tbody><tr>
+			<th>Type</th>
+			<th>App Status</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td rowspan="4">Processing Status</td>
+			<td>REGISTERING</td>
+			<td>App is being registered by AppVet.</td>
+		</tr>
+		<tr>
+			<td>PENDING</td>
+			<td>App is waiting to be analyzed.</td>
+		</tr>
+		<tr>
+			<td>PROCESSING</td>
+			<td>App is being analyzed by one or more tool services.</td>
+		</tr>
+		<tr>
+			<td>ERROR</td>
+			<td>One or more tools could not analyze the app.</td>
+		</tr>
+		<tr>
+			<td rowspan="3">Risk Assessment</td>
+			<td>LOW</td>
+			<td>All tool services designate the app as low-risk.</td>
+		</tr>
+		<tr>
+			<td>MODERATE</td>
+			<td>At least one tool service designates te app as
+				moderate-risk, but no tool service designates the app as high-risk.</td>
+		</tr>
+		<tr>
+			<td>HIGH</td>
+			<td>At least one tool service designates the app as high-risk.</td>
+		</tr>
+	</tbody></table>
+</center>
+<br>
+<br>
+<br> 
+Note that if a risk assessment is displayed, processing for the app has completed.
+<p>
+Note that the decision to approve or reject an app is dependent upon the
+policies and security requirements of the organization that owns and
+operates the instance of AppVet. In addition, overall risk assessments
+generated by AppVet are based solely on the risk assessments provided by
+the tools used.		
+	<br>
+	<br>
+</body>
+
+</html>
