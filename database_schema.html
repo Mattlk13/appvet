@@ -56,6 +56,20 @@
 				<td><center>-</center></td>
 				</code>
 			</tr>
+
+			<tr>
+				<td><code>updated</code></td>
+				<td><code>tinyint(1)</code></td>
+				<td><center>
+						<code>NO</code>
+					</center></td>
+				<td><center></center></td>
+				<td><center>0</center></td>
+				<td><center>-</center></td>
+				</code>
+			</tr>
+
+
 			<tr>
 				<td><code>appname</code></td>
 				<td><code>varchar(120)</code></td>
@@ -120,20 +134,8 @@
 				<td><center>-</center></td>
 			</tr>
 			<tr>
-				<td><code>status</code></td>
+				<td><code>appstatus</code></td>
 				<td><code>varchar(120)</code></td>
-				<td><center>
-						<code>YES</code>
-					</center></td>
-				<td><center>-</center></td>
-				<td><center>
-						<code>NULL</code>
-					</center></td>
-				<td><center>-</center></td>
-			</tr>
-			<tr>
-				<td><code>statustime</code></td>
-				<td><code>timestamp</code></td>
 				<td><center>
 						<code>YES</code>
 					</center></td>
@@ -158,6 +160,18 @@
 			<tr>
 				<td><code>clienthost</code></td>
 				<td><code>varchar(120)</code></td>
+				<td><center>
+						<code>YES</code>
+					</center></td>
+				<td><center>-</center></td>
+				<td><center>
+						<code>NULL</code>
+					</center></td>
+				<td><center>-</center></td>
+			</tr>
+			<tr>
+				<td><code>os</code></td>
+				<td><code>varchar(10)</code></td>
 				<td><center>
 						<code>YES</code>
 					</center></td>
@@ -192,6 +206,11 @@
 				<td>The AppVet generated unique ID.</td>
 			</tr>
 			<tr>
+				<td><code>updated</code></td>
+				<td>Used internally by AppVet to update UI display.</td>
+			</tr>
+
+			<tr>
 				<td><code>appname</code></td>
 				<td>The name of the app.</td>
 			</tr>
@@ -216,12 +235,8 @@
 				<td>The time the app was submitted.</td>
 			</tr>
 			<tr>
-				<td><code>status</code></td>
+				<td><code>appstatus</code></td>
 				<td>The current status of the app.</td>
-			</tr>
-			<tr>
-				<td><code>statustime</code></td>
-				<td>The time of the last status update.</td>
 			</tr>
 			<tr>
 				<td><code>username</code></td>
@@ -230,6 +245,10 @@
 			<tr>
 				<td><code>clienthost</code></td>
 				<td>The host who submitted the app.</td>
+			</tr>
+			<tr>
+				<td><code>os</code></td>
+				<td>The operating system platform of the app.</td>
 			</tr>
 		</table>
 	</center>
@@ -263,7 +282,7 @@
 			</tr>
 			<tr>
 				<td><code>username</code></td>
-				<td><code>varchar(32)</code></td>
+				<td><code>varchar(254)</code></td>
 				<td><center>
 						<code>NO</code>
 					</center></td>
@@ -276,7 +295,7 @@
 			</tr>
 			<tr>
 				<td><code>password</code></td>
-				<td><code>varchar(102)</code></td>
+				<td><code>varchar(128)</code></td>
 				<td><center>
 						<code>YES</code>
 					</center></td>
@@ -287,7 +306,37 @@
 					</code></td>
 			</tr>
 			<tr>
+				<td><code>lastName</code></td>
+				<td><code>varchar(32)</code></td>
+				<td><center>
+						<code>YES</code>
+					</center></td>
+				<td><center>-</center></td>
+				<td><code>NULL</code></td>
+				<td><center>-</center></td>
+			</tr>
+			<tr>
+				<td><code>firstName</code></td>
+				<td><code>varchar(32)</code></td>
+				<td><center>
+						<code>YES</code>
+					</center></td>
+				<td><center>-</center></td>
+				<td><code>NULL</code></td>
+				<td><center>-</center></td>
+			</tr>
+			<tr>
 				<td><code>org</code></td>
+				<td><code>varchar(120)</code></td>
+				<td><center>
+						<code>YES</code>
+					</center></td>
+				<td><center>-</center></td>
+				<td><code>NULL</code></td>
+				<td><center>-</center></td>
+			</tr>
+			<tr>
+				<td><code>dept</code></td>
 				<td><code>varchar(120)</code></td>
 				<td><center>
 						<code>YES</code>
@@ -337,18 +386,8 @@
 				<td><center>-</center></td>
 			</tr>
 			<tr>
-				<td><code>lastName</code></td>
-				<td><code>varchar(32)</code></td>
-				<td><center>
-						<code>YES</code>
-					</center></td>
-				<td><center>-</center></td>
-				<td><code>NULL</code></td>
-				<td><center>-</center></td>
-			</tr>
-			<tr>
-				<td><code>firstName</code></td>
-				<td><code>varchar(32)</code></td>
+				<td><code>toolsAuth</code></td>
+				<td><code>varchar(1000)</code></td>
 				<td><center>
 						<code>YES</code>
 					</center></td>
@@ -387,8 +426,20 @@
 				<td>The user's password (PBKDF2 salted hash).</td>
 			</tr>
 			<tr>
+				<td><code>lastName</code></td>
+				<td>The user's last name.</td>
+			</tr>
+			<tr>
+				<td><code>firstName</code></td>
+				<td>The user's first name.</td>
+			</tr>
+			<tr>
 				<td><code>org</code></td>
 				<td>The user's organization.</td>
+			</tr>
+			<tr>
+				<td><code>dept</code></td>
+				<td>The user's department.</td>
 			</tr>
 			<tr>
 				<td><code>email</code></td>
@@ -407,12 +458,8 @@
 				<td>The host of the user's last logon.</td>
 			</tr>
 			<tr>
-				<td><code>lastName</code></td>
-				<td>The user's last name.</td>
-			</tr>
-			<tr>
-				<td><code>firstName</code></td>
-				<td>The user's first name.</td>
+				<td><code>toolsAuth</code></td>
+				<td>The user's authentication information for available tools.</td>
 			</tr>
 		</table>
 	</center>
@@ -543,8 +590,9 @@
 	table defines the current processing or risk status of an Android tool
 	for a given app. Table 7 shows the
 	<code>androidtoolstatus</code>
-	table schema. Note that as new testing service adapters are added to AppVet,
-	AppVet automatically creates a new column in the
+	table schema. Note that AppVet comes with three internal tools: registration, 
+	appinfo, and audit. As new testing service adapters are added to
+	AppVet, AppVet automatically creates a new column in the
 	<code>androidtoolstatus</code>
 	table.
 	<br>
@@ -592,7 +640,17 @@
 					</code></td>
 			</tr>
 			<tr>
-				<td><code>android</code></td>
+				<td><code>appinfo</code></td>
+				<td><code>varchar(120)</code></td>
+				<td><center>
+						<code>YES</code>
+					</center></td>
+				<td><center>-</center></td>
+				<td><code>NULL</code></td>
+				<td><center>-</center></td>
+			</tr>
+			<tr>
+				<td><code>audit</code></td>
 				<td><code>varchar(120)</code></td>
 				<td><center>
 						<code>YES</code>
@@ -659,11 +717,19 @@
 			</tr>
 			<tr>
 				<td><code>registration</code></td>
-				<td>The registration status of the app.</td>
+				<td>The registration status of the app. The registration tool
+				is a built-in internal tool for AppVet.</td>
 			</tr>
 			<tr>
-				<td><code>android</code></td>
-				<td>The Android pre-processing status.</td>
+				<td><code>appinfo</code></td>
+				<td>The Android pre-processing status. The appinfo tool
+				is a built-in internal tool for AppVet.</td>
+			</tr>
+			<tr>
+				<td><code>audit</code></td>
+				<td>The organization's audit status. The audit tool
+				is a built-in internal tool for AppVet. Note that the status of an
+					audit will override the current app status.</td>
 			</tr>
 			<tr>
 				<td><code>tool 1</code></td>
@@ -687,8 +753,9 @@
 	table defines the current processing or risk status of a tool for a
 	given app. Table 9 shows the
 	<code>iostoolstatus</code>
-	table schema. Note that as new testing service adapters are added to AppVet,
-	AppVet automatically creates a new column in the
+	table schema. Note that AppVet comes with three internal tools: registration, 
+	appinfo, and audit. As new testing service adapters are added to
+	AppVet, AppVet automatically creates a new column in the
 	<code>iostoolstatus</code>
 	table.
 	<br>
@@ -736,7 +803,17 @@
 					</code></td>
 			</tr>
 			<tr>
-				<td><code>android</code></td>
+				<td><code>appinfo</code></td>
+				<td><code>varchar(120)</code></td>
+				<td><center>
+						<code>YES</code>
+					</center></td>
+				<td><center>-</center></td>
+				<td><code>NULL</code></td>
+				<td><center>-</center></td>
+			</tr>
+			<tr>
+				<td><code>audit</code></td>
 				<td><code>varchar(120)</code></td>
 				<td><center>
 						<code>YES</code>
@@ -803,11 +880,19 @@
 			</tr>
 			<tr>
 				<td><code>registration</code></td>
-				<td>The registration status of the app.</td>
+				<td>The registration status of the app. The registration tool
+				is a built-in internal tool for AppVet.</td>
 			</tr>
 			<tr>
-				<td><code>android</code></td>
-				<td>The Android pre-processing status.</td>
+				<td><code>appinfo</code></td>
+				<td>The iOS pre-processing status. The appinfo tool
+				is a built-in internal tool for AppVet.</td>
+			</tr>
+			<tr>
+				<td><code>audit</code></td>
+				<td>The organization's audit status. The audit tool
+				is a built-in internal tool for AppVet. Note that the status of an
+					audit will override the current app status.</td>
 			</tr>
 			<tr>
 				<td><code>tool 1</code></td>

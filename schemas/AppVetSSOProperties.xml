@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AppVetSSO xmlns:p="http://appvet.github.io/appvet/schemas"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://appvet.github.io/appvet/schemas AppVetSSOProperties.xsd ">
+	<Host>
+		<Hostname>appvethost</Hostname>
+		<SSL>false</SSL>
+		<Port>8080</Port>
+	</Host>
+	<Logging>
+		<Level>DEBUG</Level>
+		<ToConsole>true</ToConsole>
+	</Logging>
+	<UserInfo>
+		<!-- Note that not all of the following may be required for AppVet SSO -->
+		<UserNameParamName>EmployeeUserName</UserNameParamName>
+		<PasswordParamName>EmnployeePassword</PasswordParamName>
+		<PhoneParamName>EmployeePhone</PhoneParamName>
+		<RoleParamName>EmployeeRole</RoleParamName>
+		<LastNameParamName>EmployeeLastName</LastNameParamName>
+		<FirstNameParamName>EmployeeFirstName</FirstNameParamName>
+		<EmailParamName>EmployeeEmail</EmailParamName>
+		<OrganizationParamName>EmployeeOrganization</OrganizationParamName>
+		<DepartmentParamName>EmployeeDepartment</DepartmentParamName>
+	</UserInfo>
+
+	<UseJira>true</UseJira>
+
+	<Jira>
+		<Host>
+			<Hostname>jirahost</Hostname>
+			<SSL>false</SSL>
+			<Port>8080</Port>
+		</Host>
+		<RESTPath>/rest</RESTPath>
+		<RESTAuthPath>/auth/latest</RESTAuthPath>
+		<RESTAPIPath>/api/latest</RESTAPIPath>
+		<UseURLQueryParam>true</UseURLQueryParam>
+		<UsernameParamName>UsernameParamName</UsernameParamName>
+		<Username>Username</Username>
+		<PasswordParamName>PasswordParamName</PasswordParamName>
+		<Password>Password</Password>
+	</Jira>
+
+	<Database>
+		<URL>jdbc:mysql://localhost</URL>
+		<UserName>root</UserName>
+		<Password>dbpassword</Password>
+	</Database>
+</AppVetSSO>

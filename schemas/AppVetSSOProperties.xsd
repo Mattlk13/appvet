@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://appvet.github.io/appvet/schemas" 
+	xmlns="http://appvet.github.io/appvet/schemas"
+	elementFormDefault="qualified">
+
+	<!-- $$Id: AppVetSSOProperties.xsd 38580 2014-04-03 19:53:51Z steveq $$ -->
+	<xs:element name="AppVetSSO">
+		<xs:annotation>
+			<xs:documentation>The AppVet element defines the properties of an
+				AppVet
+				system.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<!-- Configure the runtime development environment -->
+				<xs:element name="Host" type="HostType" maxOccurs="1"
+					minOccurs="1">
+					<xs:annotation>
+						<xs:documentation>
+							The Host element defines properties of the
+							AppVet host.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Logging" type="LoggingType"
+					maxOccurs="1" minOccurs="1">
+					<xs:annotation>
+						<xs:documentation>
+							The Logging element defines properties of
+							the AppVet logger.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="UserInfo" type="UserInfoType"
+					maxOccurs="1" minOccurs="1">
+					<xs:annotation>
+						<xs:documentation>
+							The SingleSignOn defines properties of a
+							single sign-on environment.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+
+
+				<xs:element name="UseJira" type="xs:boolean" maxOccurs="1" minOccurs="1"></xs:element>
+				<xs:element name="Jira" type="JiraType" maxOccurs="1"
+					minOccurs="0">
+				</xs:element>
+			</xs:sequence>
+
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="LoggingType">
+		<xs:sequence>
+			<xs:element name="Level" type="LevelType" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The Level element defines the level used for AppVet logging. Level
+						values include DEBUG, WARNING, INFO, ERROR. For example,
+						<Level>ERROR</Level>
+						. The Level element should be set to DEBUG during AppVet
+						development and to INFO, WARNING, or ERROR for operational AppVet
+						systems.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ToConsole" type="xs:boolean" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The ToConsole element defines whether to write logging information
+						to the console (true) or not (false). For example,
+						<ToConsole>true</ToConsole>
+						. The ToConsole element should be set to true during AppVet
+						development and false for operational AppVet systems.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="AppVetUserParamType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="USERNAME" />
+			<xs:enumeration value="PASSWORD" />
+			<xs:enumeration value="EMAIL" />
+			<xs:enumeration value="LASTNAME" />
+			<xs:enumeration value="FIRSTNAME" />
+			<xs:enumeration value="PHONE" />
+			<xs:enumeration value="ORGANIZATION" />
+			<xs:enumeration value="DEPARTMENT" />
+			<xs:enumeration value="ROLE" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="LevelType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="DEBUG" />
+			<xs:enumeration value="INFO" />
+			<xs:enumeration value="WARNING" />
+			<xs:enumeration value="ERROR" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="UserInfoType">
+        <xs:annotation>
+        	<xs:documentation>These values represent the parameter names received by AppVet SSO. We assume these parameters (and their values) are received as a header in the HTTP Request. 
+Note that these parameters may not include all of the information required by AppVetSSO and that missing parameters and their values might need to be acquired
+from another source (e.g., JIRA). 
+
+</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+			<xs:element name="UserNameParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="PasswordParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="LastNameParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="FirstNameParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="EmailParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="PhoneParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="OrganizationParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="DepartmentParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="RoleParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="DatabaseType">
+		<xs:sequence>
+			<xs:element name="URL" type="xs:anyURI" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The URL element defines the URL of the JDBC database connector.
+						For example,
+						<URL>jdbc:mysql://localhost/appvet</URL>
+						.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="UserName" type="xs:string" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The UserName element defines the database username. For example,
+						<UserName>steve</UserName>
+						.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Password" type="xs:string" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The Password element defines the database password. For example,
+						<Password>mypassword1234</Password>
+						.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+
+
+	<xs:complexType name="SessionType">
+		<xs:sequence>
+			<xs:element name="Timeout" type="xs:int" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The Timeout element defines the duration (in milliseconds) of a
+						user session. For example,
+						<Timeout>1800000</Timeout>
+						. Note that user activity that is detected by the system resets
+						Timeout.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GetUpdatesDelay" type="xs:int"
+				maxOccurs="1" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The GetUpdatesDelay element defines the interval (in milliseconds)
+						to retrieve session update information. For example,
+						<GetUpdatesDisplay>5000</GetUpdatesDisplay>
+						.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ServicesMgrType">
+		<xs:sequence>
+			<xs:element name="ConnectionTimeout" type="xs:int"
+				maxOccurs="1" minOccurs="1"></xs:element>
+			<xs:element name="SocketTimeout" type="xs:int" maxOccurs="1"
+				minOccurs="1"></xs:element>
+			<xs:element name="Timeout" type="xs:int" maxOccurs="1"
+				minOccurs="1"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ToolServicesType">
+		<xs:sequence>
+			<xs:element name="PollingInterval" type="xs:int"
+				maxOccurs="1" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The PollingInterval element defines the interval (in milliseconds)
+						to poll for new or updated app information. For example,
+						<PollingInterval>2000</PollingInterval>
+						.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StaggerInterval" type="xs:int"
+				maxOccurs="1" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The StaggerInterval element defines the delay (in milliseconds) to
+						invoke a tool on an app. For example,
+						<StaggerInterval>1000</StaggerInterval>
+						.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ConnectionTimeout" type="xs:int"
+				maxOccurs="1" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>The ConnectionTimeout element defines the maximum
+						time permitted (in milliseconds) to establish a connection to a
+						remote tool service.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SocketTimeout" type="xs:int" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>The SocketTimeout element defines the maximum
+						time
+						permitted (in milliseconds) to receive data from a remote tool
+						service.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Timeout" type="xs:int" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>The Timeout element defines the maximum time
+						permitted (in milliseconds) for a synchronous service to complete.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="AdminType">
+		<xs:sequence>
+			<!-- Default admin username and password. -->
+			<xs:element name="Username" type="xs:string" maxOccurs="1"
+				minOccurs="1">
+			</xs:element>
+			<xs:element name="Password" type="xs:string" maxOccurs="1"
+				minOccurs="1">
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="HostType">
+		<xs:sequence>
+			<!-- Hostname must be a Fully Qualified Domain Name (FQDN) that includes 
+				both a local hostname and a domain name. This is required due to reliability 
+				issues in deriving the FQDN from the host IP. Because AppVet clients must 
+				connect to AppVet server(s) using the FQDN, it is necessary to require the 
+				admin to define this property. Note that if a FQDN is used for the host, 
+				all clients must also use the same FQDN when connecting to the host. Similarly, 
+				if an IP address in lieu of an FQDN for the host, all clients must connect 
+				to the host using that IP address. -->
+			<xs:element name="Hostname" type="xs:string" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The Hostname element defines the fully qualified domain name
+						(FQDN) or IP address of the host. For example,
+						<Hostname>myhost.examlpe.com</Hostname>
+						. If DHCP is used, Hostame must have the value Hostname="DHCP".
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SSL" type="xs:boolean" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The SSL element defines whether SSL is used by the Tomcat server
+						(true) or not (false). For example,
+						<SSL>true</SSL>
+						. Note that the value of SSL (true or false) must match the Tomcat
+						server configuration as defined in $CATALINA_HOME/conf/server.xml.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Port" type="xs:string" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The Port element defines the Tomcat port number for accessing
+						AppVet. For example,
+						<Port>8080</Port>
+						. Note that the value of Port must match the Tomcat server
+						configuration as defined in $CATALINA_HOME/conf/server.xml.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<!-- Defines whether to keep received apps (true) or delete them after 
+				processing (false). -->
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="AppsType">
+		<xs:sequence>
+			<xs:element name="KeepApps" type="xs:boolean" default="false"
+				maxOccurs="1" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>The KeepApps element defines whether AppVet
+						should
+						keep (true) or delete (false) received apps. Note that
+						keeping
+						apps on the system can lead to large disk usage.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="JiraType">
+        <xs:annotation>
+        	<xs:documentation>If the organization or department for a user is not included in the
+initial parameters received by AppVetSSO, JIRA may be used to 
+acquire this information.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+			<xs:element name="Host" type="HostType" maxOccurs="1"
+				minOccurs="1">
+			</xs:element>
+			<xs:element name="RESTAuthPath" type="xs:string"
+				maxOccurs="1" minOccurs="1">
+			</xs:element>
+			<xs:element name="RESTAPIPath" type="xs:string"
+				maxOccurs="1" minOccurs="1">
+			</xs:element>
+			<xs:element name="UseURLQueryParam" type="xs:boolean"
+				maxOccurs="1" minOccurs="1">
+			</xs:element>
+			<xs:element name="UsernameParamName" type="xs:string"
+				maxOccurs="1" minOccurs="0">
+			</xs:element>
+			<xs:element name="PasswordParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
