@@ -145,7 +145,6 @@ public class AppVetPanel extends DockLayoutPanel {
 	private static boolean searchMode = false;
 	private MenuItem accountMenuItem = null;
 	public static boolean timeoutMessageDisplayed = false;
-	//private boolean newBrowserEvent = true;
 	
 
 	class AppListHandler implements SelectionChangeEvent.Handler {
