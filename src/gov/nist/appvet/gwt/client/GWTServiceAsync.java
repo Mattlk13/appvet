@@ -67,8 +67,8 @@ public interface GWTServiceAsync {
 	void removeSession(String sessionId, AsyncCallback<Boolean> callback)
 			throws IllegalArgumentException;
 
-	void updateSessionTimeout(String sessionId, long sessionTimeout,
-			AsyncCallback<Boolean> callback) throws IllegalArgumentException;
+	void updateSessionExpiration(String sessionId, long sessionTimeout,
+			AsyncCallback<Long> callback) throws IllegalArgumentException;
 
 	void updateSelf(UserInfoGwt userInfo, AsyncCallback<Boolean> callback)
 			throws IllegalArgumentException;

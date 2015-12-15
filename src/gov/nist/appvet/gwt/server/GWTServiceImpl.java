@@ -287,18 +287,18 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	}
 
 	@Override
-	public Boolean updateSessionTimeout(String sessionId, long sessionTimeout)
+	public Long updateSessionExpiration(String sessionId, long sessionTimeout)
 			throws IllegalArgumentException {
 		final String clientIpAddress = getThreadLocalRequest().getRemoteAddr();
-		final boolean sessionValid = Database.isValidSession(sessionId,
+		final long sessionValid = Database.isSessionExpired(sessionId,
 				clientIpAddress);
-		if (!sessionValid) {
+		if (sessionValid == -1) {
 			Database.clearExpiredSessions();
-			return false;
+			return new Long(-1);
 		} else {
 			Database.updateSessionExpiration(sessionId, clientIpAddress,
 					sessionTimeout);
-			return true;
+			return new Long(sessionTimeout);
 		}
 	}
 

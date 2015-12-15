@@ -1036,19 +1036,19 @@ public class Database {
 	 * @param clientIpAddress
 	 * @return
 	 */
-	public static boolean isValidSession(String sessionId,
+	public static long isSessionExpired(String sessionId,
 			String clientIpAddress) {
 		Date date = null;
 		try {
 			if ((sessionId == null) || (clientIpAddress == null)) {
 				log.warn("sessionID or clientIpAddress is null");
-				return false;
+				return -1;
 			}
 			final long expireTimeLong = getSessionExpiration(sessionId,
 					clientIpAddress);
 			if (expireTimeLong == -1) {
 				log.error("expireTimeLong is -1");
-				return false;
+				return -1;
 			} else {
 				date = new Date();
 				final long currentTimeLong = date.getTime();
@@ -1057,9 +1057,9 @@ public class Database {
 					log.warn("Session " + sessionId + " has expired");
 					update("DELETE FROM sessions WHERE sessionid='" + sessionId
 							+ "'");
-					return false;
+					return -1;
 				} else {
-					return true;
+					return expireTimeLong;
 				}
 			}
 		} finally {

@@ -62,7 +62,7 @@ public interface GWTService extends RemoteService {
 
 	Boolean removeSession(String sessionId) throws IllegalArgumentException;
 
-	Boolean updateSessionTimeout(String sessionId, long sessionTimeout)
+	Long updateSessionExpiration(String sessionId, long sessionTimeout)
 			throws IllegalArgumentException;
 
 	Boolean updateSelf(UserInfoGwt userInfo) throws IllegalArgumentException;

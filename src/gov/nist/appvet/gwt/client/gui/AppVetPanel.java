@@ -47,6 +47,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -121,7 +122,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	private List<AppInfoGwt> allApps = null;
 	private TextBox searchTextBox = null;
 	private String sessionId = null;
-	private long sessionExpirationLong = 0;
+	private static long sessionExpirationLong = 0;
 	private Timer pollingTimer = null;
 	private HorizontalPanel appsListButtonPanel = null;
 	private SimplePanel rightCenterPanel = null;
@@ -132,7 +133,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	private static UserListDialogBox usersDialogBox = null;
 	private static DeleteAppConfirmDialogBox deleteConfirmDialogBox = null;
 	private static ReportUploadDialogBox reportUploadDialogBox = null;
-	private UserAcctDialogBox userAcctDialogBox = null;
+	private static UserAcctDialogBox userAcctDialogBox = null;
 	public final Label statusMessageLabel = new Label("");
 	private String SERVLET_URL = null;
 	private String HOST_URL = null;
@@ -143,7 +144,8 @@ public class AppVetPanel extends DockLayoutPanel {
 	private static double SOUTH_PANEL_HEIGHT = 47.0;
 	private static boolean searchMode = false;
 	private MenuItem accountMenuItem = null;
-	private boolean newBrowserEvent = true;
+	public static boolean timeoutMessageDisplayed = false;
+	//private boolean newBrowserEvent = true;
 	
 
 	class AppListHandler implements SelectionChangeEvent.Handler {
@@ -501,7 +503,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 	}
 
-	public void showExpiredSessionMessage() {
+	public static void showExpiredSessionMessage() {
 		killDialogBox(appUploadDialogBox);
 		killDialogBox(errorDialogBox);
 		killDialogBox(messageDialogBox);
@@ -535,6 +537,30 @@ public class AppVetPanel extends DockLayoutPanel {
 			@Override
 			public void onClick(ClickEvent event) {
 				killDialogBox(messageDialogBox);
+			}
+		});
+	}
+	
+	public static void showTimeoutDialog() {
+		messageDialogBox = new MessageDialogBox("Your AppVet session will expire in less than 60 seconds. Please select OK to continue using AppVet.", false);
+		messageDialogBox.setText("AppVet Timeout Warning");
+		messageDialogBox.center();
+		messageDialogBox.closeButton.setFocus(true);
+		messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				killDialogBox(messageDialogBox);
+				// Reset session timeout if close button clicked
+				if (!sessionTimeLeft(sessionExpirationLong)) {
+					showExpiredSessionMessage();
+					
+				} else {
+					sessionExpirationLong = new Date().getTime()
+							+ MAX_SESSION_IDLE_DURATION;
+					timeoutMessageDisplayed = false;
+					log.info("Setting session timeout and display=false");
+				}
+
 			}
 		});
 	}
@@ -1380,7 +1406,8 @@ public class AppVetPanel extends DockLayoutPanel {
 
 	@Override
 	public void onBrowserEvent(Event event) {
-		newBrowserEvent = true;
+		log.info("Browser event! " + event.getString());
+		//newBrowserEvent = true;
 		sessionExpirationLong = new Date().getTime()
 				+ MAX_SESSION_IDLE_DURATION;
 	}
@@ -1390,10 +1417,11 @@ public class AppVetPanel extends DockLayoutPanel {
 		pollingTimer = new Timer() {
 			@Override
 			public void run() {
-				if (newBrowserEvent) {
-					updateSessionExpiration();
-					newBrowserEvent = false;
-				}
+//				if (newBrowserEvent) {
+//					newBrowserEvent = false;
+//				}
+				updateSessionExpiration();
+
 				getUpdatedApps(user);
 			}
 		};
@@ -1574,8 +1602,8 @@ public class AppVetPanel extends DockLayoutPanel {
 	}
 
 	public void updateSessionExpiration() {
-		appVetServiceAsync.updateSessionTimeout(sessionId,
-				sessionExpirationLong, new AsyncCallback<Boolean>() {
+		appVetServiceAsync.updateSessionExpiration(sessionId,
+				sessionExpirationLong, new AsyncCallback<Long>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						log.severe("Could not update session: "
@@ -1583,14 +1611,39 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 
 					@Override
-					public void onSuccess(Boolean updatedSessionTimeout) {
-						if (!updatedSessionTimeout) {
+					public void onSuccess(Long expirationTime) {
+						if (expirationTime == -1) {
 							// Session has expired
 							pollingTimer.cancel();
 							showExpiredSessionMessage();
+						} else {
+							sessionTimeLeft(expirationTime);
 						}
 					}
 				});
+	}
+	
+	public static boolean sessionTimeLeft(long expirationTime) {
+		Date currentDate = new Date();
+		Date expiresDate = new Date(expirationTime);
+		
+		long diff = expiresDate.getTime() - currentDate.getTime();
+		
+		long diffSeconds = diff / 1000 % 60;  
+		long diffMinutes = diff / (60 * 1000) % 60; 
+		
+		if (diff < 0) {
+			log.warning("Time expired: " + diffMinutes + "min " + diffSeconds + "sec");
+			return false;
+		} else {
+			log.info("Time remaining: " + diffMinutes + "min " + diffSeconds + "sec");
+			
+			if (diffMinutes == 0 && timeoutMessageDisplayed == false) {
+				timeoutMessageDisplayed = true;
+				showTimeoutDialog();
+			}
+			return true;
+		}
 	}
 
 	public void openUserAccount(final ConfigInfoGwt configInfo) {

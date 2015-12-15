@@ -109,7 +109,7 @@ public class ToolMgr implements Runnable {
 	@Override
 	public void run() {
 		for (;;) {
-			delay(1000); // Wait to see if another app is processing
+			delay(AppVetProperties.TOOL_MGR_POLLING_INTERVAL); // Wait to see if another app is processing
 			if (Database.otherAppProcessing()) {
 				// If another app has a status of PROCESSING, no other apps
 				// will be processed. If app is stuck in a PROCESSING status,
