@@ -5,7 +5,7 @@
 </head>
 
 <body>
-	<h1>AppVet Dependencies</h1>
+	<h1>AppVet Dependencies Installation</h1>
 
 	AppVet requires the following platforms and tools to be installed:
 	<br>
@@ -17,13 +17,13 @@
 	</ul>
 
 	Note that AppVet dependencies require Oracle Java JDK to be installed
-	first. The following instructions focus primarily on Linux, but should
-	be similar (if not easier) on Windows.
+	first. The following instructions focus primarily on CentOS/RedHat, but should
+	be similar for other Linux platforms and for Windows.
 	<hr>
 	<h2 id="java">Oracle JDK</h2>
 	<h3>Installation</h3>
 
-	AppVet requires Oracle Java JDK 8 to be installed. Note that some Linux
+	AppVet requires Oracle (Java) JDK 8 to be installed. Note that some CentOS/RedHat
 	platforms may come preinstalled with OpenJDK Java packages which may
 	need to be uninstalled and removed so that they do not conflict with
 	Oracle Java. To view a list of preinstalled OpenJDK packages of Java,
@@ -47,7 +47,7 @@
 	uninstalled (e.g., using
 	<code>yum remove libraoffice*</code>
 	) prior to uninstalling OpenJDK. After OpenJDK has been uninstalled and
-	removed, download Oracle Java JDK 8 from:
+	removed, download the (32- or 64-bit) Oracle JDK 8 Linux <code>.rpm</code> file from:
 	<br>
 	<br>
 	<p style="text-indent: 5em;">
@@ -58,7 +58,7 @@
 		</a>
 	</p>
 	<br>
-	<br> To install the Oracle JDK
+	<br> To install the Oracle JDK 8 
 	<code>.rpm</code>
 	file under Linux, open a terminal and run:
 	<br>
@@ -92,6 +92,7 @@
 	by adding the following to the end of the file:
 	<br>
 	<br>
+	<br>	
 	<p>
 		<code>
 			#Global Environment Variables<br>
@@ -228,10 +229,7 @@
 	<h2 id="tomcat">Apache Tomcat</h2>
 	<h3>Installation</h3>
 	AppVet requires Apache Tomcat 8 to be installed. Tomcat is used to host
-	AppVet as a web application and service. For AppVet, it is recommended
-	to install Tomcat into the user's
-	<code>$HOME</code>
-	directory. To install Apache Tomcat 8 under CentOS/RedHat, open a
+	the AppVet web application. To install Apache Tomcat 8 under CentOS/RedHat, open a
 	browser and go to:
 	<br>
 	<br>

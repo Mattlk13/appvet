@@ -1,0 +1,114 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../stylesheets/appvet.css">
+</head>
+
+<body>
+
+	<h1>AppVet SSO Properties XML Schema</h1>
+
+	<ul>
+		<li class="big"><a href="#admin" target="rightframe">Host</a></li>
+		<li class="big"><a href="#host" target="rightframe">Logging</a></li>
+		<li class="big"><a href="#logging" target="rightframe">UserInfo</a></li>
+		<li class="big"><a href="#usesso" target="rightframe">UseJira</a></li>
+		<li class="big"><a href="#sessions" target="rightframe">Jira</a></li>
+		<li class="big"><a href="#database" target="rightframe">Database</a></li>
+	</ul>
+
+	<hr>
+	Configuring AppVet SSO involves modifying the AppVet SSO properties XML file located in 
+	<code>$APPVET_SSO_FILES_HOME/conf/AppVetSSOProperties.xml</code> (See 
+	<a  class="underline" href="AppVetSSOProperties.xml" target="_blank">Example AppVet SSO properties file</a>).
+	
+	
+	The AppVet SSO properties XML file conforms to the 
+	
+	<a class="underline" href="AppVetSSOProperties.xsd" target="_blank">AppVet SSO Properties XML Schema</a>.
+	
+	<br>
+	<br> The following describe the user-configurable AppVet SSO properties.
+
+	<h2 id="host">Host</h2>
+
+	The
+	<code>Host</code>
+	parameter specifies the hostname (or IP address) of the actual AppVet
+	server (not the AppVet SSO server). Due to various issues with DNS
+	servers in obtaining a correct hostname, AppVet requires the manual
+	specification of this parameter. In addition, the
+	<code>port</code>
+	and
+	<code>SSL</code>
+	parameters for the server must also be specified. Note that the port and 
+	SSL parameters must match your Tomcat configuration.
+
+	<h2 id="logging">Logging</h2>
+
+	The
+	<code>Logging</code>
+	parameter specifies the logging configuration of AppVet SSO. The
+	<code>Level</code>
+	parameter specifies the types of logging statements to be output
+	including
+	<code>DEBUG</code>
+	,
+	<code>INFO</code>
+	,
+	<code>WARN</code>
+	, and
+	<code>ERROR</code>
+	statements. In addition, the
+	<code>ToConsole</code>
+	parameter indicates whether logging should be output to the console,
+	and is typically used for debugging during AppVet development. For production use,
+	<code>ToConsole</code> should be set to <code>false</code>.
+
+	<h2 id="userinfo">UserInfo</h2>
+
+	The
+	<code>UserInfo</code>
+	parameter specifies the single sign-on parameter names sent by an
+	authentication system of the organization to AppVet SSO for
+	authentication. At the very least,
+	<code>UserNameParamName</code>
+	must be set to a parameter name that is sent from an authorization system. Note
+	that parameter names and their corresponding values should be sent to AppVet 
+	via HTTP Request headers.
+
+	<h2 id="userinfo">Use JIRA</h2>
+
+	The
+	<code>UseJira</code>
+	parameter specifies whether or not JIRA should be used to acquire some
+	or all user information. The default value should be set to
+	<code>false</code>
+	.
+	
+		<h2 id="userinfo">JIRA</h2>
+	
+		The
+	<code>Jira</code>
+	parameter specifies a number of properties of the Jira sever used to 
+	acquire user information. For more information, consult the 
+	<a href="https://docs.atlassian.com/jira/REST/latest/">JIRA API</a>.
+	
+
+	<h2 id="userinfo">Database</h2>
+
+	The
+	<code>Database</code>
+	parameter specifies the AppVet database-related settings including the
+	<code>URL</code>
+	of the database as well as the
+	<code>username</code>
+	and
+	<code>password</code>
+	used to authenticate with the AppVet database. Note the values of these 
+	parameters should be identical to those defined in your 
+	<code>$APPVET_FILES_HOME/conf/AppVetProperties.xml</code> file.
+
+</body>
+
+</html>
