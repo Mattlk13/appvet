@@ -1025,6 +1025,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsListButtonPanel.setSize("100%", "");
 		appsLabel = new InlineLabel("Apps");
 		appsLabel.setTitle("List of apps");
+		appsLabel.setText("List of apps");
 		appsLabel.setStyleName("AppsLabel");
 		appsListButtonPanel.add(appsLabel);
 		appsListButtonPanel.setCellVerticalAlignment(appsLabel,
