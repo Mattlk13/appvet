@@ -888,7 +888,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				false, new Command() {
 					@Override
 					public void execute() {
-						Window.open("http://csrc.nist.gov/projects/appvet/",
+						Window.open("http://appvet.github.io/appvet",
 								"_blank", null);
 					}
 				});
