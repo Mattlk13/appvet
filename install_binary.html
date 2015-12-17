@@ -37,20 +37,19 @@
 
 	<h2 id="download">Download</h2>
 	After AppVet dependencies have been installed, download the latest AppVet
-	binary release (<code>tar.gz</code>) file from 
+	binary release (<code>appvet-2.x-binary.tar.gz</code>) file from 
 	<a class="underline" href="https://github.com/AppVet/appvet/releases"
 		target="_blank">https://github.com/AppVet/appvet/releases</a>. After downloading
 	the AppVet binary release file, extract the compressed file onto your
 	local machine.
 
 	<h2 id="tomcat">Binary Release Installation</h2>
-	The AppVet binary release contains the following directories:
+	The AppVet binary release contains:
 
 	<ul>
-		<li><code>appvet.war</code>: The AppVet web application.</li>
-		<li><code>appvet_images</code>: AppVet images directory.</li>
-		<li><code>appvet_files</code>: AppVet files directory including
-			configuration, log, and app files.</li>
+		<li><code>appvet.war</code>: The AppVet web application</li>
+		<li><code>appvet_images</code>: The AppVet <code>images</code> directory</li>
+		<li><code>appvet_files</code>: The AppVet <code>files</code> directory</li>
 	</ul>
 
 	To install AppVet, copy the
@@ -61,7 +60,7 @@
 	<code>$CATALINA_HOME/webapps</code>
 	directory. Next, copy the
 	<code>appvet_files</code>
-	directory to your local machine.
+	directory to your <code>$HOME</code> directory.
 	
 	<h2 id="envvar">Environment Variable</h2>
 
@@ -70,27 +69,15 @@
 	<code>$APPVET_FILES_HOME</code>
 	environment variable must be set to the installation path of your
 	<code>appvet_files</code>
-	directory. For examples, if you copied
-	<code>appvet_files</code>
-	to
-	<code>$HOME/&lt;username&gt;</code>
-	, then:
-<br><br>
-	<p style="text-indent: 5em;">
-		<code>$APPVET_FILES_HOME=/home/&lt;username&gt;/appvet_files</code>
-	</p>
-<br>
-
-	Using
-	<code>sudo</code>
-	, edit
-	<code>/etc/profile</code>
+	directory. Assuming you copied the <code>appvet_files</code> directory to 
+	your <code>$HOME</code> directory, edit
+	<code>/etc/profile</code> using <code>sudo</code> 
 	by adding the following:
 <br><br>
 	<p>
 		<code>
 			#Global Environment Variables<br>
-			APPVET_FILES_HOME=/your/path/to/appvet_files<br>
+			APPVET_FILES_HOME=/home/&lt;username&gt;/appvet_files<br>
 			PATH=$PATH:$APPVET_FILES_HOME <br> export APPVET_FILES_HOME<br>
 			export PATH <br>
 		</code>
@@ -157,11 +144,10 @@
 	</p>
 <br>
 	<h2 id="mysql">Database Installation</h2>
-	To use AppVet, the AppVet database must be created and configured in
-	MySQL.
+	To use AppVet, the AppVet database must first be created and configured.
 
 	<h3>Create Database</h3>
-	To create the appvet database, log into MySQL by opening a terminal and
+	To create the AppVet database, log into MySQL by opening a terminal and
 	running:
 <br><br>
 	<p style="text-indent: 5em;">
@@ -170,7 +156,7 @@
 
 <br>
 
-	Next, at the mysql prompt, enter:
+	Next, at the <code>mysql</code> prompt, enter:
 <br><br>
 	<p style="text-indent: 5em;">
 		<code>mysql&gt create database appvet;</code>
@@ -187,7 +173,7 @@
 	<h3>Create Tables</h3>
 
 	To create the tables for the
-	<code>appvet</code>
+	AppVet 
 	database, open a terminal and navigate to
 	<code>$APPVET_FILES_HOME/mysql</code>
 	then run:
@@ -198,10 +184,10 @@
 	</p>
 <br>
 
-	This will load the initial appvet database. Note that there will be no 
-	notification that the appvet tables were
-	loaded successfully. To verify the loading of the appvet tables, log
-	back into MySQL and enter:
+	This will load the AppVet database tables. Note that there will be no 
+	notification that the AppVet database tables were
+	loaded successfully. To verify the loading of the AppVet database tables, log
+	 into MySQL and enter:
 <br><br>
 	<p style="text-indent: 5em;">
 		<code>mysql&gt; use appvet;</code>
@@ -236,7 +222,7 @@
 
 	<h2 id="tools">Adding Tools</h2>
 	AppVet requires online tools to analyze and test uploaded apps. 
-	For more information about online tools and how to add them to AppVet, see the  
+	For more information about online tools and how to add them to AppVet, see   
 	<a href="tools.html">Online Tools</a>.
 	
 		<h2 id="sso">Single Sign-On</h2>

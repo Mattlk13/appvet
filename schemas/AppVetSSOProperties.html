@@ -28,29 +28,29 @@
 	<a class="underline" href="AppVetSSOProperties.xsd" target="_blank">AppVet SSO Properties XML Schema</a>.
 	
 	<br>
-	<br> The following describe the user-configurable AppVet SSO properties.
+	<br> The following describes the user-configurable AppVet SSO properties.
 
 	<h2 id="host">Host</h2>
 
 	The
 	<code>Host</code>
-	parameter specifies the hostname (or IP address) of the actual AppVet
-	server (not the AppVet SSO server). Due to various issues with DNS
+	property specifies the hostname (or IP address) of your AppVet
+	server (not your AppVet SSO server). Due to various issues with DNS
 	servers in obtaining a correct hostname, AppVet requires the manual
-	specification of this parameter. In addition, the
+	specification of this property. In addition, the
 	<code>port</code>
 	and
 	<code>SSL</code>
-	parameters for the server must also be specified. Note that the port and 
-	SSL parameters must match your Tomcat configuration.
+	properties for the server must also be specified. Note that the port and 
+	SSL properties must match your Tomcat configuration.
 
 	<h2 id="logging">Logging</h2>
 
 	The
 	<code>Logging</code>
-	parameter specifies the logging configuration of AppVet SSO. The
+	property specifies the logging configuration of AppVet SSO. The
 	<code>Level</code>
-	parameter specifies the types of logging statements to be output
+	property specifies the types of logging statements to be output
 	including
 	<code>DEBUG</code>
 	,
@@ -61,7 +61,7 @@
 	<code>ERROR</code>
 	statements. In addition, the
 	<code>ToConsole</code>
-	parameter indicates whether logging should be output to the console,
+	property indicates whether logging should be output to the console,
 	and is typically used for debugging during AppVet development. For production use,
 	<code>ToConsole</code> should be set to <code>false</code>.
 
@@ -69,19 +69,19 @@
 
 	The
 	<code>UserInfo</code>
-	parameter specifies the single sign-on parameter names sent by an
-	authentication system of the organization to AppVet SSO for
-	authentication. At the very least,
+	property specifies the single sign-on parameter names sent by your
+	organization's authentication system to AppVet SSO for
+	(AppVet) authentication. At the very least,
 	<code>UserNameParamName</code>
 	must be set to a parameter name that is sent from an authorization system. Note
-	that parameter names and their corresponding values should be sent to AppVet 
+	that parameter names and their corresponding values should be sent to AppVet SSO 
 	via HTTP Request headers.
 
 	<h2 id="userinfo">Use JIRA</h2>
 
 	The
 	<code>UseJira</code>
-	parameter specifies whether or not JIRA should be used to acquire some
+	property specifies whether or not JIRA should be used to acquire some
 	or all user information. The default value should be set to
 	<code>false</code>
 	.
@@ -90,7 +90,7 @@
 	
 		The
 	<code>Jira</code>
-	parameter specifies a number of properties of the Jira sever used to 
+	property specifies a number of properties of the Jira sever used to 
 	acquire user information. For more information, consult the 
 	<a href="https://docs.atlassian.com/jira/REST/latest/">JIRA API</a>.
 	
@@ -99,14 +99,14 @@
 
 	The
 	<code>Database</code>
-	parameter specifies the AppVet database-related settings including the
+	property specifies the AppVet database-related settings including the
 	<code>URL</code>
 	of the database as well as the
 	<code>username</code>
 	and
 	<code>password</code>
-	used to authenticate with the AppVet database. Note the values of these 
-	parameters should be identical to those defined in your 
+	used to authenticate with the AppVet database. Note that the values of these 
+	properties should be identical to those defined in your 
 	<code>$APPVET_FILES_HOME/conf/AppVetProperties.xml</code> file.
 
 </body>

@@ -29,7 +29,7 @@
 	<a class="underline" href="AppVetProperties.xsd" target="_blank">AppVet Properties XML Schema</a>.
 	
 	<br>
-	<br> The following describe the user-configurable AppVet properties.
+	<br> The following describes the user-configurable AppVet properties.
 
 	<h2 id="admin">Admin</h2>
 
@@ -48,23 +48,23 @@
 
 	The
 	<code>Host</code>
-	parameter specifies the hostname (or IP address) of the AppVet server
+	property specifies the hostname (or IP address) of the AppVet server
 	that client should use. Due to various issues with DNS servers in
 	obtaining a correct hostname, AppVet requires the manual specification
-	of this parameter. In addition, the
+	of this property. In addition, the
 	<code>port</code>
 	and
 	<code>SSL</code>
-	parameters for the server must also be specified. Note that the port and 
-	SSL parameters must match your Tomcat configuration.
+	properties for the server must also be specified. Note that the port and 
+	SSL properties must match your Tomcat configuration.
 
 	<h2 id="logging">Logging</h2>
 
 	The
 	<code>Logging</code>
-	parameter specifies the logging configuration of AppVet. The
+	property specifies the logging configuration of AppVet. The
 	<code>Level</code>
-	parameter specifies the types of logging statements to be output
+	property specifies the types of logging statements to be output
 	including
 	<code>DEBUG</code>
 	,
@@ -75,7 +75,7 @@
 	<code>ERROR</code>
 	statements. In addition, the
 	<code>ToConsole</code>
-	parameter indicates whether logging should be output to the console,
+	property indicates whether logging should be output to the console,
 	and is typically used for debugging during AppVet development. For production use,
 	<code>ToConsole</code> should be set to <code>false</code>.
 
@@ -84,7 +84,7 @@
 
 	The
 	<code>UseSSO</code>
-	parameter specifies whether AppVet should use Single Sign-On (SSO) for
+	property specifies whether AppVet should use Single Sign-On (SSO) for
 	all transactions. If SSO is used, a separate URL that supports SSO will
 	be used for AppVet to provide authentication. For more information, see
 	<a   class="underline" href="../install_sso.html">AppVet Single Sign-On (SSO)</a>.
@@ -93,7 +93,7 @@
 
 	The
 	<code>Sessions</code>
-	parameter specifies sessions-related configurations including the
+	property specifies sessions-related configurations including the
 	<code>Timeout</code>
 	that specifies the maximum amount of idle time by a user (in
 	milliseconds) and the
@@ -105,7 +105,7 @@
 
 	The
 	<code>Database</code>
-	parameter specifies the AppVet database-related settings including the
+	property specifies the AppVet database-related settings including the
 	<code>URL</code>
 	of the database as well as the
 	<code>username</code>
@@ -117,7 +117,7 @@
 
 	The
 	<code>ToolServices</code>
-	parameter specifies online tool-related settings concerned with delays and
+	property specifies online tool-related settings concerned with delays and
 	timeouts. The
 	<code>PollingInterval</code>
 	specifies the delay (in milliseconds) that AppVet waits before checking
@@ -136,7 +136,7 @@
 
 	The
 	<code>Apps</code>
-	parameter specifies app-related settings. Currently, only the
+	property specifies app-related settings. Currently, only the
 	<code>KeepApps</code>
 	property is used to indicate whether AppVet should keep uploaded apps
 	on the system. Note that keeping uploaded apps on the system can

@@ -17,8 +17,9 @@
 	</ul>
 
 	Note that AppVet dependencies require Oracle Java JDK to be installed
-	first. The following instructions focus primarily on CentOS/RedHat, but should
-	be similar for other Linux platforms and for Windows.
+	first. The following instructions focus primarily on the installation of AppVet
+	dependencies on CentOS/RedHat, but should
+	be similar for other Linux (and Windows) platforms.
 	<hr>
 	<h2 id="java">Oracle JDK</h2>
 	<h3>Installation</h3>
@@ -60,15 +61,15 @@
 	<br>
 	<br> To install the Oracle JDK 8 
 	<code>.rpm</code>
-	file under Linux, open a terminal and run:
+	file, open a terminal and run:
 	<br>
 	<br>
 	<p style="text-indent: 5em;">
-		<code># sudo rpm -ivh /path/to/jdk-8u60-linux-x64.rpm</code>
+		<code># sudo rpm -ivh /path/to/jdk-8&lt;version&gt;-linux-x64.rpm</code>
 	</p>
 	<br>
 	<br> This will install Oracle JDK in
-	<code>/usr/java/jdk1.8.0_60</code>
+	<code>/usr/java/jdk1.8.&lt;version&gt;</code>
 	. To ensure proper installation, open a console and run:
 	<br>
 	<br>
@@ -76,7 +77,7 @@
 		<code># java -version</code>
 	</p>
 	<br>
-	<br> For Oracle JDK 8, the correct version should be 1.8.x.
+	<br> For Oracle JDK 8, the correct version should be 1.8.&lt;version&gt;.
 
 	<h3>Environment Variables</h3>
 
@@ -96,7 +97,7 @@
 	<p>
 		<code>
 			#Global Environment Variables<br>
-			JAVA_HOME=/usr/java/jdk1.8.0_60<br> JRE_HOME=$JAVA_HOME/jre<br>
+			JAVA_HOME=/usr/java/jdk1.8.&lt;version&gt;<br> JRE_HOME=$JAVA_HOME/jre<br>
 			PATH=$PATH:$HOME/bin:$JAVA_HOME/bin:$JRE_HOME/bin <br> export
 			JAVA_HOME<br> export JRE_HOME <br> export PATH <br>
 		</code>
@@ -169,10 +170,7 @@
 	<p style="text-indent: 5em;">
 		<code># sudo printenv JAVA_HOME</code>
 	</p>
-	<br>
-	<br> and
-	<br>
-	<br>
+	and
 	<p style="text-indent: 5em;">
 		<code># sudo printenv JRE_HOME</code>
 	</p>
@@ -194,13 +192,13 @@
 	<br>
 	<br> For CentOS/RedHat, download the MySQL Red Hat Enterprise
 	Linux 7 / Oracle Linux 7 RPM (
-	<code>mysql-community-release-el7-5.noarch.rpm</code>
+	<code>mysql-community-release-&lt;version&gt;-5.noarch.rpm</code>
 	). To install the MySQL Yum Repository, run:
 	<br>
 	<br>
 	<p style="text-indent: 5em;">
 		<code># sudo yum localinstall
-			mysql-community-release-el7-5.noarch.rpm</code>
+			mysql-community-release-&lt;version&gt;-5.noarch.rpm</code>
 	</p>
 	<br>
 	<br> To verify the MySQL Yum Repository installation, run:
@@ -240,44 +238,39 @@
 	<br>
 	<br> Next, download the Apache Tomcat 8.x Binary Distribution Core
 	<code>tar.gz</code>
-	file and extract the compressed tar file into
-	<code>$HOME</code>
+	file and extract the compressed tar file into your 
+	<code>$HOME</code> directory
 	:
 	<br>
 	<br>
 	<p style="text-indent: 5em;">
-		<code># tar xvzf apache-tomat-8.0.26.tar.gz</code>
+		<code># tar xvzf apache-tomat-8.&lt;version&gt;.tar.gz</code>
 	</p>
 	<br>
 	<br> To ensure proper installation of Tomcat, run:
 	<br>
 	<br>
 	<p style="text-indent: 5em;">
-		<code># $HOME/apache-tomcat-8.0.26/bin/startup.sh</code>
+		<code># $HOME/apache-tomcat-8.&lt;version&gt;/bin/startup.sh</code>
 	</p>
 	<br>
 	<br> Then, open a web browser and go to:
-	<br>
-	<br>
+
 	<p style="text-indent: 5em;">
 		<a class="underline" href="http://127.0.0.1:8080" target="_blank">
 			http://127.0.0.1:8080 </a>
-	</p>
-	<br>
-	<br> or
-	<br>
-	<br>
+	</p> or
 	<p style="text-indent: 5em;">
 		<a class="underline" href="http://localhost:8080" target="_blank">
 			http://localhost:8080 </a>
 	</p>
 	<br>
-	<br> If the Apache Tomcat 8.x web page is displayed, then Tomcat
+	<br> If the Apache Tomcat 8.&lt;version&gt; web page is displayed, then Tomcat
 	was installed correctly. To shut down Tomcat, run:
 	<br>
 	<br>
 	<p style="text-indent: 5em;">
-		<code># $HOME/apache-tomcat-8.0.26/bin/shutdown.sh</code>
+		<code># $HOME/apache-tomcat-8.&lt;version&gt;/bin/shutdown.sh</code>
 	</p>
 	<br>
 	<br>
@@ -288,11 +281,11 @@
 	<code>$CATALINA_HOME</code>
 	and
 	<code>$CATALINA_BASE</code>
-	environment variables must be globally defined. Using
-	<code>sudo</code>
-	, edit
+	environment variables must be globally defined. Assuming Tomcat was 
+	installed in your <code>$HOME</code> directory, edit
 
-	<code>/etc/profile</code>
+	<code>/etc/profile</code> using
+	<code>sudo</code>
 	by adding the following (in bold):
 	<br>
 	<br>
@@ -300,8 +293,8 @@
 		<code>
 			#Global Environment Variables<br>
 			JAVA_HOME=/usr/lib/jvm/java-8-oracle JRE_HOME=$JAVA_HOME/jre<br>
-			<b><code>CATALINA_HOME=/home/jdoe/apache-tomcat-8.0.26</code></b><br>
-			<b><code>CATALINA_BASE=/home/jdoe/apache-tomcat-8.0.26</code></b><br>
+			<b><code>CATALINA_HOME=/home/&lt;username&gt;/apache-tomcat-8.&lt;version&gt;</code></b><br>
+			<b><code>CATALINA_BASE=/home/&lt;username&gt;/apache-tomcat-8.&lt;version&gt;</code></b><br>
 			PATH=$PATH:$HOME/bin:$JAVA_HOME/bin:$JRE_HOME/bin:$CATALINA_HOME/bin:$CATALINA_BASE/bin<br>
 			export JAVA_HOME <br> export JRE_HOME <br> <b><code>export
 					CATALINA_HOME</code></b> <br> <b><code>export CATALINA_BASE</code></b> <br>
@@ -372,8 +365,12 @@
 	<br>
 	<p style="text-indent: 5em;">
 		<code># chmod 555 apktool</code>
+
+		</p>
 	<p style="text-indent: 5em;">
-		<br> <br> Next, using
+		<code># chmod 555 apktool.jar</code>
+		</p>
+		<br> Next, using
 		<code>sudo</code>
 		, move both files to
 		<code>/usr/local/bin</code>
@@ -387,12 +384,8 @@
 	, edit
 	<code>/etc/profile</code>
 	by adding the path for
-	<code>$APKTOOL_HOME</code>
-	as done for
-	<code>$JAVA_HOME</code>
-	and
-	<code>$CATALINA_HOME</code>
-	above. In addition, add
+	<code>$APKTOOL_HOME=/usr/local/bin</code>
+	. In addition, add
 	<code>APKTOOL_HOME</code>
 	to the
 	<code>env_keep</code>
@@ -408,7 +401,7 @@
 	<br>
 
 
-	</p>
+	
 </body>
 
 </html>

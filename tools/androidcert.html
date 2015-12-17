@@ -1,0 +1,247 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../stylesheets/appvet.css">
+</head>
+
+<body>
+
+	<h1>Android Certificate Tool Installation</h1>
+
+	<ul>
+		<li class="big"><a href="#dependencies" target="rightframe">Dependencies</a>
+		<li class="big"><a href="#download" target="rightframe">Download</a>
+		<li class="big"><a href="#tomcat" target="rightframe">Binary Release Installation</a>
+		<li class="big"><a href="#envvar" target="rightframe">Environment
+				variables</a>
+		<li class="big"><a href="#mysql" target="rightframe">Database Installation</a>
+		<li class="big"><a href="#conf" target="rightframe">Configuration</a>
+		<li class="big"><a href="#tools" target="rightframe">Adding Tools</a>
+		
+		<li class="big"><a href="#sso" target="rightframe">Single Sign-On (SSO)</a>
+
+
+		</li>
+	</ul>
+	<hr>
+The Android Certificate tool verifies the signatures and integrity of signed Android
+app (<code>.apk</code>) files using the Oracle <code>jarsigner</code> tool. 
+	
+	
+	<h2 id="dependencies">Dependencies</h2>
+		The Android Certificate tool requires Oracle JDK to be installed. To install 
+		Oracle JDK, see the <a href="../dependencies.html#java">Oracle JDK 
+		installation and environment variables</a> instructions. 
+		Oracle JDK includes the Oracle <code>jarsigner</code> tool. To 
+		verify that <code>jarsigner</code> is installed, open a terminal and run:
+		
+			<p style="text-indent: 5em;">
+		<code># jarsigner</code>
+	</p>
+	The Android Certificate tool also requires Apache Tomcat to be installed. To 
+	install Apache Tomcat, see the <a href="../dependencies.html#tomcat">Apache Tomcat  
+		installation and environment variables</a> instructions. 		
+
+
+	<h2 id="download">Download</h2>
+	After AppVet dependencies have been installed, download the latest AppVet
+	binary release (<code>appvet-2.x-binary.tar.gz</code>) file from 
+	<a class="underline" href="https://github.com/AppVet/appvet/releases"
+		target="_blank">https://github.com/AppVet/appvet/releases</a>. After downloading
+	the AppVet binary release file, extract the compressed file onto your
+	local machine.
+
+	<h2 id="tomcat">Binary Release Installation</h2>
+	The AppVet binary release contains:
+
+	<ul>
+		<li><code>appvet.war</code>: The AppVet web application</li>
+		<li><code>appvet_images</code>: The AppVet <code>images</code> directory</li>
+		<li><code>appvet_files</code>: The AppVet <code>files</code> directory</li>
+	</ul>
+
+	To install AppVet, copy the
+	<code>appvet.war</code>
+	file and
+	<code>appvet_images</code>
+	directory to your
+	<code>$CATALINA_HOME/webapps</code>
+	directory. Next, copy the
+	<code>appvet_files</code>
+	directory to your <code>$HOME</code> directory.
+	
+	<h2 id="envvar">Environment Variable</h2>
+
+
+	To ensure proper operation of AppVet, the
+	<code>$APPVET_FILES_HOME</code>
+	environment variable must be set to the installation path of your
+	<code>appvet_files</code>
+	directory. Assuming you copied the <code>appvet_files</code> directory to 
+	your <code>$HOME</code> directory, edit
+	<code>/etc/profile</code> using <code>sudo</code> 
+	by adding the following:
+<br><br>
+	<p>
+		<code>
+			#Global Environment Variables<br>
+			APPVET_FILES_HOME=/home/&lt;username&gt;/appvet_files<br>
+			PATH=$PATH:$APPVET_FILES_HOME <br> export APPVET_FILES_HOME<br>
+			export PATH <br>
+		</code>
+	</p>
+<br>
+	Next, reload
+	<code>/etc/profile</code>
+	by running:
+<br><br>
+	<p style="text-indent: 5em;">
+		<code># source /etc/profile</code>
+	</p>
+<br>
+
+	in all open terminals. To verify that
+	<code>$APPVET_FILES_HOME</code>
+
+	has been added to your
+	<code>$PATH</code>
+	variable, run:
+<br><br>
+	<p style="text-indent: 5em;">
+		<code># printenv APPVET_FILES_HOME</code>
+	</p>
+<br>
+	Next, to allow
+	<code>$APPVET_FILES_HOME</code>
+
+	to be accessed when using
+	<code>sudo</code>
+	, open a terminal and run:
+<br><br>
+
+	<p style="text-indent: 5em;">
+		<code># sudo visudo</code>
+	</p>
+<br>
+
+	From
+	<code>visudo</code>
+	, add the following line:
+<br><br>
+	<p style="text-indent: 5em;">
+		<code>Defaults env_keep += "APPVET_FILES_HOME"</code>
+	</p>
+<br>
+	This will force
+	<code>sudo</code>
+	to preserve and use the
+	<code>$APPVET_FILES_HOME</code>
+
+	environment variable as defined in
+	<code>/etc/profile</code>
+	(since
+	<code>sudo</code>
+	typically ignores these environment variables). To verify that
+	<code>$APPVET_FILES_HOME</code>
+	is now accessible to
+	<code>sudo</code>
+	, run:
+<br><br>
+	<p style="text-indent: 5em;">
+		<code># sudo printenv APPVET_FILES_HOME</code>
+	</p>
+<br>
+	<h2 id="mysql">Database Installation</h2>
+	To use AppVet, the AppVet database must first be created and configured.
+
+	<h3>Create Database</h3>
+	To create the AppVet database, log into MySQL by opening a terminal and
+	running:
+<br><br>
+	<p style="text-indent: 5em;">
+		<code># mysql -u root -p&lt;password&gt;</code>
+	</p>
+
+<br>
+
+	Next, at the <code>mysql</code> prompt, enter:
+<br><br>
+	<p style="text-indent: 5em;">
+		<code>mysql&gt create database appvet;</code>
+	</p>
+<br>
+
+
+	Note that all MySQL statements must end with a semicolon. Next, type
+	<code>exit</code>
+	to exit MySQL.
+
+	<br>
+	<br>
+	<h3>Create Tables</h3>
+
+	To create the tables for the
+	AppVet 
+	database, open a terminal and navigate to
+	<code>$APPVET_FILES_HOME/mysql</code>
+	then run:
+<br><br>
+	<p style="text-indent: 5em;">
+		<code># mysql -u root -p&lt;password&gt; appvet &lt;
+			appvet_init_db.sql</code>
+	</p>
+<br>
+
+	This will load the AppVet database tables. Note that there will be no 
+	notification that the AppVet database tables were
+	loaded successfully. To verify the loading of the AppVet database tables, log
+	 into MySQL and enter:
+<br><br>
+	<p style="text-indent: 5em;">
+		<code>mysql&gt; use appvet;</code>
+		<br>
+	<p style="text-indent: 5em;">
+		<code>mysql&gt; show tables;</code>
+	</p>
+<br>
+
+	The AppVet database includes the following tables:
+
+	<ul>
+		<li>apps</li>
+		<li>users</li>
+		<li>sessions</li>
+		<li>androidtoolstatus</li>
+		<li>iostoolstatus</li>
+	</ul>
+
+	See the 
+	<a class="underline" href="database_schema.html" target="rightframe">AppVet
+		Database Schema</a> for a complete specification of the AppVet database.
+
+
+	<h2 id="conf">Configuration</h2>
+
+	To configure AppVet, edit the AppVet properties file located in your
+	<code>$APPVET_FILES_HOME/conf/AppVetProperties.xml</code>
+	file. For more information, see  
+	<a class="underline" href="schemas/AppVetProperties.html" target="rightframe">AppVet
+		Properties</a>.
+
+	<h2 id="tools">Adding Tools</h2>
+	AppVet requires online tools to analyze and test uploaded apps. 
+	For more information about online tools and how to add them to AppVet, see   
+	<a href="tools.html">Online Tools</a>.
+	
+		<h2 id="sso">Single Sign-On</h2>
+	
+	Some organizations may support a single sign-on (SSO) environment for applications. To 
+	integrate AppVet in an SSO environment, see <a href="install_sso.html">AppVet SSO Installation</a>.
+	
+	<br>
+	<br>
+	
+
+</body>
+
+</html>

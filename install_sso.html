@@ -32,20 +32,19 @@
 
 	<h2 id="download">Download</h2>
 	Download the latest AppVet SSO binary release (
-	<code>tar.gz</code>
+	<code>appvet-sso-1.x-binary.tar.gz</code>
 	) file from
 	<a class="underline"
-		href="https://github.com/AppVet/appvetsso/releases" target="_blank">https://github.com/AppVet/appvetsso/releases</a>.
+		href="https://github.com/AppVet/appvet_sso/releases" target="_blank">https://github.com/AppVet/appvetsso/releases</a>.
 	After downloading the AppVet SSO binary release file, extract the
 	compressed file onto your local machine.
 
 	<h2 id="tomcat">Binary Release Installation</h2>
-	The AppVet binary release contains the following directories:
+	The AppVet SSO binary release contains:
 
 	<ul>
-		<li><code>appvet_sso.war</code>: The AppVet SSO web application.</li>
-		<li><code>appvet_sso_files</code>: AppVet SSO directory including
-			configuration, log, and app files.</li>
+		<li><code>appvet_sso.war</code>: The AppVet SSO web application</li>
+		<li><code>appvet_sso_files</code>: The AppVet SSO files directory</li>
 	</ul>
 
 	To install AppVet SSO, copy the
@@ -54,7 +53,7 @@
 	<code>$CATALINA_HOME/webapps</code>
 	directory. Next, copy the
 	<code>appvet_sso_files</code>
-	directory to your local machine.
+	directory to your <code>$HOME</code> directory.
 
 	<h2 id="envvar">Environment Variable</h2>
 
@@ -62,27 +61,17 @@
 	<code>$APPVET_SSO_FILES_HOME</code>
 	environment variable must be set to the installation path of your
 	<code>appvet_sso_files</code>
-	directory. For examples, if you copied
-	<code>appvet_sso_files</code>
-	to
-	<code>$HOME/&lt;username&gt;</code>
-	, then:
-	<br>
-	<br>
-	<p style="text-indent: 5em;">
-		<code>$APPVET_SSO_FILES_HOME=/home/&lt;username&gt;/appvet_sso_files</code>
-	</p>
-	<br> Using
-	<code>sudo</code>
-	, edit
-	<code>/etc/profile</code>
+	directory. Assuming you copied the 
+	<code>appvet_sso_files</code> directory into your <code>$HOME</code> directory, 
+	edit
+	<code>/etc/profile</code> using <code>sudo</code>
 	by adding the following:
 	<br>
 	<br>
 	<p>
 		<code>
 			#Global Environment Variables<br>
-			APPVET_SSO_FILES_HOME=/your/path/to/appvet_sso_files<br>
+			APPVET_SSO_FILES_HOME=/home/&lt;username&gt;/appvet_sso_files<br>
 			PATH=$PATH:$APPVET_SSO_FILES_HOME <br> export
 			APPVET_SSO_FILES_HOME<br> export PATH <br>
 		</code>
