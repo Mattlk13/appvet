@@ -27,11 +27,6 @@ CREATE TABLE `androidtoolstatus` (
   `registration` varchar(120) DEFAULT NULL,
   `appinfo` varchar(120) DEFAULT NULL,
   `audit` varchar(120) DEFAULT NULL,
-  `fireeye` varchar(120) DEFAULT 'NA',
-  `appollo` varchar(120) DEFAULT 'NA',
-  `androwarn` varchar(120) DEFAULT 'NA',
-  `androidcert` varchar(120) DEFAULT 'NA',
-  `androidmkef` varchar(120) DEFAULT 'NA',
   PRIMARY KEY (`appid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

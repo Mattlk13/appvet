@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ToolAdapter xmlns="https://appsec.nist.gov/appvet"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="https://appsec.nist.gov/appvet AppVetProperties.xsd">
-	
-	<Description>
-		<Name>App Metadata</Name>
-		<!-- App info proprocessor will always have Id = 'appinfo' -->
-		<Id>appinfo</Id>
-		<Category>PREPROCESSOR</Category>
-		<OS>ANDROID</OS>
-		<VendorName>NIST</VendorName>
-		<VendorWebsite>http://127.0.0.1:8080/appvet/tool_descriptions/metadata-android.html</VendorWebsite>
-		<ReportFile>HTML</ReportFile>
-		<AppSubmit>APP_FILE</AppSubmit>
-		<AuthenticationRequired>false</AuthenticationRequired>
-	</Description>
+<appvet:ToolAdapter 
+xmlns:appvet="http://appvet.github.io/appvet/schemas" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://appvet.github.io/appvet/schemas/ToolAdapter.xsd ">
+  <appvet:Description>
+    <appvet:Name>App Metadata</appvet:Name>
+    <!-- App info preprocessor will always have Id = 'appinfo' -->
+    <appvet:Id>appinfo</appvet:Id>
+    <appvet:Category>PREPROCESSOR</appvet:Category>
+	<appvet:OS>ANDROID</appvet:OS>
+    <appvet:VendorName>NIST</appvet:VendorName>
+    <appvet:VendorWebsite>http://127.0.0.1:8080/appvet/tool_descriptions/metadata-android.html</appvet:VendorWebsite>
+    <appvet:ReportFile>HTML</appvet:ReportFile>
+    <appvet:AppSubmit>APP_FILE</appvet:AppSubmit>
+    <appvet:AuthenticationRequired>false</appvet:AuthenticationRequired>	
+  </appvet:Description>
 
-	<Protocol>
-		<Internal/>
-	</Protocol>
-	
-</ToolAdapter>
+  <appvet:Protocol>
+    <appvet:Internal/>
+  </appvet:Protocol>
+</appvet:ToolAdapter>

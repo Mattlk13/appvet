@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<appvet:ToolAdapter xmlns:appvet="https://appsec.nist.gov/appvet/"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="https://appsec.nist.gov/appvet/ToolAdapter.xsd ">
-	
-	<appvet:Description>
-		<appvet:Name>App Metadata</appvet:Name>
-		<!-- App info will always have Id = 'appinfo' -->
-		<appvet:Id>appinfo</appvet:Id>
-		<appvet:Category>PREPROCESSOR</appvet:Category>
+<appvet:ToolAdapter 
+xmlns:appvet="http://appvet.github.io/appvet/schemas" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://appvet.github.io/appvet/schemas/ToolAdapter.xsd ">
+  <appvet:Description>
+    <appvet:Name>App Metadata</appvet:Name>
+    <!-- App info will always have Id = 'appinfo' -->
+    <appvet:Id>appinfo</appvet:Id>
+   <appvet:Category>PREPROCESSOR</appvet:Category>
 		<appvet:OS>IOS</appvet:OS>
-		<appvet:VendorName>NIST</appvet:VendorName>
-		<appvet:VendorWebsite>http://127.0.0.1:8080/appvet/tool_descriptions/metadata-ios.html
-		</appvet:VendorWebsite>
-		<appvet:ReportFile>HTML</appvet:ReportFile>
+    <appvet:VendorName>NIST</appvet:VendorName>
+    <appvet:VendorWebsite>http://127.0.0.1:8080/appvet/tool_descriptions/metadata-ios.html</appvet:VendorWebsite>
+    <appvet:ReportFile>HTML</appvet:ReportFile>
 		<appvet:AppSubmit>APP_FILE</appvet:AppSubmit>
-		<appvet:AuthenticationRequired>false</appvet:AuthenticationRequired>
-	</appvet:Description>
-	
-	<appvet:Protocol>
-		<appvet:Internal/>
-	</appvet:Protocol>
-	
+    <appvet:AuthenticationRequired>false</appvet:AuthenticationRequired>
+  </appvet:Description>
+  <appvet:Protocol>
+    <appvet:Internal/>
+  </appvet:Protocol>
 </appvet:ToolAdapter>

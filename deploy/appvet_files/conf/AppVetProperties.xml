@@ -1,42 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<AppVet xmlns="https://appsec.nist.gov/appvet" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="https://appsec.nist.gov/appvet AppVetProperties.xsd">
-
+<AppVet xmlns="http://appvet.github.io/appvet/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://appvet.github.io/appvet/schemas AppVetProperties.xsd">
+	
 	<Admin>
-		<!-- Initial username does not have to be 'admin'. -->
+		<!-- Initial credentials to launch AppVet for the first time. Does not have to be 'admin'. -->
 		<Username>johndoe</Username>
 		<Password>JoHnDoE</Password>
 	</Admin>
-
+	
 	<Host>
 		<!-- Hostname examples: 'myhost.example.gov' or '123.45.6.7'. For local 
-			development, use 'localhost'. Make sure that these parameters match your 
-			Tomcat configuration. -->
-		<Hostname>localhost</Hostname>
+			development, use 'localhost'. Make sure that these parameters match 				your Tomcat configuration. -->
+		<Hostname>127.0.0.1</Hostname>
 		<SSL>false</SSL>
 		<Port>8080</Port>
 	</Host>
-
+	
 	<Logging>
 		<Level>DEBUG</Level>
 		<!-- For development, set ToConsole to true to view logging in Eclipse 
 			console. For production deployment, set to false. -->
 		<ToConsole>true</ToConsole>
 	</Logging>
+
 	<UseSSO>true</UseSSO>
+
+	
 	<Sessions>
-		<Timeout>1800000</Timeout>
+		<Timeout>300000</Timeout>
 		<GetUpdatesDelay>5000</GetUpdatesDelay>
 	</Sessions>
-
+	
 	<Database>
 		<URL>jdbc:mysql://localhost</URL>
 		<UserName>root</UserName>
-		<Password>dbpassword1</Password>
+		<Password>mypassword1</Password>
 	</Database>
-
+	
 	<ToolServices>
-		<PollingInterval>2000</PollingInterval>
+		<PollingInterval>1000</PollingInterval>
 		<StaggerInterval>1000</StaggerInterval>
 		<ConnectionTimeout>30000</ConnectionTimeout>
 		<SocketTimeout>1200000</SocketTimeout>
@@ -44,9 +46,9 @@
 			timeout which may be less or greater than this timeout. -->
 		<Timeout>3600000</Timeout>
 	</ToolServices>
-
+	
 	<Apps>
 		<KeepApps>false</KeepApps>
 	</Apps>
-
+	
 </AppVet>
