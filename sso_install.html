@@ -9,13 +9,11 @@
 	<h1>AppVet SSO Installation</h1>
 
 	<ul>
-		<li class="big"><a href="#dependencies" target="rightframe">Dependencies</a>
-		<li class="big"><a href="#download" target="rightframe">Download</a>
-		<li class="big"><a href="#tomcat" target="rightframe">Binary Release Installation</a>
-		<li class="big"><a href="#envvar" target="rightframe">Environment
-				variables</a>
-		<li class="big"><a href="#conf" target="rightframe">Configuration</a>
-
+		<li class="big"><a href="#dependencies" target="rightframe">1. Install Dependencies</a>
+		<li class="big"><a href="#download" target="rightframe">2. Download AppVet SSO</a>
+		<li class="big"><a href="#tomcat" target="rightframe">3. Install Binary Release</a>
+		<li class="big"><a href="#envvar" target="rightframe">4. Set Environment Variable</a>
+		<li class="big"><a href="#conf" target="rightframe">5. Configure</a>
 		</li>
 	</ul>
 	<hr>
@@ -24,13 +22,15 @@
 	authentication system. The following describes the installation of
 	AppVet SSO.
 
-	<h2 id="dependencies">Dependencies</h2>
-	AppVet SSO requires the installation of AppVet. See instructions for
-	installing the
-	<a class="underline" href="binary_installation.html"
-		target="rightframe">AppVet Binary Release</a>.
+	<h2 id="dependencies">1. Install Dependencies</h2>
+	
+	AppVet SSO requires the installation of AppVet (See instructions for
+	 
+	<a class="underline" href="installation.html"
+		target="rightframe">AppVet Installation</a>.
 
-	<h2 id="download">Download</h2>
+	<h2 id="download">2. Download AppVet SSO</h2>
+	
 	Download the latest AppVet SSO binary release (
 	<code>appvet-sso-1.x-binary.tar.gz</code>
 	) file from
@@ -39,7 +39,8 @@
 	After downloading the AppVet SSO binary release file, extract the
 	compressed file onto your local machine.
 
-	<h2 id="tomcat">Binary Release Installation</h2>
+	<h2 id="tomcat">3. Install Binary Release</h2>
+	
 	The AppVet SSO binary release contains:
 
 	<ul>
@@ -55,7 +56,7 @@
 	<code>appvet_sso_files</code>
 	directory to your <code>$HOME</code> directory.
 
-	<h2 id="envvar">Environment Variable</h2>
+	<h2 id="envvar">4. Set Environment Variable</h2>
 
 	To ensure proper operation of AppVet SSO, the
 	<code>$APPVET_SSO_FILES_HOME</code>
@@ -66,17 +67,18 @@
 	edit
 	<code>/etc/profile</code> using <code>sudo</code>
 	by adding the following:
-	<br>
-	<br>
 	<p>
+	<pre>
 		<code>
-			#Global Environment Variables<br>
-			APPVET_SSO_FILES_HOME=/home/&lt;username&gt;/appvet_sso_files<br>
-			PATH=$PATH:$APPVET_SSO_FILES_HOME <br> export
-			APPVET_SSO_FILES_HOME<br> export PATH <br>
+	#Global Environment Variables
+	APPVET_SSO_FILES_HOME=/home/&lt;username&gt;/appvet_sso_files
+	PATH=$PATH:$APPVET_SSO_FILES_HOME
+	export APPVET_SSO_FILES_HOME
+	export PATH
 		</code>
+		</pre>
 	</p>
-	<br> Next, reload
+	Next, reload
 	<code>/etc/profile</code>
 	by running:
 	<br>
@@ -138,7 +140,7 @@
 
 
 
-	<h2 id="conf">Configuration</h2>
+	<h2 id="conf">5. Configure</h2>
 	
 		To configure AppVet SSO, edit the AppVet SSO properties file located in your
 	<code>$APPVET_SSO_FILES_HOME/conf/AppVetSSOProperties.xml</code>

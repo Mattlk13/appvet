@@ -9,33 +9,29 @@
 	<h1>AppVet Installation</h1>
 
 	<ul>
-		<li class="big"><a href="#dependencies" target="rightframe">Dependencies</a>
-		<li class="big"><a href="#download" target="rightframe">Download</a>
-		<li class="big"><a href="#tomcat" target="rightframe">Binary Release Installation</a>
-		<li class="big"><a href="#envvar" target="rightframe">Environment
-				variables</a>
-		<li class="big"><a href="#mysql" target="rightframe">Database Installation</a>
-		<li class="big"><a href="#conf" target="rightframe">Configuration</a>
-		<li class="big"><a href="#tools" target="rightframe">Adding Tools</a>
-		
-		<li class="big"><a href="#sso" target="rightframe">Single Sign-On (SSO)</a>
-
-
+		<li class="big"><a href="#dependencies" target="rightframe">Step 1: Install Dependencies</a>
+		<li class="big"><a href="#download" target="rightframe">Step 2: Download AppVet</a>
+		<li class="big"><a href="#tomcat" target="rightframe">Step 3: Install Binary Release</a>
+		<li class="big"><a href="#envvar" target="rightframe">Step 4: Set Environment Variables</a>
+		<li class="big"><a href="#mysql" target="rightframe">Step 5: Install Database</a>
+		<li class="big"><a href="#conf" target="rightframe">Step 6: Configure</a>
+		<li class="big"><a href="#test" target="rightframe">Step 7: Test</a>
+		<li class="big"><a href="#tools" target="rightframe">Step 8: Add Tools</a>
+		<li class="big"><a href="#sso" target="rightframe">Step 9: Install Single Sign-On (Optional)</a>
 		</li>
 	</ul>
+	
 	<hr>
 
+	<h2 id="dependencies">Step 1: Install Dependencies</h2>
 	
-	
-	<h2 id="dependencies">Dependencies</h2>
 		AppVet requires the installation of some 
 	platforms and tools (See 
 	<a class="underline" href="dependencies.html" target="rightframe">AppVet
-		Dependencies</a>).
-		
+		Dependencies Installation</a>).
 
-
-	<h2 id="download">Download</h2>
+	<h2 id="download">2. Download AppVet</h2>
+	
 	After AppVet dependencies have been installed, download the latest AppVet
 	binary release (<code>appvet-2.x-binary.tar.gz</code>) file from 
 	<a class="underline" href="https://github.com/AppVet/appvet/releases"
@@ -43,7 +39,8 @@
 	the AppVet binary release file, extract the compressed file onto your
 	local machine.
 
-	<h2 id="tomcat">Binary Release Installation</h2>
+	<h2 id="tomcat">3. Install Binary Release</h2>
+	
 	The AppVet binary release contains:
 
 	<ul>
@@ -62,8 +59,7 @@
 	<code>appvet_files</code>
 	directory to your <code>$HOME</code> directory.
 	
-	<h2 id="envvar">Environment Variable</h2>
-
+	<h2 id="envvar">4. Set Environment Variable</h2>
 
 	To ensure proper operation of AppVet, the
 	<code>$APPVET_FILES_HOME</code>
@@ -73,16 +69,15 @@
 	your <code>$HOME</code> directory, edit
 	<code>/etc/profile</code> using <code>sudo</code> 
 	by adding the following:
-<br><br>
 	<p>
-		<code>
-			#Global Environment Variables<br>
-			APPVET_FILES_HOME=/home/&lt;username&gt;/appvet_files<br>
-			PATH=$PATH:$APPVET_FILES_HOME <br> export APPVET_FILES_HOME<br>
-			export PATH <br>
-		</code>
+		<pre><code>
+	#Global Environment Variables
+	APPVET_FILES_HOME=/home/&lt;username&gt;/appvet_files
+	PATH=$PATH:$APPVET_FILES_HOME
+	export APPVET_FILES_HOME
+	export PATH
+		</code></pre>
 	</p>
-<br>
 	Next, reload
 	<code>/etc/profile</code>
 	by running:
@@ -91,10 +86,8 @@
 		<code># source /etc/profile</code>
 	</p>
 <br>
-
 	in all open terminals. To verify that
 	<code>$APPVET_FILES_HOME</code>
-
 	has been added to your
 	<code>$PATH</code>
 	variable, run:
@@ -143,10 +136,10 @@
 		<code># sudo printenv APPVET_FILES_HOME</code>
 	</p>
 <br>
-	<h2 id="mysql">Database Installation</h2>
+	<h2 id="mysql">5. Install Database</h2>
 	To use AppVet, the AppVet database must first be created and configured.
 
-	<h3>Create Database</h3>
+	<h3>Create the Database</h3>
 	To create the AppVet database, log into MySQL by opening a terminal and
 	running:
 <br><br>
@@ -170,7 +163,7 @@
 
 	<br>
 	<br>
-	<h3>Create Tables</h3>
+	<h3>Create the Database Tables</h3>
 
 	To create the tables for the
 	AppVet 
@@ -212,23 +205,50 @@
 		Database Schema</a> for a complete specification of the AppVet database.
 
 
-	<h2 id="conf">Configuration</h2>
+	<h2 id="conf">6. Configure</h2>
 
-	To configure AppVet, edit the AppVet properties file located in your
-	<code>$APPVET_FILES_HOME/conf/AppVetProperties.xml</code>
-	file. For more information, see  
+	Configuring AppVet involves editing the AppVet Properties file located in 
+	<code>$APPVET_FILES_HOME/conf/AppVetProperties.xml</code>. For more information, see  
 	<a class="underline" href="schemas/AppVetProperties.html" target="rightframe">AppVet
 		Properties</a>.
+		
+	<h2 id="test">7. Test</h2>
+	
+	To ensure proper installation of AppVet, run:
+	<br>
+	<br>
+	<p style="text-indent: 5em;">
+		<code># $HOME/apache-tomcat-8.&lt;version&gt;/bin/startup.sh</code>
+	</p>
+	<br>
+	<br> Then, open a web browser and go to:
 
-	<h2 id="tools">Adding Tools</h2>
+	<p style="text-indent: 5em;">
+		<a class="underline" href="http://127.0.0.1:8080/appvet" target="_blank">
+			http://127.0.0.1:8080/appvet </a>
+	</p> or
+	<p style="text-indent: 5em;">
+		<a class="underline" href="http://localhost:8080/appvet" target="_blank">
+			http://localhost:8080/appvet </a>
+	</p>
+	<br>
+	<br> If the AppVet login page is displayed, then AppVet
+	was installed correctly. To shut down Tomcat, run:
+	<br>
+	<br>
+	<p style="text-indent: 5em;">
+		<code># $HOME/apache-tomcat-8.&lt;version&gt;/bin/shutdown.sh</code>
+	</p>
+	<br>
+	<h2 id="tools">8. Add Tools</h2>
 	AppVet requires online tools to analyze and test uploaded apps. 
 	For more information about online tools and how to add them to AppVet, see   
 	<a href="tools.html">Online Tools</a>.
 	
-		<h2 id="sso">Single Sign-On</h2>
+		<h2 id="sso">9. Install Single Sign-On (Optional)</h2>
 	
 	Some organizations may support a single sign-on (SSO) environment for applications. To 
-	integrate AppVet in an SSO environment, see <a href="install_sso.html">AppVet SSO Installation</a>.
+	integrate AppVet in an SSO environment, see <a href="sso_install.html">AppVet SSO Installation</a>.
 	
 	<br>
 	<br>
