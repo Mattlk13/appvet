@@ -9,12 +9,16 @@
 	<h1>AppVet SSO Installation</h1>
 
 	<ul>
-		<li class="big"><a href="#dependencies" target="rightframe">1. Install Dependencies</a>
-		<li class="big"><a href="#download" target="rightframe">2. Download AppVet SSO</a>
-		<li class="big"><a href="#tomcat" target="rightframe">3. Install Binary Release</a>
-		<li class="big"><a href="#envvar" target="rightframe">4. Set Environment Variable</a>
-		<li class="big"><a href="#conf" target="rightframe">5. Configure</a>
-		</li>
+		<li class="big"><a href="#dependencies" target="rightframe">Step
+				1. Install Dependencies</a>
+		<li class="big"><a href="#download" target="rightframe">Step
+				2. Download AppVet SSO</a>
+		<li class="big"><a href="#tomcat" target="rightframe">Step 3.
+				Install Binary Release</a>
+		<li class="big"><a href="#envvar" target="rightframe">Step 4.
+				Set Environment Variable</a>
+		<li class="big"><a href="#conf" target="rightframe">Step 5.
+				Configure</a></li>
 	</ul>
 	<hr>
 	AppVet provides Single Sign-On (SSO) capability for organizations that
@@ -22,15 +26,15 @@
 	authentication system. The following describes the installation of
 	AppVet SSO.
 
-	<h2 id="dependencies">1. Install Dependencies</h2>
-	
-	AppVet SSO requires the installation of AppVet (See instructions for
-	 
-	<a class="underline" href="installation.html"
-		target="rightframe">AppVet Installation</a>.
+	<h2 id="dependencies">Step 1. Install Dependencies</h2>
 
-	<h2 id="download">2. Download AppVet SSO</h2>
-	
+	AppVet SSO requires the installation of AppVet (See instructions for
+
+	<a class="underline" href="installation.html" target="rightframe">AppVet
+		Installation</a>.
+
+	<h2 id="download">Step 2. Download AppVet SSO</h2>
+
 	Download the latest AppVet SSO binary release (
 	<code>appvet-sso-1.x-binary.tar.gz</code>
 	) file from
@@ -39,8 +43,8 @@
 	After downloading the AppVet SSO binary release file, extract the
 	compressed file onto your local machine.
 
-	<h2 id="tomcat">3. Install Binary Release</h2>
-	
+	<h2 id="tomcat">Step 3. Install Binary Release</h2>
+
 	The AppVet SSO binary release contains:
 
 	<ul>
@@ -54,18 +58,24 @@
 	<code>$CATALINA_HOME/webapps</code>
 	directory. Next, copy the
 	<code>appvet_sso_files</code>
-	directory to your <code>$HOME</code> directory.
+	directory to your
+	<code>$HOME</code>
+	directory.
 
-	<h2 id="envvar">4. Set Environment Variable</h2>
+	<h2 id="envvar">Step 4. Set Environment Variable</h2>
 
 	To ensure proper operation of AppVet SSO, the
 	<code>$APPVET_SSO_FILES_HOME</code>
 	environment variable must be set to the installation path of your
 	<code>appvet_sso_files</code>
-	directory. Assuming you copied the 
-	<code>appvet_sso_files</code> directory into your <code>$HOME</code> directory, 
-	edit
-	<code>/etc/profile</code> using <code>sudo</code>
+	directory. Assuming you copied the
+	<code>appvet_sso_files</code>
+	directory into your
+	<code>$HOME</code>
+	directory, edit
+	<code>/etc/profile</code>
+	using
+	<code>sudo</code>
 	by adding the following:
 	<p>
 	<pre>
@@ -140,13 +150,14 @@
 
 
 
-	<h2 id="conf">5. Configure</h2>
-	
-		To configure AppVet SSO, edit the AppVet SSO properties file located in your
+	<h2 id="conf">Step 5. Configure</h2>
+
+	To configure AppVet SSO, edit the AppVet SSO properties file located in
+	your
 	<code>$APPVET_SSO_FILES_HOME/conf/AppVetSSOProperties.xml</code>
-	file. For more information, see  
-	<a class="underline" href="schemas/AppVetSSOProperties.html" target="rightframe">AppVet
-		SSO Properties</a>.
+	file. For more information, see
+	<a class="underline" href="schemas/AppVetSSOProperties.html"
+		target="rightframe">AppVet SSO Properties</a>.
 
 
 </body>

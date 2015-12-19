@@ -1,0 +1,102 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="stylesheets/appvet.css">
+</head>
+
+<body>
+
+	<h1>Setting Global Environment Variables</h1>
+
+	<ul>
+		<li class="big"><a href="#etcprofile" target="rightframe">Step
+				1: Edit <code>/etc/profile</code></a>
+		<li class="big"><a href="#editsudoers" target="rightframe">Step
+				2: Edit Sudoers</a>
+	</ul>
+
+	<hr>
+AppVet depends on the proper setting of global environment variables. The following 
+describes how to create a global environment variables under CentOS/RedHat. For
+the following examples, we create a global environment variable 
+<code>$MY_PROGRAM_HOME</code> and set it to 
+the directory <code>/home/jdoe/myprogram</code>.
+
+<h2 id="etcprofile">Step 1. Edit <code>/etc/profile</code></h2>
+
+Edit <code>/etc/profile</code> using <code>sudo</code> (e.g., <code>sudo vi /etc/profile</code>)
+	by adding the following:
+	<p>
+	<pre>
+		<code>
+	#Global Environment Variables
+	MY_PROGRAM_HOME=/home/jdoe/myprogram
+	PATH=$PATH:$MY_PROGRAM_HOME
+	export MY_PROGRAM_HOME
+	export PATH
+		</code>
+	</pre>
+	</p>
+	Next, reload
+	<code>/etc/profile</code>
+	by running:
+	<br>
+	<br>
+	<p style="text-indent: 5em;">
+		<code># source /etc/profile</code>
+	</p>
+	<br> in all open terminals. To verify that
+	<code>$MY_PROGRAM_HOME</code>
+	has been added to your
+	<code>$PATH</code>
+	variable, run:
+	<br>
+	<br>
+	<p style="text-indent: 5em;">
+		<code># printenv MY_PROGRAM_HOME</code>
+	</p>
+	<br>
+<h2 id="editsudoers">Step 2. Edit Sudoers</h2>
+	To allow
+	<code>$MY_PROGRAM_HOME</code>
+
+	to be accessed when using
+	<code>sudo</code>
+	, open a terminal and run:
+	<br>
+	<br>
+
+	<p style="text-indent: 5em;">
+		<code># sudo visudo</code>
+	</p>
+	<br> From
+	<code>visudo</code>
+	, add the following line:
+	<br>
+	<br>
+	<p style="text-indent: 5em;">
+		<code>Defaults env_keep += "MY_PROGRAM_HOME"</code>
+	</p>
+	<br> This will force
+	<code>sudo</code>
+	to preserve and use the
+	<code>$MY_PROGRAM_HOME</code>
+
+	environment variable as defined in
+	<code>/etc/profile</code>
+	(since
+	<code>sudo</code>
+	typically ignores these environment variables). To verify that
+	<code>$MY_PROGRAM_HOME</code>
+	is now accessible to
+	<code>sudo</code>
+	, run:
+	<br>
+	<br>
+	<p style="text-indent: 5em;">
+		<code># sudo printenv MY_PROGRAM_HOME</code>
+	</p>
+	<br>
+</body>
+
+</html>
