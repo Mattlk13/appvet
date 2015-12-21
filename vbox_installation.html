@@ -1,0 +1,98 @@
+<html>
+
+<head>
+<title>CentOS VirtualBox Installation</title>
+<link rel="stylesheet" href="stylesheets/appvet.css">
+</head>
+
+<body>
+
+	<h1>CentOS VirtualBox Installation</h1>
+
+	<ul>
+		<li class="big"><a href="#dependencies" target="rightframe">Step
+				1: Install Oracle VirtualBox</a>
+		<li class="big"><a href="#download" target="rightframe">Step
+				2: Install CentOS Image</a>
+		<li class="big"><a href="#envvar" target="rightframe">Step 3:
+				Import CentOS OVA</a>
+		<li class="big"><a href="#mysql" target="rightframe">Step 4:
+				Create CentOS Account (Optional)</a>
+		<li class="big"><a href="#conf" target="rightframe">Step 5:
+				Install VirtualBox Guest Additions </a>
+	</ul>
+
+	<hr>
+
+	<h2 id="dependencies">Step 1: Install Oracle VirtualBox</h2>
+
+Download and install Oracle VirtualBox 5.0.2 for your host environment from:
+
+	<p style="text-indent: 5em;">
+		<a class="underline"
+			href="https://www.virtualbox.org/wiki/Downloads"
+			target="_blank">
+			https://www.virtualbox.org/wiki/Downloads
+		</a>
+	</p>
+
+	<h2 id="download">Step 2. Install CentOS Image</h2>
+	
+	
+	
+	
+	
+	Download the CentOS 7 Gnome torrent file from: 
+
+	<p style="text-indent: 5em;">
+		<a class="underline"
+			href="http://virtualboxes.org/images/centos"
+			target="_blank">
+			http://virtualboxes.org/images/centos
+		</a>
+	</p>
+
+Download and install a torrent client and use the CentOS 7 Gnome torrent file 
+to download the CentOS 7 Gnome Open Virtual Format (.ova) file. These directions 
+also apply to a RedHat installation of AppVet.
+	
+	
+
+	<h2 id="envvar">Step 3. Import CentOS OVA</h2>
+	
+	Start VirtualBox and select <b>File > Import Appliance...</b> to import 
+	the <code>CentOS7-Gnome.ova</code> file. Start the CentOS appliance by 
+	selecting <b>Start</b> from the VirtualBox toolbar. When the 
+	CentOS desktop appears, select CentOS as the username and use password 
+	<code>reverse</code>. Note that the root password for this installation is also 
+	<code>reverse</code>.
+	
+
+	<h2 id="mysql">Step 4. Create CentOS Account (Optional)</h2>
+
+Add an administrator user account (e.g., "John Doe") with username jdoe and password Jdoe123?. This account will be used to install all AppVet components (i.e., where $HOME=/home/jdoe).
+
+
+
+
+	<h2 id="conf">Step 5. Install VirtualBox Guest Additions</h2>
+
+After installing CentOS, install the VirtualBox Guest Additions. First, install the correct kernel-devel and kernel-headers so that they match the CentOS7 kernel. Open a terminal and run:
+
+
+
+
+	<pre>
+		<code>
+	# sudo yum update
+	# sudo yum install kernel-headers kernel-devel
+	# sudo yum install tar bzip2 make automake gcc gcc-c++ kernel-devel
+		</code>
+		</pre>
+	</p>
+	
+
+
+</body>
+
+</html>
