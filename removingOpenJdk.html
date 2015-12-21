@@ -1,0 +1,34 @@
+<html>
+
+<head>
+<title>Removing OpenJDK</title>
+<link rel="stylesheet" href="stylesheets/appvet.css">
+</head>
+
+<body>
+	<h1>Removing OpenJDK</h1>
+	<hr>
+	To view a list of preinstalled OpenJDK packages of Java, run:
+	<br>
+	<br>
+	<p style="text-indent: 5em;">
+		<code># rpm -aq | grep -i java</code>
+	</p>
+	<br>
+	<br> To uninstall and remove OpenJDK Java packages, open a console
+	and run:
+	<br>
+	<br>
+	<p style="text-indent: 5em;">
+		<code># sudo rpm -e &lt;package_name&gt;</code>
+	</p>
+	<br>
+	<br> for each OpenJDK Java package. Note that other applications
+	(e.g., libreoffice) might be dependent on OpenJDK and should be
+	uninstalled (e.g., using
+	<code>yum remove libraoffice*</code>
+	) prior to uninstalling OpenJDK.
+
+</body>
+
+</html>
