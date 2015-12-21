@@ -80,7 +80,15 @@
 		</code>
 		</pre>
 	</p>
-
+Then, reboot. After CentOS reloads, load additional guest OS features by 
+logging into CentOS and selecting <b>Devices > Insert guest additions CD image...</b>
+ from the VirtualBox menu. Next, right-click on 
+ VBOXADDITIONS_5.0.2_xxx from your CentOS desktop and select 
+ <b>Open with Run Software...</b> After installing the guest OS features, 
+ shutdown CentOS and remove the VBox Guest Additions CD by selecting 
+ <b>Settings > Storage</b> from the VirtualBox Manager and removing the
+ <code>VBoxGuestAdditions.iso</code> file from Controller: IDE. 
+ Then, restart the virtual machine.
 
 </body>
 
