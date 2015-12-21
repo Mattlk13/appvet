@@ -182,55 +182,8 @@
 			target="_blank"> https://dev.mysql.com/doc/mysql-repo-excerpt/5.7/en/linux-installation-yum-repo.html</a>
 	</p>
 
-	Next, download the Red Hat Enterprise Linux 7 / Oracle Linux 7
-	(Architecture Independent) RPM Package
-	(e.g., <code>mysql57-community-release-el7-7.noarch.rpm</code>). Before installing 
-	MySQL, we must first install the MySQL Yum
-	Repository. To install the MySQL Yum Repository, navigate to the directory containing the 
-	downloaded <code>.rpm</code> file and run:
-
-	<br>
-	<br>
-	<p style="text-indent: 5em;">
-		<code># sudo yum localinstall mysql57-community-release-el7-7.noarch.rpm</code>
-	</p>
-	<br> To verify the correct installation of the MySQL Yum Repository, run:
-	<br>
-	<br>
-	<p style="text-indent: 5em;">
-		<code># yum repolist enabled | grep "mysql.*-community.*"</code>
-	</p>
-	Next, to install MySQL, run:
-	<br>
-	<br>
-	<p style="text-indent: 5em;">
-		<code># sudo yum install mysql-community-server</code>
-	</p>
-		<br>
-	Next, start the MySQL server by running:
-		<p style="text-indent: 5em;">
-		<code># sudo service mysqld start</code>
-	</p>
-		<br>
-	<br>
-	<br> To set the root password for MySQL, open a terminal and run:
-	<br>
-	<br>
-	<p style="text-indent: 5em;">
-		<code># sudo mysql_secure_installation</code>
-	</p>
-	<br>
-	<br> 
-	<p>
-	To ensure that MySQL was installed, run:
-	</p>
-	<br>
-	<br>
-	<p style="text-indent: 5em;">
-		<code># mysql</code>
-	</p>
-	<br>
-	<br>
+	<i>When installing MySQL, do not forget your MySQL root password as this will be 
+	needed to configure AppVet.</i>
 
 	<h2 id="tomcat">Apache Tomcat</h2>
 
