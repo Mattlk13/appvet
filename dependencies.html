@@ -176,25 +176,28 @@
 	AppVet requires MySQL 5 to be installed. MySQL is used to store
 	AppVet-related data including user accounts, app statuses, and session
 	data. To install MySQL 5, open a browser and go to:
-		<br>
+	<br>
 	<p style="text-indent: 5em;">
-		<a class="underline"
-			href="http://dev.mysql.com/downloads/repo/yum/"
-			target="_blank">
-			http://dev.mysql.com/downloads/repo/yum/
-		</a>
+		<a class="underline" href="http://dev.mysql.com/downloads/repo/yum/"
+			target="_blank"> http://dev.mysql.com/downloads/repo/yum/ </a>
 	</p>
+
+	Next, download the Red Hat Enterprise Linux 7 / Oracle Linux 7
+	(Architecture Independent) RPM Package
+	(e.g., <code>mysql57-community-release-el7-7.noarch.rpm</code>). To install MySQL Yum
+	Repository, run:
+
 	<br>
 	<br>
 	<br>
 	<p style="text-indent: 5em;">
-		<code># sudo yum install mysql-community-server</code>
+		<code># sudo yum localinstall mysql57-community-release-el7-7.noarch.rpm</code>
 	</p>
-	<br> then run:
+	<br> To correct installation of the Yum Repository, run:
 	<br>
 	<br>
 	<p style="text-indent: 5em;">
-		<code># sudo yum install mysql-community-server-* mysql-5.*</code>
+		<code># yum repolist enabled | grep "mysql.*-community.*"</code>
 	</p>
 	<br>
 	<br> To set the root password for MySQL, open a terminal and run:
