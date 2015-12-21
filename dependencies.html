@@ -184,8 +184,9 @@
 
 	Next, download the Red Hat Enterprise Linux 7 / Oracle Linux 7
 	(Architecture Independent) RPM Package
-	(e.g., <code>mysql57-community-release-el7-7.noarch.rpm</code>). To install MySQL Yum
-	Repository, navigate to the directory containing the 
+	(e.g., <code>mysql57-community-release-el7-7.noarch.rpm</code>). Before installing 
+	MySQL, we must first install the MySQL Yum
+	Repository. To install the MySQL Yum Repository, navigate to the directory containing the 
 	downloaded <code>.rpm</code> file and run:
 
 	<br>
@@ -199,6 +200,14 @@
 	<p style="text-indent: 5em;">
 		<code># yum repolist enabled | grep "mysql.*-community.*"</code>
 	</p>
+	Next, to install MySQL, run:
+		<br>
+	<p style="text-indent: 5em;">
+		<code># sudo yum install mysql-community-server</code>
+	</p>
+	
+	
+	
 	<br>
 	<br> To set the root password for MySQL, open a terminal and run:
 	<br>
