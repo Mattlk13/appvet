@@ -22,7 +22,9 @@
 				Configure</a>
 		<li class="big"><a href="#test" target="rightframe">Step 6:
 				Test</a>
-		<li class="big"><a href="#tools" target="rightframe">Step 7:
+		<li class="big"><a href="#logos" target="rightframe">Step 7:
+				Logos (Optional)</a>		
+		<li class="big"><a href="#tools" target="rightframe">Step 8:
 				Add Tools</a>
 		<li class="big"><a href="#sso" target="rightframe">Step 9:
 				Install Single Sign-On (Optional)</a></li>
@@ -226,10 +228,27 @@
 	</p>
 	 
 	<br>
-	<br> Note that it can take several seconds for the AppVet application to load.
+	<br> 
+	After AppVet loads, log into AppVet using the username and password you 
+	defined in your <code>AppVetProperties.xml</code> file. When logging into 
+	AppVet for the first time, the screen will be dislayed as shown in Figure 1.
+	
+		<br>
+	<br>
+	<br>
+	<center>
+		<img src="images/initial-login.png" alt="AppVet initial login" style="height: 400px;">
+		<br> <br>
+		<p class="cap">Figure 1. AppVet initial screen.</p>
+	</center>
+	<br>
+	<br>
+	<br>
+	
+	and submit an Android or iOS app file 
+	using the Upload (<img src="images/button_upload_app.png" width="20px">) button.
 	<br><br>
-	Log into AppVet using the default admin username and password. After logging in,
-	upload an app to test. After testing an app, shut down AppVet by
+	After testing an app, shut down AppVet by
 	running:
 	<br>
 	<br>
@@ -237,12 +256,42 @@
 		<code># $HOME/apache-tomcat-8.&lt;version&gt;/bin/shutdown.sh</code>
 	</p>
 	<br>
-	<h2 id="tools">Step 7. Add Tools</h2>
+	<h2 id="logos">Step 7. Logos (Optional)</h2>
+	
+	Figure 2 shows logos that may be modified for AppVet.
+	
+			<br>
+	<br>
+	<br>
+	<center>
+		<img src="images/logos.png" alt="Logos" style="height: 400px;">
+		<br> <br>
+		<p class="cap">Figure 2. Modifiable logos.</p>
+	</center>
+	<br>
+	<br>
+	<br>
+	<h3>Browser Icon</h3>
+	
+	To change the AppVet icon in the browser tab, replace the <code>favicon.ico</code> file in 
+	the <code>$CATALINA_HOME/webapps/ROOT</code> directory with the <code>favicon.ico</code> file 
+	in <code>$CATALINA_HOME/webapps/appvet</code> and restart Tomcat. If the new icon does not display, clear the browser's cache 
+	and reload the AppVet page.
+	
+	<h3>Organizational Logo</h3>
+	
+	To change the default logo to your organization's logo, create a square image in <code>.png</code> format 
+	with the name <code>org_logo.png</code>. Next, replace the <code>org_logo.png</code> file in 
+	<code>$CATALINA_HOME/webapps/appvet/images</code> with your new <code>org_logo.png</code> file and 
+	restart Tomcat. If the new logo does not display, clear the browser's cache 
+	and reload the AppVet page.
+	
+	<h2 id="tools">Step 8. Add Tools</h2>
 	AppVet requires the integration of online tools to analyze and test uploaded apps. For
 	available AppVet-compatible tools, see
 	<a href="tools_and_adapters.html">Tools & Adapters</a>.
 
-	<h2 id="sso">Step 8. Install Single Sign-On (Optional)</h2>
+	<h2 id="sso">Step 9. Install Single Sign-On (Optional)</h2>
 
 	Some organizations may support a single sign-on (SSO) environment for
 	applications. To integrate AppVet in an SSO environment, see
