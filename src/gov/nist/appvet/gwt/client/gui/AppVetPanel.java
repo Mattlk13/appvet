@@ -297,7 +297,7 @@ public class AppVetPanel extends DockLayoutPanel {
 							public String getHtmlToolResults(String appId,
 									List<ToolStatusGwt> toolResults) {
 								/* Get pre-processing analysis results */
-								String statuses = "<hr><div title=\"PreProcessing\" id=\"appInfoSectionHeader\">PreProcessing</div>\n";
+								String statuses = "<hr><h3 title=\"PreProcessing\" id=\"appInfoSectionHeader\">PreProcessing</h3>\n";
 								int preprocessorToolCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -316,7 +316,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 
 								// Get tool and manually-uploaded results.
-								statuses += "<hr><div title=\"Tools\"  id=\"appInfoSectionHeader\">Tools</div>\n";
+								statuses += "<hr><h3 title=\"Tools\"  id=\"appInfoSectionHeader\">Tools</h3>\n";
 								int analysisToolCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -336,7 +336,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 
 								/* Get audit results */
-								statuses += "<hr><div title=\"Override\" id=\"appInfoSectionHeader\">Override</div>\n";
+								statuses += "<hr><h3 title=\"Override\" id=\"appInfoSectionHeader\">Override</h3>\n";
 								int auditCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
