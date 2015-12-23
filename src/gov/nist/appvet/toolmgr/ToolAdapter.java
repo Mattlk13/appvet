@@ -475,6 +475,14 @@ public class ToolAdapter implements Runnable {
 										+ "'. Setting to appid = '"
 										+ appInfo.appId + "'");
 								paramValue = appInfo.appId;
+							} else if (paramName.equals("msgId")) {
+								appInfo.log.debug("Found " + paramName + " = "
+										+ "'APPVET_DEFINED' for tool '" + id
+										+ "'. Setting to msgId = '"
+										+ appInfo.appId + "'");
+								paramValue = appInfo.appId;
+								
+								
 							} else {
 								appInfo.log
 										.error("Found "
