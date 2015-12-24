@@ -136,6 +136,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	public final Label statusMessageLabel = new Label("");
 	private String SERVLET_URL = null;
 	private String HOST_URL = null;
+	private String PROXY_URL = null;
 	private ArrayList<ToolInfoGwt> tools = null;
 	private InlineLabel appsLabel = null;
 	private int iconVersion = 0;
@@ -198,7 +199,13 @@ public class AppVetPanel extends DockLayoutPanel {
 									if (selectedApp.appStatus == AppStatus.REGISTERING) {
 										//log.info("Displaying REGISTERING");
 										iconVersion++;
-										final String iconPath = HOST_URL
+										String URL = null;
+										if (PROXY_URL != null && !PROXY_URL.isEmpty()) {
+											URL = PROXY_URL;
+										} else {
+											URL = HOST_URL;
+										}
+										final String iconPath = URL
 												+ "/appvet_images/"
 												+ defaultIcon + "?v"
 												+ iconVersion;
@@ -215,24 +222,39 @@ public class AppVetPanel extends DockLayoutPanel {
 										return;
 									} else if (selectedApp.appStatus == AppStatus.PENDING) {
 										//log.info("Displaying PENDING");
-
-										final String iconPath = HOST_URL
+										String URL = null;
+										if (PROXY_URL != null && !PROXY_URL.isEmpty()) {
+											URL = PROXY_URL;
+										} else {
+											URL = HOST_URL;
+										}
+										final String iconPath = URL
 												+ "/appvet_images/"
 												+ defaultIcon;
 										appInfoIcon.setUrl(iconPath);
 									} else if (selectedApp.appStatus == AppStatus.PROCESSING) {
 										//log.info("Displaying PROCESSING");
-
+										String URL = null;
+										if (PROXY_URL != null && !PROXY_URL.isEmpty()) {
+											URL = PROXY_URL;
+										} else {
+											URL = HOST_URL;
+										}
 										iconVersion++;
-										final String iconPath = HOST_URL
+										final String iconPath = URL
 												+ "/appvet_images/"
 												+ selectedApp.appId + ".png?v"
 												+ iconVersion;
 										appInfoIcon.setUrl(iconPath);
 									} else {
 										//log.info("Displaying OTHER");
-
-										final String iconPath = HOST_URL
+										String URL = null;
+										if (PROXY_URL != null && !PROXY_URL.isEmpty()) {
+											URL = PROXY_URL;
+										} else {
+											URL = HOST_URL;
+										}
+										final String iconPath = URL
 												+ "/appvet_images/"
 												+ selectedApp.appId + ".png?v";
 										appInfoIcon.setUrl(iconPath);
@@ -643,6 +665,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		setStyleName("mainDockPanel");
 		SERVLET_URL = configInfo.getAppVetServletUrl();
 		HOST_URL = configInfo.getAppVetHostUrl();
+		PROXY_URL = configInfo.getAppvetProxyUrl();
 		appSelectionModel = new SingleSelectionModel<AppInfoGwt>();
 		appSelectionModel.addSelectionChangeHandler(new AppListHandler(this,
 				configInfo));
@@ -1275,6 +1298,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		dockPanel_1.setCellVerticalAlignment(appsListTable,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appsListTable.setAppVetHostUrl(HOST_URL);
+		appsListTable.setAppVetProxyUrl(PROXY_URL);
 		appsListTable.dataGrid.setSize("99%", "");
 		appsListTable.setDataList(initialApps);
 		appsListTable.setSize("", "");

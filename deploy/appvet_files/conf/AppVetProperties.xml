@@ -16,6 +16,9 @@
 		<Port>8080</Port>
 	</Host>
 	
+	<!-- Use only if AppVet behind proxy (e.g., <ProxyUrl>https://test.example.com:8443</Proxy)-->
+	<Proxy></Proxy>
+	
 	<Logging>
 		<Level>DEBUG</Level>
 		<!-- For development, set ToConsole to true to view logging in Eclipse 

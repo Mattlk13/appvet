@@ -49,6 +49,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 	private final DateTimeFormat dateTimeFormat = DateTimeFormat
 			.getFormat("yyyy-MM-dd HH:mm:ss");
 	private String appVetHostUrl = null;
+	private String appVetProxyUrl = null;
 	private static Logger log = Logger.getLogger("AppsListPagingDataGrid");
 
 	@Override
@@ -124,13 +125,25 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 				} else if (appStatus == AppStatus.REGISTERING ||
 						appStatus == AppStatus.PENDING) {
 					iconVersion++; // Forces refresh of icon
-					final String iconPath = appVetHostUrl + "/appvet_images/"
+					String URL = null;
+					if (appVetProxyUrl != null && !appVetProxyUrl.isEmpty()) {
+						URL = appVetProxyUrl;
+					} else {
+						URL = appVetHostUrl;
+					}
+					final String iconPath = URL + "/appvet_images/"
 							+ defaultLargeAppIcon + "?v" + iconVersion;
 					sb.appendHtmlConstant("<img width=\"20\" src=\"" + iconPath
 							+ "\" alt=\"App Icon\" />");
 					} else {
 						iconVersion++;
-						final String iconPath = appVetHostUrl + "/appvet_images/"
+						String URL = null;
+						if (appVetProxyUrl != null && !appVetProxyUrl.isEmpty()) {
+							URL = appVetProxyUrl;
+						} else {
+							URL = appVetHostUrl;
+						}
+						final String iconPath = URL + "/appvet_images/"
 								+ appId + ".png?v" + iconVersion;
 						sb.appendHtmlConstant("<img width=\"20\" src=\"" + iconPath
 								+ "\" alt=\"App Icon\" />");
@@ -266,5 +279,9 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 
 	public void setAppVetHostUrl(String appVetHostUrl) {
 		this.appVetHostUrl = appVetHostUrl;
+	}
+	
+	public void setAppVetProxyUrl(String appVetProxyUrl) {
+		this.appVetProxyUrl = appVetProxyUrl;
 	}
 }
