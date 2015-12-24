@@ -30,7 +30,6 @@ import gov.nist.appvet.toolmgr.ToolAdapter;
 import gov.nist.appvet.xml.XmlUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -53,7 +52,6 @@ public class AppVetProperties {
 	public static String CATALINA_HOME = null; // Tomcat
 	public static String CATALINA_BASE = null; // Tomcat
 	public static String APKTOOL_HOME = null;  // For Android only
-	public static String APPVET_SOURCE_HOME = null;
 	public static String APPVET_FILES_HOME = null;
 	public static boolean useSSO = false;
 
@@ -78,10 +76,7 @@ public class AppVetProperties {
 		if (APKTOOL_HOME == null || APKTOOL_HOME.isEmpty()) {
 			System.err.println("The APKTOOL_HOME environment variable is null!");
 		}
-		APPVET_SOURCE_HOME = System.getenv("APPVET_SOURCE_HOME");
-		if (APPVET_SOURCE_HOME == null || APPVET_SOURCE_HOME.isEmpty()) {
-			System.err.println("The APPVET_SOURCE_HOME environment variable is null!");
-		}
+
 		APPVET_FILES_HOME = System.getenv("APPVET_FILES_HOME");
 		if (APPVET_FILES_HOME == null || APPVET_FILES_HOME.isEmpty()) {
 			System.err.println("The APPVET_FILES_HOME environment variable is null!");
@@ -158,7 +153,6 @@ public class AppVetProperties {
 		printVal("CATALINA_HOME", CATALINA_HOME);
 		printVal("CATALINA_BASE", CATALINA_BASE);
 		printVal("APKTOOL_HOME", APKTOOL_HOME);
-		printVal("APPVET_SOURCE_HOME", APPVET_SOURCE_HOME);
 		printVal("APPVET_FILES_HOME", APPVET_FILES_HOME);
 		printVal("LOG_PATH", APPVET_LOG_PATH);
 		printVal("LOG_LEVEL", LOG_LEVEL);
@@ -168,8 +162,8 @@ public class AppVetProperties {
 		printVal("APPS_ROOT", APPS_ROOT);
 		File appsDir = new File(APPS_ROOT);
 		if (!appsDir.exists()) {
-			appsDir.mkdir();	
-			System.out.println("Created apps directory");
+			appsDir.mkdirs();			
+			System.out.println("Created apps directory for AppVet");
 		}
 		TEMP_ROOT = APPVET_FILES_HOME + "/tmp";
 		printVal("TEMP_ROOT", TEMP_ROOT);
