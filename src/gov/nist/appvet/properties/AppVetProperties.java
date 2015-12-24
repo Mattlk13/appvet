@@ -248,7 +248,7 @@ public class AppVetProperties {
 		printVal("SERVLET_URL", SERVLET_URL);
 		
 		PROXY_URL = xml.getXPathValue("/AppVet/ProxyUrl");
-		
+		printVal("PROXY_URL", PROXY_URL);
 		
 		KEEP_APPS = new Boolean(xml.getXPathValue("/AppVet/Apps/KeepApps"))
 				.booleanValue();
