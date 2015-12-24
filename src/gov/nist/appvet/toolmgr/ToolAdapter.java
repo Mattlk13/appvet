@@ -467,32 +467,39 @@ public class ToolAdapter implements Runnable {
 						fileUploadParamName = paramName;
 					} else {
 						
-						if (paramValue.equals("APPVET_DEFINED")) {
+						if (paramValue.equals("APPVET_ID")) {
 							
-							if (paramName.equals("appid")) {
-								appInfo.log.debug("Found " + paramName + " = "
-										+ "'APPVET_DEFINED' for tool '" + id
-										+ "'. Setting to appid = '"
-										+ appInfo.appId + "'");
-								paramValue = appInfo.appId;
-							} else if (paramName.equals("msgId")) {
-								appInfo.log.debug("Found " + paramName + " = "
-										+ "'APPVET_DEFINED' for tool '" + id
-										+ "'. Setting to msgId = '"
-										+ appInfo.appId + "'");
-								paramValue = appInfo.appId;
-								
-								
-							} else {
-								appInfo.log
-										.error("Found "
-												+ paramName
-												+ " = "
-												+ "'APPVET_DEFINED' for tool '"
-												+ id
-												+ "' but no actual value is set by AppVet. Aborting.");
-								return null;
-							}
+							appInfo.log.debug("Found " + paramName + " = "
+									+ "'APPVET_ID' for tool '" + id
+									+ "'. Setting to appid = '"
+									+ appInfo.appId + "'");
+							
+							paramValue = appInfo.appId;
+
+//							if (paramName.equals("appid")) {
+//								appInfo.log.debug("Found " + paramName + " = "
+//										+ "'APPVET_DEFINED' for tool '" + id
+//										+ "'. Setting to appid = '"
+//										+ appInfo.appId + "'");
+//								paramValue = appInfo.appId;
+//							} else if (paramName.equals("msgId")) {
+//								appInfo.log.debug("Found " + paramName + " = "
+//										+ "'APPVET_DEFINED' for tool '" + id
+//										+ "'. Setting to msgId = '"
+//										+ appInfo.appId + "'");
+//								paramValue = appInfo.appId;
+//								
+//								
+//							} else {
+//								appInfo.log
+//										.error("Found "
+//												+ paramName
+//												+ " = "
+//												+ "'APPVET_DEFINED' for tool '"
+//												+ id
+//												+ "' but no actual value is set by AppVet. Aborting.");
+//								return null;
+//							}
 							
 						}
 						
