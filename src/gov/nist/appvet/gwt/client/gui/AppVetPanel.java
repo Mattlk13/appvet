@@ -763,6 +763,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 
 		Image orgLogo = new Image("images/org_logo.png");
+		orgLogo.setSize("85px", "85px");
 		orgLogo.setAltText("Organizational logo here");
 		orgLogo.setTitle("Organizational logo here");
 		horizontalPanel_5.add(orgLogo);
@@ -770,7 +771,6 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_5.setCellHorizontalAlignment(orgLogo,
 				HasHorizontalAlignment.ALIGN_RIGHT);
-		orgLogo.setSize("85px", "85px");
 		final HorizontalPanel horizontalPanel_3 = new HorizontalPanel();
 		northAppVetPanel.add(horizontalPanel_3);
 		northAppVetPanel.setCellVerticalAlignment(horizontalPanel_3,

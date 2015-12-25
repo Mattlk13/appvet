@@ -101,6 +101,7 @@ public class LoginPanel extends DockLayoutPanel {
 		horizontalPanel.setSize("100%", "100%");
 
 		Image orgLogo = new Image("images/org_logo.png");
+		orgLogo.setSize("85px", "85px");
 		orgLogo.setAltText("Organizational logo here");
 		orgLogo.setTitle("Organizational logo here");
 		orgLogo.setStyleName("nistLoginLogo");
