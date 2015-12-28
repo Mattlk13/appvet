@@ -7,9 +7,10 @@
 
 <body>
 
-	<h1>Online Tools</h1>
+	<h1>AppVet Tools</h1>
 
 	<ul>
+		<li class="big"><a href="#overview" target="rightframe">Overview</a>
 		<li class="big"><a href="#addingtools" target="rightframe">Adding
 				Tools</a>
 		<li class="big"><a href="#installingtools" target="rightframe">Installing
@@ -24,6 +25,101 @@
 	</ul>
 	<hr>
 
+	<h2 id="overview">Overview</h2>
+
+	<p>
+		AppVet requires the integration of tools to perform testing and
+		analysis of apps. In an AppVet system, tools are required to be
+		accessible online and support AppVet communication protocols. Such
+		tools are referred to as "AppVet-compatible" and are denoted by the <img
+			src="images/tool_checkmark.png" alt="AppVet Tool"
+			style="height: 25px;"> logo. For example, Figure 1 shows the
+		integration between AppVet and an AppVet-compatible online tool called
+		<code>mysec</code>
+		. <br> <br> <br>
+	<center>
+		<img src="images/tool_protocol.png" alt="Tool prototol"
+			style="height: 400px;"> <br> <br>
+		<p class="cap">Figure 1. AppVet and tool integration.</p>
+	</center>
+	<br>
+	<br>
+	<p>
+		To integrate AppVet with a tool, AppVet must be configured using a <i>tool
+			adapter</i>. A tool adapter is an XML file that is provided by a tool
+		vendor that defines information about the tool including the tool's
+		URL and data that should be sent to the tool when submitting an app
+		for testing. In Figure 1, for example, the tool adapter
+		<code>android_mysec_tool.xml</code>
+		is used by AppVet to integrate with the
+		<code>mysec</code>
+		tool.
+	</p>
+	<p>
+		Regardless of whether or not a tool resides on a remote server or on
+		the same server as AppVet, AppVet communicates with tools via HTTP
+		messages. For messages from AppVet to a tool, the tool's REST API is
+		used by AppVet while messages from tools to AppVet use AppVet's API.
+		Although some vendors may implement their own API for their tool,
+		AppVet provides a <i>service wrapper</i> The basic communication
+		protocol between AppVet and a tool is asynchronous. When an app is
+		sent to a tool from AppVet, the sends an acknowledgement back to
+		AppVet before testing the app. After the tool is done testing the app,
+		it authenticates with AppVet and submits a report and risk assessment
+		for the app. After AppVet receives the report and risk assessment, it
+		returns an acknowledgement back to the tool.
+	</p>
+	<p>
+		In addition to configuring AppVet to integrate with a tool, a tool
+		must also be configured to integrate with AppVet. Configuration of a
+		tool to integrate with AppVet requires configuration of the tool's
+		<code>ToolProperties.xml</code>
+		file. The
+		<code>ToolProperties.xml</code>
+		file defines information used by the tool to process apps (e.g.,
+		report strings to scan for determining risk assessment) as well as to
+		authenticate with AppVet (e.g., username and password). Thus, AppVet
+		must have an account for each tool that it integrates with and each
+		tool must include its AppVet account information in its
+		<code>ToolProperties.xml</code>
+		file.
+	</p>
+	<p>
+		In many cases, a standalone tool will be available but will not have
+		any network capability. In such cases, AppVet provides a <i>service
+			wrapper</i> that allows vendors to "wrap" their standalone tool and
+		convert it to an online tool service that will seamless integrate with
+		AppVet. Figure 2 shows an example of how a standalone tool
+		<code>mytool</code>
+		is wrapped by an AppVet service wrapper
+		<code>myonlinetool</code>
+		. <br> <br> <br>
+	<center>
+		<img src="images/service_wrapper.png" alt="Tool prototol"
+			style="height: 400px;"> <br> <br>
+		<p class="cap">Figure 2. Tool service wrapper.</p>
+	</center>
+	<br>
+	<br>
+	<p>
+		Here, AppVet is configured to integrate with
+		<code>myonlinetool</code>
+		via its
+		<code>android_myonlinetool_tool.xml</code>
+		file. When an app is submitted from AppVet to
+		<code>myonlinetool</code>
+		,
+		<code>myonlinetool</code>
+		then executes
+		<code>mytool</code>
+		on the received app and generates a report and risk assessment which
+		are fed back to
+		<code>myonlinetool</code>
+		and submitted to AppVet.
+	</p>
+
+	<br>
+	<br>
 
 	<h2 id="addingtools">Adding Tools</h2>
 	TBD
