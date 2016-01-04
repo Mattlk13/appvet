@@ -271,6 +271,7 @@ public class AppVetProperties {
 		}
 		setupTools(DeviceOS.ANDROID);
 		setupTools(DeviceOS.IOS);
+		checkForProcessingApps();
 		log.debug("---------- END AppVet PROPERTIES -------------------", false);
 	}
 
@@ -366,5 +367,12 @@ public class AppVetProperties {
 			tableColumnNames = null;
 			log.debug("Found " + iosTools.size() + " iOS tools", false);
 		}
+	}
+	
+	/** If AppVet is shutdown while an app is in the PROCESSING state, the
+	 * status of the app should be changed to an ERROR state.
+	 */
+	public static void checkForProcessingApps() {
+		Database.setProcessingStatusToError();
 	}
 }

@@ -45,9 +45,9 @@
 		<StaggerInterval>1000</StaggerInterval>
 		<ConnectionTimeout>30000</ConnectionTimeout>
 		<SocketTimeout>1200000</SocketTimeout>
-		<!-- 3600000ms = 1hr tool timeout. Note that tools might have their own 
-			timeout which may be less or greater than this timeout. -->
-		<Timeout>3600000</Timeout>
+		<!-- Send an app and receive an ACK from a tool service
+		within this timeout period (in milliseconds)-->
+		<Timeout>10000</Timeout>
 	</ToolServices>
 	
 	<Apps>

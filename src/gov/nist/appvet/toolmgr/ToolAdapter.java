@@ -734,13 +734,13 @@ public class ToolAdapter implements Runnable {
 					} else if (httpResponseVal.indexOf("HTTP/1.1 404 Not Found") > -1) {
 						appInfo.log.error("Received from " + id + ": "
 								+ httpResponseVal
-								+ ". Make sure tool has been added to Tomcat");
+								+ ". Make sure tool service is running at: " + appVetRequest.URL);
 						ToolStatusManager.setToolStatus(appInfo.os,
 								appInfo.appId, this.id, ToolStatus.ERROR);
 					} else if (httpResponseVal.indexOf("HTTP/1.1 400") > -1) {
 						appInfo.log.error("Received from " + id + ": "
 								+ httpResponseVal
-								+ ". Check tool request parameters");
+								+ ". Make sure parameters sent to " + this.id + " are correct.");
 						ToolStatusManager.setToolStatus(appInfo.os,
 								appInfo.appId, this.id, ToolStatus.ERROR);
 					} else {

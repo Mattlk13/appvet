@@ -24,6 +24,7 @@ import gov.nist.appvet.gwt.shared.UserToolCredentialsGwt;
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import gov.nist.appvet.gwt.shared.UserInfoGwt;
 import gov.nist.appvet.properties.AppVetProperties;
+import gov.nist.appvet.shared.app.AppInfo;
 import gov.nist.appvet.shared.os.DeviceOS;
 import gov.nist.appvet.shared.role.Role;
 import gov.nist.appvet.shared.status.AppStatus;
@@ -70,6 +71,38 @@ public class Database {
 	public static boolean deleteUser(String username) {
 		return update("DELETE FROM users " + "where username='" + username
 				+ "'");
+	}
+	
+	/** If AppVet is shutdown while an app is in the PROCESSING state, set 
+	 * the status of the app from PROCESSING to ERROR upon the next startup
+	 * of AppVet.
+	 */
+	public static void setProcessingStatusToError() {
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		String sql = null;
+		try {
+			connection = getConnection();
+			sql = "SELECT * FROM apps where appstatus='" + AppStatus.PROCESSING.name() + "'";
+			//arrayList = new ArrayList<UserInfoGwt>();
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				String appId = resultSet.getString(1);
+				AppInfo appInfo = new AppInfo(appId);
+				appInfo.log.warn("Found app in interrupted PROCESSING state. Changing status to ERROR.");
+				update ("UPDATE apps SET appstatus='" + AppStatus.ERROR.name() + "' "
+				+ "WHERE appId='" + appId + "'");
+			}
+		} catch (final SQLException e) {
+			log.error(e.toString());
+		} finally {
+			sql = null;
+			cleanUpResultSet(resultSet);
+			cleanUpStatement(statement);
+			cleanUpConnection(connection);
+		}		
 	}
 
 	public static boolean adminAddNewUser(String username, String password,
