@@ -143,15 +143,15 @@ public class AppVetServlet extends HttpServlet {
 				return;
 			}
 		}
-		// /* Debug incoming parameters after validation.*/
-		// log.debug("Incoming GET message:\n" +
-		// "sessionId: " + sessionId + "\n" +
-		// "clientIpAddress: " + " clientIpAddress " + "\n" +
-		// "requesterUserName: " + " requesterUserName " + "\n" +
-		// "requesterPassword: " + requesterPassword + "\n" +
-		// "commandStr: " + commandStr + "\n" +
-		// "appId: " + appId + "\n" +
-		// "toolId: " + toolId);
+		 /* Debug incoming parameters after validation.*/
+		 log.debug("Incoming GET message:\n" +
+		 "sessionId: " + sessionId + "\n" +
+		 "clientIpAddress: " + " clientIpAddress " + "\n" +
+		 "requesterUserName: " + " requesterUserName " + "\n" +
+		 "requesterPassword: " + requesterPassword + "\n" +
+		 "commandStr: " + commandStr + "\n" +
+		 "appId: " + appId + "\n" +
+		 "toolId: " + toolId);
 		try {
 			// -------------------- Handle AppVet command ----------------------
 			switch (command) {
@@ -345,14 +345,13 @@ public class AppVetServlet extends HttpServlet {
 				}
 			}
 			// Debug incoming parameters after validation.
-			/*
-			 * log.debug("Incoming POST message:\n" + "sessionId: " + sessionId
-			 * + "\n" + "clientIpAddress: " + clientIpAddress + "\n" +
-			 * "requesterUserName: " + requesterUserName + "\n" +
-			 * "requesterPassword: " + requesterPassword + "\n" + "commandStr: "
-			 * + commandStr + "\n" + "appId: " + appId + "\n" + "toolId: " +
-			 * toolId);
-			 */
+			 log.debug("Incoming POST message:\n" + "sessionId: " + sessionId
+			 + "\n" + "clientIpAddress: " + clientIpAddress + "\n" +
+			 "requesterUserName: " + requesterUserName + "\n" +
+			 "requesterPassword: " + requesterPassword + "\n" + "commandStr: "
+			 + commandStr + "\n" + "appId: " + appId + "\n" + "toolId: " +
+			 toolId);
+			 
 
 			incomingParameter = null;
 			incomingValue = null;
@@ -365,6 +364,8 @@ public class AppVetServlet extends HttpServlet {
 							ErrorMessage.AUTHENTICATION_ERROR.getDescription(),
 							true);
 					return;
+				} else {
+					// Correct username and password so continue.
 				}
 			} else {
 				requesterUserName = Database.getSessionUser(sessionId);
@@ -678,7 +679,7 @@ public class AppVetServlet extends HttpServlet {
 		}
 	}
 
-	/** This method authenticates a user based on session information. */
+	/** This method authenticates a user based on username and password. */
 	private boolean authenticateUserNameAndPassword(String userName,
 			String password) {
 		boolean userExists = Database

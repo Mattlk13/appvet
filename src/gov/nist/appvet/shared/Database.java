@@ -1073,8 +1073,12 @@ public class Database {
 			String clientIpAddress) {
 		Date date = null;
 		try {
-			if ((sessionId == null) || (clientIpAddress == null)) {
-				log.warn("sessionID or clientIpAddress is null");
+			if (sessionId == null) {
+				log.warn("sessionID is null or has expired");
+				return -1;
+			}
+			if (clientIpAddress == null || clientIpAddress.isEmpty()) {
+				log.warn("Client IP address is null or empty.");
 				return -1;
 			}
 			final long expireTimeLong = getSessionExpiration(sessionId,

@@ -95,11 +95,19 @@ public class Authenticate {
 
 	/** Authenticate with username and password. */
 	public static boolean isAuthenticated(String username, String password) {
-		if (username == null || password == null)
+		if (username == null) {
+			log.warn("AUTH error: username is null");
 			return false;
+		} else if (password == null) {
+			log.warn("AUTH error: password is null");
+			return false;
+		}
 		try {
 			final String storedPasswordHash = Database
 					.getPasswordHash(username);
+			if (storedPasswordHash == null || storedPasswordHash.isEmpty()) {
+				log.warn("AUTH error: storedPasswordHash is null or empty");
+			}
 			return validatePassword(password, storedPasswordHash);
 		} catch (final NoSuchAlgorithmException e) {
 			log.error(e.toString());
@@ -232,7 +240,7 @@ public class Authenticate {
 		 */
 		boolean hashesMatch = slowEquals(hash, testHash);
 		if (!hashesMatch)
-			log.warn("Hashes dont match");
+			log.warn("Password hashes dont match");
 		return hashesMatch;
 	}
 }

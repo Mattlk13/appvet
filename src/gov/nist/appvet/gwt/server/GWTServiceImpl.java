@@ -81,32 +81,62 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	@Override
 	public ConfigInfoGwt authenticate(String username, String password, boolean sso)
 			throws IllegalArgumentException {
-		String sql = "SELECT * FROM users " + "where username='" + username
+		log.debug("*** AUTH username: " + username);
+		log.debug("*** AUTH password: " + password);
+		log.debug("*** SSO On: " + sso);
+		
+		String user = "SELECT * FROM users " + "where username='" + username
 				+ "'";
-		if (!Database.exists(sql)) {
+		if (!Database.exists(user)) {
+			log.warn("User '" + username + "' does not exists in db.");
+			
 			// Check if user is the AppVet default admin defined in
 			// AppVetProperties.xml
 			if (username.equals(AppVetProperties.ADMIN_USERNAME)
 					&& password.equals(AppVetProperties.ADMIN_PASSWORD)) {
-				log.debug("Adding new AppVet admin '" + username);
-				Database.adminAddNewUser(username, password, "NIST",
-						"appvet@nist.gov", Role.ADMIN.name(), "Administrator",
-						"AppVet");
+				log.debug("Adding user-defined default admin '" + username + "'");
+				if (Database.adminAddNewUser(username, password, "AppVet",
+						"appvet@example.com", Role.ADMIN.name(), "Administrator",
+						"AppVet")) {
+					log.debug("Added new admin user '" + username + "'");
+				} else {
+					log.debug("Could not add new admin user '" + username + "'");
+					return null;
+				}
 			} else {
-				log.warn("User " + username + " not defined as default admin");
+				log.debug("User '" + username + "' does not exist in database.");
 				return null;
 			}
+		} else {
+			log.debug("User '" + username + "' exists in database.");
 		}
-		final String clientIpAddress = getThreadLocalRequest().getRemoteAddr();
-		boolean userExists = 
-				Database.exists("SELECT * FROM users WHERE username='" + username + "'");
-		if (!userExists) {
-			log.error("No such user: " + username);
-			return null;
-		}
+		
+//		boolean userExists = 
+//				Database.exists("SELECT * FROM users WHERE username='" + username + "'");
+//		if (!userExists) {
+//			log.error("No such user: " + username);
+//			return null;
+//		}
+		
 		if (Authenticate.isAuthenticated(username, password)) {
-			Database.updateClientHost(username, clientIpAddress);
-			Database.updateUserLogonTime(username);
+			
+			log.debug("User '" + username + "' authenticated");
+			
+			final String clientIpAddress = getThreadLocalRequest().getRemoteAddr();
+
+			if (Database.updateClientHost(username, clientIpAddress)) {
+				log.debug("Updated client IP '" + clientIpAddress + "' for user '" + username + "' updated.");
+			} else {
+				log.warn("Updated client IP '" + clientIpAddress + "' for user '" + username + "' could not be updated.");
+				return null;
+			}
+			if (Database.updateUserLogonTime(username)) {
+				log.debug("Updated logon time for user '" + username + "'.");
+			} else {
+				log.debug("Could not update logon time for user '" + username + "'.");
+				return null;
+			}
+			
 			log.debug(username + " logged into GWT from: " + clientIpAddress);
 			final String sessionId = Database.setSession(username,
 					clientIpAddress);
@@ -116,19 +146,22 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			// be copied by another user and used as a query parameter to 
 			// directly access AppVet.
 			if (sso) {
+				log.warn("SSO is turned on - randomly change password for security");
 				UUID newPassword = UUID.randomUUID();
 				Database.setPBKDF2Password(username, newPassword.toString());
+			} else {
+				log.debug("SSO is turned off");
 			}
 			return getConfigInfo(username, sessionId, sessionExpiration);
 		} else {
-			AppVetProperties.log.warn("Could not authenticate user: "
-					+ username);
+			log.error("Could not authenticate user: " + username);
 			return null;
 		}
 	}
 
 	private static ConfigInfoGwt getConfigInfo(String username,
 			String sessionId, long sessionExpiration) {
+		
 		final ConfigInfoGwt configInfo = new ConfigInfoGwt();
 		configInfo.setAppVetHostUrl(AppVetProperties.HOST_URL);
 		configInfo.setAppVetProxyUrl(AppVetProperties.PROXY_URL);
