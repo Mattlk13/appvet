@@ -146,8 +146,8 @@ public class AppVetServlet extends HttpServlet {
 		 /* Debug incoming parameters after validation.*/
 		 log.debug("Incoming GET message:\n" +
 		 "sessionId: " + sessionId + "\n" +
-		 "clientIpAddress: " + " clientIpAddress " + "\n" +
-		 "requesterUserName: " + " requesterUserName " + "\n" +
+		 "clientIpAddress: " + clientIpAddress  + "\n" +
+		 "requesterUserName: " + requesterUserName + "\n" +
 		 "requesterPassword: " + requesterPassword + "\n" +
 		 "commandStr: " + commandStr + "\n" +
 		 "appId: " + appId + "\n" +
