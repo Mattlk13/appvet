@@ -346,10 +346,20 @@ public class LoginPanel extends DockLayoutPanel {
 
 			@Override
 			public void onFailure(Throwable caught) {
+				
+				StackTraceElement[] trace = caught.getStackTrace();
+				String stackTraceStr = null;
+				for (int i = 0; i < trace.length; i++) {
+					StackTraceElement element = trace[i];
+					stackTraceStr += element.toString() + "\n";
+				}
+				
+				log.fine("STACK TRACE LOG: " + stackTraceStr);
+				System.out.println("STACK TRACE: " + stackTraceStr);
 
 				showMessageDialog("AppVet Error",
 
-				"Authentication system error", true);
+				"Authentication system error - See console", true);
 
 				return;
 
