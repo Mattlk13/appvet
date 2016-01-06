@@ -56,6 +56,8 @@ public class AppVetProperties {
 	public static boolean useSSO = false;
 
 	static {
+		System.out.println("*** Starting AppVet v" + APPVET_VERSION + " ***");
+
 		JAVA_HOME = System.getenv("JAVA_HOME");
 		if (JAVA_HOME == null || JAVA_HOME.isEmpty()) {
 			System.err.println("The JAVA_HOME environment variable is null!");
