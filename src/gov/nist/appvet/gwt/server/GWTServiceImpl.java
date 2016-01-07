@@ -164,7 +164,6 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		
 		final ConfigInfoGwt configInfo = new ConfigInfoGwt();
 		configInfo.setAppVetHostUrl(AppVetProperties.HOST_URL);
-		configInfo.setAppVetProxyUrl(AppVetProperties.PROXY_URL);
 		configInfo.setAppVetUrl(AppVetProperties.URL);
 		configInfo.setAppVetServletUrl(AppVetProperties.SERVLET_URL);
 		configInfo.setAppVetVersion(AppVetProperties.APPVET_VERSION);

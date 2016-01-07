@@ -51,6 +51,7 @@ public class ToolMgr implements Runnable {
 	}
 
 	public void removeAppFiles(AppInfo appInfo) {
+		log.debug("Removing app files from: " + appInfo.getIdPath());
 		if (appInfo.os == DeviceOS.IOS) {
 			// Newly received iOS apps use "Receiving...zip" as the expanded
 			// name.
@@ -61,6 +62,8 @@ public class ToolMgr implements Runnable {
 				// This directory will only exist if an IPA file was uploaded.
 				FileUtil.deleteFile(zipPath);
 				appInfo.log.debug("Removed " + appInfo.appName + " project.");
+			} else {
+				appInfo.log.error("App file does not exist at: " + zipPath);
 			}
 		} else {
 			String projectPath = appInfo.getProjectPath();

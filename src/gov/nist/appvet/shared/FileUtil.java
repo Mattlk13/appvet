@@ -127,6 +127,7 @@ public class FileUtil {
 			// Note that if appInfo.fileItem.name contained spaces then those
 			// spaces are replaced with underscores for appInfo.fileName.
 			String appFilePath = appInfo.getAppFilePath();
+			log.info("Saving app to: " + appFilePath);
 			file = new File(appFilePath);
 			boolean fileCreated = file.createNewFile();
 			if (!fileCreated) {

@@ -48,6 +48,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.jetty.util.log.Log;
+
 /**
  * @author steveq@nist.gov
  */
@@ -314,7 +316,9 @@ public class AndroidMetadata {
 		final String projectPath = appInfo.getProjectPath();
 		try {
 			File manifestFile = new File(projectPath + "/AndroidManifest.xml");
+			appInfo.log.debug("manifestFile: " + projectPath + "/AndroidManifest.xml");
 			File stringsFile = new File(projectPath + "/res/values/strings.xml");
+			appInfo.log.debug("stringsFilePath: " + projectPath + "/res/values/strings.xml");
 			try {
 				if (!manifestFile.exists()) {
 					appInfo.log.error("Could not locate Android manifest: "
@@ -327,6 +331,8 @@ public class AndroidMetadata {
 					ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 							appinfoTool.id, ToolStatus.ERROR);
 					return false;
+				} else {
+					appInfo.log.debug("Found manifest file at: " + projectPath + "/AndroidManifest.xml");
 				}
 				if (!stringsFile.exists()) {
 					appInfo.log.error("Could not locate Strings file: "
@@ -339,6 +345,8 @@ public class AndroidMetadata {
 					ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 							appinfoTool.id, ToolStatus.ERROR);
 					return false;
+				} else {
+					appInfo.log.debug("Found strings file at: " + projectPath);
 				}
 				appInfo.log.debug("Found AndroidMetadata.xml file\tOK");
 				// Get the XML element values.

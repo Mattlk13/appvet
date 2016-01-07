@@ -123,8 +123,6 @@ public class AppVetProperties {
 	public static String HOST = null;
 	/** HTTP address of host */
 	public static String HOST_URL = null;
-	/** Only used if AppVet behind a proxy */
-	public static String PROXY_URL = null;
 	/** HTTP address of host /appvet directory */
 	public static String URL = null;
 	/** HTTP address of host /appvet/AppVetServlet directory */
@@ -248,9 +246,6 @@ public class AppVetProperties {
 		printVal("URL", URL);
 		SERVLET_URL = URL + "/AppVetServlet";
 		printVal("SERVLET_URL", SERVLET_URL);
-		
-		PROXY_URL = xml.getXPathValue("/AppVet/ProxyUrl");
-		printVal("PROXY_URL", PROXY_URL);
 		
 		KEEP_APPS = new Boolean(xml.getXPathValue("/AppVet/Apps/KeepApps"))
 				.booleanValue();
