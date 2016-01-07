@@ -48,7 +48,7 @@
 	</ToolServices>
 	
 	<Apps>
-		<KeepApps>false</KeepApps>
+		<KeepApps>true</KeepApps>
 	</Apps>
 	
 </AppVet>
