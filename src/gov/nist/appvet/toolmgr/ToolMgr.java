@@ -125,9 +125,8 @@ public class ToolMgr implements Runnable {
 					log.debug(MemoryUtil.getFreeHeap("ToolMgr.run()"));
 					appInfo = new AppInfo(appid);
 					// Get app metadata.
-					if (!getAppMetaData(appInfo)) {
+					if (!getAppMetaData(appInfo) && !AppVetProperties.KEEP_APPS) {
 						removeAppFiles(appInfo);
-						//continue mainLoop;
 					} else {
 						// Get all available tools
 						ArrayList<ToolAdapter> availableTools = null;
