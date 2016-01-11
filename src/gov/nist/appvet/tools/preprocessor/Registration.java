@@ -191,7 +191,7 @@ public class Registration {
 						appInfo.log.error(ErrorMessage.ERROR_SAVING_UPLOADED_FILE
 								.getDescription());
 						ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-								registrationTool.id, ToolStatus.ERROR);
+								registrationTool.toolId, ToolStatus.ERROR);
 						return false;
 					}
 					
@@ -202,7 +202,7 @@ public class Registration {
 
 				// Update registration status to LOW.
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-						registrationTool.id, ToolStatus.LOW);
+						registrationTool.toolId, ToolStatus.LOW);
 				
 				regReportWriter.write("Date: \t\t" + currentDate + "\n\n");
 				regReportWriter.write("App ID: \t" + appInfo.appId + "\n");
@@ -220,7 +220,7 @@ public class Registration {
 			} else {
 				// Update registration status to ERROR.
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-						registrationTool.id, ToolStatus.ERROR);
+						registrationTool.toolId, ToolStatus.ERROR);
 				appInfo.log.error(ErrorMessage.ERROR_APP_ALREADY_REGISTERED
 						.getDescription());
 				regReportWriter.write("<font color=\"red\">"
@@ -252,10 +252,10 @@ public class Registration {
 		
 		String sql = null;
 		if (appInfo.os == DeviceOS.ANDROID) {
-			sql = "UPDATE androidtoolstatus SET " + tool.id + "='NA' "
+			sql = "UPDATE androidtoolstatus SET " + tool.toolId + "='NA' "
 					+ "WHERE appid='" + appInfo.appId + "'";
 		} else if (appInfo.os == DeviceOS.IOS) {
-			sql = "UPDATE iostoolstatus SET " + tool.id + "='NA' "
+			sql = "UPDATE iostoolstatus SET " + tool.toolId + "='NA' "
 					+ "WHERE appid='" + appInfo.appId + "'";
 		}
 

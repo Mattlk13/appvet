@@ -82,7 +82,7 @@ public class ToolStatusManager {
 		// If audit report exists, use it to override the app's status. Note 
 		// that an audit can only have a status of LOW, MODERATE, or HIGH.
 		ToolAdapter auditTool = ToolAdapter.getByToolId(os, "audit");
-		ToolStatus auditStatus = getToolStatus(os, appId, auditTool.id);
+		ToolStatus auditStatus = getToolStatus(os, appId, auditTool.toolId);
 		if (auditStatus != null && auditStatus != ToolStatus.NA) {
 			if (auditStatus == ToolStatus.LOW) {
 				AppStatusManager.setAppStatus(appId, AppStatus.LOW);
@@ -102,7 +102,7 @@ public class ToolStatusManager {
 		ToolAdapter registrationTool = ToolAdapter.getByToolId(os,
 				"registration");
 		ToolStatus registrationStatus = getToolStatus(os, appId,
-				registrationTool.id);
+				registrationTool.toolId);
 		if (registrationStatus == ToolStatus.ERROR) {
 			AppStatusManager.setAppStatus(appId, AppStatus.ERROR);
 			return;
@@ -115,7 +115,7 @@ public class ToolStatusManager {
 		// App metadata. Note that we only change app status if metadata
 		// ERROR or if metadata LOW while app status is REGISTERING
 		ToolAdapter metadataTool = ToolAdapter.getByToolId(os, "appinfo");
-		ToolStatus metadataStatus = getToolStatus(os, appId, metadataTool.id);
+		ToolStatus metadataStatus = getToolStatus(os, appId, metadataTool.toolId);
 		if (metadataStatus == ToolStatus.ERROR) {
 			AppStatusManager.setAppStatus(appId, AppStatus.ERROR);
 			return;
@@ -149,7 +149,7 @@ public class ToolStatusManager {
 			if (tool.analysisType == AnalysisType.TESTTOOL ||
 					tool.analysisType == AnalysisType.REPORT) {
 				ToolStatus toolStatus = getToolStatus(os, appId,
-						tool.id);
+						tool.toolId);
 				if (toolStatus == ToolStatus.ERROR) {
 					numToolErrors++;
 				} else if (toolStatus == ToolStatus.HIGH) {

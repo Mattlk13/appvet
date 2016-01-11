@@ -804,13 +804,13 @@ public class AppVetServlet extends HttpServlet {
 		ArrayList<ToolAdapter> androidTools = AppVetProperties.androidTools;
 		for (int i = 0; i < androidTools.size(); i++) {
 			ToolAdapter androidTool = androidTools.get(i);
-			payload.append(androidTool.id + "\n");
+			payload.append(androidTool.toolId + "\n");
 		}
 		payload.append("* iOS tool IDs:\n");
 		ArrayList<ToolAdapter> iosTools = AppVetProperties.iosTools;
 		for (int i = 0; i < iosTools.size(); i++) {
 			ToolAdapter iosTool = iosTools.get(i);
-			payload.append(iosTool.id + "\n");
+			payload.append(iosTool.toolId + "\n");
 		}
 		return payload.toString();
 	}
@@ -821,7 +821,7 @@ public class AppVetServlet extends HttpServlet {
 		if (appOS == DeviceOS.ANDROID) {
 			for (int i = 0; i < AppVetProperties.androidTools.size(); i++) {
 				ToolAdapter toolAdapter = AppVetProperties.androidTools.get(i);
-				String androidToolId = toolAdapter.id;
+				String androidToolId = toolAdapter.toolId;
 				ToolStatus toolStatus = ToolStatusManager.getToolStatus(appOS,
 						appId, androidToolId);
 				toolStatuses += androidToolId + "=" + toolStatus + "\n";
@@ -829,7 +829,7 @@ public class AppVetServlet extends HttpServlet {
 		} else if (appOS == DeviceOS.IOS) {
 			for (int i = 0; i < AppVetProperties.iosTools.size(); i++) {
 				ToolAdapter toolAdapter = AppVetProperties.iosTools.get(i);
-				String iosToolId = toolAdapter.id;
+				String iosToolId = toolAdapter.toolId;
 				ToolStatus toolStatus = ToolStatusManager.getToolStatus(appOS,
 						appId, iosToolId);
 				toolStatuses += iosToolId + "=" + toolStatus + "\n";
@@ -847,13 +847,13 @@ public class AppVetServlet extends HttpServlet {
 			ArrayList<ToolAdapter> androidTools = AppVetProperties.androidTools;
 			for (int i = 0; i < androidTools.size(); i++) {
 				ToolAdapter androidTool = androidTools.get(i);
-				payload.append(androidTool.id + "\n");
+				payload.append(androidTool.toolId + "\n");
 			}
 		} else if (appOS == DeviceOS.IOS) {
 			ArrayList<ToolAdapter> iosTools = AppVetProperties.iosTools;
 			for (int i = 0; i < iosTools.size(); i++) {
 				ToolAdapter iosTool = iosTools.get(i);
-				payload.append(iosTool.id + "\n");
+				payload.append(iosTool.toolId + "\n");
 			}
 		} else {
 			log.error("Unknown device OS");
@@ -943,16 +943,16 @@ public class AppVetServlet extends HttpServlet {
 			// Override reports with final LOW/MODERATE/HIGH risk decision.
 			if (appInfo.toolRisk.equals("HIGH")) {
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-						tool.id, ToolStatus.HIGH);
+						tool.toolId, ToolStatus.HIGH);
 			} else if (appInfo.toolRisk.equals("MODERATE")) {
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-						tool.id, ToolStatus.MODERATE);
+						tool.toolId, ToolStatus.MODERATE);
 			} else if (appInfo.toolRisk.equals("LOW")) {
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-						tool.id, ToolStatus.LOW);
+						tool.toolId, ToolStatus.LOW);
 			} else if (appInfo.toolRisk.equals("ERROR")) {
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-						tool.id, ToolStatus.ERROR);
+						tool.toolId, ToolStatus.ERROR);
 			} else {
 				appInfo.log.error("Unknown report type '" + appInfo.toolRisk
 						+ "' received from " + appInfo.ownerName);

@@ -328,12 +328,12 @@ public class AppVetProperties {
 			}
 			for (int i = 0; i < androidTools.size(); i++) {
 				final ToolAdapter tool = androidTools.get(i);
-				if (!tableColumnNames.contains(tool.id)) {
+				if (!tableColumnNames.contains(tool.toolId)) {
 					// Add to table "androidtoolstatus"
-					tableColumnNames.add(tool.id);
-					if (!Database.addTableColumn("androidtoolstatus", tool.id,
+					tableColumnNames.add(tool.toolId);
+					if (!Database.addTableColumn("androidtoolstatus", tool.toolId,
 							"VARCHAR (120) DEFAULT \"NA\"")) {
-						log.error("Could not add Android tool '" + tool.id
+						log.error("Could not add Android tool '" + tool.toolId
 								+ "' to androidtoolstatus table");
 					}
 				}
@@ -351,12 +351,12 @@ public class AppVetProperties {
 			}
 			for (int i = 0; i < iosTools.size(); i++) {
 				final ToolAdapter tool = iosTools.get(i);
-				if (!tableColumnNames.contains(tool.id)) {
+				if (!tableColumnNames.contains(tool.toolId)) {
 					// Add to table "iostools"
-					tableColumnNames.add(tool.id);
-					if (!Database.addTableColumn("iostoolstatus", tool.id,
+					tableColumnNames.add(tool.toolId);
+					if (!Database.addTableColumn("iostoolstatus", tool.toolId,
 							"VARCHAR (120)")) {
-						log.error("Could not add iOS tool '" + tool.id
+						log.error("Could not add iOS tool '" + tool.toolId
 								+ "' to iostoolstatus table");
 					}
 				}

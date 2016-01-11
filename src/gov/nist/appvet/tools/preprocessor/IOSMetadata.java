@@ -72,7 +72,7 @@ public class IOSMetadata {
 			File ipaFile = new File(ipaFilePath);
 			if (ipaFile.exists()) {
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-						appinfoTool.id, ToolStatus.SUBMITTED);
+						appinfoTool.toolId, ToolStatus.SUBMITTED);
 			}
 			String zipFilePath = appInfo.getIdPath() + "/" + appInfo.appName
 					+ ".zip";
@@ -228,11 +228,11 @@ public class IOSMetadata {
 					.toUpperCase();
 			if (fileNameUpperCase.endsWith(".IPA")) {
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-						appinfoTool.id, ToolStatus.SUBMITTED);
+						appinfoTool.toolId, ToolStatus.SUBMITTED);
 
 			} else {
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-						appinfoTool.id, ToolStatus.ERROR);
+						appinfoTool.toolId, ToolStatus.ERROR);
 				return false;
 			}
 
@@ -242,7 +242,7 @@ public class IOSMetadata {
 					appInfo.versionName);
 
 			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-					appinfoTool.id, ToolStatus.LOW);
+					appinfoTool.toolId, ToolStatus.LOW);
 			appinfoReport
 					.write("\nStatus:\t\t<font color=\"green\">LOW</font>\n");
 			appInfo.log.debug("End iOS metadata preprocessing for app "

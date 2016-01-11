@@ -100,7 +100,7 @@ public class AndroidMetadata {
 					.toUpperCase();
 			if (fileNameUpperCase.endsWith(".APK")) {
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-						appinfoTool.id, ToolStatus.SUBMITTED);
+						appinfoTool.toolId, ToolStatus.SUBMITTED);
 				// Use apktool to decode APK file.
 				if (!decodeApk(appInfo, appinfoReport)) {
 					return false;
@@ -113,12 +113,12 @@ public class AndroidMetadata {
 				appInfo.log.error("File " + appInfo.getAppFileName()
 						+ " has invalid file extension.");
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-						appinfoTool.id, ToolStatus.ERROR);
+						appinfoTool.toolId, ToolStatus.ERROR);
 				return false;
 			}
 			// Set metadata processing to LOW.
 			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-					appinfoTool.id, ToolStatus.LOW);
+					appinfoTool.toolId, ToolStatus.LOW);
 			appinfoReport
 					.write("\nStatus:\t\t<font color=\"green\">LOW</font>\n");
 			appInfo.log.debug("End Android metadata preprocessing for app "
@@ -186,7 +186,7 @@ public class AndroidMetadata {
 					appInfo.log.error(ErrorMessage.FILE_NOT_FOUND
 							.getDescription());
 					ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-							appinfoTool.id, ToolStatus.ERROR);
+							appinfoTool.toolId, ToolStatus.ERROR);
 				} else {
 					appInfo.log.error(reportBuffer.toString());
 					appinfoReport.write("\n<font color=\"red\">"
@@ -196,14 +196,14 @@ public class AndroidMetadata {
 					appInfo.log.error(ErrorMessage.ANDROID_APK_DECODE_ERROR
 							.getDescription());
 					ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-							appinfoTool.id, ToolStatus.ERROR);
+							appinfoTool.toolId, ToolStatus.ERROR);
 				}
 				return false;
 			}
 		} catch (final IOException e) {
 			appInfo.log.error(e.toString());
 			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-					appinfoTool.id, ToolStatus.ERROR);
+					appinfoTool.toolId, ToolStatus.ERROR);
 			try {
 				appinfoReport.write("\n<font color=\"red\">"
 						+ ErrorMessage.ANDROID_APK_DECODE_ERROR
@@ -329,7 +329,7 @@ public class AndroidMetadata {
 											.getDescription()
 									+ " (apktool did not generate manifest file).</font>");
 					ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-							appinfoTool.id, ToolStatus.ERROR);
+							appinfoTool.toolId, ToolStatus.ERROR);
 					return false;
 				} else {
 					appInfo.log.debug("Found manifest file at: " + projectPath + "/AndroidManifest.xml");
@@ -343,7 +343,7 @@ public class AndroidMetadata {
 											.getDescription()
 									+ " (apktool did not generate strings res file).</font>");
 					ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-							appinfoTool.id, ToolStatus.ERROR);
+							appinfoTool.toolId, ToolStatus.ERROR);
 					return false;
 				} else {
 					appInfo.log.debug("Found strings file at: " + projectPath);
@@ -367,7 +367,7 @@ public class AndroidMetadata {
 						+ ErrorMessage.ANDROID_MANIFEST_ERROR.getDescription()
 						+ "</font>");
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-						appinfoTool.id, ToolStatus.ERROR);
+						appinfoTool.toolId, ToolStatus.ERROR);
 			} catch (final IOException e1) {
 				appInfo.log.error(e1.toString());
 			}

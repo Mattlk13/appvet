@@ -185,7 +185,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					ToolInfoGwt toolInfo = new ToolInfoGwt();
 					toolInfo.setOs(DeviceOS.ANDROID.name());
 					toolInfo.setName(androidTool.name);
-					toolInfo.setId(androidTool.id);
+					toolInfo.setId(androidTool.toolId);
 					toolInfo.setAuthenticationRequired(androidTool.authenticationRequired);
 					if (toolInfo.requiresAuthentication()) {
 						toolInfo.setAuthenticationParameterNames(androidTool.authenticationParams);
@@ -214,7 +214,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					ToolInfoGwt toolInfo = new ToolInfoGwt();
 					toolInfo.setOs(DeviceOS.IOS.name());
 					toolInfo.setName(iosTool.name);
-					toolInfo.setId(iosTool.id);
+					toolInfo.setId(iosTool.toolId);
 					toolInfo.setAuthenticationRequired(iosTool.authenticationRequired);
 					if (toolInfo.requiresAuthentication()) {
 						toolInfo.setAuthenticationParameterNames(iosTool.authenticationParams);
@@ -367,7 +367,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 				if (toolStatus != null) {
 					toolStatusList.add(toolStatus);
 				} else {
-					log.error("Status for tool " + tool.id + " is null");
+					log.error("Status for tool " + tool.toolId + " is null");
 				}
 			}
 		}
@@ -393,9 +393,9 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		toolStatusGwt.setToolDisplayName(websiteHrefTag);
 		boolean toolCompleted = false;
 		final ToolStatus toolStatus = ToolStatusManager.getToolStatus(os,
-				appId, tool.id);
+				appId, tool.toolId);
 		if (toolStatus == null) {
-			log.warn(appId + ", " + tool.id + "-status: null!");
+			log.warn(appId + ", " + tool.toolId + "-status: null!");
 		}
 		// ---------------------- Compute Tool Status
 		// ---------------------------
@@ -403,7 +403,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			// Status for a tool may be null if it was recently installed
 			// but not run for previously submitted apps. In such cases,
 			// we return an NA status.
-			ToolStatusManager.setToolStatus(os, appId, tool.id, ToolStatus.NA);
+			ToolStatusManager.setToolStatus(os, appId, tool.toolId, ToolStatus.NA);
 			toolCompleted = true;
 			toolStatusGwt
 					.setStatusHtml("<div id=\"tabledim\" style='color: gray'>N/A</div>");
@@ -456,7 +456,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 						+ AppVetServletCommand.GET_TOOL_REPORT.name() + "&"
 						+ AppVetParameter.APPID.value + "=" + appId + "&"
 						+ AppVetParameter.SESSIONID.value + "=" + sessionId
-						+ "&" + AppVetParameter.TOOLID.value + "=" + tool.id
+						+ "&" + AppVetParameter.TOOLID.value + "=" + tool.toolId
 						+ "\" target=\"_blank\">Report</a>");
 			}
 		} else {

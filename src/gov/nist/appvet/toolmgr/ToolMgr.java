@@ -223,11 +223,11 @@ public class ToolMgr implements Runnable {
 	public void wait(AppInfo appInfo, ToolAdapter tool) {
 		try {
 			tool.thread.join(AppVetProperties.TOOL_TIMEOUT);
-			log.debug("Tool " + tool.id + " is no longer waiting");
+			log.debug("Tool " + tool.toolId + " is no longer waiting");
 		} catch (final InterruptedException e) {
 			appInfo.log.error("Tool timed out after "
 					+ AppVetProperties.TOOL_TIMEOUT + "ms");
-			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId, tool.id,
+			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId, tool.toolId,
 					ToolStatus.ERROR);
 		}
 	}

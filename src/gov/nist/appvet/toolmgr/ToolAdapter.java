@@ -72,8 +72,8 @@ public class ToolAdapter implements Runnable {
 	private static final Logger log = AppVetProperties.log;
 	// Display Name (e.g., Androwarn (Maaaaz))
 	public String name = null; 
-	// ID used as a database table column name
-	public String id = null; 
+	// Tool ID (and tools database table column name)
+	public String toolId = null; 
 	public AnalysisType analysisType = null;
 	public DeviceOS os = null;
 	public String vendorName = null;
@@ -107,8 +107,8 @@ public class ToolAdapter implements Runnable {
 		name = xml.getXPathValue("/ToolAdapter/Description/Name");
 		checkNullString(configFileName, "name", name);
 
-		id = xml.getXPathValue("/ToolAdapter/Description/Id");
-		checkNullString(configFileName, "id", id);
+		toolId = xml.getXPathValue("/ToolAdapter/Description/Id");
+		checkNullString(configFileName, "id", toolId);
 
 		String analysisValue = xml
 				.getXPathValue("/ToolAdapter/Description/Category");
@@ -174,7 +174,7 @@ public class ToolAdapter implements Runnable {
 
 		log.debug("Adding Tool:\n" + "Config file: " + configFileName + "\n"
 				+ "Tool name: " + name + "\n" 
-				+ "Tool ID: " + id + "\n"
+				+ "Tool ID: " + toolId + "\n"
 				+ "Analysis type: " + analysisType + "\n" 
 				+ "OS: " + os.name()
 				+ "\n" + "Vendor: " + vendorName + "\n" 
@@ -217,7 +217,7 @@ public class ToolAdapter implements Runnable {
 		for (int i = 0; i < AppVetProperties.androidTools.size(); i++) {
 			final ToolAdapter adapter = AppVetProperties.androidTools.get(i);
 
-			if (adapter.id.equals(toolId)) {
+			if (adapter.toolId.equals(toolId)) {
 				return true;
 			}
 
@@ -226,7 +226,7 @@ public class ToolAdapter implements Runnable {
 		for (int i = 0; i < AppVetProperties.iosTools.size(); i++) {
 			final ToolAdapter adapter = AppVetProperties.iosTools.get(i);
 
-			if (adapter.id.equals(toolId)) {
+			if (adapter.toolId.equals(toolId)) {
 				return true;
 			}
 
@@ -244,7 +244,7 @@ public class ToolAdapter implements Runnable {
 				final ToolAdapter adapter = AppVetProperties.androidTools
 						.get(i);
 
-				if (adapter.id.equals(toolId)) {
+				if (adapter.toolId.equals(toolId)) {
 					return adapter;
 				}
 
@@ -258,7 +258,7 @@ public class ToolAdapter implements Runnable {
 			for (int i = 0; i < AppVetProperties.iosTools.size(); i++) {
 				final ToolAdapter adapter = AppVetProperties.iosTools.get(i);
 
-				if (adapter.id.equals(toolId)) {
+				if (adapter.toolId.equals(toolId)) {
 					return adapter;
 				}
 
@@ -437,7 +437,7 @@ public class ToolAdapter implements Runnable {
 					+ " is still alive.  Interrupting...");
 			thread.interrupt();
 			appInfo.log.error(ErrorMessage.TOOL_TIMEOUT_ERROR.getDescription());
-			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId, this.id,
+			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId, this.toolId,
 					ToolStatus.ERROR);
 		}
 		
@@ -470,7 +470,7 @@ public class ToolAdapter implements Runnable {
 						if (paramValue.equals("APPVET_ID")) {
 							
 							appInfo.log.debug("Found " + paramName + " = "
-									+ "'APPVET_ID' for tool '" + id
+									+ "'APPVET_ID' for tool '" + toolId
 									+ "'. Setting to appid = '"
 									+ appInfo.appId + "'");
 							
@@ -557,17 +557,17 @@ public class ToolAdapter implements Runnable {
 		final String reportSuffix = "_security_report";
 		switch (reportFileType) {
 		case TXT:
-			return id + reportSuffix + "." + ReportFileType.TXT.value;
+			return toolId + reportSuffix + "." + ReportFileType.TXT.value;
 		case HTML:
-			return id + reportSuffix + "." + ReportFileType.HTML.value;
+			return toolId + reportSuffix + "." + ReportFileType.HTML.value;
 		case PDF:
-			return id + reportSuffix + "." + ReportFileType.PDF.value;
+			return toolId + reportSuffix + "." + ReportFileType.PDF.value;
 		case RTF:
-			return id + reportSuffix + "." + ReportFileType.RTF.value;
+			return toolId + reportSuffix + "." + ReportFileType.RTF.value;
 		case XML:
-			return id + reportSuffix + "." + ReportFileType.XML.value;
+			return toolId + reportSuffix + "." + ReportFileType.XML.value;
 		case JSON:
-			return id + reportSuffix + "." + ReportFileType.JSON.value;
+			return toolId + reportSuffix + "." + ReportFileType.JSON.value;
 		default:
 			return null;
 		}
@@ -580,7 +580,7 @@ public class ToolAdapter implements Runnable {
 
 	@Override
 	public void run() {
-		log.debug("CALLING RUN METHOD FOR " + id);
+		log.debug("CALLING RUN METHOD FOR " + toolId);
 
 		if ((protocol == Protocol.PUSH) || (protocol == Protocol.INTERNAL)) {
 			// PUSH/INTERNAL adapters do not send requests to a service.
@@ -598,7 +598,7 @@ public class ToolAdapter implements Runnable {
 
 		// Add authentication parameters if they exist
 		if (authenticationRequired) {
-			log.debug("Tool " + id + ": Checking tool credentials for "
+			log.debug("Tool " + toolId + ": Checking tool credentials for "
 					+ appInfo.ownerName);
 			// Get user's tool credentials
 			ArrayList<UserToolCredentialsGwt> userToolCredentials = 
@@ -608,7 +608,7 @@ public class ToolAdapter implements Runnable {
 				UserToolCredentialsGwt userToolCredential = userToolCredentials
 						.get(i);
 				
-				if (userToolCredential.toolId.equals(id)
+				if (userToolCredential.toolId.equals(toolId)
 						&& userToolCredential.os.equals(os.name())) {
 
 					for (int j = 0; j < userToolCredential.authParamNames.length; j++) {
@@ -623,11 +623,11 @@ public class ToolAdapter implements Runnable {
 							log.warn("Tool authentication parameter value "
 									+ "cannot be null. Setting tool to NA");
 							ToolStatusManager.setToolStatus(appInfo.os,
-									appInfo.appId, this.id, ToolStatus.NA);
+									appInfo.appId, this.toolId, ToolStatus.NA);
 							return;
 						} else {
 							log.debug("Adding " + appInfo.ownerName
-									+ " tool credentials for " + id);
+									+ " tool credentials for " + toolId);
 							authParamNames.add(paramName);
 							authParamValues.add(paramValue);
 						}
@@ -649,7 +649,7 @@ public class ToolAdapter implements Runnable {
 				final long startTime = startDate.getTime();
 				startDate = null;
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-						this.id, ToolStatus.SUBMITTED);
+						this.toolId, ToolStatus.SUBMITTED);
 				HttpParams httpParameters = new BasicHttpParams();
 				HttpConnectionParams.setConnectionTimeout(httpParameters,
 						AppVetProperties.CONNECTION_TIMEOUT);
@@ -663,13 +663,24 @@ public class ToolAdapter implements Runnable {
 					appInfo.log.error("MultipartEntity is null. Aborting "
 							+ name);
 					ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-							this.id, ToolStatus.ERROR);
+							this.toolId, ToolStatus.ERROR);
 					return;
 				}
-				HttpPost httpPost = new HttpPost(appVetRequest.URL);
+				
+				String targetURL = appVetRequest.URL;
+				
+				/* Need special case for RRF tool that appends appID to URL path */
+				if (toolId.equals("androidrrf") || toolId.equals("rrf")) {
+					targetURL += "/" + appInfo.appId;
+					appInfo.log.info("RRF tool using modified target URL: " + targetURL);
+				}
+				
+				HttpPost httpPost = new HttpPost(targetURL);
+
+				
 				httpPost.setEntity(entity);
 				appInfo.log.info(name + " adapter sending app " + appInfo.appId
-						+ " to " + appVetRequest.URL);
+						+ " to " + targetURL);
 
 				// Send the app to the tool
 				final HttpResponse httpResponse = httpclient.execute(httpPost);
@@ -709,18 +720,18 @@ public class ToolAdapter implements Runnable {
 					String toolResult = httpResponse.getFirstHeader(
 							appvetRiskHeaderName).getValue();
 					appInfo.log.debug("Received tool result: " + toolResult
-							+ " from " + this.id);
+							+ " from " + this.toolId);
 
 					ToolStatus toolStatus = ToolStatus.getStatus(toolResult);
 
 					if (toolStatus == null) {
 						appInfo.log.error("Tool status is null!");
 						ToolStatusManager.setToolStatus(appInfo.os,
-								appInfo.appId, this.id, ToolStatus.ERROR);
+								appInfo.appId, this.toolId, ToolStatus.ERROR);
 						return;
 					} else {
 						ToolStatusManager.setToolStatus(appInfo.os,
-								appInfo.appId, this.id, toolStatus);
+								appInfo.appId, this.toolId, toolStatus);
 					}
 
 				} else if (protocol == Protocol.ASYNCHRONOUS) {
@@ -729,26 +740,26 @@ public class ToolAdapter implements Runnable {
 							.toString();
 					if ((httpResponseVal.indexOf("HTTP/1.1 202 Accepted") > -1)
 							|| (httpResponseVal.indexOf("HTTP/1.1 200 OK") > -1)) {
-						appInfo.log.info("Received from " + id + ": "
+						appInfo.log.info("Received from " + toolId + ": "
 								+ httpResponseVal);
 					} else if (httpResponseVal.indexOf("HTTP/1.1 404 Not Found") > -1) {
-						appInfo.log.error("Received from " + id + ": "
+						appInfo.log.error("Received from " + toolId + ": "
 								+ httpResponseVal
-								+ ". Make sure tool service is running at: " + appVetRequest.URL);
+								+ ". Make sure tool service is running at: " + targetURL);
 						ToolStatusManager.setToolStatus(appInfo.os,
-								appInfo.appId, this.id, ToolStatus.ERROR);
+								appInfo.appId, this.toolId, ToolStatus.ERROR);
 					} else if (httpResponseVal.indexOf("HTTP/1.1 400") > -1) {
-						appInfo.log.error("Received from " + id + ": "
+						appInfo.log.error("Received from " + toolId + ": "
 								+ httpResponseVal
-								+ ". Make sure parameters sent to " + this.id + " are correct.");
+								+ ". Make sure parameters sent to " + this.toolId + " are correct.");
 						ToolStatusManager.setToolStatus(appInfo.os,
-								appInfo.appId, this.id, ToolStatus.ERROR);
+								appInfo.appId, this.toolId, ToolStatus.ERROR);
 					} else {
-						appInfo.log.error("Tool '" + id + "' received: "
+						appInfo.log.error("Tool '" + toolId + "' received: "
 								+ httpResponseVal
 								+ ". Could not process app.");
 						ToolStatusManager.setToolStatus(appInfo.os,
-								appInfo.appId, this.id, ToolStatus.ERROR);
+								appInfo.appId, this.toolId, ToolStatus.ERROR);
 					}
 				}
 
@@ -764,7 +775,7 @@ public class ToolAdapter implements Runnable {
 			} catch (final Exception e) {
 				appInfo.log.error(e.toString());
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-						this.id, ToolStatus.ERROR);
+						this.toolId, ToolStatus.ERROR);
 			}
 		}
 	}
