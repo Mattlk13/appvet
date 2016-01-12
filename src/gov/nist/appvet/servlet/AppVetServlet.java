@@ -256,6 +256,7 @@ public class AppVetServlet extends HttpServlet {
 	/** Handler for HTTP POST messages.*/
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) {
+		
 		AppVetServletCommand command = null;
 		String commandStr = null;
 		String requesterUserName = null;
@@ -272,6 +273,8 @@ public class AppVetServlet extends HttpServlet {
 		// String appOS = null;
 		FileItem fileItem = null;
 		String clientIpAddress = request.getRemoteAddr();
+		log.debug("Receiving incoming POST from " + clientIpAddress);
+
 		// On CentOS, clientIpAddress will be '0:0:0:0:0:0:0:1' if on
 		// localhost, so change to '127.0.0.1'
 		if (clientIpAddress.equals("0:0:0:0:0:0:0:1")) {
@@ -350,7 +353,7 @@ public class AppVetServlet extends HttpServlet {
 			 "requesterUserName: " + requesterUserName + "\n" +
 			 "requesterPassword: " + requesterPassword + "\n" + "commandStr: "
 			 + commandStr + "\n" + "appId: " + appId + "\n" + "toolId: " +
-			 toolId);
+			 toolId + "\ntoolRisk: " + toolRisk);
 			 
 
 			incomingParameter = null;
@@ -359,6 +362,7 @@ public class AppVetServlet extends HttpServlet {
 			if (!authenticateSession(sessionId, clientIpAddress)) {
 				if (!authenticateUserNameAndPassword(requesterUserName,
 						requesterPassword)) {
+					log.error("Authentication error for user '" + requesterUserName + "'");
 					sendHttpResponse(response,
 							HttpServletResponse.SC_BAD_REQUEST,
 							ErrorMessage.AUTHENTICATION_ERROR.getDescription(),
@@ -366,34 +370,47 @@ public class AppVetServlet extends HttpServlet {
 					return;
 				} else {
 					// Correct username and password so continue.
+					log.debug("User '" + requesterUserName + "' authenticated");
 				}
 			} else {
 				requesterUserName = Database.getSessionUser(sessionId);
+				log.debug("User '" + requesterUserName + "' authenticated");
 			}
 
 			// Validate AppVet command.
 			command = AppVetServletCommand.getCommand(commandStr);
 			if (command == null) {
+				log.error("Unknown command received. Aborting...");
 				sendHttpResponse(response, HttpServletResponse.SC_BAD_REQUEST,
 						ErrorMessage.INVALID_COMMAND.getDescription(), true);
 				return;
+			} else {
+				log.debug("Received valid command: " + command);
 			}
+			
 			// Validate AppVet app ID. Required only for SUBMIT_APP_REPORT.
 			if (command == AppVetServletCommand.SUBMIT_REPORT) {
 				if (!isValidAppId(appId, command)) {
+					log.error("Invalid app ID: " + appId);
 					sendHttpResponse(response,
 							HttpServletResponse.SC_BAD_REQUEST,
 							ErrorMessage.INVALID_APPID.getDescription(), true);
 					return;
+				} else {
+					log.debug("Received valid app ID for report: " + appId);
 				}
+				
 			}
 			// Validate tool ID. Required only for GET_TOOL_REPORT command.
 			if (command == AppVetServletCommand.GET_TOOL_REPORT) {
 				if (!ToolAdapter.isValidToolId(toolId)) {
+					log.error("Invalid tool ID: " + toolId);
 					sendHttpResponse(response,
 							HttpServletResponse.SC_BAD_REQUEST,
 							ErrorMessage.INVALID_TOOLID.getDescription(), true);
 					return;
+				} else {
+					log.debug("Valid tool ID: " + toolId);
 				}
 			}
 			// Verify file attachment (or file encoded in an HTML form param
@@ -401,17 +418,21 @@ public class AppVetServlet extends HttpServlet {
 			if (command == AppVetServletCommand.SUBMIT_APP
 					|| command == AppVetServletCommand.SUBMIT_REPORT) {
 				if (fileItem == null) {
+					log.error("File attachment is missing.");
 					sendHttpResponse(response,
 							HttpServletResponse.SC_BAD_REQUEST,
 							ErrorMessage.MISSING_FILE.getDescription(), true);
 					return;
 				} else if (!Validate.isPrintable(fileItem.getName())) {
+					log.error("Filename contains illegal character");
 					sendHttpResponse(
 							response,
 							HttpServletResponse.SC_BAD_REQUEST,
 							ErrorMessage.ILLEGAL_CHAR_IN_UPLOADED_FILENAME_ERROR
 									.getDescription(), true);
 					return;
+				} else {
+					log.debug("File attachment is valid");
 				}
 			}
 
@@ -441,6 +462,7 @@ public class AppVetServlet extends HttpServlet {
 				// Submit a tool report. Used by GUI and non-GUI clients.
 				boolean appExists = Database.appExists(appId);
 				if (!appExists) {
+					log.error("App " + appId + " does not exist.");
 					sendHttpResponse(response,
 							HttpServletResponse.SC_BAD_REQUEST,
 							ErrorMessage.INVALID_APPID.getDescription(), true);
@@ -450,12 +472,14 @@ public class AppVetServlet extends HttpServlet {
 
 					if (!Validate.hasValidReportFileExtension(fileItem
 							.getName())) {
+						log.error("File " + fileItem.getName() + " does not valid file extension.");
 						sendHttpResponse(response,
 								HttpServletResponse.SC_BAD_REQUEST,
 								ErrorMessage.INVALID_REPORT_FILE_EXTENSION
 										.getDescription(), true);
 						return;
 					} else {
+						log.debug("File " + fileItem.getName() + " has valid file extension.");
 						sendHttpResponse(response, HttpServletResponse.SC_OK,
 								"HTTP/1.1 200 Accepted", false);
 						appInfo = createAppInfo(appId, requesterUserName,
@@ -941,20 +965,29 @@ public class AppVetServlet extends HttpServlet {
 				reportName, appInfo.fileItem);
 		if (reportSaved) {
 			// Override reports with final LOW/MODERATE/HIGH risk decision.
+			if (appInfo == null) {
+				appInfo.log.error("appInfo is null");
+			} else if (appInfo.toolRisk == null) {
+				appInfo.log.error("appInfo.toolRisk is null");
+			}
 			if (appInfo.toolRisk.equals("HIGH")) {
+				appInfo.log.debug("Setting " + appInfo.toolId + " to HIGH risk.");
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 						tool.toolId, ToolStatus.HIGH);
 			} else if (appInfo.toolRisk.equals("MODERATE")) {
+				appInfo.log.debug("Setting " + appInfo.toolId + " to MODERATE risk.");
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 						tool.toolId, ToolStatus.MODERATE);
 			} else if (appInfo.toolRisk.equals("LOW")) {
+				appInfo.log.debug("Setting " + appInfo.toolId + " to LOW risk.");
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 						tool.toolId, ToolStatus.LOW);
 			} else if (appInfo.toolRisk.equals("ERROR")) {
+				appInfo.log.debug("Setting " + appInfo.toolId + " to ERROR status.");
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 						tool.toolId, ToolStatus.ERROR);
 			} else {
-				appInfo.log.error("Unknown report type '" + appInfo.toolRisk
+				appInfo.log.error("Unknown risk type '" + appInfo.toolRisk
 						+ "' received from " + appInfo.ownerName);
 			}
 			appInfo.log.info(submitterUserName + " invoked SUBMIT_REPORT for "

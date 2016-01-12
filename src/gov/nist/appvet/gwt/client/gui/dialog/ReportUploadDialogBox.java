@@ -56,8 +56,10 @@ public class ReportUploadDialogBox extends DialogBox {
 	public PushButton submitButton = null;
 	public PushButton cancelButton = null;
 	public String servletURL = null;
+	public ListBox toolRiskComboBox = null;
 	public ListBox toolNamesComboBox = null;
 	public Hidden hiddenToolID = null;
+	public Hidden hiddenToolRisk = null;
 
 	public ReportUploadDialogBox(String username, String sessionId,
 			String appid, String servletURL, DeviceOS os,
@@ -119,9 +121,14 @@ public class ReportUploadDialogBox extends DialogBox {
 		verticalPanel.add(hiddenCommand);
 		hiddenToolID = new Hidden();
 		hiddenToolID.setTitle("toolid");
-
 		hiddenToolID.setName("toolid");
 		verticalPanel.add(hiddenToolID);
+		
+		hiddenToolRisk = new Hidden();
+		hiddenToolRisk.setTitle("toolrisk");
+		hiddenToolRisk.setName("toolrisk");
+		verticalPanel.add(hiddenToolRisk);
+		
 		final Grid grid = new Grid(5, 2);
 		grid.setTitle("grid");
 		grid.setCellPadding(5);
@@ -266,7 +273,7 @@ public class ReportUploadDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_LEFT);
 		grid.getCellFormatter().setVerticalAlignment(4, 1,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		ListBox toolRiskComboBox = new ListBox();
+		toolRiskComboBox = new ListBox();
 		toolRiskComboBox.setName("Risk");
 		toolRiskComboBox.setTitle("Select security risk");
 		toolRiskComboBox.addItem("LOW");
@@ -342,8 +349,13 @@ public class ReportUploadDialogBox extends DialogBox {
 						break;
 					}
 				}
+				
+				int selectedRiskIndex = toolRiskComboBox.getSelectedIndex();
+				String risk = toolRiskComboBox.getValue(selectedRiskIndex);
+				
 				if (toolID != null) {
 					hiddenToolID.setValue(toolID);
+					hiddenToolRisk.setValue(risk);
 					uploadReportForm.submit();
 				}
 			}

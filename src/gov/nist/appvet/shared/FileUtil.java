@@ -158,12 +158,17 @@ public class FileUtil {
 			outputFilePath = reportsPath + "/" + reportName;
 			file = new File(outputFilePath);
 			if (file.exists()) {
-				file.delete();
+				if (file.delete()) {
+					log.debug("Deleted file at " + outputFilePath);
+				} else {
+					log.error("Could not delete existing file at " + outputFilePath);
+				}
 			}
 			fileItem.write(file);
+			log.debug("Wrote report " + outputFilePath);
 			return true;
 		} catch (final Exception e) {
-			log.error(e.toString());
+			log.error("Could not write report to " + outputFilePath + "\n" + e.toString());
 			return false;
 		} finally {
 			reportsPath = null;
