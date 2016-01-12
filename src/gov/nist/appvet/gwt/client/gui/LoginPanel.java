@@ -95,7 +95,7 @@ public class LoginPanel extends DockLayoutPanel {
 		horizontalPanel.setSize("100%", "100%");
 
 		Image orgLogo = new Image("images/org_logo.png");
-		orgLogo.setSize("85px", "85px");
+		orgLogo.setSize("120px", "120px");
 		orgLogo.setAltText("Organizational logo here");
 		orgLogo.setTitle("Organizational logo here");
 		orgLogo.setStyleName("nistLoginLogo");
@@ -107,8 +107,10 @@ public class LoginPanel extends DockLayoutPanel {
 
 		SimplePanel simplePanel = new SimplePanel();
 		addSouth(simplePanel, 23.0);
+		simplePanel.setHeight("100%");
 
 		HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
+		horizontalPanel_1.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		simplePanel.setWidget(horizontalPanel_1);
 		horizontalPanel_1.setSize("100%", "100%");
 

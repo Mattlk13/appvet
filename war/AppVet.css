@@ -167,7 +167,6 @@ searchPanel {
 }
 
 .appListButtonPanel {
-	padding: 5px;
 	border-top: White;
 	border-right: White;
 	border-bottom: white;
@@ -514,7 +513,6 @@ searchPanel {
 }
 
 .gwt-Image {
-	padding-top: 5px;
 	padding-right: 5px;
 	
 }
@@ -752,10 +750,10 @@ searchPanel {
 
 .
 {
-	border-top: 5px solid Background;
-	border-right: 0px solid Maroon;
-	border-bottom: 0px solid Maroon;
-	border-left: 0px solid Maroon;
+	border-top: solid Background;
+	border-right: 5px solid Maroon;
+	border-bottom: solid Maroon;
+	border-left: solid Maroon;
 }
 .appInfoHtml2 {
 	border: 1px dashed #990000;

@@ -140,7 +140,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	private ArrayList<ToolInfoGwt> tools = null;
 	private InlineLabel appsLabel = null;
 	private int iconVersion = 0;
-	private static double NORTH_PANEL_HEIGHT = 130.0;
+	private static double NORTH_PANEL_HEIGHT = 110.0;
 	private static double SOUTH_PANEL_HEIGHT = 47.0;
 	private static boolean searchMode = false;
 	private MenuItem accountMenuItem = null;
@@ -674,9 +674,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		northAppVetPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		northAppVetPanel.setStyleName("northAppVetPanel");
-		northAppVetPanel
-				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		addNorth(northAppVetPanel, 125.0);
+		addNorth(northAppVetPanel, 155.0);
 		northAppVetPanel.setSize("100%", "");
 		final HorizontalPanel horizontalPanel_5 = new HorizontalPanel();
 		horizontalPanel_5
@@ -763,7 +761,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 
 		Image orgLogo = new Image("images/org_logo.png");
-		orgLogo.setSize("85px", "85px");
+		orgLogo.setSize("120px", "120px");
 		orgLogo.setAltText("Organizational logo here");
 		orgLogo.setTitle("Organizational logo here");
 		horizontalPanel_5.add(orgLogo);
@@ -918,8 +916,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		helpMenuBar.addItem(documentationMenuItem);
 		documentationMenuItem.setHeight("");
 		appVetMenuBar.addItem(helpMenuItem);
-
-	              
 		helpMenuItem.setHeight("");
 		helpMenuBar.addItem(aboutMenuItem);
 		aboutMenuItem.setHeight("");
@@ -932,7 +928,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		statusMessageLabel.setStyleName("devModeIndicator");
 		statusMessageLabel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-		statusMessageLabel.setSize("420px", "18");
+		statusMessageLabel.setSize("420px", "18px");
 		final MenuBar adminMenuBar = new MenuBar(true);
 		adminMenuBar.setFocusOnHoverEnabled(true);
 		
@@ -981,13 +977,13 @@ public class AppVetPanel extends DockLayoutPanel {
 //		}
 		final HorizontalSplitPanel centerAppVetSplitPanel = new HorizontalSplitPanel();
 		centerAppVetSplitPanel.setTitle("AppVet split pane");
-		centerAppVetSplitPanel.setSplitPosition("64%");
-		centerAppVetSplitPanel.setSize("", "100%");
+		centerAppVetSplitPanel.setSplitPosition("70%");
+		centerAppVetSplitPanel.setSize("", "");
 		final SimplePanel leftCenterPanel = new SimplePanel();
 		leftCenterPanel.setTitle("AppVet apps list pane");
 
 		centerAppVetSplitPanel.setLeftWidget(leftCenterPanel);
-		leftCenterPanel.setSize("", "100%");
+		leftCenterPanel.setSize("", "");
 		final DockPanel dockPanel_1 = new DockPanel();
 		dockPanel_1.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		leftCenterPanel.setWidget(dockPanel_1);
@@ -996,7 +992,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		rightCenterPanel.setTitle("AppVet app info panel");
 
 		centerAppVetSplitPanel.setRightWidget(rightCenterPanel);
-		rightCenterPanel.setSize("", "95%");
+		rightCenterPanel.setSize("", "");
 		final VerticalPanel appInfoVerticalPanel = new VerticalPanel();
 		appInfoVerticalPanel
 				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
@@ -1055,7 +1051,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appsListButtonPanel.setCellWidth(appsLabel, "50%");
 		appsLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		appsLabel.setWidth("60px");
+		appsLabel.setSize("60px", "");
 		final HorizontalPanel horizontalPanel = new HorizontalPanel();
 		horizontalPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
@@ -1067,7 +1063,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appsListButtonPanel.setCellHorizontalAlignment(horizontalPanel,
 				HasHorizontalAlignment.ALIGN_RIGHT);
-		horizontalPanel.setWidth("");
+		horizontalPanel.setSize("", "");
 		final PushButton submitButton = new PushButton("Submit");
 		submitButton.setTitle("Submit App");
 		submitButton
@@ -1318,7 +1314,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel_2
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		simplePanel.setWidget(horizontalPanel_2);
-		horizontalPanel_2.setSize("100%", "20px");
+		horizontalPanel_2.setSize("100%", "100%");
 
 		Image nistLogo = new Image("images/nist_logo_darkgrey.png");
 		nistLogo.setAltText("NIST logo");
@@ -1463,17 +1459,32 @@ public class AppVetPanel extends DockLayoutPanel {
 	}
 
 	public void resizeComponents() {
-		final int marginsHeights = 19;
+		final int MARGIN_HEIGHT = 60;  // This is the main value to adjust when changing the 
+										// size of the org_logo.png image.
 		final int appVetPanelHeight = getOffsetHeight();
 		final int appsListButtonPanelHeight = appsListButtonPanel
 				.getOffsetHeight();
+		log.info("-------------------------------------");
+		log.info("appVetPanelHeight: " + appVetPanelHeight);
+		log.info("NORTH_PANEL_HEIGHT: " + NORTH_PANEL_HEIGHT);
+		log.info("SOUTH_PANEL_HEIGHT: " + SOUTH_PANEL_HEIGHT);
+		log.info("appsListButtonPanelHeight: " + appsListButtonPanelHeight);
+		log.info("MARGIN_HEIGHT: " + MARGIN_HEIGHT);
 		final int appsListTableHeight = appVetPanelHeight
 				- (int) NORTH_PANEL_HEIGHT - (int) SOUTH_PANEL_HEIGHT
-				- appsListButtonPanelHeight - marginsHeights;
+				- appsListButtonPanelHeight - MARGIN_HEIGHT;
+		log.info("appsListTableHeight = " + appsListTableHeight + "px = " + " - " + (int) NORTH_PANEL_HEIGHT 
+				+ " - " + (int) SOUTH_PANEL_HEIGHT
+				+ " - " +  appsListButtonPanelHeight + " - " +  MARGIN_HEIGHT);
+
 		appsListTable.setSize("100%", appsListTableHeight + "px");
 		appsListTable.dataGrid.redraw();
 		final int rightCenterPanelHeight = appVetPanelHeight
-				- (int) NORTH_PANEL_HEIGHT - (int) SOUTH_PANEL_HEIGHT;
+				- (int) NORTH_PANEL_HEIGHT - (int) SOUTH_PANEL_HEIGHT - MARGIN_HEIGHT;
+		
+		log.info("rightCenterPanelHeight = " + rightCenterPanelHeight + "px = " + appVetPanelHeight 
+				+ " - " + (int) NORTH_PANEL_HEIGHT 
+				+ " - " + (int) SOUTH_PANEL_HEIGHT + " - " + MARGIN_HEIGHT);
 		rightCenterPanel.setSize("99%", rightCenterPanelHeight + "px");
 	}
 
