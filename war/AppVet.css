@@ -167,6 +167,7 @@ searchPanel {
 }
 
 .appListButtonPanel {
+	padding-right: 5px;
 	border-top: White;
 	border-right: White;
 	border-bottom: white;
@@ -330,14 +331,12 @@ searchPanel {
 
 .appInfoName {
 	color: darkslategray;
-	padding-left: 5px;
-	font-size: 24px;
 	font-weight: bold;
+	font-size: 24px;
 }
 
 .appInfoVersion {
 	color: darkslategray;
-	padding-left: 5px;
 	font-size: 12px;
 }
 
@@ -371,7 +370,6 @@ searchPanel {
 .iconPanel {
 	color: darkslategray;
 	margin-top: 5px;
-	margin-left: 5px;
 }
 
 .resultsPanel {
@@ -380,11 +378,9 @@ searchPanel {
 
 .dataGrid {
 	color: darkslategray;
-	margin-right: 5px;
-	margin-left: 5px;
 	border-top: solid Silver;
 	border-right: Silver;
-	border-bottom: 1px solid Silver;
+	border-bottom: solid Silver;
 	border-left: Silver;
 }
 
@@ -513,7 +509,6 @@ searchPanel {
 }
 
 .gwt-Image {
-	padding-right: 5px;
 	
 }
 
@@ -751,7 +746,7 @@ searchPanel {
 .
 {
 	border-top: solid Background;
-	border-right: 5px solid Maroon;
+	border-right: solid Maroon;
 	border-bottom: solid Maroon;
 	border-left: solid Maroon;
 }
@@ -779,7 +774,6 @@ searchPanel {
 }
 
 .toolResultsHtml {
-	padding-left: 5px;
 }
 
 .rightCenterPanel {

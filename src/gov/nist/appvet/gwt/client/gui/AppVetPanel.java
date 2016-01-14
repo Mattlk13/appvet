@@ -661,7 +661,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		sessionExpirationLong = configInfo.getSessionExpirationLong();
 		MAX_SESSION_IDLE_DURATION = configInfo.getMaxIdleTime();
 		POLLING_INTERVAL = configInfo.getUpdatesDelay();
-		setSize("100%", "");
+		setSize("", "");
 		setStyleName("mainDockPanel");
 		SERVLET_URL = configInfo.getAppVetServletUrl();
 		HOST_URL = configInfo.getAppVetHostUrl();
@@ -978,13 +978,14 @@ public class AppVetPanel extends DockLayoutPanel {
 		final HorizontalSplitPanel centerAppVetSplitPanel = new HorizontalSplitPanel();
 		centerAppVetSplitPanel.setTitle("AppVet split pane");
 		centerAppVetSplitPanel.setSplitPosition("70%");
-		centerAppVetSplitPanel.setSize("", "");
+		centerAppVetSplitPanel.setSize("100%", "");
 		final SimplePanel leftCenterPanel = new SimplePanel();
 		leftCenterPanel.setTitle("AppVet apps list pane");
 
 		centerAppVetSplitPanel.setLeftWidget(leftCenterPanel);
-		leftCenterPanel.setSize("", "");
+		leftCenterPanel.setSize("100%", "");
 		final DockPanel dockPanel_1 = new DockPanel();
+		dockPanel_1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		dockPanel_1.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		leftCenterPanel.setWidget(dockPanel_1);
 		dockPanel_1.setSize("100%", "");
@@ -997,7 +998,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoVerticalPanel
 				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		rightCenterPanel.setWidget(appInfoVerticalPanel);
-		appInfoVerticalPanel.setSize("99%", "");
+		appInfoVerticalPanel.setSize("100%", "");
 		final HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
 		horizontalPanel_1
 				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
@@ -1047,11 +1048,11 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsLabel.setText("Apps");
 		appsLabel.setStyleName("AppsLabel");
 		appsListButtonPanel.add(appsLabel);
+		appsListButtonPanel.setCellWidth(appsLabel, "60px");
 		appsListButtonPanel.setCellVerticalAlignment(appsLabel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		appsListButtonPanel.setCellWidth(appsLabel, "50%");
 		appsLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		appsLabel.setSize("60px", "");
+		appsLabel.setSize("", "");
 		final HorizontalPanel horizontalPanel = new HorizontalPanel();
 		horizontalPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
@@ -1126,13 +1127,13 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel.setCellVerticalAlignment(viewAllButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		viewAllButton.setSize("18px", "18px");
+		viewAllButton.setSize("", "");
 		horizontalPanel.add(submitButton);
 		horizontalPanel.setCellVerticalAlignment(submitButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel.setCellHorizontalAlignment(submitButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		submitButton.setSize("18px", "18px");
+		submitButton.setSize("", "");
 		downloadButton = new PushButton("Download");
 		downloadButton.setTitle("Download Reports");
 		downloadButton
@@ -1166,7 +1167,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appsListButtonPanel.setCellHorizontalAlignment(downloadButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		downloadButton.setSize("18px", "18px");
+		downloadButton.setSize("", "");
 		uploadReportButton = new PushButton("Add Report");
 		horizontalPanel.add(uploadReportButton);
 		horizontalPanel.setCellVerticalAlignment(uploadReportButton,
@@ -1217,7 +1218,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				}
 			}
 		});
-		uploadReportButton.setSize("18px", "18px");
+		uploadReportButton.setSize("", "");
 		uploadReportButton
 				.setHTML("<img width=\"18px\" src=\"images/icon-submit-report.png\" alt=\"Add Report\" />");
 		deleteButton = new PushButton("Delete");
@@ -1259,7 +1260,7 @@ public class AppVetPanel extends DockLayoutPanel {
 						});
 			}
 		});
-		deleteButton.setSize("18px", "18px");
+		deleteButton.setSize("", "");
 		logButton = new PushButton("Log");
 		horizontalPanel.add(logButton);
 		horizontalPanel.setCellVerticalAlignment(logButton,
@@ -1285,28 +1286,28 @@ public class AppVetPanel extends DockLayoutPanel {
 				}
 			}
 		});
-		logButton.setSize("18px", "18px");
+		logButton.setSize("", "");
 		appsListTable = new AppsListPagingDataGrid<AppInfoGwt>();
+		appsListTable.dataGrid.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 		appsListTable.dataGrid.setStyleName("dataGrid");
 		dockPanel_1.add(appsListTable, DockPanel.CENTER);
+		dockPanel_1.setCellWidth(appsListTable, "100%");
 		dockPanel_1.setCellHorizontalAlignment(appsListTable,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		dockPanel_1.setCellVerticalAlignment(appsListTable,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appsListTable.setAppVetHostUrl(HOST_URL);
 		appsListTable.setAppVetProxyUrl(PROXY_URL);
-		appsListTable.dataGrid.setSize("99%", "");
+		appsListTable.dataGrid.setSize("100%", "");
 		appsListTable.setDataList(initialApps);
-		appsListTable.setSize("", "");
-		appsListTable.dataGrid
-				.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
+		appsListTable.setSize("100%", "");
 		appsListTable.dataGrid.setSelectionModel(appSelectionModel);
 		uploadReportButton.setVisible(true);
 		logButton.setVisible(true);
 
 		SimplePanel simplePanel = new SimplePanel();
 		addSouth(simplePanel, 21.0);
-		simplePanel.setHeight("");
+		simplePanel.setSize("100%", "");
 
 		HorizontalPanel horizontalPanel_2 = new HorizontalPanel();
 		horizontalPanel_2
@@ -1459,33 +1460,56 @@ public class AppVetPanel extends DockLayoutPanel {
 	}
 
 	public void resizeComponents() {
-		final int MARGIN_HEIGHT = 60;  // This is the main value to adjust when changing the 
-										// size of the org_logo.png image.
+		/** The following variable is the main variable to adjust when changing the 
+		    size of the org_logo.png image. The larger this image, the larger
+		    MARGIN_HEIGHT should be. Note these parameters will be rendered
+		    differently on Firefox, Chrome and IE, with Firefox being the most
+		    problematic, so check all three browsers! */
+		final int MARGIN_HEIGHT = 75;
 		final int appVetPanelHeight = getOffsetHeight();
-		final int appsListButtonPanelHeight = appsListButtonPanel
-				.getOffsetHeight();
+
+		// First adjust apps list table
+		final int appsListButtonPanelHeight = appsListButtonPanel.getOffsetHeight();
 		log.info("-------------------------------------");
 		log.info("appVetPanelHeight: " + appVetPanelHeight);
 		log.info("NORTH_PANEL_HEIGHT: " + NORTH_PANEL_HEIGHT);
 		log.info("SOUTH_PANEL_HEIGHT: " + SOUTH_PANEL_HEIGHT);
 		log.info("appsListButtonPanelHeight: " + appsListButtonPanelHeight);
 		log.info("MARGIN_HEIGHT: " + MARGIN_HEIGHT);
+		
 		final int appsListTableHeight = appVetPanelHeight
 				- (int) NORTH_PANEL_HEIGHT - (int) SOUTH_PANEL_HEIGHT
 				- appsListButtonPanelHeight - MARGIN_HEIGHT;
 		log.info("appsListTableHeight = " + appsListTableHeight + "px = " + " - " + (int) NORTH_PANEL_HEIGHT 
 				+ " - " + (int) SOUTH_PANEL_HEIGHT
 				+ " - " +  appsListButtonPanelHeight + " - " +  MARGIN_HEIGHT);
-
+		
 		appsListTable.setSize("100%", appsListTableHeight + "px");
 		appsListTable.dataGrid.redraw();
-		final int rightCenterPanelHeight = appVetPanelHeight
-				- (int) NORTH_PANEL_HEIGHT - (int) SOUTH_PANEL_HEIGHT - MARGIN_HEIGHT;
+
 		
-		log.info("rightCenterPanelHeight = " + rightCenterPanelHeight + "px = " + appVetPanelHeight 
-				+ " - " + (int) NORTH_PANEL_HEIGHT 
-				+ " - " + (int) SOUTH_PANEL_HEIGHT + " - " + MARGIN_HEIGHT);
-		rightCenterPanel.setSize("99%", rightCenterPanelHeight + "px");
+		// Set apps list button panel width
+		//final int appVetPanelWidth = getOffsetWidth();
+
+//		final int MARGIN_WIDTH = 10;
+//		final int appsListButtonPanelWidth = appsListButtonPanel.getOffsetWidth() - MARGIN_WIDTH;
+//		log.info("appsListButtonPanelWidth = " + appsListButtonPanelWidth );
+//		appsListButtonPanel.setSize(appsListButtonPanelWidth + "px", "100%");
+
+//		String width2 = appsListButtonPanelWidth + "px";
+//		String height2 = appsListButtonPanel.getOffsetHeight() + "px";
+//		appsListButtonPanel.setSize(width2, height2);
+//		
+//		// Set right panel
+//		final int rightCenterPanelHeight = appVetPanelHeight
+//				- (int) NORTH_PANEL_HEIGHT - (int) SOUTH_PANEL_HEIGHT - MARGIN_HEIGHT;
+//		
+//		log.info("rightCenterPanelHeight = " + rightCenterPanelHeight + "px = " + appVetPanelHeight 
+//				+ " - " + (int) NORTH_PANEL_HEIGHT 
+//				+ " - " + (int) SOUTH_PANEL_HEIGHT + " - " + MARGIN_HEIGHT);
+//		rightCenterPanel.setSize("100%", rightCenterPanelHeight + "px");
+		
+		
 	}
 
 	// The size of the AppVet panel is 0 until displayed in rootlayoutpanel.
