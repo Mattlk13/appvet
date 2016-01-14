@@ -34,21 +34,54 @@ public class AppStatusManager {
 	private AppStatusManager() {
 	}
 
-	public synchronized static void setAppStatus(String appId,
+	public synchronized static boolean setAppStatus(String appId,
 			AppStatus appStatus) {
+		if (appId == null || appId.isEmpty()) {
+			log.error("App ID is null or empty");
+			return false;
+		} else {
+			if (appStatus == null) {
+				log.error("App status is null");
+				return false;
+			}
+		}
 		// Only update the status if the new status is different from the
 		// current status (reduces GUI refresh).
 		final String currentAppStatusString = getAppStatusName(appId);
+		if (currentAppStatusString == null) {
+			log.error("Current app " + appId + " status string is null");
+			return false;
+		} else {
+			log.debug("Current app " + appId + " status string is: " + currentAppStatusString);
+		}
 		final AppStatus currentAppStatus = AppStatus
 				.getStatus(currentAppStatusString);
+		if (currentAppStatus == null) {
+			log.error("Current app " + appId + " status is null");
+			return false;
+		} else {
+			log.debug("Current app " + appId + " status is " + currentAppStatus.name());
+		}
 		if (appStatus != currentAppStatus) {
+			log.debug("New status is different than current status for app " + appId);
 			final String sql = "UPDATE apps SET appstatus='" + appStatus.name()
 					+ "' where appid='" + appId + "'";
 			if (Database.update(sql)) {
-				Database.setAppIsUpdated(appId, true);
+				if (Database.setAppIsUpdated(appId, true)) {
+					log.debug("App " + appId + " update flag set successfully.");
+					return true;
+				} else {
+					log.error("App " + appId + " update flag not set successfully.");
+					return false;
+				}
+			} else {
+				log.error("Could not update status for app " + appId);
+				return false;
 			}
+		} else {
+			log.debug("New status is the same as current status for app " + appId + ". Not updating status.");
+			return true;
 		}
-		return;
 	}
 
 	private static String getAppStatusName(String appid) {

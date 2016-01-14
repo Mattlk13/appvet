@@ -24,6 +24,7 @@ import gov.nist.appvet.servlet.shared.Native;
 import gov.nist.appvet.shared.Database;
 import gov.nist.appvet.shared.ErrorMessage;
 import gov.nist.appvet.shared.FileUtil;
+import gov.nist.appvet.shared.Logger;
 import gov.nist.appvet.shared.app.AppInfo;
 import gov.nist.appvet.shared.os.DeviceOS;
 import gov.nist.appvet.shared.status.ToolStatus;
@@ -48,19 +49,32 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-import org.eclipse.jetty.util.log.Log;
-
 /**
  * @author steveq@nist.gov
  */
 public class AndroidMetadata {
+	
+	private static final Logger log = AppVetProperties.log;
+
+	private static final DeviceOS OS = DeviceOS.ANDROID;
+
 	public static final String APKTOOL_WINDOWS_COMMAND = "apktool.bat";
 	public static final String APKTOOL_LINUX_COMMAND = "apktool";
-	private static ToolAdapter appinfoTool = ToolAdapter.getByToolId(
-			DeviceOS.ANDROID, "appinfo");
+	
+	/** Both Android and iOS MUST use the metadata tool ID 'appinfo' */
+	private static final String METADATA_TOOL_ID = "appinfo";
+	private static ToolAdapter appinfoTool = null;
+	
 
 	public static boolean getFromFile(AppInfo appInfo) {
-		appInfo.log
+		
+		appinfoTool = ToolAdapter.getByToolId(OS, METADATA_TOOL_ID);
+		if (appinfoTool == null) {
+			log.error("Android tool adapter 'appinfo' was not found. Cannot get app metadata.");
+			return false;
+		}
+		
+		log
 				.debug("Acquiring Android metadata for app " + appInfo.appId);
 		// The ID "appinfo" is the default metadata tool ID.
 		final ToolAdapter appinfoTool = ToolAdapter.getByToolId(appInfo.os,
@@ -110,7 +124,7 @@ public class AndroidMetadata {
 					return false;
 				}
 			} else {
-				appInfo.log.error("File " + appInfo.getAppFileName()
+				log.error("File " + appInfo.getAppFileName()
 						+ " has invalid file extension.");
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 						appinfoTool.toolId, ToolStatus.ERROR);
@@ -121,11 +135,11 @@ public class AndroidMetadata {
 					appinfoTool.toolId, ToolStatus.LOW);
 			appinfoReport
 					.write("\nStatus:\t\t<font color=\"green\">LOW</font>\n");
-			appInfo.log.debug("End Android metadata preprocessing for app "
+			log.debug("End Android metadata preprocessing for app "
 					+ appInfo.appId);
 			return true;
 		} catch (final IOException e) {
-			appInfo.log.error(e.toString());
+			log.error(e.toString());
 			return false;
 		} finally {
 			try {
@@ -137,7 +151,7 @@ public class AndroidMetadata {
 					appinfoReport = null;
 				}
 			} catch (final IOException e) {
-				appInfo.log.error(e.toString());
+				log.error(e.toString());
 			}
 		}
 	}
@@ -148,7 +162,7 @@ public class AndroidMetadata {
 	private static boolean decodeApk(AppInfo appInfo,
 			BufferedWriter appinfoReport) {
 		if (AppVetProperties.APKTOOL_HOME == null) {
-			appInfo.log
+			log
 					.warn("APKTOOL_HOME, which is used to launch the apktool, is null.");
 		}
 		String appvetOS = Native.os;
@@ -160,7 +174,7 @@ public class AndroidMetadata {
 		}
 		final String decodeCmd = apktoolCommand + " d "
 				+ appInfo.getAppFilePath() + " -o " + appInfo.getProjectPath();
-		appInfo.log.debug("Apktool cmd: " + decodeCmd);
+		log.debug("Apktool cmd: " + decodeCmd);
 		try {
 			final StringBuffer reportBuffer = new StringBuffer();
 			//final StringBuilder errorBuffer = new StringBuilder();
@@ -168,7 +182,7 @@ public class AndroidMetadata {
 			boolean executed = execute(decodeCmd, reportBuffer);
 
 			if (executed) {
-				appInfo.log.info("Decoded " + appInfo.appName
+				log.info("Decoded " + appInfo.appName
 						+ " APK file successfully.");
 				return true;
 			} else {
@@ -177,23 +191,23 @@ public class AndroidMetadata {
 								.indexOf("was not found or was not readable") >= 0) {
 					// Anti-virus on system may have removed app if it was
 					// malware
-					appInfo.log.error(reportBuffer.toString());
+					log.error(reportBuffer.toString());
 					appinfoReport
 							.write("\n<font color=\"red\">"
 									+ ErrorMessage.FILE_NOT_FOUND
 											.getDescription()
 									+ " (File removed by system; file may be malware)</font>");
-					appInfo.log.error(ErrorMessage.FILE_NOT_FOUND
+					log.error(ErrorMessage.FILE_NOT_FOUND
 							.getDescription());
 					ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 							appinfoTool.toolId, ToolStatus.ERROR);
 				} else {
-					appInfo.log.error(reportBuffer.toString());
+					log.error(reportBuffer.toString());
 					appinfoReport.write("\n<font color=\"red\">"
 							+ ErrorMessage.ANDROID_APK_DECODE_ERROR
 									.getDescription()
 							+ " (File may be corrupted)</font>");
-					appInfo.log.error(ErrorMessage.ANDROID_APK_DECODE_ERROR
+					log.error(ErrorMessage.ANDROID_APK_DECODE_ERROR
 							.getDescription());
 					ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 							appinfoTool.toolId, ToolStatus.ERROR);
@@ -201,7 +215,7 @@ public class AndroidMetadata {
 				return false;
 			}
 		} catch (final IOException e) {
-			appInfo.log.error(e.toString());
+			log.error(e.toString());
 			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 					appinfoTool.toolId, ToolStatus.ERROR);
 			try {
@@ -209,7 +223,7 @@ public class AndroidMetadata {
 						+ ErrorMessage.ANDROID_APK_DECODE_ERROR
 								.getDescription() + "</font>");
 			} catch (final IOException e1) {
-				appInfo.log.error(e1.toString());
+				log.error(e1.toString());
 			}
 			return false;
 		}
@@ -316,12 +330,12 @@ public class AndroidMetadata {
 		final String projectPath = appInfo.getProjectPath();
 		try {
 			File manifestFile = new File(projectPath + "/AndroidManifest.xml");
-			appInfo.log.debug("manifestFile: " + projectPath + "/AndroidManifest.xml");
+			log.debug("manifestFile: " + projectPath + "/AndroidManifest.xml");
 			File stringsFile = new File(projectPath + "/res/values/strings.xml");
-			appInfo.log.debug("stringsFilePath: " + projectPath + "/res/values/strings.xml");
+			log.debug("stringsFilePath: " + projectPath + "/res/values/strings.xml");
 			try {
 				if (!manifestFile.exists()) {
-					appInfo.log.error("Could not locate Android manifest: "
+					log.error("Could not locate Android manifest: "
 							+ manifestFile);
 					appinfoReport
 							.write("\n<font color=\"red\">"
@@ -332,10 +346,10 @@ public class AndroidMetadata {
 							appinfoTool.toolId, ToolStatus.ERROR);
 					return false;
 				} else {
-					appInfo.log.debug("Found manifest file at: " + projectPath + "/AndroidManifest.xml");
+					log.debug("Found manifest file at: " + projectPath + "/AndroidManifest.xml");
 				}
 				if (!stringsFile.exists()) {
-					appInfo.log.error("Could not locate Strings file: "
+					log.error("Could not locate Strings file: "
 							+ stringsFile);
 					appinfoReport
 							.write("\n<font color=\"red\">"
@@ -346,21 +360,21 @@ public class AndroidMetadata {
 							appinfoTool.toolId, ToolStatus.ERROR);
 					return false;
 				} else {
-					appInfo.log.debug("Found strings file at: " + projectPath);
+					log.debug("Found strings file at: " + projectPath);
 				}
-				appInfo.log.debug("Found AndroidMetadata.xml file\tOK");
+				log.debug("Found AndroidMetadata.xml file\tOK");
 				// Get the XML element values.
 				getElementValues(appInfo, manifestFile, stringsFile,
 						appinfoReport);
 				return true;
 			} catch (Exception e) {
-				appInfo.log.error(e.toString());
+				log.error(e.toString());
 				return false;
 			} finally {
 				manifestFile = null;
 			}
 		} catch (final Exception e) {
-			appInfo.log.error(e.toString());
+			log.error(e.toString());
 			try {
 				appinfoReport.write("\n<font color=\"red\">" + appinfoTool.name
 						+ " "
@@ -369,7 +383,7 @@ public class AndroidMetadata {
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 						appinfoTool.toolId, ToolStatus.ERROR);
 			} catch (final IOException e1) {
-				appInfo.log.error(e1.toString());
+				log.error(e1.toString());
 			}
 			return false;
 		}
@@ -411,27 +425,27 @@ public class AndroidMetadata {
 					if (name_value[0].equals("versionCode")) {
 						// Remove single quotes from the value.
 						appInfo.versionCode = name_value[1].replaceAll("'", "");
-						appInfo.log
+						log
 								.debug("VersionCode: " + appInfo.versionCode);
 						print(appInfo, "Version code", appInfo.versionCode,
 								appinfoReport);
 					} else if (name_value[0].equals("versionName")) {
 						// Remove single quotes from the value.
 						appInfo.versionName = name_value[1].replaceAll("'", "");
-						appInfo.log
+						log
 								.debug("VersionName: " + appInfo.versionName);
 						print(appInfo, "Version name", appInfo.versionName,
 								appinfoReport);
 					} else if (name_value[0].equals("minSdkVersion")) {
 						// Remove single quotes from the value.
 						String minSdkValue = name_value[1].replaceAll("'", "");
-						appInfo.log.debug("Min SDK: " + minSdkValue);
+						log.debug("Min SDK: " + minSdkValue);
 						print(appInfo, "Min SDK", minSdkValue, appinfoReport);
 					} else if (name_value[0].equals("targetSdkVersion")) {
 						// Remove single quotes from the value.
 						String targetSdkValue = name_value[1].replaceAll("'",
 								"");
-						appInfo.log.debug("Target SDK: " + targetSdkValue);
+						log.debug("Target SDK: " + targetSdkValue);
 						print(appInfo, "Target SDK", targetSdkValue,
 								appinfoReport);
 					}
@@ -442,12 +456,12 @@ public class AndroidMetadata {
 						appInfo.versionName);
 				bufferedReader.close();
 			} catch (FileNotFoundException e) {
-				appInfo.log.error(e.toString());
+				log.error(e.toString());
 			} catch (IOException e) {
-				appInfo.log.error(e.toString());
+				log.error(e.toString());
 			}
 		} else {
-			appInfo.log.error("Could not find file: "
+			log.error("Could not find file: "
 					+ apkToolYmlFile.getAbsolutePath());
 		}
 	}
@@ -468,12 +482,12 @@ public class AndroidMetadata {
 				iconFile = getIcon(resFolderPath, directoryName, iconName);
 				if ((iconFile == null) || !iconFile.exists()) {
 					// Use default icon
-					appInfo.log
+					log
 							.warn("No icon file found. Using default icon...");
 					iconFile = new File(AppVetProperties.APP_IMAGES + "/"
 							+ defaultIcon);
 				} else {
-					appInfo.log.debug("Found icon at: "
+					log.debug("Found icon at: "
 							+ iconFile.getAbsolutePath());
 				}
 			}
@@ -518,15 +532,15 @@ public class AndroidMetadata {
 	private static boolean print(AppInfo appInfo,
 			String parameter, String value, BufferedWriter appinfoReport) {
 		if ((value == null) || value.isEmpty()) {
-			appInfo.log.warn(parameter
+			log.warn(parameter
 					+ " not found in AndroidMetadata manifest");
 			return true;
 		} else {
-			appInfo.log.info(parameter + ": \t" + value);
+			log.info(parameter + ": \t" + value);
 			try {
 				appinfoReport.write(parameter + ": \t" + value + "\n");
 			} catch (final IOException e) {
-				appInfo.log.error(e.toString());
+				log.error(e.toString());
 			}
 			return false;
 		}

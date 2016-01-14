@@ -37,16 +37,19 @@ public class FileUtil {
 
 	public static boolean copyFile(File sourceFile, File destFile) {
 		if (sourceFile == null || !sourceFile.exists() || destFile == null) {
+			log.error("Cannot copy to null source or dest file");
 			return false;
 		}
 		try {
 			Files.copy(sourceFile.toPath(), destFile.toPath(),
 					StandardCopyOption.REPLACE_EXISTING);
+			log.debug(sourceFile.getPath() + " successfully copied to " + destFile.getPath());
+			return true;
 		} catch (final IOException e) {
+			log.error(sourceFile.getPath() + " could not be copied to " + destFile.getPath());
 			log.error(e.toString());
 			return false;
 		}
-		return true;
 	}
 
 	public static boolean copyFile(String sourceFilePath,

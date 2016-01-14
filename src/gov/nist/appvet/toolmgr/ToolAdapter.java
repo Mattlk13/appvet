@@ -237,34 +237,40 @@ public class ToolAdapter implements Runnable {
 	}
 
 	public static ToolAdapter getByToolId(DeviceOS os, String toolId) {
+		
+		if (os == null) {
+			log.error("Cannot get tool adapter for null os.");
+			return null;
+		}
+		if (toolId == null) {
+			log.error("Cannot get tool adapter for null tool ID.");
+			return null;
+		}
 
 		if (os == DeviceOS.ANDROID) {
 
 			for (int i = 0; i < AppVetProperties.androidTools.size(); i++) {
-				final ToolAdapter adapter = AppVetProperties.androidTools
-						.get(i);
-
+				final ToolAdapter adapter = AppVetProperties.androidTools.get(i);
 				if (adapter.toolId.equals(toolId)) {
+					log.debug("Found Android tool adapter for " + toolId);
 					return adapter;
 				}
-
 			}
 
-			log.error("Android tool id '" + toolId + "' does not exist!");
+			log.error("Could not find Android tool adapter '" + toolId + "'.");
 			return null;
 
 		} else if (os == DeviceOS.IOS) {
 
 			for (int i = 0; i < AppVetProperties.iosTools.size(); i++) {
 				final ToolAdapter adapter = AppVetProperties.iosTools.get(i);
-
 				if (adapter.toolId.equals(toolId)) {
+					log.debug("Found iOS tool adapter for " + toolId);
 					return adapter;
 				}
-
 			}
 
-			log.error("iOS tool id '" + toolId + "' does not exist!");
+			log.error("Could not find iOS tool adapter '" + toolId + "'.");
 			return null;
 
 		} else {

@@ -619,9 +619,10 @@ public class Database {
 			connection = getConnection();
 			statement = connection.createStatement();
 			statement.executeUpdate(sql);
+			//log.debug("Updated database using: " + sql);
 			return true;
 		} catch (final SQLException e) {
-			log.error(e.toString() + " using: " + sql);
+			log.error("Could not update database using: " + sql + "\n" + e.toString());
 			return false;
 		} finally {
 			cleanUpStatement(statement);
@@ -1114,9 +1115,9 @@ public class Database {
 		return getBoolean("SELECT updated FROM apps WHERE appid='" + appId + "'");
 	}
 
-	public synchronized static void setAppIsUpdated(String appId, boolean updated) {
+	public synchronized static boolean setAppIsUpdated(String appId, boolean updated) {
 		int boolInt = updated ? 1: 0;
-		update("UPDATE apps SET updated='" + boolInt + "' WHERE appid='" + appId + "'");
+		return update("UPDATE apps SET updated='" + boolInt + "' WHERE appid='" + appId + "'");
 	}
 
 	public static String getPBKDF2Password(String password) {

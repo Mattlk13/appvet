@@ -709,7 +709,7 @@ public class AppVetServlet extends HttpServlet {
 		boolean userExists = Database
 				.exists("SELECT * FROM users WHERE username='" + userName + "'");
 		if (!userExists) {
-			log.error("No such user: " + userName);
+			log.error("No such user: " + userName + ". ");
 			return false;
 		}
 		if (Authenticate.isAuthenticated(userName, password)) {
@@ -948,6 +948,11 @@ public class AppVetServlet extends HttpServlet {
 
 	private void submitReport(String submitterUserName, AppInfo appInfo,
 			HttpServletResponse response) {
+		
+		if (appInfo == null) {
+			log.error("App info is null. Cannot submit report.");
+			return;
+		}
 		final ToolAdapter tool = ToolAdapter.getByToolId(appInfo.os,
 				appInfo.toolId);
 		String reportName = null;
@@ -965,9 +970,7 @@ public class AppVetServlet extends HttpServlet {
 				reportName, appInfo.fileItem);
 		if (reportSaved) {
 			// Override reports with final LOW/MODERATE/HIGH risk decision.
-			if (appInfo == null) {
-				appInfo.log.error("appInfo is null");
-			} else if (appInfo.toolRisk == null) {
+			if (appInfo.toolRisk == null) {
 				appInfo.log.error("appInfo.toolRisk is null");
 			}
 			if (appInfo.toolRisk.equals("HIGH")) {

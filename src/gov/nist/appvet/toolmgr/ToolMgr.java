@@ -117,10 +117,12 @@ public class ToolMgr implements Runnable {
 				// If another app has a status of PROCESSING, no other apps
 				// will be processed. If app is stuck in a PROCESSING status,
 				// manually delete the app from the AppVet GUI.
+				log.debug("An app is already processing. Waiting...");
 			} else {
 				AppInfo appInfo = null;
 				final String appid = Database.getNextApp(AppStatus.PENDING);
 				if (appid != null) {
+					log.debug("App " + appid + " now processing.");
 					final long startTime = new Date().getTime();
 					log.debug(MemoryUtil.getFreeHeap("ToolMgr.run()"));
 					appInfo = new AppInfo(appid);
