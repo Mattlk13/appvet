@@ -37,7 +37,7 @@ public class FileUtil {
 
 	public static boolean copyFile(File sourceFile, File destFile) {
 		if (sourceFile == null || !sourceFile.exists() || destFile == null) {
-			log.error("Cannot copy to null source or dest file");
+			log.error("Cannot copy to null or non-existent source or dest file");
 			return false;
 		}
 		try {

@@ -193,8 +193,14 @@ public class IOSMetadata {
 					}
 					File sourceIcon = new File(AppVetProperties.APP_IMAGES
 							+ "/" + appIcon);
+					if (!sourceIcon.exists()) {
+						log.error("Default IOS or Android icon is missing from Tomcat/webapps/appvet_images. Aborting metadata processing.");
+						return false;
+					}
 					File destIcon = new File(AppVetProperties.APP_IMAGES + "/"
 							+ appInfo.appId + ".png");
+					log.debug("Copying " + sourceIcon.getAbsolutePath() + " to " + 
+							destIcon.getAbsolutePath());
 					FileUtil.copyFile(sourceIcon, destIcon);
 				}
 
@@ -208,9 +214,25 @@ public class IOSMetadata {
 					// check the data in it
 					NSDictionary d = (NSDictionary) x;
 					playListName = d.get("playlistName");
+					if (playListName == null) {
+						log.warn("iOS playlist name is null. Setting to 'N/A'");
+						playListName.wrap("N/A");
+					}
 					softwareVersionBundleId = d.get("softwareVersionBundleId");
+					if (softwareVersionBundleId == null) {
+						log.warn("iOS software bundle ID is null. Setting to 'N/A'");
+						softwareVersionBundleId.wrap("N/A");
+					}
 					bundleVersion = d.get("bundleVersion");
+					if (bundleVersion == null) {
+						log.warn("iOS software version is null. Setting to 'N/A'");
+						bundleVersion.wrap("N/A");
+					}
 					releaseDate = d.get("releaseDate");
+					if (releaseDate == null) {
+						log.warn("iOS software release date is null. Setting to 'N/A'");
+						releaseDate.wrap("N/A");
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 					log.error("Could not get plist info for app " + appInfo.appId);
@@ -226,6 +248,10 @@ public class IOSMetadata {
 
 			appinfoReport = new BufferedWriter(
 					new FileWriter(appinfoReportPath));
+			if (appinfoReport == null) {
+				log.error("Metadata report for app " + appInfo.appId + " is null. Aborting metadata processing.");
+				return false;
+			}
 
 			appinfoReport.write("<HTML>\n");
 			appinfoReport.write("<head>\n");
@@ -250,18 +276,42 @@ public class IOSMetadata {
 			final String currentDate = format.format(date);
 			appinfoReport.write("File: \t\t" + appInfo.getAppFileName() + "\n");
 			appinfoReport.write("Date: \t\t" + currentDate + "\n\n");
-			appInfo.appName = playListName.toString();
+			if (playListName == null || playListName.toString() == null) {
+				log.warn("iOS playlist name is null. Setting app name to 'N/A'");
+				appInfo.appName = "N/A";
+			} else {
+				appInfo.appName = playListName.toString();
+			}
+			log.debug("Playlist Name: \t\t" + appInfo.appName + "\n");
 			appinfoReport.write("Playlist Name: \t\t" + appInfo.appName + "\n");
 
-			appInfo.packageName = softwareVersionBundleId.toString();
+			if (softwareVersionBundleId == null || softwareVersionBundleId.toString() == null) {
+				log.warn("iOS software bundle ID is null. Setting package name to 'N/A'");
+				appInfo.packageName = "N/A";
+			} else {
+				appInfo.packageName = softwareVersionBundleId.toString();
+			}
+			log.debug("Bundle ID: \t\t" + appInfo.packageName + "\n");
 			appinfoReport.write("Bundle ID: \t\t" + appInfo.packageName + "\n");
 
-			appInfo.versionName = bundleVersion.toString();
+			if (bundleVersion == null || bundleVersion.toString() == null) {
+				log.warn("iOS bundle version is null. Setting version name to 'N/A'");
+				appInfo.versionName = "N/A";
+			} else {
+				appInfo.versionName = bundleVersion.toString();
+			}
+			log.debug("Bundle Version: \t" + appInfo.versionName
+					+ "\n");
 			appinfoReport.write("Bundle Version: \t" + appInfo.versionName
 					+ "\n");
 
-			appinfoReport.write("Release Date: \t\t" + releaseDate.toString()
-					+ "\n");
+			if (releaseDate == null || releaseDate.toString() == null) {
+				appinfoReport.write("Release Date: \t\tN/A\n");
+			} else {
+				appinfoReport.write("Release Date: \t\t" + releaseDate.toString()
+						+ "\n");
+			}
+
 			appinfoReport.write("App ID: \t" + appInfo.appId + "\n");
 
 			final String fileNameUpperCase = appInfo.getAppFileName()
