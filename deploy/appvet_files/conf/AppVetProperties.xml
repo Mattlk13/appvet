@@ -42,9 +42,11 @@
 		<StaggerInterval>1000</StaggerInterval>
 		<ConnectionTimeout>30000</ConnectionTimeout>
 		<SocketTimeout>1200000</SocketTimeout>
-		<!-- Send an app and receive an ACK from a tool service
-		within this timeout period (in milliseconds)-->
-		<Timeout>10000</Timeout>
+		<!-- Max time for AppVet to wait from the time an app enters the 
+		PROCESSING state (after registration) until the time all tool reports
+		have been received for the app (in milliseconds). Default timeout
+		is 10 minutes = 600000ms -->
+		<Timeout>600000</Timeout>
 	</ToolServices>
 	
 	<Apps>

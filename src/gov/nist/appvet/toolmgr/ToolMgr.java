@@ -43,6 +43,7 @@ import java.util.Date;
  */
 public class ToolMgr implements Runnable {
 	private static final Logger log = AppVetProperties.log;
+	private static final long TOOL_ADAPTER_SHUTDOWN_TIMEOUT = 10000;
 
 	public ToolMgr() {
 		log.info("*** Starting AppVet Tool Manager "
@@ -111,13 +112,24 @@ public class ToolMgr implements Runnable {
 
 	@Override
 	public void run() {
+		// Set the time that the app processing timeout will occur
+		Date currentAppTimeout = new Date(System.currentTimeMillis() + AppVetProperties.APP_PROCESSING_TIMEOUT);
 		for (;;) {
 			delay(AppVetProperties.TOOL_MGR_POLLING_INTERVAL); // Wait to see if another app is processing
-			if (Database.otherAppProcessing()) {
-				// If another app has a status of PROCESSING, no other apps
-				// will be processed. If app is stuck in a PROCESSING status,
-				// manually delete the app from the AppVet GUI.
+			String currentProcessingAppId = Database.getCurrentProcessingAppId();
+			if (currentProcessingAppId != null) {
+				// An app already has a status of PROCESSING so no other apps
+				// will be processed. 
 				//log.debug("An app is already processing. Waiting...");
+				
+				// Check if current app has exceeded processing timeout
+				Date currentTime = new Date(System.currentTimeMillis());
+				if (currentTime.after(currentAppTimeout)) {
+					// Timeout occurred waiting for one or more reports to be received
+					// Get app info to set the status of these tools to ERROR
+					String appOS = Database.getOs(currentProcessingAppId);
+					Database.killProcessingTools(currentProcessingAppId, DeviceOS.getOS(appOS));
+				}				
 			} else {
 				AppInfo appInfo = null;
 				final String appid = Database.getNextApp(AppStatus.PENDING);
@@ -128,6 +140,9 @@ public class ToolMgr implements Runnable {
 					appInfo = new AppInfo(appid);
 					// Get app metadata.
 					if (!getAppMetaData(appInfo) && !AppVetProperties.KEEP_APPS) {
+						// If we can't get metadata info for the app, this is an
+						// error and we should set an error this app and remove
+						// all related files unless KEEP_APPS is true.
 						removeAppFiles(appInfo);
 					} else {
 						// Get all available tools
@@ -224,11 +239,12 @@ public class ToolMgr implements Runnable {
 
 	public void wait(AppInfo appInfo, ToolAdapter tool) {
 		try {
-			tool.thread.join(AppVetProperties.TOOL_TIMEOUT);
-			log.debug("Tool " + tool.toolId + " is no longer waiting");
+			// Wait for tool adapter thread to shut down.
+			tool.thread.join(TOOL_ADAPTER_SHUTDOWN_TIMEOUT);
+			log.debug("Tool " + tool.toolId + " shut down.");
 		} catch (final InterruptedException e) {
-			appInfo.log.error("Tool timed out after "
-					+ AppVetProperties.TOOL_TIMEOUT + "ms");
+			appInfo.log.warn("Tool " + tool.toolId + " shut down after "
+					+ AppVetProperties.APP_PROCESSING_TIMEOUT + "ms timeout");
 			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId, tool.toolId,
 					ToolStatus.ERROR);
 		}

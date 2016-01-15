@@ -28,6 +28,8 @@ import gov.nist.appvet.shared.app.AppInfo;
 import gov.nist.appvet.shared.os.DeviceOS;
 import gov.nist.appvet.shared.role.Role;
 import gov.nist.appvet.shared.status.AppStatus;
+import gov.nist.appvet.shared.status.ToolStatus;
+import gov.nist.appvet.shared.status.ToolStatusManager;
 
 import java.io.BufferedWriter;
 import java.security.NoSuchAlgorithmException;
@@ -299,6 +301,66 @@ public class Database {
 		// Save to database
 		saveUserToolCredentials(username, toolCredentialsList);
 		return toolCredentialsList;
+	}
+	
+	/** Kill timed-out tools in SUBMITTED state to ERROR forcing app to change
+	 * status to ERROR.
+	 */
+	public static boolean killProcessingTools(String appId, DeviceOS os) {
+		String sql = null;
+		if (os == DeviceOS.ANDROID) {
+			String androidTableName = "androidtoolstatus";
+			ArrayList<String> androidTools = getTableColumnNames(androidTableName);
+			for (int i = 0; i < androidTools.size(); i++) {
+				String toolId = androidTools.get(i);
+				sql = "Select " + toolId + "from " + androidTableName + " where appid='" + appId + "'";
+				String toolStatusString = Database.getString(sql);
+				ToolStatus toolStatus = ToolStatus.getStatus(toolStatusString);
+				if (toolStatus == null) {
+					log.error("Unknown Android tool status encountered while killing active tool");
+					return false;
+				}
+				if (toolStatus == ToolStatus.SUBMITTED) {
+					if (ToolStatusManager.setToolStatus(os, appId, toolId, ToolStatus.ERROR)) {
+						// Write error message to app's log
+						AppInfo appInfo = new AppInfo(appId);
+						appInfo.log.error("Tool " + toolId + " exceeded timeout. Setting to tool status to " + ToolStatus.ERROR);
+					} else {
+						log.error("Could not update " + toolId + " status for app " + appId + " to ERROR.");
+						return false;
+					}
+				}
+			}
+			return true;
+		} else if (os == DeviceOS.IOS){
+			String iosTableName = "iostoolstatus";
+			ArrayList<String> androidTools = getTableColumnNames(iosTableName);
+			for (int i = 0; i < androidTools.size(); i++) {
+				String toolId = androidTools.get(i);
+				sql = "Select " + toolId + "from " + iosTableName + " where appid='" + appId + "'";
+				String toolStatusString = Database.getString(sql);
+				ToolStatus toolStatus = ToolStatus.getStatus(toolStatusString);
+				if (toolStatus == null) {
+					log.error("Unknown iOS tool status encountered while killing active tool");
+					return false;
+				}
+				if (toolStatus == ToolStatus.SUBMITTED) {
+					if (ToolStatusManager.setToolStatus(os, appId, toolId, ToolStatus.ERROR)) {
+						// Write error message to app's log
+						AppInfo appInfo = new AppInfo(appId);
+						appInfo.log.error("Tool " + toolId + " exceeded timeout. Setting to tool status to " + ToolStatus.ERROR);
+					} else {
+						log.error("Could not update " + toolId + " status for app " + appId + " to ERROR.");
+						return false;
+					}
+				}
+			}
+			return true;
+
+		} else {
+			log.error("Unknown OS for getting processing tool IDs.");
+			return false;
+		}
 	}
 
 	/**
@@ -652,7 +714,7 @@ public class Database {
 	}
 	
 
-	public static boolean otherAppProcessing() {
+	public static String getCurrentProcessingAppId() {
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -665,17 +727,26 @@ public class Database {
 					+ "submittime ASC";
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
-				return true;
+				//return true;
+				return resultSet.getString(1);
 			}
-			return false;
+			return null;
 		} catch (final SQLException e) {
 			log.error(e.toString());
-			return false;
+			return null;
 		} finally {
 			cleanUpResultSet(resultSet);
 			cleanUpStatement(statement);
 			cleanUpConnection(connection);
 		}
+	}
+	
+	/** For an app that has timed-out waiting for one or more reports to 
+	 * be received, set all tools in a SUBMITTED state to ERROR.
+	 * @param appId
+	 */
+	public static void setAppProcessingTimeoutToError(String appId) {
+		
 	}
 
 	/**
