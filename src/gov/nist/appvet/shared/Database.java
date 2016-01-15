@@ -307,14 +307,19 @@ public class Database {
 	 * status to ERROR.
 	 */
 	public static boolean killProcessingTools(String appId, DeviceOS os) {
+		AppInfo appInfo = new AppInfo(appId);
+
 		String sql = null;
 		if (os == DeviceOS.ANDROID) {
 			String androidTableName = "androidtoolstatus";
 			ArrayList<String> androidTools = getTableColumnNames(androidTableName);
-			for (int i = 0; i < androidTools.size(); i++) {
+			for (int i = 1; i < androidTools.size(); i++) {
+				// Skip appid columns
 				String toolId = androidTools.get(i);
-				sql = "Select " + toolId + "from " + androidTableName + " where appid='" + appId + "'";
+				sql = "SELECT " + toolId + " FROM " + androidTableName + " WHERE appid='" + appId + "'";
+				log.debug("SQL for tool timeout: " + sql);
 				String toolStatusString = Database.getString(sql);
+				log.debug("toolStatusString: " + toolStatusString);
 				ToolStatus toolStatus = ToolStatus.getStatus(toolStatusString);
 				if (toolStatus == null) {
 					log.error("Unknown Android tool status encountered while killing active tool");
@@ -323,8 +328,7 @@ public class Database {
 				if (toolStatus == ToolStatus.SUBMITTED) {
 					if (ToolStatusManager.setToolStatus(os, appId, toolId, ToolStatus.ERROR)) {
 						// Write error message to app's log
-						AppInfo appInfo = new AppInfo(appId);
-						appInfo.log.error("Tool " + toolId + " exceeded timeout. Setting to tool status to " + ToolStatus.ERROR);
+						appInfo.log.warn("Tool " + toolId + " exceeded timeout. Setting tool status to " + ToolStatus.ERROR);
 					} else {
 						log.error("Could not update " + toolId + " status for app " + appId + " to ERROR.");
 						return false;
@@ -335,10 +339,13 @@ public class Database {
 		} else if (os == DeviceOS.IOS){
 			String iosTableName = "iostoolstatus";
 			ArrayList<String> androidTools = getTableColumnNames(iosTableName);
-			for (int i = 0; i < androidTools.size(); i++) {
+			for (int i = 1; i < androidTools.size(); i++) {
+				// Skip appid column
 				String toolId = androidTools.get(i);
-				sql = "Select " + toolId + "from " + iosTableName + " where appid='" + appId + "'";
+				sql = "SELECT " + toolId + " FROM " + iosTableName + " WHERE appid='" + appId + "'";
+				log.debug("SQL for tool timeout: " + sql);
 				String toolStatusString = Database.getString(sql);
+				log.debug("toolStatusString: " + toolStatusString);
 				ToolStatus toolStatus = ToolStatus.getStatus(toolStatusString);
 				if (toolStatus == null) {
 					log.error("Unknown iOS tool status encountered while killing active tool");
@@ -347,8 +354,7 @@ public class Database {
 				if (toolStatus == ToolStatus.SUBMITTED) {
 					if (ToolStatusManager.setToolStatus(os, appId, toolId, ToolStatus.ERROR)) {
 						// Write error message to app's log
-						AppInfo appInfo = new AppInfo(appId);
-						appInfo.log.error("Tool " + toolId + " exceeded timeout. Setting to tool status to " + ToolStatus.ERROR);
+						appInfo.log.warn("Tool " + toolId + " exceeded timeout. Setting tool status to " + ToolStatus.ERROR);
 					} else {
 						log.error("Could not update " + toolId + " status for app " + appId + " to ERROR.");
 						return false;
