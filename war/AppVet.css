@@ -167,7 +167,7 @@ searchPanel {
 }
 
 .appListButtonPanel {
-	padding-right: 5px;
+	padding-right: 2px;
 	border-top: White;
 	border-right: White;
 	border-bottom: white;
@@ -745,6 +745,7 @@ searchPanel {
 
 .
 {
+	padding-right: 2px;
 	border-top: solid Background;
 	border-right: solid Maroon;
 	border-bottom: solid Maroon;

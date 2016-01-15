@@ -349,7 +349,7 @@ public class IOSMetadata {
 				return false;
 			}
 			appinfoReport
-					.write("\nStatus:\t\t<font color=\"green\">LOW</font>\n");
+					.write("\nStatus:\t\t<font color=\"black\">COMPLETED</font>\n");
 			log.debug("End iOS metadata preprocessing for app "
 					+ appInfo.appId);
 

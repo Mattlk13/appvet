@@ -92,6 +92,7 @@ import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.google.gwt.user.client.ui.Button;
 
 /**
  * @author steveq@nist.gov
@@ -338,7 +339,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 
 								// Get tool and manually-uploaded results.
-								statuses += "<hr><h3 title=\"Tools\"  id=\"appInfoSectionHeader\">Tools</h3>\n";
+								statuses += "<hr><h3 title=\"Analyses\"  id=\"appInfoSectionHeader\">Analyses</h3>\n";
 								int analysisToolCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -358,7 +359,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 
 								/* Get audit results */
-								statuses += "<hr><h3 title=\"Override\" id=\"appInfoSectionHeader\">Override</h3>\n";
+								statuses += "<hr><h3 title=\"Final Analysis\" id=\"appInfoSectionHeader\">Final Analysis</h3>\n";
 								int auditCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -933,7 +934,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		adminMenuBar.setFocusOnHoverEnabled(true);
 		
 		final MenuItem adminMenuItem = new MenuItem("Admin", true, adminMenuBar);
-		final MenuItem mntmAppVetLog = new MenuItem("AppVet Log", false,
+		final MenuItem mntmAppVetLog = new MenuItem("View AppVet Log", false,
 				new Command() {
 					@Override
 					public void execute() {
@@ -948,6 +949,41 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				});
 		adminMenuBar.addItem(mntmAppVetLog);
+		
+		final MenuItem downloadAppVetLogMenuItem = new MenuItem("Download AppVet Log", false,
+				new Command() {
+					@Override
+					public void execute() {
+						final String dateString = "?nocache"
+								+ new Date().getTime();
+						final String url = SERVLET_URL + dateString + "&"
+								+ AppVetParameter.COMMAND.value + "="
+								+ AppVetServletCommand.GET_APPVET_LOG.name()
+								+ "&" + AppVetParameter.SESSIONID.value + "="
+								+ sessionId;
+						Window.open(url, "_blank", "");
+					}
+				});
+		adminMenuBar.addItem(downloadAppVetLogMenuItem);
+		
+		
+		final MenuItem clearAppVetLogMenuItem = new MenuItem("Clear AppVet Log", false,
+				new Command() {
+					@Override
+					public void execute() {
+						final String dateString = "?nocache"
+								+ new Date().getTime();
+						final String url = SERVLET_URL + dateString + "&"
+								+ AppVetParameter.COMMAND.value + "="
+								+ AppVetServletCommand.GET_APPVET_LOG.name()
+								+ "&" + AppVetParameter.SESSIONID.value + "="
+								+ sessionId;
+						Window.open(url, "_blank", "");
+					}
+				});
+		adminMenuBar.addItem(clearAppVetLogMenuItem);
+		adminMenuBar.addSeparator();
+		
 		final MenuItem usersMenuItem = new MenuItem("Users", false,
 				new Command() {
 					@Override
@@ -999,28 +1035,28 @@ public class AppVetPanel extends DockLayoutPanel {
 				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		rightCenterPanel.setWidget(appInfoVerticalPanel);
 		appInfoVerticalPanel.setSize("100%", "");
-		final HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
-		horizontalPanel_1
+		final HorizontalPanel appInfoPanel = new HorizontalPanel();
+		appInfoPanel
 				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_1.setStyleName("iconPanel");
-		appInfoVerticalPanel.add(horizontalPanel_1);
-		appInfoVerticalPanel.setCellWidth(horizontalPanel_1, "100%");
-		horizontalPanel_1.setSize("", "");
+		appInfoPanel.setStyleName("iconPanel");
+		appInfoVerticalPanel.add(appInfoPanel);
+		appInfoVerticalPanel.setCellWidth(appInfoPanel, "100%");
+		appInfoPanel.setSize("", "");
 		appInfoIcon = new Image("");
 		appInfoIcon.setVisible(false);
 		appInfoIcon.setAltText("");
-		horizontalPanel_1.add(appInfoIcon);
-		horizontalPanel_1.setCellVerticalAlignment(appInfoIcon,
+		appInfoPanel.add(appInfoIcon);
+		appInfoPanel.setCellVerticalAlignment(appInfoIcon,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appInfoIcon.setSize("70px", "70px");
 		final VerticalPanel verticalPanel = new VerticalPanel();
-		horizontalPanel_1.add(verticalPanel);
+		appInfoPanel.add(verticalPanel);
 		appInfoName = new HTML("", true);
 		appInfoName.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		verticalPanel.add(appInfoName);
 		appInfoName.setStyleName("appInfoName");
 		appInfoName.setWidth("");
-		horizontalPanel_1.setCellVerticalAlignment(appInfoName,
+		appInfoPanel.setCellVerticalAlignment(appInfoName,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appInfoPackage = new HTML("", true);
 		appInfoPackage
@@ -1066,9 +1102,9 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		horizontalPanel.setSize("", "");
 		final PushButton submitButton = new PushButton("Submit");
-		submitButton.setTitle("Submit App");
+		submitButton.setTitle("Upload App");
 		submitButton
-				.setHTML("<img width=\"18px\" src=\"images/icon-submit.png\" alt=\"Submit\" />");
+				.setHTML("U/L App ");
 		submitButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1113,8 +1149,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		final PushButton viewAllButton = new PushButton("View All");
 		viewAllButton.setTitle("View All");
-		viewAllButton
-				.setHTML("<img width=\"18px\" src=\"images/icon-view-all.png\" alt=\"view-all\" />");
 		viewAllButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1127,18 +1161,60 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel.setCellVerticalAlignment(viewAllButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		viewAllButton.setSize("", "");
+		viewAllButton.setSize("70px", "");
 		horizontalPanel.add(submitButton);
 		horizontalPanel.setCellVerticalAlignment(submitButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel.setCellHorizontalAlignment(submitButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		submitButton.setSize("", "");
+		submitButton.setSize("70px", "");
+		appsListTable = new AppsListPagingDataGrid<AppInfoGwt>();
+		appsListTable.dataGrid.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
+		appsListTable.dataGrid.setStyleName("dataGrid");
+		dockPanel_1.add(appsListTable, DockPanel.CENTER);
+		dockPanel_1.setCellWidth(appsListTable, "100%");
+		dockPanel_1.setCellHorizontalAlignment(appsListTable,
+				HasHorizontalAlignment.ALIGN_CENTER);
+		dockPanel_1.setCellVerticalAlignment(appsListTable,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		appsListTable.setAppVetHostUrl(HOST_URL);
+		appsListTable.setAppVetProxyUrl(PROXY_URL);
+		appsListTable.dataGrid.setSize("100%", "");
+		appsListTable.setDataList(initialApps);
+		appsListTable.setSize("100%", "");
+		appsListTable.dataGrid.setSelectionModel(appSelectionModel);
+
+		SimplePanel simplePanel = new SimplePanel();
+		addSouth(simplePanel, 21.0);
+		simplePanel.setSize("100%", "");
+
+		HorizontalPanel horizontalPanel_2 = new HorizontalPanel();
+		horizontalPanel_2
+				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_2
+				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		simplePanel.setWidget(horizontalPanel_2);
+		horizontalPanel_2.setSize("100%", "100%");
+
+		Image nistLogo = new Image("images/nist_logo_darkgrey.png");
+		nistLogo.setAltText("NIST logo");
+		nistLogo.setTitle("NIST logo");
+		horizontalPanel_2.add(nistLogo);
+		horizontalPanel_2.setCellVerticalAlignment(nistLogo,
+				HasVerticalAlignment.ALIGN_BOTTOM);
+		horizontalPanel_2.setCellHorizontalAlignment(nistLogo,
+				HasHorizontalAlignment.ALIGN_RIGHT);
+		nistLogo.setSize("50px", "13px");
+		
+		HorizontalPanel appHorizontalButtonPanel = new HorizontalPanel();
+		appInfoVerticalPanel.add(appHorizontalButtonPanel);
 		downloadButton = new PushButton("Download");
+		appHorizontalButtonPanel.add(downloadButton);
+		appHorizontalButtonPanel.setCellVerticalAlignment(downloadButton, HasVerticalAlignment.ALIGN_MIDDLE);
+		appHorizontalButtonPanel.setCellHorizontalAlignment(downloadButton, HasHorizontalAlignment.ALIGN_CENTER);
 		downloadButton.setTitle("Download Reports");
 		downloadButton
-				.setHTML("<img width=\"18px\" src=\"images/icon-download.png\" alt=\"Download\" />");
-		horizontalPanel.add(downloadButton);
+				.setHTML("D/L Reports");
 		downloadButton.setEnabled(true);
 		downloadButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -1167,9 +1243,12 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appsListButtonPanel.setCellHorizontalAlignment(downloadButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		downloadButton.setSize("", "");
-		uploadReportButton = new PushButton("Add Report");
-		horizontalPanel.add(uploadReportButton);
+		downloadButton.setSize("70px", "");
+		uploadReportButton = new PushButton("Upload Report");
+		uploadReportButton.setHTML("U/L Report");
+		appHorizontalButtonPanel.add(uploadReportButton);
+		appHorizontalButtonPanel.setCellHorizontalAlignment(uploadReportButton, HasHorizontalAlignment.ALIGN_CENTER);
+		appHorizontalButtonPanel.setCellVerticalAlignment(uploadReportButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel.setCellVerticalAlignment(uploadReportButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		uploadReportButton.setTitle("Upload Report");
@@ -1218,15 +1297,13 @@ public class AppVetPanel extends DockLayoutPanel {
 				}
 			}
 		});
-		uploadReportButton.setSize("", "");
-		uploadReportButton
-				.setHTML("<img width=\"18px\" src=\"images/icon-submit-report.png\" alt=\"Add Report\" />");
+		uploadReportButton.setSize("70px", "");
 		deleteButton = new PushButton("Delete");
-		horizontalPanel.add(deleteButton);
+		appHorizontalButtonPanel.add(deleteButton);
+		appHorizontalButtonPanel.setCellHorizontalAlignment(deleteButton, HasHorizontalAlignment.ALIGN_CENTER);
+		appHorizontalButtonPanel.setCellVerticalAlignment(deleteButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel.setCellVerticalAlignment(deleteButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		deleteButton
-				.setHTML("<img width=\"18px\" src=\"images/icon-delete.png\" alt=\"delete\" />");
 		deleteButton.setTitle("Delete App");
 		deleteButton.setVisible(true);
 		deleteButton.addClickHandler(new ClickHandler() {
@@ -1260,14 +1337,16 @@ public class AppVetPanel extends DockLayoutPanel {
 						});
 			}
 		});
-		deleteButton.setSize("", "");
+		deleteButton.setSize("70px", "");
 		logButton = new PushButton("Log");
-		horizontalPanel.add(logButton);
+		appHorizontalButtonPanel.add(logButton);
+		appHorizontalButtonPanel.setCellHorizontalAlignment(logButton, HasHorizontalAlignment.ALIGN_CENTER);
+		appHorizontalButtonPanel.setCellVerticalAlignment(logButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel.setCellVerticalAlignment(logButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		logButton.setTitle("View Log");
 		logButton
-				.setHTML("<img width=\"18px\" src=\"images/icon-log.png\" alt=\"log\" />");
+				.setHTML("View Log");
 		logButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1286,46 +1365,16 @@ public class AppVetPanel extends DockLayoutPanel {
 				}
 			}
 		});
-		logButton.setSize("", "");
-		appsListTable = new AppsListPagingDataGrid<AppInfoGwt>();
-		appsListTable.dataGrid.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
-		appsListTable.dataGrid.setStyleName("dataGrid");
-		dockPanel_1.add(appsListTable, DockPanel.CENTER);
-		dockPanel_1.setCellWidth(appsListTable, "100%");
-		dockPanel_1.setCellHorizontalAlignment(appsListTable,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		dockPanel_1.setCellVerticalAlignment(appsListTable,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		appsListTable.setAppVetHostUrl(HOST_URL);
-		appsListTable.setAppVetProxyUrl(PROXY_URL);
-		appsListTable.dataGrid.setSize("100%", "");
-		appsListTable.setDataList(initialApps);
-		appsListTable.setSize("100%", "");
-		appsListTable.dataGrid.setSelectionModel(appSelectionModel);
-		uploadReportButton.setVisible(true);
+		logButton.setSize("70px", "");
+		
+		PushButton pshbtnNewButton = new PushButton("Download App");
+		pshbtnNewButton.setHTML("D/L App");
+		appHorizontalButtonPanel.add(pshbtnNewButton);
+		pshbtnNewButton.setWidth("70px");
+		appHorizontalButtonPanel.setCellHorizontalAlignment(pshbtnNewButton, HasHorizontalAlignment.ALIGN_CENTER);
+		appHorizontalButtonPanel.setCellVerticalAlignment(pshbtnNewButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		logButton.setVisible(true);
-
-		SimplePanel simplePanel = new SimplePanel();
-		addSouth(simplePanel, 21.0);
-		simplePanel.setSize("100%", "");
-
-		HorizontalPanel horizontalPanel_2 = new HorizontalPanel();
-		horizontalPanel_2
-				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_2
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		simplePanel.setWidget(horizontalPanel_2);
-		horizontalPanel_2.setSize("100%", "100%");
-
-		Image nistLogo = new Image("images/nist_logo_darkgrey.png");
-		nistLogo.setAltText("NIST logo");
-		nistLogo.setTitle("NIST logo");
-		horizontalPanel_2.add(nistLogo);
-		horizontalPanel_2.setCellVerticalAlignment(nistLogo,
-				HasVerticalAlignment.ALIGN_BOTTOM);
-		horizontalPanel_2.setCellHorizontalAlignment(nistLogo,
-				HasHorizontalAlignment.ALIGN_RIGHT);
-		nistLogo.setSize("50px", "13px");
+		uploadReportButton.setVisible(true);
 		toolResultsHtml = new HTML("", true);
 		appInfoVerticalPanel.add(toolResultsHtml);
 		appInfoVerticalPanel.setCellWidth(toolResultsHtml, "100%");

@@ -209,7 +209,7 @@ public class Registration {
 				regReportWriter.write("Submitter: \t" + appInfo.ownerName
 						+ "\n\n");
 				regReportWriter
-						.write("Status:\t\t<font color=\"green\">LOW</font>\n");
+						.write("Status:\t\t<font color=\"black\">COMPLETED</font>\n");
 				regReportWriter.write("</pre>\n");
 				regReportWriter.write("</body>\n");
 				regReportWriter.write("</HTML>\n");

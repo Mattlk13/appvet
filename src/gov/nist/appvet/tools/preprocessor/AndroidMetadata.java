@@ -134,7 +134,7 @@ public class AndroidMetadata {
 			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 					appinfoTool.toolId, ToolStatus.LOW);
 			appinfoReport
-					.write("\nStatus:\t\t<font color=\"green\">LOW</font>\n");
+					.write("\nStatus:\t\t<font color=\"black\">COMPLETED</font>\n");
 			log.debug("End Android metadata preprocessing for app "
 					+ appInfo.appId);
 			return true;
