@@ -314,7 +314,7 @@ public class Database {
 			String androidTableName = "androidtoolstatus";
 			ArrayList<String> androidTools = getTableColumnNames(androidTableName);
 			for (int i = 1; i < androidTools.size(); i++) {
-				// Skip appid columns
+				// Skip appid column
 				String toolId = androidTools.get(i);
 				sql = "SELECT " + toolId + " FROM " + androidTableName + " WHERE appid='" + appId + "'";
 				log.debug("SQL for tool timeout: " + sql);
@@ -328,6 +328,7 @@ public class Database {
 				if (toolStatus == ToolStatus.SUBMITTED) {
 					if (ToolStatusManager.setToolStatus(os, appId, toolId, ToolStatus.ERROR)) {
 						// Write error message to app's log
+						log.warn("Tool " + toolId + " exceeded timeout. Setting tool status to " + ToolStatus.ERROR);
 						appInfo.log.warn("Tool " + toolId + " exceeded timeout. Setting tool status to " + ToolStatus.ERROR);
 					} else {
 						log.error("Could not update " + toolId + " status for app " + appId + " to ERROR.");
@@ -354,6 +355,7 @@ public class Database {
 				if (toolStatus == ToolStatus.SUBMITTED) {
 					if (ToolStatusManager.setToolStatus(os, appId, toolId, ToolStatus.ERROR)) {
 						// Write error message to app's log
+						log.warn("Tool " + toolId + " exceeded timeout. Setting tool status to " + ToolStatus.ERROR);
 						appInfo.log.warn("Tool " + toolId + " exceeded timeout. Setting tool status to " + ToolStatus.ERROR);
 					} else {
 						log.error("Could not update " + toolId + " status for app " + appId + " to ERROR.");
