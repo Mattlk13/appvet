@@ -1104,7 +1104,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		final PushButton submitButton = new PushButton("Submit");
 		submitButton.setTitle("Upload App");
 		submitButton
-				.setHTML("U/L App ");
+				.setHTML("<img width=\"70px\" src=\"images/app-upload2.png\" alt=\"Upload App\" />");
 		submitButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1148,6 +1148,7 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		});
 		final PushButton viewAllButton = new PushButton("View All");
+		viewAllButton.setHTML("<img width=\"70px\" src=\"images/view-all2.png\" alt=\"View All\" />");
 		viewAllButton.setTitle("View All");
 		viewAllButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -1208,13 +1209,13 @@ public class AppVetPanel extends DockLayoutPanel {
 		
 		HorizontalPanel appHorizontalButtonPanel = new HorizontalPanel();
 		appInfoVerticalPanel.add(appHorizontalButtonPanel);
-		downloadButton = new PushButton("Download");
+		downloadButton = new PushButton("Download Reports");
 		appHorizontalButtonPanel.add(downloadButton);
 		appHorizontalButtonPanel.setCellVerticalAlignment(downloadButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		appHorizontalButtonPanel.setCellHorizontalAlignment(downloadButton, HasHorizontalAlignment.ALIGN_CENTER);
 		downloadButton.setTitle("Download Reports");
 		downloadButton
-				.setHTML("D/L Reports");
+				.setHTML("<img width=\"70px\" src=\"images/report-download2.png\" alt=\"Download Zipped Reports\" />");
 		downloadButton.setEnabled(true);
 		downloadButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -1245,7 +1246,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		downloadButton.setSize("70px", "");
 		uploadReportButton = new PushButton("Upload Report");
-		uploadReportButton.setHTML("U/L Report");
+		uploadReportButton.setHTML("<img width=\"70px\" src=\"images/report-upload2.png\" alt=\"Upload Report\" />");
 		appHorizontalButtonPanel.add(uploadReportButton);
 		appHorizontalButtonPanel.setCellHorizontalAlignment(uploadReportButton, HasHorizontalAlignment.ALIGN_CENTER);
 		appHorizontalButtonPanel.setCellVerticalAlignment(uploadReportButton, HasVerticalAlignment.ALIGN_MIDDLE);
@@ -1298,7 +1299,8 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		});
 		uploadReportButton.setSize("70px", "");
-		deleteButton = new PushButton("Delete");
+		deleteButton = new PushButton("Delete App");
+		deleteButton.setHTML("<img width=\"70px\" src=\"images/delete-app2.png\" alt=\"Delete App\" />");
 		appHorizontalButtonPanel.add(deleteButton);
 		appHorizontalButtonPanel.setCellHorizontalAlignment(deleteButton, HasHorizontalAlignment.ALIGN_CENTER);
 		appHorizontalButtonPanel.setCellVerticalAlignment(deleteButton, HasVerticalAlignment.ALIGN_MIDDLE);
@@ -1338,7 +1340,7 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		});
 		deleteButton.setSize("70px", "");
-		logButton = new PushButton("Log");
+		logButton = new PushButton("View Log");
 		appHorizontalButtonPanel.add(logButton);
 		appHorizontalButtonPanel.setCellHorizontalAlignment(logButton, HasHorizontalAlignment.ALIGN_CENTER);
 		appHorizontalButtonPanel.setCellVerticalAlignment(logButton, HasVerticalAlignment.ALIGN_MIDDLE);
@@ -1346,7 +1348,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		logButton.setTitle("View Log");
 		logButton
-				.setHTML("View Log");
+				.setHTML("<img width=\"70px\" src=\"images/view-log2.png\" alt=\"View Log\" />");
 		logButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1368,7 +1370,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		logButton.setSize("70px", "");
 		
 		PushButton pshbtnNewButton = new PushButton("Download App");
-		pshbtnNewButton.setHTML("D/L App");
+		pshbtnNewButton.setHTML("<img width=\"70px\" src=\"images/app-download2.png\" alt=\"Download App\" />");
 		appHorizontalButtonPanel.add(pshbtnNewButton);
 		pshbtnNewButton.setWidth("70px");
 		appHorizontalButtonPanel.setCellHorizontalAlignment(pshbtnNewButton, HasHorizontalAlignment.ALIGN_CENTER);
