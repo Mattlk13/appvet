@@ -118,6 +118,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	private PushButton deleteButton = null;
 	private PushButton downloadButton = null;
 	private PushButton uploadReportButton = null;
+	private PushButton downloadAppButton = null;
 	private PushButton logButton = null;
 	private List<AppInfoGwt> allApps = null;
 	private TextBox searchTextBox = null;
@@ -925,56 +926,63 @@ public class AppVetPanel extends DockLayoutPanel {
 		final MenuBar adminMenuBar = new MenuBar(true);
 		adminMenuBar.setFocusOnHoverEnabled(true);
 		
+		
+		final MenuBar logMenubar = new MenuBar(true);
+		logMenubar.setFocusOnHoverEnabled(true);
+		final MenuItem mntmAppVetLog = new MenuItem("View", false,
+				new Command() {
+					@Override
+					public void execute() {
+						final String dateString = "?nocache"
+								+ new Date().getTime();
+						final String url = SERVLET_URL + dateString + "&"
+								+ AppVetParameter.COMMAND.value + "="
+								+ AppVetServletCommand.GET_APPVET_LOG.name()
+								+ "&" + AppVetParameter.SESSIONID.value + "="
+								+ sessionId;
+						Window.open(url, "_blank", "");
+					}
+				});
+		logMenubar.addItem(mntmAppVetLog);
+		final MenuItem clearAppVetLogMenuItem = new MenuItem("Clear", false,
+				new Command() {
+					@Override
+					public void execute() {
+						final String dateString = "?nocache"
+								+ new Date().getTime();
+						final String url = SERVLET_URL + dateString + "&"
+								+ AppVetParameter.COMMAND.value + "="
+								+ AppVetServletCommand.GET_APPVET_LOG.name()
+								+ "&" + AppVetParameter.SESSIONID.value + "="
+								+ sessionId;
+						Window.open(url, "_blank", "");
+					}
+				});
+		logMenubar.addItem(clearAppVetLogMenuItem);
+		final MenuItem downloadAppVetLogMenuItem = new MenuItem("Download", false,
+				new Command() {
+					@Override
+					public void execute() {
+						final String dateString = "?nocache"
+								+ new Date().getTime();
+						final String url = SERVLET_URL + dateString + "&"
+								+ AppVetParameter.COMMAND.value + "="
+								+ AppVetServletCommand.GET_APPVET_LOG.name()
+								+ "&" + AppVetParameter.SESSIONID.value + "="
+								+ sessionId;
+						Window.open(url, "_blank", "");
+					}
+				});
+		logMenubar.addItem(downloadAppVetLogMenuItem);
+		
+		
+
+
+		
 		final MenuItem adminMenuItem = new MenuItem("Admin", true, adminMenuBar);
-		final MenuItem mntmAppVetLog = new MenuItem("View AppVet Log", false,
-				new Command() {
-					@Override
-					public void execute() {
-						final String dateString = "?nocache"
-								+ new Date().getTime();
-						final String url = SERVLET_URL + dateString + "&"
-								+ AppVetParameter.COMMAND.value + "="
-								+ AppVetServletCommand.GET_APPVET_LOG.name()
-								+ "&" + AppVetParameter.SESSIONID.value + "="
-								+ sessionId;
-						Window.open(url, "_blank", "");
-					}
-				});
-		adminMenuBar.addItem(mntmAppVetLog);
+		adminMenuBar.addItem("Log", logMenubar);
 		
-		final MenuItem downloadAppVetLogMenuItem = new MenuItem("Download AppVet Log", false,
-				new Command() {
-					@Override
-					public void execute() {
-						final String dateString = "?nocache"
-								+ new Date().getTime();
-						final String url = SERVLET_URL + dateString + "&"
-								+ AppVetParameter.COMMAND.value + "="
-								+ AppVetServletCommand.GET_APPVET_LOG.name()
-								+ "&" + AppVetParameter.SESSIONID.value + "="
-								+ sessionId;
-						Window.open(url, "_blank", "");
-					}
-				});
-		adminMenuBar.addItem(downloadAppVetLogMenuItem);
-		
-		
-		final MenuItem clearAppVetLogMenuItem = new MenuItem("Clear AppVet Log", false,
-				new Command() {
-					@Override
-					public void execute() {
-						final String dateString = "?nocache"
-								+ new Date().getTime();
-						final String url = SERVLET_URL + dateString + "&"
-								+ AppVetParameter.COMMAND.value + "="
-								+ AppVetServletCommand.GET_APPVET_LOG.name()
-								+ "&" + AppVetParameter.SESSIONID.value + "="
-								+ sessionId;
-						Window.open(url, "_blank", "");
-					}
-				});
-		adminMenuBar.addItem(clearAppVetLogMenuItem);
-		adminMenuBar.addSeparator();
+
 		
 		final MenuItem usersMenuItem = new MenuItem("Users", false,
 				new Command() {
@@ -1327,7 +1335,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		deleteButton.setSize("70px", "");
 		downloadButton = new PushButton("Download Reports");
-		appHorizontalButtonPanel.add(downloadButton);
+		// REMOVE REPORT DOWNLOAD BUTTON
+		//appHorizontalButtonPanel.add(downloadButton);
 		appHorizontalButtonPanel.setCellVerticalAlignment(downloadButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		appHorizontalButtonPanel.setCellHorizontalAlignment(downloadButton, HasHorizontalAlignment.ALIGN_CENTER);
 		downloadButton.setTitle("Download Reports");
@@ -1363,12 +1372,13 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		downloadButton.setSize("70px", "");
 		
-		PushButton dowloadAppButton = new PushButton("Download App");
-		dowloadAppButton.setHTML("<img width=\"70px\" src=\"images/app-download3.png\" alt=\"Download App\" />");
-		appHorizontalButtonPanel.add(dowloadAppButton);
-		dowloadAppButton.setWidth("70px");
-		appHorizontalButtonPanel.setCellHorizontalAlignment(dowloadAppButton, HasHorizontalAlignment.ALIGN_CENTER);
-		appHorizontalButtonPanel.setCellVerticalAlignment(dowloadAppButton, HasVerticalAlignment.ALIGN_MIDDLE);
+		downloadAppButton = new PushButton("Download App");
+		downloadAppButton.setTitle("Download App");
+		downloadAppButton.setHTML("<img width=\"70px\" src=\"images/app-download3.png\" alt=\"Download App\" />");
+		appHorizontalButtonPanel.add(downloadAppButton);
+		downloadAppButton.setWidth("70px");
+		appHorizontalButtonPanel.setCellHorizontalAlignment(downloadAppButton, HasHorizontalAlignment.ALIGN_CENTER);
+		appHorizontalButtonPanel.setCellVerticalAlignment(downloadAppButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		uploadReportButton.setVisible(true);
 		toolResultsHtml = new HTML("", true);
 		appInfoVerticalPanel.add(toolResultsHtml);
