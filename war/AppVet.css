@@ -330,12 +330,14 @@ searchPanel {
 
 .appInfoName {
 	color: darkslategray;
+	margin-left: 15px;
 	font-weight: bold;
 	font-size: 24px;
 }
 
 .appInfoVersion {
 	color: darkslategray;
+	margin-left: 15px;
 	font-size: 12px;
 }
 
@@ -369,6 +371,7 @@ searchPanel {
 .iconPanel {
 	color: darkslategray;
 	margin-top: 5px;
+	margin-bottom: 10px;
 }
 
 .resultsPanel {
@@ -509,7 +512,8 @@ searchPanel {
 }
 
 .gwt-Image {
-	margin-bottom: 10px;
+	margin-top: 5px;
+	margin-right: 5px;
 	margin-left: 5px;
 	
 }
@@ -747,11 +751,9 @@ searchPanel {
 
 .
 {
-	margin-top: 10px;
 	margin-bottom: 5px;
-	margin-left: 20px;
-	padding-top: 10px;
-	padding-left: 20px;
+	margin-left: 5px;
+	padding-left: 5px;
 	border-top: solid Background;
 	border-right: solid Maroon;
 	border-bottom: solid Maroon;
@@ -781,6 +783,7 @@ searchPanel {
 }
 
 .toolResultsHtml {
+	padding-left: 5px;
 }
 
 .rightCenterPanel {

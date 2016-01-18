@@ -759,7 +759,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		orgLogo.setTitle("Organizational logo here");
 		horizontalPanel_5.add(orgLogo);
 		horizontalPanel_5.setCellVerticalAlignment(orgLogo,
-				HasVerticalAlignment.ALIGN_MIDDLE);
+				HasVerticalAlignment.ALIGN_BOTTOM);
 		horizontalPanel_5.setCellHorizontalAlignment(orgLogo,
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		final HorizontalPanel horizontalPanel_3 = new HorizontalPanel();
@@ -1201,6 +1201,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		
 		HorizontalPanel appHorizontalButtonPanel = new HorizontalPanel();
 		appInfoVerticalPanel.add(appHorizontalButtonPanel);
+		appInfoVerticalPanel.setCellVerticalAlignment(appHorizontalButtonPanel, HasVerticalAlignment.ALIGN_MIDDLE);
 		uploadReportButton = new PushButton("Upload Report");
 		uploadReportButton.setHTML("<img width=\"70px\" src=\"images/report-upload2.png\" alt=\"Upload Report\" />");
 		appHorizontalButtonPanel.add(uploadReportButton);
@@ -1362,12 +1363,12 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		downloadButton.setSize("70px", "");
 		
-		PushButton pshbtnNewButton = new PushButton("Download App");
-		pshbtnNewButton.setHTML("<img width=\"70px\" src=\"images/app-download2.png\" alt=\"Download App\" />");
-		appHorizontalButtonPanel.add(pshbtnNewButton);
-		pshbtnNewButton.setWidth("70px");
-		appHorizontalButtonPanel.setCellHorizontalAlignment(pshbtnNewButton, HasHorizontalAlignment.ALIGN_CENTER);
-		appHorizontalButtonPanel.setCellVerticalAlignment(pshbtnNewButton, HasVerticalAlignment.ALIGN_MIDDLE);
+		PushButton dowloadAppButton = new PushButton("Download App");
+		dowloadAppButton.setHTML("<img width=\"70px\" src=\"images/app-download2.png\" alt=\"Download App\" />");
+		appHorizontalButtonPanel.add(dowloadAppButton);
+		dowloadAppButton.setWidth("70px");
+		appHorizontalButtonPanel.setCellHorizontalAlignment(dowloadAppButton, HasHorizontalAlignment.ALIGN_CENTER);
+		appHorizontalButtonPanel.setCellVerticalAlignment(dowloadAppButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		uploadReportButton.setVisible(true);
 		toolResultsHtml = new HTML("", true);
 		appInfoVerticalPanel.add(toolResultsHtml);
