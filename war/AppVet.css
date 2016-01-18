@@ -167,7 +167,6 @@ searchPanel {
 }
 
 .appListButtonPanel {
-	padding-right: 2px;
 	border-top: White;
 	border-right: White;
 	border-bottom: white;
@@ -457,8 +456,9 @@ searchPanel {
 
 .AppsLabel {
 	color: darkslategray;
-	font-size: 16px;
+	margin-left: 5px;
 	font-weight: bold;
+	font-size: 16px;
 }
 
 .searchTextBox {
@@ -509,6 +509,8 @@ searchPanel {
 }
 
 .gwt-Image {
+	margin-bottom: 10px;
+	margin-left: 5px;
 	
 }
 
@@ -745,7 +747,11 @@ searchPanel {
 
 .
 {
-	padding-right: 2px;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	margin-left: 20px;
+	padding-top: 10px;
+	padding-left: 20px;
 	border-top: solid Background;
 	border-right: solid Maroon;
 	border-bottom: solid Maroon;
