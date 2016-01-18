@@ -1096,7 +1096,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		final PushButton submitButton = new PushButton("Submit");
 		submitButton.setTitle("Upload App");
 		submitButton
-				.setHTML("<img width=\"70px\" src=\"images/app-upload2.png\" alt=\"Upload App\" />");
+				.setHTML("<img width=\"70px\" src=\"images/app-upload3.png\" alt=\"Upload App\" />");
 		submitButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1140,7 +1140,7 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		});
 		final PushButton viewAllButton = new PushButton("View All");
-		viewAllButton.setHTML("<img width=\"70px\" src=\"images/view-all2.png\" alt=\"View All\" />");
+		viewAllButton.setHTML("<img width=\"70px\" src=\"images/view-all3.png\" alt=\"View All\" />");
 		viewAllButton.setTitle("View All");
 		viewAllButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -1203,7 +1203,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoVerticalPanel.add(appHorizontalButtonPanel);
 		appInfoVerticalPanel.setCellVerticalAlignment(appHorizontalButtonPanel, HasVerticalAlignment.ALIGN_MIDDLE);
 		uploadReportButton = new PushButton("Upload Report");
-		uploadReportButton.setHTML("<img width=\"70px\" src=\"images/report-upload2.png\" alt=\"Upload Report\" />");
+		uploadReportButton.setHTML("<img width=\"70px\" src=\"images/report-upload3.png\" alt=\"Upload Report\" />");
 		appHorizontalButtonPanel.add(uploadReportButton);
 		appHorizontalButtonPanel.setCellHorizontalAlignment(uploadReportButton, HasHorizontalAlignment.ALIGN_CENTER);
 		appHorizontalButtonPanel.setCellVerticalAlignment(uploadReportButton, HasVerticalAlignment.ALIGN_MIDDLE);
@@ -1264,7 +1264,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		logButton.setTitle("View Log");
 		logButton
-				.setHTML("<img width=\"70px\" src=\"images/view-log2.png\" alt=\"View Log\" />");
+				.setHTML("<img width=\"70px\" src=\"images/view-log3.png\" alt=\"View Log\" />");
 		logButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1286,7 +1286,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		logButton.setSize("70px", "");
 		logButton.setVisible(true);
 		deleteButton = new PushButton("Delete App");
-		deleteButton.setHTML("<img width=\"70px\" src=\"images/delete-app2.png\" alt=\"Delete App\" />");
+		deleteButton.setHTML("<img width=\"70px\" src=\"images/delete-app3.png\" alt=\"Delete App\" />");
 		appHorizontalButtonPanel.add(deleteButton);
 		appHorizontalButtonPanel.setCellHorizontalAlignment(deleteButton, HasHorizontalAlignment.ALIGN_CENTER);
 		appHorizontalButtonPanel.setCellVerticalAlignment(deleteButton, HasVerticalAlignment.ALIGN_MIDDLE);
@@ -1332,7 +1332,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appHorizontalButtonPanel.setCellHorizontalAlignment(downloadButton, HasHorizontalAlignment.ALIGN_CENTER);
 		downloadButton.setTitle("Download Reports");
 		downloadButton
-				.setHTML("<img width=\"70px\" src=\"images/report-download2.png\" alt=\"Download Zipped Reports\" />");
+				.setHTML("<img width=\"70px\" src=\"images/report-download3.png\" alt=\"Download Zipped Reports\" />");
 		downloadButton.setEnabled(true);
 		downloadButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -1364,7 +1364,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		downloadButton.setSize("70px", "");
 		
 		PushButton dowloadAppButton = new PushButton("Download App");
-		dowloadAppButton.setHTML("<img width=\"70px\" src=\"images/app-download2.png\" alt=\"Download App\" />");
+		dowloadAppButton.setHTML("<img width=\"70px\" src=\"images/app-download3.png\" alt=\"Download App\" />");
 		appHorizontalButtonPanel.add(dowloadAppButton);
 		dowloadAppButton.setWidth("70px");
 		appHorizontalButtonPanel.setCellHorizontalAlignment(dowloadAppButton, HasHorizontalAlignment.ALIGN_CENTER);
