@@ -998,7 +998,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								+ AppVetServletCommand.DOWNLOAD_LOG.name()
 								+ "&" + AppVetParameter.SESSIONID.value + "="
 								+ sessionId;
-						Window.open(url, "_blankf", "");
+						Window.open(url, "_self", "");
 					}
 				});
 		logMenubar.addItem(downloadAppVetLogMenuItem);
@@ -1436,7 +1436,7 @@ public class AppVetPanel extends DockLayoutPanel {
 							+ "&" + AppVetParameter.APPID.value + "=" + appId
 							+ "&" + AppVetParameter.SESSIONID.value + "="
 							+ sessionId;
-					Window.open(url, "_blank", "");
+					Window.open(url, "_self", "");
 				}
 			}
 		});

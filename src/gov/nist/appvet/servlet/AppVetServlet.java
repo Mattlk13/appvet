@@ -690,11 +690,12 @@ public class AppVetServlet extends HttpServlet {
 	private void downloadApp(HttpServletResponse response, String appid) {
 		AppInfo appInfo = new AppInfo(appid);
 		try {
+			log.debug("Returning app at " + appInfo.getAppFilePath());
 			File file = new File(appInfo.getAppFilePath());
 			if (!file.exists()) {
 				sendHttpResponse(response,
 						HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-						"Could not locate zipped report", true);
+						"Could not locate app file. Make sure AppVet KEEP_APPS property is true.", true);
 				return;
 			}
 			response.setContentType("application/octet-stream");
