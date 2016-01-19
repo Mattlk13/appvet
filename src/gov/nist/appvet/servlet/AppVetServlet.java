@@ -125,9 +125,10 @@ public class AppVetServlet extends HttpServlet {
 			return;
 		}
 		// Validate AppVet app ID. Required for all GET commands except
-		// GET_APPVET_LOG.
+		// GET_APPVET_LOG and DOWNLOAD_LOG.
 		String appId = request.getParameter(AppVetParameter.APPID.value);
-		if (command != AppVetServletCommand.GET_APPVET_LOG) {
+		if (command != AppVetServletCommand.GET_APPVET_LOG
+				&& command != AppVetServletCommand.DOWNLOAD_LOG) {
 			if (!isValidAppId(appId, command)) {
 				sendHttpResponse(response, HttpServletResponse.SC_BAD_REQUEST,
 						ErrorMessage.INVALID_APPID.getDescription(), true);
@@ -143,15 +144,13 @@ public class AppVetServlet extends HttpServlet {
 				return;
 			}
 		}
-		 /* Debug incoming parameters after validation.*/
-		 log.debug("Incoming GET message:\n" +
-		 "sessionId: " + sessionId + "\n" +
-		 "clientIpAddress: " + clientIpAddress  + "\n" +
-		 "requesterUserName: " + requesterUserName + "\n" +
-		 "requesterPassword: " + requesterPassword + "\n" +
-		 "commandStr: " + commandStr + "\n" +
-		 "appId: " + appId + "\n" +
-		 "toolId: " + toolId);
+		/* Debug incoming parameters after validation. */
+		log.debug("Incoming GET message:\n" + "sessionId: " + sessionId + "\n"
+				+ "clientIpAddress: " + clientIpAddress + "\n"
+				+ "requesterUserName: " + requesterUserName + "\n"
+				+ "requesterPassword: " + requesterPassword + "\n"
+				+ "commandStr: " + commandStr + "\n" + "appId: " + appId + "\n"
+				+ "toolId: " + toolId);
 		try {
 			// -------------------- Handle AppVet command ----------------------
 			switch (command) {
@@ -237,6 +236,16 @@ public class AppVetServlet extends HttpServlet {
 					break;
 				}
 				break;
+			case DOWNLOAD_LOG:
+				// Download AppVet log. Used by GUI
+				// and non-GUI clients.
+				downloadAppVetLog(response);
+				break;
+			case DOWNLOAD_APP:
+				// Download AppVet log. Used by GUI
+				// and non-GUI clients.
+				downloadApp(response, appId);
+				break;
 			default:
 				log.warn("Received unknown GET command: " + commandStr
 						+ " from IP: " + clientIpAddress + ". Ignoring...");
@@ -256,7 +265,7 @@ public class AppVetServlet extends HttpServlet {
 	/** Handler for HTTP POST messages.*/
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) {
-		
+
 		AppVetServletCommand command = null;
 		String commandStr = null;
 		String requesterUserName = null;
@@ -266,7 +275,7 @@ public class AppVetServlet extends HttpServlet {
 		String toolRisk = null;
 		String appId = null;
 		// Used for some reports that are passed as an HTML form parameter
-		//ByteArrayBody report = null;
+		// ByteArrayBody report = null;
 
 		// String appPackageName = null;
 		// String appVersion = null;
@@ -294,7 +303,7 @@ public class AppVetServlet extends HttpServlet {
 			String incomingValue = null;
 			while (iter.hasNext()) {
 				item = iter.next();
-				
+
 				if (item.isFormField()) {
 					incomingParameter = item.getFieldName();
 					// incomingValue = item.getString();
@@ -348,13 +357,12 @@ public class AppVetServlet extends HttpServlet {
 				}
 			}
 			// Debug incoming parameters after validation.
-			 log.debug("Incoming POST message:\n" + "sessionId: " + sessionId
-			 + "\n" + "clientIpAddress: " + clientIpAddress + "\n" +
-			 "requesterUserName: " + requesterUserName + "\n" +
-			 "requesterPassword: " + requesterPassword + "\n" + "commandStr: "
-			 + commandStr + "\n" + "appId: " + appId + "\n" + "toolId: " +
-			 toolId + "\ntoolRisk: " + toolRisk);
-			 
+			log.debug("Incoming POST message:\n" + "sessionId: " + sessionId
+					+ "\n" + "clientIpAddress: " + clientIpAddress + "\n"
+					+ "requesterUserName: " + requesterUserName + "\n"
+					+ "requesterPassword: " + requesterPassword + "\n"
+					+ "commandStr: " + commandStr + "\n" + "appId: " + appId
+					+ "\n" + "toolId: " + toolId + "\ntoolRisk: " + toolRisk);
 
 			incomingParameter = null;
 			incomingValue = null;
@@ -362,7 +370,8 @@ public class AppVetServlet extends HttpServlet {
 			if (!authenticateSession(sessionId, clientIpAddress)) {
 				if (!authenticateUserNameAndPassword(requesterUserName,
 						requesterPassword)) {
-					log.error("Authentication error for user '" + requesterUserName + "'");
+					log.error("Authentication error for user '"
+							+ requesterUserName + "'");
 					sendHttpResponse(response,
 							HttpServletResponse.SC_BAD_REQUEST,
 							ErrorMessage.AUTHENTICATION_ERROR.getDescription(),
@@ -387,7 +396,7 @@ public class AppVetServlet extends HttpServlet {
 			} else {
 				log.debug("Received valid command: " + command);
 			}
-			
+
 			// Validate AppVet app ID. Required only for SUBMIT_APP_REPORT.
 			if (command == AppVetServletCommand.SUBMIT_REPORT) {
 				if (!isValidAppId(appId, command)) {
@@ -399,7 +408,7 @@ public class AppVetServlet extends HttpServlet {
 				} else {
 					log.debug("Received valid app ID for report: " + appId);
 				}
-				
+
 			}
 			// Validate tool ID. Required only for GET_TOOL_REPORT command.
 			if (command == AppVetServletCommand.GET_TOOL_REPORT) {
@@ -472,19 +481,21 @@ public class AppVetServlet extends HttpServlet {
 
 					if (!Validate.hasValidReportFileExtension(fileItem
 							.getName())) {
-						log.error("File " + fileItem.getName() + " does not valid file extension.");
+						log.error("File " + fileItem.getName()
+								+ " does not valid file extension.");
 						sendHttpResponse(response,
 								HttpServletResponse.SC_BAD_REQUEST,
 								ErrorMessage.INVALID_REPORT_FILE_EXTENSION
 										.getDescription(), true);
 						return;
 					} else {
-						log.debug("File " + fileItem.getName() + " has valid file extension.");
+						log.debug("File " + fileItem.getName()
+								+ " has valid file extension.");
 						sendHttpResponse(response, HttpServletResponse.SC_OK,
 								"HTTP/1.1 200 Accepted", false);
 						appInfo = createAppInfo(appId, requesterUserName,
-								commandStr, toolId, toolRisk, fileItem,
-								null, clientIpAddress, response);
+								commandStr, toolId, toolRisk, fileItem, null,
+								clientIpAddress, response);
 					}
 				}
 
@@ -673,6 +684,48 @@ public class AppVetServlet extends HttpServlet {
 			} catch (final Exception e) {
 				log.error(e.toString());
 			}
+		}
+	}
+
+	private void downloadApp(HttpServletResponse response, String appid) {
+		AppInfo appInfo = new AppInfo(appid);
+		try {
+			File file = new File(appInfo.getAppFilePath());
+			if (!file.exists()) {
+				sendHttpResponse(response,
+						HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+						"Could not locate zipped report", true);
+				return;
+			}
+			response.setContentType("application/octet-stream");
+			response.setHeader("Content-Disposition", "attachment;filename=" + appInfo.getAppFileName());
+			response.setHeader("Cache-Control", "max-age=0");
+			response.setContentLength((int) file.length());
+			returnFile(response, file);
+			file = null;
+		} catch (final Exception e) {
+			log.error(e.toString());
+		}
+	}
+
+	private void downloadAppVetLog(HttpServletResponse response) {
+		try {
+			File file = new File(AppVetProperties.APPVET_LOG_PATH);
+			if (!file.exists()) {
+				sendHttpResponse(response,
+						HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+						"Could not locate AppVet log", true);
+				return;
+			}
+			response.setContentType("text/plain");
+			response.setHeader("Content-Disposition",
+					"attachment;filename=appvet_log.txt");
+			response.setHeader("Cache-Control", "max-age=0");
+			response.setContentLength((int) file.length());
+			returnFile(response, file);
+			file = null;
+		} catch (final Exception e) {
+			log.error(e.toString());
 		}
 	}
 
@@ -948,7 +1001,7 @@ public class AppVetServlet extends HttpServlet {
 
 	private void submitReport(String submitterUserName, AppInfo appInfo,
 			HttpServletResponse response) {
-		
+
 		if (appInfo == null) {
 			log.error("App info is null. Cannot submit report.");
 			return;
@@ -965,7 +1018,7 @@ public class AppVetServlet extends HttpServlet {
 			return;
 		}
 		reportName = tool.reportName;
-		
+
 		final boolean reportSaved = FileUtil.saveReportUpload(appInfo.appId,
 				reportName, appInfo.fileItem);
 		if (reportSaved) {
@@ -974,19 +1027,23 @@ public class AppVetServlet extends HttpServlet {
 				appInfo.log.error("appInfo.toolRisk is null");
 			}
 			if (appInfo.toolRisk.equals("HIGH")) {
-				appInfo.log.debug("Setting " + appInfo.toolId + " to HIGH risk.");
+				appInfo.log.debug("Setting " + appInfo.toolId
+						+ " to HIGH risk.");
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 						tool.toolId, ToolStatus.HIGH);
 			} else if (appInfo.toolRisk.equals("MODERATE")) {
-				appInfo.log.debug("Setting " + appInfo.toolId + " to MODERATE risk.");
+				appInfo.log.debug("Setting " + appInfo.toolId
+						+ " to MODERATE risk.");
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 						tool.toolId, ToolStatus.MODERATE);
 			} else if (appInfo.toolRisk.equals("LOW")) {
-				appInfo.log.debug("Setting " + appInfo.toolId + " to LOW risk.");
+				appInfo.log
+						.debug("Setting " + appInfo.toolId + " to LOW risk.");
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 						tool.toolId, ToolStatus.LOW);
 			} else if (appInfo.toolRisk.equals("ERROR")) {
-				appInfo.log.debug("Setting " + appInfo.toolId + " to ERROR status.");
+				appInfo.log.debug("Setting " + appInfo.toolId
+						+ " to ERROR status.");
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 						tool.toolId, ToolStatus.ERROR);
 			} else {

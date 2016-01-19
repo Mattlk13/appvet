@@ -43,6 +43,9 @@ public interface GWTServiceAsync {
 	void authenticate(String username, String password, boolean sso, 
 			AsyncCallback<ConfigInfoGwt> callback)
 			throws IllegalArgumentException;
+	
+	void clearLog(AsyncCallback<Boolean> callback)
+			throws IllegalArgumentException;
 
 	void deleteApp(DeviceOS os, String appId, String username,
 			AsyncCallback<Boolean> callback) throws IllegalArgumentException;

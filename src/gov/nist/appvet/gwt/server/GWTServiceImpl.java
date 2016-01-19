@@ -41,6 +41,8 @@ import gov.nist.appvet.shared.status.ToolStatusManager;
 import gov.nist.appvet.toolmgr.ToolAdapter;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -156,6 +158,21 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		} else {
 			log.error("Could not authenticate user: " + username);
 			return null;
+		}
+	}
+	
+	public Boolean clearLog()
+			throws IllegalArgumentException {
+		String appVetLogPath = AppVetProperties.APPVET_LOG_PATH;
+		log.debug("AppVet log path to clear: " + appVetLogPath);
+		PrintWriter pw;
+		try {
+			pw = new PrintWriter(appVetLogPath);
+			pw.close();
+			return true;
+		} catch (FileNotFoundException e) {
+			log.debug(e.toString());
+			return false;
 		}
 	}
 

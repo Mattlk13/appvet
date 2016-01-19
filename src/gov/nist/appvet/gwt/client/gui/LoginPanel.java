@@ -94,7 +94,8 @@ public class LoginPanel extends DockLayoutPanel {
 		simplePanel_2.setWidget(horizontalPanel);
 		horizontalPanel.setSize("100%", "100%");
 
-		Image orgLogo = new Image("images/org_logo.png");
+		// Your org_logo.png should be placed in $CATALINA_HOME/webapps/appvet_images directory.
+		Image orgLogo = new Image("../appvet_images/org_logo.png");
 		orgLogo.setSize("120px", "120px");
 		orgLogo.setAltText("Organizational logo here");
 		orgLogo.setTitle("Organizational logo here");

@@ -249,8 +249,9 @@ public class UserListDialogBox extends DialogBox {
 			public void onClick(ClickEvent event) {
 				final UserInfoGwt selected = usersSelectionModel
 						.getSelectedObject();
-				final DeleteUserConfirmDialogBox deleteConfirmDialogBox = new DeleteUserConfirmDialogBox(
-						selected.getUserName());
+				final YesNoConfirmDialog deleteConfirmDialogBox = new YesNoConfirmDialog(
+						"<p align=\"center\">\r\nAre you sure you want to delete user"
+								+ " '" + selected.getUserName() + "'?\r\n</p>");
 				deleteConfirmDialogBox.setText("Confirm Delete");
 				deleteConfirmDialogBox.center();
 				deleteConfirmDialogBox.cancelButton.setFocus(true);

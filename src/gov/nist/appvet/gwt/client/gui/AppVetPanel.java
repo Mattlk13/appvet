@@ -28,12 +28,14 @@ import gov.nist.appvet.gwt.client.gui.dialog.MessageDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.ReportUploadDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.UserAcctDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.UserListDialogBox;
+import gov.nist.appvet.gwt.client.gui.dialog.YesNoConfirmDialog;
 import gov.nist.appvet.gwt.client.gui.table.appslist.AppsListPagingDataGrid;
 import gov.nist.appvet.gwt.shared.AppInfoGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolStatusGwt;
 import gov.nist.appvet.gwt.shared.UserInfoGwt;
+import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.shared.analysis.AnalysisType;
 import gov.nist.appvet.shared.appvetparameters.AppVetParameter;
 import gov.nist.appvet.shared.os.DeviceOS;
@@ -54,11 +56,17 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.ErrorEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.thirdparty.javascript.jscomp.CheckLevel;
+import com.google.gwt.thirdparty.javascript.jscomp.ErrorHandler;
+import com.google.gwt.thirdparty.javascript.jscomp.JSError;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
@@ -132,7 +140,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	private static MessageDialogBox messageDialogBox = null;
 	private static AboutDialogBox aboutDialogBox = null;
 	private static UserListDialogBox usersDialogBox = null;
-	private static DeleteAppConfirmDialogBox deleteConfirmDialogBox = null;
+	private static YesNoConfirmDialog deleteConfirmDialogBox = null;
 	private static ReportUploadDialogBox reportUploadDialogBox = null;
 	private static UserAcctDialogBox userAcctDialogBox = null;
 	public final Label statusMessageLabel = new Label("");
@@ -147,7 +155,6 @@ public class AppVetPanel extends DockLayoutPanel {
 	private static boolean searchMode = false;
 	private MenuItem accountMenuItem = null;
 	public static boolean timeoutMessageDisplayed = false;
-	
 
 	class AppListHandler implements SelectionChangeEvent.Handler {
 
@@ -199,10 +206,11 @@ public class AppVetPanel extends DockLayoutPanel {
 									appInfoIcon.setAltText("App Icon");
 
 									if (selectedApp.appStatus == AppStatus.REGISTERING) {
-										//log.info("Displaying REGISTERING");
+										// log.info("Displaying REGISTERING");
 										iconVersion++;
 										String URL = null;
-										if (PROXY_URL != null && !PROXY_URL.isEmpty()) {
+										if (PROXY_URL != null
+												&& !PROXY_URL.isEmpty()) {
 											URL = PROXY_URL;
 										} else {
 											URL = HOST_URL;
@@ -223,9 +231,10 @@ public class AppVetPanel extends DockLayoutPanel {
 												.setHTML("<b>Version: </b>N/A");
 										return;
 									} else if (selectedApp.appStatus == AppStatus.PENDING) {
-										//log.info("Displaying PENDING");
+										// log.info("Displaying PENDING");
 										String URL = null;
-										if (PROXY_URL != null && !PROXY_URL.isEmpty()) {
+										if (PROXY_URL != null
+												&& !PROXY_URL.isEmpty()) {
 											URL = PROXY_URL;
 										} else {
 											URL = HOST_URL;
@@ -235,9 +244,10 @@ public class AppVetPanel extends DockLayoutPanel {
 												+ defaultIcon;
 										appInfoIcon.setUrl(iconPath);
 									} else if (selectedApp.appStatus == AppStatus.PROCESSING) {
-										//log.info("Displaying PROCESSING");
+										// log.info("Displaying PROCESSING");
 										String URL = null;
-										if (PROXY_URL != null && !PROXY_URL.isEmpty()) {
+										if (PROXY_URL != null
+												&& !PROXY_URL.isEmpty()) {
 											URL = PROXY_URL;
 										} else {
 											URL = HOST_URL;
@@ -249,9 +259,10 @@ public class AppVetPanel extends DockLayoutPanel {
 												+ iconVersion;
 										appInfoIcon.setUrl(iconPath);
 									} else {
-										//log.info("Displaying OTHER");
+										// log.info("Displaying OTHER");
 										String URL = null;
-										if (PROXY_URL != null && !PROXY_URL.isEmpty()) {
+										if (PROXY_URL != null
+												&& !PROXY_URL.isEmpty()) {
 											URL = PROXY_URL;
 										} else {
 											URL = HOST_URL;
@@ -399,12 +410,14 @@ public class AppVetPanel extends DockLayoutPanel {
 									status = toolStatus.getStatusHtml();
 								}
 
-								return "<table>" + "<tr>\n"
+								return "<table>"
+										+ "<tr>\n"
 										+ "<td title=\"Tool name\" align=\"left\" width=\"185\">"
 										+ toolStatus.getToolDisplayName()
 										+ "</td>\n"
 										+ "<td title=\"Tool status\"  align=\"left\" width=\"120\">"
-										+ status + "</td>\n"
+										+ status
+										+ "</td>\n"
 										+ "<td title=\"Tool report\" align=\"left\" width=\"45\">"
 										+ toolStatus.getReport() + "</td>\n"
 										+ "</tr>\n" + "</table>";
@@ -412,7 +425,8 @@ public class AppVetPanel extends DockLayoutPanel {
 
 							public String getToolStatusHtmlDisplay(
 									ToolStatusGwt toolStatus) {
-								return "<table>" + "<tr>\n"
+								return "<table>"
+										+ "<tr>\n"
 										+ "<td title=\"Tool name\" align=\"left\" width=\"185\">"
 										+ toolStatus.getToolDisplayName()
 										+ "</td>\n"
@@ -564,9 +578,11 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		});
 	}
-	
+
 	public static void showTimeoutDialog() {
-		messageDialogBox = new MessageDialogBox("Your AppVet session will expire in less than 60 seconds. Please select OK to continue using AppVet.", false);
+		messageDialogBox = new MessageDialogBox(
+				"Your AppVet session will expire in less than 60 seconds. Please select OK to continue using AppVet.",
+				false);
 		messageDialogBox.setText("AppVet Timeout Warning");
 		messageDialogBox.center();
 		messageDialogBox.closeButton.setFocus(true);
@@ -577,7 +593,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				// Reset session timeout if close button clicked
 				if (!sessionTimeLeft(sessionExpirationLong)) {
 					showExpiredSessionMessage();
-					
+
 				} else {
 					sessionExpirationLong = new Date().getTime()
 							+ MAX_SESSION_IDLE_DURATION;
@@ -687,7 +703,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_5.setSize("100%", "");
 		northAppVetPanel.setCellWidth(horizontalPanel_5, "100%");
-		
+
 		Image image = new Image("images/appvet_logo.png");
 		horizontalPanel_5.add(image);
 		final HorizontalPanel horizontalPanel_6 = new HorizontalPanel();
@@ -754,7 +770,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel_6.setCellVerticalAlignment(searchButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 
-		Image orgLogo = new Image("images/org_logo.png");
+		// Your org_logo.png should be placed in $CATALINA_HOME/webapps/appvet-images directory.
+		Image orgLogo = new Image("../appvet_images/org_logo.png");
 		orgLogo.setSize("120px", "120px");
 		orgLogo.setAltText("Organizational logo here");
 		orgLogo.setTitle("Organizational logo here");
@@ -780,9 +797,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appVetMenuBar.setSize("250px", "");
 		appVetMenuBar.setAnimationEnabled(false);
 		appVetMenuBar.setFocusOnHoverEnabled(true);
-		
-		
-		
+
 		final MenuBar userMenuBar = new MenuBar(true);
 		userMenuBar.setFocusOnHoverEnabled(true);
 
@@ -863,7 +878,8 @@ public class AppVetPanel extends DockLayoutPanel {
 											loginPanel.setTitle("Login panel");
 											final RootLayoutPanel rootLayoutPanel = RootLayoutPanel
 													.get();
-											rootLayoutPanel.setTitle("Root panel");
+											rootLayoutPanel
+													.setTitle("Root panel");
 											rootLayoutPanel.clear();
 											rootLayoutPanel.add(loginPanel);
 											System.gc();
@@ -878,7 +894,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		accountMenuItem.setHeight("");
 		final MenuBar helpMenuBar = new MenuBar(true);
 		helpMenuBar.setFocusOnHoverEnabled(true);
-		
+
 		final MenuItem helpMenuItem = new MenuItem("Help", true, helpMenuBar);
 		helpMenuBar.setHeight("");
 		final MenuItem aboutMenuItem = new MenuItem("About", false,
@@ -903,8 +919,8 @@ public class AppVetPanel extends DockLayoutPanel {
 				false, new Command() {
 					@Override
 					public void execute() {
-						Window.open("http://appvet.github.io/appvet",
-								"_blank", null);
+						Window.open("http://appvet.github.io/appvet", "_blank",
+								null);
 					}
 				});
 		helpMenuBar.addItem(documentationMenuItem);
@@ -925,8 +941,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		statusMessageLabel.setSize("420px", "18px");
 		final MenuBar adminMenuBar = new MenuBar(true);
 		adminMenuBar.setFocusOnHoverEnabled(true);
-		
-		
+
 		final MenuBar logMenubar = new MenuBar(true);
 		logMenubar.setFocusOnHoverEnabled(true);
 		final MenuItem mntmAppVetLog = new MenuItem("View", false,
@@ -948,42 +963,49 @@ public class AppVetPanel extends DockLayoutPanel {
 				new Command() {
 					@Override
 					public void execute() {
-						final String dateString = "?nocache"
-								+ new Date().getTime();
-						final String url = SERVLET_URL + dateString + "&"
-								+ AppVetParameter.COMMAND.value + "="
-								+ AppVetServletCommand.GET_APPVET_LOG.name()
-								+ "&" + AppVetParameter.SESSIONID.value + "="
-								+ sessionId;
-						Window.open(url, "_blank", "");
+						final YesNoConfirmDialog clearLogDialogBox = new YesNoConfirmDialog(
+								"<p align=\"center\">\r\nAre you sure you want to clear the AppVet log?\r\n</p>");
+						clearLogDialogBox.setText("Confirm Clear");
+						clearLogDialogBox.center();
+						clearLogDialogBox.cancelButton.setFocus(true);
+						clearLogDialogBox.cancelButton
+								.addClickHandler(new ClickHandler() {
+									@Override
+									public void onClick(ClickEvent event) {
+										killDialogBox(clearLogDialogBox);
+										return;
+									}
+								});
+						clearLogDialogBox.okButton
+								.addClickHandler(new ClickHandler() {
+									@Override
+									public void onClick(ClickEvent event) {
+										killDialogBox(clearLogDialogBox);
+										clearLog();
+									}
+								});
 					}
 				});
 		logMenubar.addItem(clearAppVetLogMenuItem);
-		final MenuItem downloadAppVetLogMenuItem = new MenuItem("Download", false,
-				new Command() {
+		final MenuItem downloadAppVetLogMenuItem = new MenuItem("Download",
+				false, new Command() {
 					@Override
 					public void execute() {
 						final String dateString = "?nocache"
 								+ new Date().getTime();
 						final String url = SERVLET_URL + dateString + "&"
 								+ AppVetParameter.COMMAND.value + "="
-								+ AppVetServletCommand.GET_APPVET_LOG.name()
+								+ AppVetServletCommand.DOWNLOAD_LOG.name()
 								+ "&" + AppVetParameter.SESSIONID.value + "="
 								+ sessionId;
-						Window.open(url, "_blank", "");
+						Window.open(url, "_blankf", "");
 					}
 				});
 		logMenubar.addItem(downloadAppVetLogMenuItem);
-		
-		
 
-
-		
 		final MenuItem adminMenuItem = new MenuItem("Admin", true, adminMenuBar);
 		adminMenuBar.addItem("Log", logMenubar);
-		
 
-		
 		final MenuItem usersMenuItem = new MenuItem("Users", false,
 				new Command() {
 					@Override
@@ -1007,10 +1029,10 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 		// Remove first element containing the lastUpdate timestamp
 		AppInfoGwt timeStampObject = null;
-//		if (initialApps != null && initialApps.size() > 0) {
-//			timeStampObject = initialApps.remove(0);
-//			lastAppsListUpdate = timeStampObject.getLastAppUpdate();
-//		}
+		// if (initialApps != null && initialApps.size() > 0) {
+		// timeStampObject = initialApps.remove(0);
+		// lastAppsListUpdate = timeStampObject.getLastAppUpdate();
+		// }
 		final HorizontalSplitPanel centerAppVetSplitPanel = new HorizontalSplitPanel();
 		centerAppVetSplitPanel.setTitle("AppVet split pane");
 		centerAppVetSplitPanel.setSplitPosition("65%");
@@ -1036,8 +1058,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		rightCenterPanel.setWidget(appInfoVerticalPanel);
 		appInfoVerticalPanel.setSize("100%", "");
 		final HorizontalPanel appInfoPanel = new HorizontalPanel();
-		appInfoPanel
-				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		appInfoPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		appInfoPanel.setStyleName("iconPanel");
 		appInfoVerticalPanel.add(appInfoPanel);
 		appInfoVerticalPanel.setCellWidth(appInfoPanel, "100%");
@@ -1148,7 +1169,8 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		});
 		final PushButton viewAllButton = new PushButton("View All");
-		viewAllButton.setHTML("<img width=\"70px\" src=\"images/view-all3.png\" alt=\"View All\" />");
+		viewAllButton
+				.setHTML("<img width=\"70px\" src=\"images/view-all3.png\" alt=\"View All\" />");
 		viewAllButton.setTitle("View All");
 		viewAllButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -1170,7 +1192,8 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		submitButton.setSize("70px", "");
 		appsListTable = new AppsListPagingDataGrid<AppInfoGwt>();
-		appsListTable.dataGrid.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
+		appsListTable.dataGrid
+				.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 		appsListTable.dataGrid.setStyleName("dataGrid");
 		dockPanel_1.add(appsListTable, DockPanel.CENTER);
 		dockPanel_1.setCellWidth(appsListTable, "100%");
@@ -1206,15 +1229,19 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel_2.setCellHorizontalAlignment(nistLogo,
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		nistLogo.setSize("50px", "13px");
-		
+
 		HorizontalPanel appHorizontalButtonPanel = new HorizontalPanel();
 		appInfoVerticalPanel.add(appHorizontalButtonPanel);
-		appInfoVerticalPanel.setCellVerticalAlignment(appHorizontalButtonPanel, HasVerticalAlignment.ALIGN_MIDDLE);
+		appInfoVerticalPanel.setCellVerticalAlignment(appHorizontalButtonPanel,
+				HasVerticalAlignment.ALIGN_MIDDLE);
 		uploadReportButton = new PushButton("Upload Report");
-		uploadReportButton.setHTML("<img width=\"70px\" src=\"images/report-upload3.png\" alt=\"Upload Report\" />");
+		uploadReportButton
+				.setHTML("<img width=\"70px\" src=\"images/report-upload3.png\" alt=\"Upload Report\" />");
 		appHorizontalButtonPanel.add(uploadReportButton);
-		appHorizontalButtonPanel.setCellHorizontalAlignment(uploadReportButton, HasHorizontalAlignment.ALIGN_CENTER);
-		appHorizontalButtonPanel.setCellVerticalAlignment(uploadReportButton, HasVerticalAlignment.ALIGN_MIDDLE);
+		appHorizontalButtonPanel.setCellHorizontalAlignment(uploadReportButton,
+				HasHorizontalAlignment.ALIGN_CENTER);
+		appHorizontalButtonPanel.setCellVerticalAlignment(uploadReportButton,
+				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel.setCellVerticalAlignment(uploadReportButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		uploadReportButton.setTitle("Upload Report");
@@ -1245,7 +1272,7 @@ public class AppVetPanel extends DockLayoutPanel {
 						reportUploadDialogBox.setText("Upload Report for "
 								+ selected.appName);
 						reportUploadDialogBox.center();
-						//reportUploadDialogBox.cancelButton.setFocus(true);
+						// reportUploadDialogBox.cancelButton.setFocus(true);
 						reportUploadDialogBox.toolNamesComboBox.setFocus(true);
 
 						reportUploadDialogBox.cancelButton
@@ -1266,8 +1293,10 @@ public class AppVetPanel extends DockLayoutPanel {
 		uploadReportButton.setSize("70px", "");
 		logButton = new PushButton("View Log");
 		appHorizontalButtonPanel.add(logButton);
-		appHorizontalButtonPanel.setCellHorizontalAlignment(logButton, HasHorizontalAlignment.ALIGN_CENTER);
-		appHorizontalButtonPanel.setCellVerticalAlignment(logButton, HasVerticalAlignment.ALIGN_MIDDLE);
+		appHorizontalButtonPanel.setCellHorizontalAlignment(logButton,
+				HasHorizontalAlignment.ALIGN_CENTER);
+		appHorizontalButtonPanel.setCellVerticalAlignment(logButton,
+				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel.setCellVerticalAlignment(logButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		logButton.setTitle("View Log");
@@ -1285,8 +1314,7 @@ public class AppVetPanel extends DockLayoutPanel {
 							+ AppVetParameter.COMMAND.value + "="
 							+ AppVetServletCommand.GET_APP_LOG.name() + "&"
 							+ AppVetParameter.APPID.value + "=" + appId + "&"
-							+ AppVetParameter.SESSIONID.value + "=" + sessionId
-							+ "&" + "guiclient=1";
+							+ AppVetParameter.SESSIONID.value + "=" + sessionId;
 					Window.open(url, "_blank", "");
 				}
 			}
@@ -1294,10 +1322,13 @@ public class AppVetPanel extends DockLayoutPanel {
 		logButton.setSize("70px", "");
 		logButton.setVisible(true);
 		deleteButton = new PushButton("Delete App");
-		deleteButton.setHTML("<img width=\"70px\" src=\"images/delete-app3.png\" alt=\"Delete App\" />");
+		deleteButton
+				.setHTML("<img width=\"70px\" src=\"images/delete-app3.png\" alt=\"Delete App\" />");
 		appHorizontalButtonPanel.add(deleteButton);
-		appHorizontalButtonPanel.setCellHorizontalAlignment(deleteButton, HasHorizontalAlignment.ALIGN_CENTER);
-		appHorizontalButtonPanel.setCellVerticalAlignment(deleteButton, HasVerticalAlignment.ALIGN_MIDDLE);
+		appHorizontalButtonPanel.setCellHorizontalAlignment(deleteButton,
+				HasHorizontalAlignment.ALIGN_CENTER);
+		appHorizontalButtonPanel.setCellVerticalAlignment(deleteButton,
+				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel.setCellVerticalAlignment(deleteButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		deleteButton.setTitle("Delete App");
@@ -1307,8 +1338,12 @@ public class AppVetPanel extends DockLayoutPanel {
 			public void onClick(ClickEvent event) {
 				final AppInfoGwt selected = appSelectionModel
 						.getSelectedObject();
-				deleteConfirmDialogBox = new DeleteAppConfirmDialogBox(
-						selected.appId, selected.appName);
+				// deleteConfirmDialogBox = new DeleteAppConfirmDialogBox(
+				// selected.appId, selected.appName);
+				deleteConfirmDialogBox = new YesNoConfirmDialog(
+						"<p align=\"center\">\r\nAre you sure you want to delete app #"
+								+ selected.appId + " '" + selected.appId
+								+ "'?\r\n</p>");
 				deleteConfirmDialogBox.setText("Confirm Delete");
 				deleteConfirmDialogBox.center();
 				deleteConfirmDialogBox.cancelButton.setFocus(true);
@@ -1336,9 +1371,11 @@ public class AppVetPanel extends DockLayoutPanel {
 		deleteButton.setSize("70px", "");
 		downloadButton = new PushButton("Download Reports");
 		// REMOVE REPORT DOWNLOAD BUTTON
-		//appHorizontalButtonPanel.add(downloadButton);
-		appHorizontalButtonPanel.setCellVerticalAlignment(downloadButton, HasVerticalAlignment.ALIGN_MIDDLE);
-		appHorizontalButtonPanel.setCellHorizontalAlignment(downloadButton, HasHorizontalAlignment.ALIGN_CENTER);
+		// appHorizontalButtonPanel.add(downloadButton);
+		appHorizontalButtonPanel.setCellVerticalAlignment(downloadButton,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		appHorizontalButtonPanel.setCellHorizontalAlignment(downloadButton,
+				HasHorizontalAlignment.ALIGN_CENTER);
 		downloadButton.setTitle("Download Reports");
 		downloadButton
 				.setHTML("<img width=\"70px\" src=\"images/report-download3.png\" alt=\"Download Zipped Reports\" />");
@@ -1359,7 +1396,7 @@ public class AppVetPanel extends DockLayoutPanel {
 							+ AppVetServletCommand.DOWNLOAD_REPORTS.name()
 							+ "&" + AppVetParameter.APPID.value + "=" + appId
 							+ "&" + AppVetParameter.SESSIONID.value + "="
-							+ sessionId + "&guiclient=1";
+							+ sessionId;
 					Window.open(url, "_self", "");
 				}
 			}
@@ -1371,14 +1408,42 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsListButtonPanel.setCellHorizontalAlignment(downloadButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		downloadButton.setSize("70px", "");
-		
+
 		downloadAppButton = new PushButton("Download App");
 		downloadAppButton.setTitle("Download App");
-		downloadAppButton.setHTML("<img width=\"70px\" src=\"images/app-download3.png\" alt=\"Download App\" />");
+		downloadAppButton
+				.setHTML("<img width=\"70px\" src=\"images/app-download3.png\" alt=\"Download App\" />");
 		appHorizontalButtonPanel.add(downloadAppButton);
 		downloadAppButton.setWidth("70px");
-		appHorizontalButtonPanel.setCellHorizontalAlignment(downloadAppButton, HasHorizontalAlignment.ALIGN_CENTER);
-		appHorizontalButtonPanel.setCellVerticalAlignment(downloadAppButton, HasVerticalAlignment.ALIGN_MIDDLE);
+		appHorizontalButtonPanel.setCellHorizontalAlignment(downloadAppButton,
+				HasHorizontalAlignment.ALIGN_CENTER);
+		appHorizontalButtonPanel.setCellVerticalAlignment(downloadAppButton,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		downloadAppButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				final AppInfoGwt selected = appSelectionModel
+						.getSelectedObject();
+				if (selected == null) {
+					showMessageDialog("AppVet Error", "No app is selected",
+							true);
+				} else {
+					final String appId = selected.appId;
+					final String dateString = "?nocache" + new Date().getTime();
+					final String url = SERVLET_URL + dateString + "&"
+							+ AppVetParameter.COMMAND.value + "="
+							+ AppVetServletCommand.DOWNLOAD_APP.name()
+							+ "&" + AppVetParameter.APPID.value + "=" + appId
+							+ "&" + AppVetParameter.SESSIONID.value + "="
+							+ sessionId;
+					Window.open(url, "_blank", "");
+				}
+			}
+		});
+		
+		
+		
+		
 		uploadReportButton.setVisible(true);
 		toolResultsHtml = new HTML("", true);
 		appInfoVerticalPanel.add(toolResultsHtml);
@@ -1398,6 +1463,26 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 		pollServer(userName);
 		scheduleResize();
+	}
+
+	public void clearLog() {
+		appVetServiceAsync.clearLog(new AsyncCallback<Boolean>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				showMessageDialog("AppVet Error",
+						"AppVet log could not be cleared", true);
+			}
+
+			@Override
+			public void onSuccess(Boolean logCleared) {
+				if (logCleared == false) {
+					showMessageDialog("AppVet Error",
+							"AppVet log could not be cleared", true);
+				} else {
+					showMessageDialog("AppVet", "AppVet log cleared", false);
+				}
+			}
+		});
 	}
 
 	public void deleteApp(final DeviceOS os, final String appid,
@@ -1482,7 +1567,7 @@ public class AppVetPanel extends DockLayoutPanel {
 							if (updatedAppsList.size() > 0) {
 								setUpdatedApps(updatedAppsList);
 							} else {
-								//log.info("No app updates available");
+								// log.info("No app updates available");
 							}
 						}
 					}
@@ -1492,7 +1577,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	@Override
 	public void onBrowserEvent(Event event) {
 		log.info("Browser event! " + event.getString());
-		//newBrowserEvent = true;
+		// newBrowserEvent = true;
 		sessionExpirationLong = new Date().getTime()
 				+ MAX_SESSION_IDLE_DURATION;
 	}
@@ -1502,9 +1587,9 @@ public class AppVetPanel extends DockLayoutPanel {
 		pollingTimer = new Timer() {
 			@Override
 			public void run() {
-//				if (newBrowserEvent) {
-//					newBrowserEvent = false;
-//				}
+				// if (newBrowserEvent) {
+				// newBrowserEvent = false;
+				// }
 				updateSessionExpiration();
 
 				getUpdatedApps(user);
@@ -1514,56 +1599,61 @@ public class AppVetPanel extends DockLayoutPanel {
 	}
 
 	public void resizeComponents() {
-		/** The following variable is the main variable to adjust when changing the 
-		    size of the org_logo.png image. The larger this image, the larger
-		    MARGIN_HEIGHT should be. Note these parameters will be rendered
-		    differently on Firefox, Chrome and IE, with Firefox being the most
-		    problematic, so check all three browsers! */
+		/**
+		 * The following variable is the main variable to adjust when changing
+		 * the size of the org_logo.png image. The larger this image, the larger
+		 * MARGIN_HEIGHT should be. Note these parameters will be rendered
+		 * differently on Firefox, Chrome and IE, with Firefox being the most
+		 * problematic, so check all three browsers!
+		 */
 		final int MARGIN_HEIGHT = 75;
 		final int appVetPanelHeight = getOffsetHeight();
 
 		// First adjust apps list table
-		final int appsListButtonPanelHeight = appsListButtonPanel.getOffsetHeight();
+		final int appsListButtonPanelHeight = appsListButtonPanel
+				.getOffsetHeight();
 		log.info("-------------------------------------");
 		log.info("appVetPanelHeight: " + appVetPanelHeight);
 		log.info("NORTH_PANEL_HEIGHT: " + NORTH_PANEL_HEIGHT);
 		log.info("SOUTH_PANEL_HEIGHT: " + SOUTH_PANEL_HEIGHT);
 		log.info("appsListButtonPanelHeight: " + appsListButtonPanelHeight);
 		log.info("MARGIN_HEIGHT: " + MARGIN_HEIGHT);
-		
+
 		final int appsListTableHeight = appVetPanelHeight
 				- (int) NORTH_PANEL_HEIGHT - (int) SOUTH_PANEL_HEIGHT
 				- appsListButtonPanelHeight - MARGIN_HEIGHT;
-		log.info("appsListTableHeight = " + appsListTableHeight + "px = " + " - " + (int) NORTH_PANEL_HEIGHT 
-				+ " - " + (int) SOUTH_PANEL_HEIGHT
-				+ " - " +  appsListButtonPanelHeight + " - " +  MARGIN_HEIGHT);
-		
+		log.info("appsListTableHeight = " + appsListTableHeight + "px = "
+				+ " - " + (int) NORTH_PANEL_HEIGHT + " - "
+				+ (int) SOUTH_PANEL_HEIGHT + " - " + appsListButtonPanelHeight
+				+ " - " + MARGIN_HEIGHT);
+
 		appsListTable.setSize("100%", appsListTableHeight + "px");
 		appsListTable.dataGrid.redraw();
 
-		
 		// Set apps list button panel width
-		//final int appVetPanelWidth = getOffsetWidth();
+		// final int appVetPanelWidth = getOffsetWidth();
 
-//		final int MARGIN_WIDTH = 10;
-//		final int appsListButtonPanelWidth = appsListButtonPanel.getOffsetWidth() - MARGIN_WIDTH;
-//		log.info("appsListButtonPanelWidth = " + appsListButtonPanelWidth );
-//		appsListButtonPanel.setSize(appsListButtonPanelWidth + "px", "100%");
+		// final int MARGIN_WIDTH = 10;
+		// final int appsListButtonPanelWidth =
+		// appsListButtonPanel.getOffsetWidth() - MARGIN_WIDTH;
+		// log.info("appsListButtonPanelWidth = " + appsListButtonPanelWidth );
+		// appsListButtonPanel.setSize(appsListButtonPanelWidth + "px", "100%");
 
-//		String width2 = appsListButtonPanelWidth + "px";
-//		String height2 = appsListButtonPanel.getOffsetHeight() + "px";
-//		appsListButtonPanel.setSize(width2, height2);
-//		
-//		// Set right panel
-//		final int rightCenterPanelHeight = appVetPanelHeight
-//				- (int) NORTH_PANEL_HEIGHT - (int) SOUTH_PANEL_HEIGHT - MARGIN_HEIGHT;
-//		
-//		log.info("rightCenterPanelHeight = " + rightCenterPanelHeight + "px = " + appVetPanelHeight 
-//				+ " - " + (int) NORTH_PANEL_HEIGHT 
-//				+ " - " + (int) SOUTH_PANEL_HEIGHT + " - " + MARGIN_HEIGHT);
-//		rightCenterPanel.setSize("100%", rightCenterPanelHeight + "px");
-		
-		
+		// String width2 = appsListButtonPanelWidth + "px";
+		// String height2 = appsListButtonPanel.getOffsetHeight() + "px";
+		// appsListButtonPanel.setSize(width2, height2);
+		//
+		// // Set right panel
+		// final int rightCenterPanelHeight = appVetPanelHeight
+		// - (int) NORTH_PANEL_HEIGHT - (int) SOUTH_PANEL_HEIGHT -
+		// MARGIN_HEIGHT;
+		//
+		// log.info("rightCenterPanelHeight = " + rightCenterPanelHeight +
+		// "px = " + appVetPanelHeight
+		// + " - " + (int) NORTH_PANEL_HEIGHT
+		// + " - " + (int) SOUTH_PANEL_HEIGHT + " - " + MARGIN_HEIGHT);
+		// rightCenterPanel.setSize("100%", rightCenterPanelHeight + "px");
+
 	}
 
 	// The size of the AppVet panel is 0 until displayed in rootlayoutpanel.
@@ -1745,22 +1835,24 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				});
 	}
-	
+
 	public static boolean sessionTimeLeft(long expirationTime) {
 		Date currentDate = new Date();
 		Date expiresDate = new Date(expirationTime);
-		
+
 		long diff = expiresDate.getTime() - currentDate.getTime();
-		
-		long diffSeconds = diff / 1000 % 60;  
-		long diffMinutes = diff / (60 * 1000) % 60; 
-		
+
+		long diffSeconds = diff / 1000 % 60;
+		long diffMinutes = diff / (60 * 1000) % 60;
+
 		if (diff < 0) {
-			log.warning("Time expired: " + diffMinutes + "min " + diffSeconds + "sec");
+			log.warning("Time expired: " + diffMinutes + "min " + diffSeconds
+					+ "sec");
 			return false;
 		} else {
-			log.info("Time remaining: " + diffMinutes + "min " + diffSeconds + "sec");
-			
+			log.info("Time remaining: " + diffMinutes + "min " + diffSeconds
+					+ "sec");
+
 			if (diffMinutes == 0 && timeoutMessageDisplayed == false) {
 				timeoutMessageDisplayed = true;
 				showTimeoutDialog();
