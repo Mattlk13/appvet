@@ -1372,7 +1372,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		deleteButton.setSize("70px", "");
 		downloadButton = new PushButton("Download Reports");
 		// REMOVE REPORT DOWNLOAD BUTTON
-		// appHorizontalButtonPanel.add(downloadButton);
+		appHorizontalButtonPanel.add(downloadButton);
 		appHorizontalButtonPanel.setCellVerticalAlignment(downloadButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appHorizontalButtonPanel.setCellHorizontalAlignment(downloadButton,

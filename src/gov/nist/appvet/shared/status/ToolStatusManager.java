@@ -61,6 +61,11 @@ public class ToolStatusManager {
 
 	public static synchronized boolean setToolStatus(DeviceOS os, String appId,
 			String toolId, ToolStatus toolStatus) {
+		
+		if (toolStatus == ToolStatus.ERROR){
+			log.error("------------- Setting " + toolId + " to ERROR for " + appId);
+		}
+		
 		if (os == DeviceOS.ANDROID) {
 			if (!Database.update("UPDATE androidtoolstatus SET " + toolId + "='"
 					+ toolStatus.name() + "' where appid='" + appId + "'")) {
