@@ -87,9 +87,10 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		log.debug("*** AUTH password: " + password);
 		log.debug("*** SSO On: " + sso);
 		
-		String user = "SELECT * FROM users " + "where username='" + username
+		String sql = "SELECT * FROM users " + "where username='" + username
 				+ "'";
-		if (!Database.exists(user)) {
+		log.debug("Checking if user exists: " + sql);
+		if (!Database.exists(sql)) {
 			log.warn("User '" + username + "' does not exists in db.");
 			
 			// Check if user is the AppVet default admin defined in
@@ -124,8 +125,10 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			
 			log.debug("User '" + username + "' authenticated");
 			
-			final String clientIpAddress = getThreadLocalRequest().getRemoteAddr();
-
+			String clientIpAddress = getThreadLocalRequest().getRemoteAddr();
+			if (clientIpAddress.equals("0:0:0:0:0:0:0:1")) {
+				clientIpAddress = "127.0.0.1";
+			}
 			if (Database.updateClientHost(username, clientIpAddress)) {
 				log.debug("Updated client IP '" + clientIpAddress + "' for user '" + username + "' updated.");
 			} else {

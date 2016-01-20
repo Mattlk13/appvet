@@ -76,7 +76,7 @@ public class Validate {
 
 	public static boolean isValidUserName(String userName) {
 		return userName != null && !userName.isEmpty()
-				&& isAlphaNumeric(userName)
+				//&& isAlphaNumeric(userName)
 				&& userName.length() <= USERNAME_MAX_LENGTH
 				&& userName.length() >= USERNAME_MIN_LENGTH;
 	}

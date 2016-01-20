@@ -292,6 +292,7 @@ public class AppVetPanel extends DockLayoutPanel {
 										uploadReportButton.setEnabled(true);
 										deleteButton.setEnabled(true);
 										downloadButton.setEnabled(true);
+										downloadAppButton.setEnabled(true);
 									} else {
 										appNameHtml = "<div id=\"endorsed\" style='color: dimgray; size:18; weight: bold'>"
 												+ appName + "</div>";
@@ -1460,6 +1461,7 @@ public class AppVetPanel extends DockLayoutPanel {
 			uploadReportButton.setEnabled(false);
 			deleteButton.setEnabled(false);
 			downloadButton.setEnabled(false);
+			downloadAppButton.setEnabled(false);
 		}
 		pollServer(userName);
 		scheduleResize();
@@ -1530,6 +1532,7 @@ public class AppVetPanel extends DockLayoutPanel {
 									logButton.setEnabled(false);
 									uploadReportButton.setEnabled(false);
 									deleteButton.setEnabled(false);
+									downloadAppButton.setEnabled(false);
 								}
 							}
 						}
@@ -1810,6 +1813,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				logButton.setEnabled(false);
 				uploadReportButton.setEnabled(false);
 				deleteButton.setEnabled(false);
+				downloadAppButton.setEnabled(false);
 			}
 		}
 	}

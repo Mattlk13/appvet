@@ -147,12 +147,19 @@ public class Database {
 					.prepareStatement(""
 							+ "REPLACE INTO users (username, lastName, firstName, org, dept, email, role) values "
 							+ "(?, ?, ?, ?, ?, ?, ?)");
+			log.debug("Admin Adding user: " + username);
 			preparedStatement.setString(1, username);
+			log.debug("Admin Adding lastname: " + userInfo.getLastName());
 			preparedStatement.setString(2, userInfo.getLastName());
+			log.debug("Admin Adding firstname: " + userInfo.getFirstName());
 			preparedStatement.setString(3, userInfo.getFirstName());
+			log.debug("Admin Adding organization: " + userInfo.getOrganization());
 			preparedStatement.setString(4, userInfo.getOrganization());
+			log.debug("Admin Adding dept: " + userInfo.getDepartment());
 			preparedStatement.setString(5, userInfo.getDepartment());
+			log.debug("Admin Adding email: " + userInfo.getEmail());
 			preparedStatement.setString(6, userInfo.getEmail());
+			log.debug("Admin Adding role: " + userInfo.getRole());
 			preparedStatement.setString(7, userInfo.getRole());
 			preparedStatement.executeUpdate();
 			if (userInfo.isChangePassword()) {
@@ -187,6 +194,14 @@ public class Database {
 		Connection connection = null;
 		Statement statement = null;
 		try {
+			log.debug("Admin Updating user: " + userInfo.getUserName());
+			log.debug("Admin Updating lastname: " + userInfo.getLastName());
+			log.debug("Admin Updating firstname: " + userInfo.getFirstName());
+			log.debug("Admin Updating organization: " + userInfo.getOrganization());
+			log.debug("Admin Updating dept: " + userInfo.getDepartment());
+			log.debug("Admin Updating email: " + userInfo.getEmail());
+			log.debug("Admin Updating role: " + userInfo.getRole());
+			
 			connection = getConnection();
 			statement = connection.createStatement();
 			statement.executeUpdate("UPDATE users SET " + "username='"
@@ -1073,9 +1088,13 @@ public class Database {
 
 	public static long getSessionExpiration(String sessionId,
 			String clientIpAddress) {
+		if (clientIpAddress.equals("0:0:0:0:0:0:0:1")) {
+			clientIpAddress = "127.0.0.1";
+		}
 		String sql = "SELECT expiretime FROM sessions "
 				+ "where (clientaddress='" + clientIpAddress + "') "
 				+ "AND sessionid='" + sessionId + "'";
+		//log.debug("Getting session expiration using: " + sql);
 		long sessionExpiration = getLong(sql);
 		return sessionExpiration;
 	}
