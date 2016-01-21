@@ -1223,6 +1223,7 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		HorizontalPanel appHorizontalButtonPanel = new HorizontalPanel();
 		appInfoVerticalPanel.add(appHorizontalButtonPanel);
+		appHorizontalButtonPanel.setWidth("400px");
 		appInfoVerticalPanel.setCellVerticalAlignment(appHorizontalButtonPanel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		uploadReportButton = new PushButton("Upload Report");
