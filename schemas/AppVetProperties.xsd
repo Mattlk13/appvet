@@ -31,34 +31,41 @@
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-				<xs:element name="Proxy" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
-			
-				<xs:element name="Logging" type="LoggingType"
-					maxOccurs="1" minOccurs="1">
+				<xs:element name="Proxy" type="xs:string" maxOccurs="1"
+					minOccurs="0"></xs:element>
+
+				<xs:element name="Logging" type="LoggingType" maxOccurs="1"
+					minOccurs="1">
 					<xs:annotation>
 						<xs:documentation>
 							The Logging element defines properties of
-							the AppVet logger.
+							the
+							AppVet logger.
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
 
-				<xs:element name="UseSSO" type="xs:boolean" maxOccurs="1" minOccurs="1"></xs:element>
-				<xs:element name="Sessions" type="SessionType"
-					maxOccurs="1" minOccurs="1">
+				<xs:element name="UseSSO" type="xs:boolean" maxOccurs="1"
+					minOccurs="1"></xs:element>
+                <xs:element name="OrgLogoAltText" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+                <xs:element name="Sessions" type="SessionType" maxOccurs="1"
+					minOccurs="1">
 					<xs:annotation>
 						<xs:documentation>
 							The Sessions defines properties of AppVet
-							user sessions.
+							user
+							sessions.
 						</xs:documentation>
 					</xs:annotation>
-				</xs:element>
+				</xs:element>
+
 				<xs:element name="Database" type="DatabaseType"
 					maxOccurs="1" minOccurs="1">
 					<xs:annotation>
 						<xs:documentation>
 							The Database element defines properties of
-							the AppVet database.
+							the
+							AppVet database.
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
@@ -77,7 +84,8 @@
 					<xs:annotation>
 						<xs:documentation>
 							The Apps element defines properties of
-							AppVet apps.
+							AppVet
+							apps.
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
