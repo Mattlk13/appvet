@@ -188,6 +188,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		configInfo.setAppVetServletUrl(AppVetProperties.SERVLET_URL);
 		configInfo.setAppVetVersion(AppVetProperties.APPVET_VERSION);
 		configInfo.setSessionId(sessionId);
+		configInfo.setOrgLogoAltText(AppVetProperties.ORG_LOGO_ALT_TEXT);
 		configInfo.setMaxIdleTime(AppVetProperties.MAX_SESSION_IDLE_DURATION);
 		configInfo.setGetUpdatesDelay(AppVetProperties.GET_UPDATES_DELAY);
 		configInfo.setSessionExpirationLong(sessionExpiration);

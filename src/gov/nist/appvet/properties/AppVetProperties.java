@@ -54,6 +54,7 @@ public class AppVetProperties {
 	public static String APKTOOL_HOME = null;  // For Android only
 	public static String APPVET_FILES_HOME = null;
 	public static boolean useSSO = false;
+	public static String ORG_LOGO_ALT_TEXT = null;
 
 	static {
 		System.out.println("*** Starting AppVet v" + APPVET_VERSION + " ***");
@@ -202,6 +203,13 @@ public class AppVetProperties {
 				xml.getXPathValue("/AppVet/ToolServices/Timeout")).intValue();
 		printVal("TOOL_TIMEOUT", APP_PROCESSING_TIMEOUT);
 		useSSO = new Boolean(xml.getXPathValue("/AppVet/UseSSO")).booleanValue();
+		ORG_LOGO_ALT_TEXT = xml.getXPathValue("/AppVet/OrgLogoAltText");
+		printVal("ORG_LOGO_ALT_TEXT", ORG_LOGO_ALT_TEXT);
+		if (ORG_LOGO_ALT_TEXT == null || ORG_LOGO_ALT_TEXT.isEmpty()) {
+			// Set to default
+			ORG_LOGO_ALT_TEXT = "Organization logo";
+		}
+		
 		MAX_SESSION_IDLE_DURATION = new Long(
 				xml.getXPathValue("/AppVet/Sessions/Timeout")).longValue();
 		printVal("MAX_SESSION_IDLE_DURATION", MAX_SESSION_IDLE_DURATION);

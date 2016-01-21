@@ -34,6 +34,7 @@ public class ConfigInfoGwt implements IsSerializable {
 	private String appVetUrl = null;
 	private String appVetServletUrl = null;
 	private String appVetVersion = null;
+	private String orgLogoAltText = null;
 	private String sessionId = null;
 	private long maxIdleTime = 0;
 	private int getUpdatesDelay = 0;
@@ -154,5 +155,13 @@ public class ConfigInfoGwt implements IsSerializable {
 
 	public void setAppvetProxyUrl(String appvetProxyUrl) {
 		this.appvetProxyUrl = appvetProxyUrl;
+	}
+
+	public String getOrgLogoAltText() {
+		return orgLogoAltText;
+	}
+
+	public void setOrgLogoAltText(String orgLogoAltText) {
+		this.orgLogoAltText = orgLogoAltText;
 	}
 }

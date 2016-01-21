@@ -23,7 +23,6 @@ import gov.nist.appvet.gwt.client.GWTService;
 import gov.nist.appvet.gwt.client.GWTServiceAsync;
 import gov.nist.appvet.gwt.client.gui.dialog.AboutDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.AppUploadDialogBox;
-import gov.nist.appvet.gwt.client.gui.dialog.DeleteAppConfirmDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.MessageDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.ReportUploadDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.UserAcctDialogBox;
@@ -35,7 +34,6 @@ import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolStatusGwt;
 import gov.nist.appvet.gwt.shared.UserInfoGwt;
-import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.shared.analysis.AnalysisType;
 import gov.nist.appvet.shared.appvetparameters.AppVetParameter;
 import gov.nist.appvet.shared.os.DeviceOS;
@@ -56,17 +54,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.ErrorEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.dom.client.LoadEvent;
-import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
-import com.google.gwt.thirdparty.javascript.jscomp.CheckLevel;
-import com.google.gwt.thirdparty.javascript.jscomp.ErrorHandler;
-import com.google.gwt.thirdparty.javascript.jscomp.JSError;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
@@ -85,7 +77,6 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
@@ -100,7 +91,6 @@ import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
-import com.google.gwt.user.client.ui.Button;
 
 /**
  * @author steveq@nist.gov
@@ -774,8 +764,9 @@ public class AppVetPanel extends DockLayoutPanel {
 		// Your org_logo.png should be placed in $CATALINA_HOME/webapps/appvet-images directory.
 		Image orgLogo = new Image("../appvet_images/org_logo.png");
 		orgLogo.setSize("120px", "120px");
-		orgLogo.setAltText("Organizational logo here");
-		orgLogo.setTitle("Organizational logo here");
+		String orgLogoAltText = configInfo.getOrgLogoAltText();
+		orgLogo.setAltText(orgLogoAltText);
+		orgLogo.setTitle(orgLogoAltText);
 		horizontalPanel_5.add(orgLogo);
 		horizontalPanel_5.setCellVerticalAlignment(orgLogo,
 				HasVerticalAlignment.ALIGN_BOTTOM);
@@ -1123,10 +1114,10 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsListButtonPanel.setCellHorizontalAlignment(horizontalPanel,
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		horizontalPanel.setSize("", "");
-		final PushButton submitButton = new PushButton("Submit");
+		final PushButton submitButton = new PushButton("Upload App");
 		submitButton.setTitle("Upload App");
 		submitButton
-				.setHTML("<img width=\"80px\" src=\"images/upload-app4.png\" alt=\"Upload App\" />");
+				.setHTML("<img width=\"80px\" src=\"images/upload-app.png\" alt=\"Upload App\" />");
 		submitButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1169,10 +1160,9 @@ public class AppVetPanel extends DockLayoutPanel {
 						});
 			}
 		});
-		final PushButton viewAllButton = new PushButton("View All");
-		viewAllButton
-				.setHTML("<img width=\"80px\" src=\"images/view-all4.png\" alt=\"View All\" />");
-		viewAllButton.setTitle("View All");
+		final PushButton viewAllButton = new PushButton("Show All Apps");
+		viewAllButton.setHTML("<img width=\"80px\" src=\"images/view-all.png\" alt=\"View All Apps\" />");
+		viewAllButton.setTitle("Show All Apps");
 		viewAllButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1236,8 +1226,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoVerticalPanel.setCellVerticalAlignment(appHorizontalButtonPanel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		uploadReportButton = new PushButton("Upload Report");
-		uploadReportButton
-				.setHTML("<img width=\"80px\" src=\"images/upload-report4.png\" alt=\"Upload Report\" />");
+		uploadReportButton.setHTML("<img width=\"80px\" src=\"images/upload-report.png\" alt=\"Upload Report\" />");
 		appHorizontalButtonPanel.add(uploadReportButton);
 		appHorizontalButtonPanel.setCellHorizontalAlignment(uploadReportButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
@@ -1293,6 +1282,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		uploadReportButton.setSize("80px", "");
 		logButton = new PushButton("View Log");
+		logButton.setHTML("<img width=\"80px\" src=\"images/view-log.png\" alt=\"View Log\"/>");
 		appHorizontalButtonPanel.add(logButton);
 		appHorizontalButtonPanel.setCellHorizontalAlignment(logButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
@@ -1301,8 +1291,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel.setCellVerticalAlignment(logButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		logButton.setTitle("View Log");
-		logButton
-				.setHTML("<img width=\"80px\" src=\"images/view-log4.png\" alt=\"View Log\" />");
 		logButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1323,8 +1311,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		logButton.setSize("80px", "");
 		logButton.setVisible(true);
 		deleteButton = new PushButton("Delete App");
-		deleteButton
-				.setHTML("<img width=\"80px\" src=\"images/delete-app4.png\" alt=\"Delete App\" />");
+		deleteButton.setHTML("<img width=\"80px\" src=\"images/delete-app.png\" alt=\"Delete App\" />");
 		appHorizontalButtonPanel.add(deleteButton);
 		appHorizontalButtonPanel.setCellHorizontalAlignment(deleteButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
@@ -1371,6 +1358,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		deleteButton.setSize("80px", "");
 		downloadButton = new PushButton("Download Reports");
+		downloadButton.setHTML("<img width=\"80px\" src=\"images/download-reports.png\" alt=\"Download Reports\" />");
 		// REMOVE REPORT DOWNLOAD BUTTON
 		appHorizontalButtonPanel.add(downloadButton);
 		appHorizontalButtonPanel.setCellVerticalAlignment(downloadButton,
@@ -1378,8 +1366,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		appHorizontalButtonPanel.setCellHorizontalAlignment(downloadButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		downloadButton.setTitle("Download Reports");
-		downloadButton
-				.setHTML("<img width=\"80px\" src=\"images/download-reports4.png\" alt=\"Download Zipped Reports\" />");
 		downloadButton.setEnabled(true);
 		downloadButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -1411,9 +1397,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		downloadButton.setSize("80px", "");
 
 		downloadAppButton = new PushButton("Download App");
+		downloadAppButton.setHTML("<img width=\"80px\" src=\"images/download-app.png\" alt=\"Download App\" />");
 		downloadAppButton.setTitle("Download App");
-		downloadAppButton
-				.setHTML("<img width=\"80px\" src=\"images/download-app4.png\" alt=\"Download App\" />");
 		appHorizontalButtonPanel.add(downloadAppButton);
 		downloadAppButton.setSize("80px", "");
 		appHorizontalButtonPanel.setCellHorizontalAlignment(downloadAppButton,

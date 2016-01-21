@@ -25,6 +25,7 @@
 
 	<UseSSO>false</UseSSO>
 
+	<OrgLogoAltText>My org logo ALT text!</OrgLogoAltText>
 	
 	<Sessions>
 		<Timeout>300000</Timeout>
