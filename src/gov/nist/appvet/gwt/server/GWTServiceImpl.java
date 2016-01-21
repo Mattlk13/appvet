@@ -202,7 +202,9 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 				if (androidTool != null
 						&& (androidTool.analysisType == AnalysisType.TESTTOOL || 
 						androidTool.analysisType == AnalysisType.REPORT ||
-						androidTool.analysisType == AnalysisType.AUDIT)) {
+						androidTool.analysisType == AnalysisType.AUDIT ||
+						androidTool.analysisType == AnalysisType.SUMMARY
+								)) {
 					ToolInfoGwt toolInfo = new ToolInfoGwt();
 					toolInfo.setOs(DeviceOS.ANDROID.name());
 					toolInfo.setName(androidTool.name);
@@ -231,7 +233,9 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 				if (iosTool != null
 						&& (iosTool.analysisType == AnalysisType.TESTTOOL ||
 						iosTool.analysisType == AnalysisType.REPORT ||
-						iosTool.analysisType == AnalysisType.AUDIT)) {
+						iosTool.analysisType == AnalysisType.AUDIT ||
+						iosTool.analysisType == AnalysisType.SUMMARY
+								)) {
 					ToolInfoGwt toolInfo = new ToolInfoGwt();
 					toolInfo.setOs(DeviceOS.IOS.name());
 					toolInfo.setName(iosTool.name);
@@ -383,7 +387,9 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			tool = tools.get(i);
 			if (tool.analysisType == AnalysisType.TESTTOOL
 					|| tool.analysisType == AnalysisType.REPORT ||
-					tool.analysisType == AnalysisType.AUDIT) {
+					tool.analysisType == AnalysisType.AUDIT ||
+					tool.analysisType == AnalysisType.SUMMARY
+					) {
 				toolStatus = getToolStatusHtml(os, sessionId, appId, tool);
 				if (toolStatus != null) {
 					toolStatusList.add(toolStatus);

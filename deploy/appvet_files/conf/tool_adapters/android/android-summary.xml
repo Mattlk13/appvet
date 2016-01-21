@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appvet:ToolAdapter 
+xmlns:appvet="http://appvet.github.io/appvet/schemas" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://appvet.github.io/appvet/schemas/ToolAdapter.xsd ">
+  <appvet:Description>
+    <appvet:Name>Carwash Summary</appvet:Name>
+    <!-- Audits will always have Id = 'audit' -->
+    <appvet:Id>audit</appvet:Id>
+    <appvet:Category>SUMMARY</appvet:Category>
+		<appvet:OS>ANDROID</appvet:OS>
+    <appvet:VendorName>NIST</appvet:VendorName>
+    <appvet:VendorWebsite>http://127.0.0.1:8080/appvet/tool_descriptions/org-audit.html</appvet:VendorWebsite>
+    <appvet:ReportFile>TXT</appvet:ReportFile>
+    <appvet:AppSubmit>APP_FILE</appvet:AppSubmit>
+    <appvet:AuthenticationRequired>false</appvet:AuthenticationRequired>	
+  </appvet:Description>
+  <appvet:Protocol>
+    <appvet:Internal/>
+  </appvet:Protocol>
+</appvet:ToolAdapter>

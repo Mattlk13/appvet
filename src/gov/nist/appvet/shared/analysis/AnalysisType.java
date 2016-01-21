@@ -25,8 +25,11 @@ package gov.nist.appvet.shared.analysis;
 public enum AnalysisType {
 	PREPROCESSOR, TESTTOOL,
 	// Use REPORT when tool is not accessible and tool report is uploaded
-	// manually.
-	REPORT, AUDIT;
+	// manually. Audit is used aas final risk assessment and SUMMARY is
+	// used to describe overall summary of app and risk assessment. AUDITs
+	// are located at the bottom of the app info panel while SUMMARYs are
+	// located at the top of the app info panel reports.
+	REPORT, AUDIT, SUMMARY;
 	private AnalysisType() {
 	}
 

@@ -322,8 +322,27 @@ public class AppVetPanel extends DockLayoutPanel {
 
 							public String getHtmlToolResults(String appId,
 									List<ToolStatusGwt> toolResults) {
+								/* Get summary report */
+								String statuses = "<hr><h3 title=\"Summary\" id=\"appInfoSectionHeader\">Summary</h3>\n";
+								int summaryCount = 0;
+
+								for (int i = 0; i < toolResults.size(); i++) {
+									AnalysisType analysisType = toolResults
+											.get(i).getAnalysisType();
+
+									if (analysisType == AnalysisType.SUMMARY) {
+										summaryCount++;
+										statuses += getToolStatusHtmlDisplay(toolResults
+												.get(i));
+									}
+								}
+
+								if (summaryCount == 0) {
+									statuses += getNAStatus();
+								}
+								
 								/* Get pre-processing analysis results */
-								String statuses = "<hr><h3 title=\"PreProcessing\" id=\"appInfoSectionHeader\">PreProcessing</h3>\n";
+								statuses += "<hr><h3 title=\"App Metadata\" id=\"appInfoSectionHeader\">App Metadata</h3>\n";
 								int preprocessorToolCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -342,7 +361,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 
 								// Get tool and manually-uploaded results.
-								statuses += "<hr><h3 title=\"Analyses\"  id=\"appInfoSectionHeader\">Analyses</h3>\n";
+								statuses += "<hr><h3 title=\"Tool Analyses\"  id=\"appInfoSectionHeader\">Tool Analyses</h3>\n";
 								int analysisToolCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -362,7 +381,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 
 								/* Get audit results */
-								statuses += "<hr><h3 title=\"Final Analysis\" id=\"appInfoSectionHeader\">Final Analysis</h3>\n";
+								statuses += "<hr><h3 title=\"Final Organization Determination\" id=\"appInfoSectionHeader\">Final Organization Determination</h3>\n";
 								int auditCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {

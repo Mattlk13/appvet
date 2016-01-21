@@ -354,6 +354,42 @@ public class ToolAdapter implements Runnable {
 		}
 
 	}
+	
+	
+	public static ToolAdapter getSummary(DeviceOS os) {
+
+		if (os == DeviceOS.ANDROID) {
+
+			for (int i = 0; i < AppVetProperties.androidTools.size(); i++) {
+				AnalysisType analysisType = AppVetProperties.androidTools
+						.get(i).analysisType;
+				if (analysisType == AnalysisType.SUMMARY) {
+					return AppVetProperties.androidTools.get(i);
+				}
+
+			}
+
+			log.error("Android summary report does not exist!");
+			return null;
+		} else if (os == DeviceOS.IOS) {
+
+			for (int i = 0; i < AppVetProperties.iosTools.size(); i++) {
+				AnalysisType analysisType = AppVetProperties.iosTools.get(i).analysisType;
+
+				if (analysisType == AnalysisType.SUMMARY) {
+					return AppVetProperties.iosTools.get(i);
+				}
+
+			}
+
+			log.error("iOS summary report does not exist!");
+			return null;
+		} else {
+			log.error("Invalid OS: " + os);
+			return null;
+		}
+
+	}
 
 	
 	public static String getHtmlReportString(String reportPath, AppInfo appInfo) {

@@ -109,11 +109,7 @@ public class ReportUploadDialogBox extends DialogBox {
 		hiddenSessionId.setName("sessionid");
 		hiddenSessionId.setValue(sessionId);
 		verticalPanel.add(hiddenSessionId);
-//		final Hidden hiddenGuiClient = new Hidden();
-//		hiddenAppid.setTitle("guiclient");
-//		hiddenGuiClient.setName("guiclient");
-//		hiddenGuiClient.setValue("1");
-//		verticalPanel.add(hiddenGuiClient);
+
 		final Hidden hiddenCommand = new Hidden();
 		hiddenCommand.setTitle("command");
 		hiddenCommand.setValue("SUBMIT_REPORT");
