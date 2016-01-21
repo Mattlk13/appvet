@@ -752,8 +752,6 @@ searchPanel {
 .
 {
 	margin-bottom: 5px;
-	margin-left: 5px;
-	padding-left: 5px;
 	border-top: solid Background;
 	border-right: solid Maroon;
 	border-bottom: solid Maroon;
@@ -783,7 +781,7 @@ searchPanel {
 }
 
 .toolResultsHtml {
-	padding-left: 5px;
+	margin-left: 5px;
 }
 
 .rightCenterPanel {

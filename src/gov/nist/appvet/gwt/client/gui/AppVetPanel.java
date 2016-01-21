@@ -1048,13 +1048,13 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoVerticalPanel
 				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		rightCenterPanel.setWidget(appInfoVerticalPanel);
-		appInfoVerticalPanel.setSize("100%", "");
+		appInfoVerticalPanel.setSize("", "");
 		final HorizontalPanel appInfoPanel = new HorizontalPanel();
 		appInfoPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		appInfoPanel.setStyleName("iconPanel");
 		appInfoVerticalPanel.add(appInfoPanel);
 		appInfoVerticalPanel.setCellWidth(appInfoPanel, "100%");
-		appInfoPanel.setSize("", "");
+		appInfoPanel.setSize("100%", "");
 		appInfoIcon = new Image("");
 		appInfoIcon.setVisible(false);
 		appInfoIcon.setAltText("");
@@ -1223,7 +1223,7 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		HorizontalPanel appHorizontalButtonPanel = new HorizontalPanel();
 		appInfoVerticalPanel.add(appHorizontalButtonPanel);
-		appHorizontalButtonPanel.setWidth("400px");
+		appHorizontalButtonPanel.setWidth("410px");
 		appInfoVerticalPanel.setCellVerticalAlignment(appHorizontalButtonPanel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		uploadReportButton = new PushButton("Upload Report");
