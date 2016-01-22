@@ -1,7 +1,7 @@
 You can edit or overwrite existing AppVet icons. Note that all button icons
 are of size 80px(w)x20px(h). Icons of any different size may lead to 
 unexpected results. Also, all button icons are transparent. Finally, image
-files must be the same as the original AppVet image files.
+file names must be the same as the original AppVet image files.
 
 The following files represent AppVet button icons:
 
