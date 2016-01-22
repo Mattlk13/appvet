@@ -1448,9 +1448,6 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		});
 		
-		
-		
-		
 		uploadReportButton.setVisible(true);
 		toolResultsHtml = new HTML("", true);
 		appInfoVerticalPanel.add(toolResultsHtml);
