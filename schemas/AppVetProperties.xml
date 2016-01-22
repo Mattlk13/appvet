@@ -31,7 +31,6 @@
 
 	<OrgLogoAltText>My org logo ALT text!</OrgLogoAltText>
 
-
 	<Sessions>
 		<Timeout>1800000</Timeout>
 		<GetUpdatesDelay>5000</GetUpdatesDelay>

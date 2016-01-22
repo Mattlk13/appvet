@@ -35,12 +35,12 @@
 
 	<xs:complexType name="DescriptionType">
 		<xs:sequence>
-			<xs:element name="Name" type="xs:string" maxOccurs="1" minOccurs="1">
+			<xs:element name="Name" type="xs:string" maxOccurs="1"
+				minOccurs="1">
 				<xs:annotation>
 					<xs:documentation>
 						The Name element defines the name of an AppVet
-						tool service. For
-						example,
+						tool service. For example,
 						<Name>My Android Tester</Name>
 						.
 					</xs:documentation>
@@ -50,8 +50,7 @@
 				<xs:annotation>
 					<xs:documentation>
 						The Id element defines the ID of the AppVet tool
-						service. The Id
-						element must be alphabetic
+						service. The Id element must be alphabetic
 						lowercase. For example,
 						<Id>myandroidtester</Id>
 						.
@@ -69,26 +68,25 @@
 
 
 			<xs:element name="OS" type="OsType" maxOccurs="1"
-				minOccurs="1"></xs:element>
+				minOccurs="1">
+			</xs:element>
 			<xs:element name="VendorName" type="xs:string" maxOccurs="1"
 				minOccurs="1">
 				<xs:annotation>
 					<xs:documentation>
 						The VendorName element defines the vendor name
-						of the AppVet tool
-						service. For example,
+						of the AppVet tool service. For example,
 						<Vendor>Example, Inc.</Vendor>
 						.
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="VendorWebsite" type="xs:anyURI" maxOccurs="1"
-				minOccurs="0">
+			<xs:element name="VendorWebsite" type="xs:anyURI"
+				maxOccurs="1" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>
 						The VendorWebsite element defines the vendor's
-						website. For
-						example,
+						website. For example,
 						<VendorWebsite>
 							https://www.example.com
 						</VendorWebsite>
@@ -99,18 +97,17 @@
 			<xs:element name="AppSubmit" maxOccurs="1" minOccurs="1"
 				type="AppSubmitType">
 			</xs:element>
+			<xs:element name="Restriction" type="RestrictionType" maxOccurs="1" minOccurs="1"></xs:element>
 			<xs:element name="AuthenticationRequired" type="xs:boolean"
 				maxOccurs="1" minOccurs="1">
 			</xs:element>
-			<xs:element name="AuthenticationParameters" type="xs:string" maxOccurs="1"
-				minOccurs="0">
+			<xs:element name="AuthenticationParameters" type="xs:string"
+				maxOccurs="1" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>
 						A comma-delimitted set of authentication
-						parameters.
-						Such parameters may include
-						username, password, license key, pin,
-						etc.
+						parameters. Such parameters may include
+						username, password, license key, pin, etc.
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
@@ -119,10 +116,8 @@
 				<xs:annotation>
 					<xs:documentation>
 						The ReportFile element defines the file type of
-						the tool service
-						report. The ReportFormat
-						element must be TXT, PDF, HTML, or RTF.
-						For
+						the tool service report. The ReportFormat
+						element must be TXT, PDF, HTML, or RTF. For
 						example,
 						<ReportFile>TXT</ReportFile>
 						.
@@ -448,7 +443,13 @@ assessment. </xs:documentation>
 		</xs:sequence>
 	</xs:complexType>
 
-
+	<xs:simpleType name="RestrictionType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NONE" />
+			<xs:enumeration value="RESTRICTED" />
+		</xs:restriction>
+	</xs:simpleType>
+	
 	<xs:simpleType name="MethodType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="POST" />
