@@ -34,8 +34,18 @@ public class ToolInfoGwt implements IsSerializable {
 	private String[] authenticationParameterNames = null;
 	private String reportFileType = null;
 	private String os = null; // From DeviceOS.name()
+	private String toolType = null;
+	private String restrictionType = null;
 
 	public ToolInfoGwt() {
+	}
+	
+	public String getType() {
+		return toolType;
+	}
+	
+	public void setType(String type) {
+		this.toolType = type;
 	}
 
 	public String getId() {
@@ -85,5 +95,13 @@ public class ToolInfoGwt implements IsSerializable {
 	public void setAuthenticationParameterNames(
 			String[] authenticationParameterNames) {
 		this.authenticationParameterNames = authenticationParameterNames;
+	}
+
+	public String getRestrictionType() {
+		return restrictionType;
+	}
+
+	public void setRestrictionType(String restrictionType) {
+		this.restrictionType = restrictionType;
 	}
 }

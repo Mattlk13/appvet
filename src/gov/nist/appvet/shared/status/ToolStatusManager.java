@@ -22,7 +22,7 @@ package gov.nist.appvet.shared.status;
 import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.shared.Database;
 import gov.nist.appvet.shared.Logger;
-import gov.nist.appvet.shared.analysis.AnalysisType;
+import gov.nist.appvet.shared.analysis.ToolType;
 import gov.nist.appvet.shared.os.DeviceOS;
 import gov.nist.appvet.toolmgr.ToolAdapter;
 
@@ -196,8 +196,8 @@ public class ToolStatusManager {
 			} else if (os == DeviceOS.IOS) {
 				tool = AppVetProperties.iosTools.get(i);
 			}
-			if (tool.analysisType == AnalysisType.TESTTOOL ||
-					tool.analysisType == AnalysisType.REPORT) {
+			if (tool.toolType == ToolType.TESTTOOL ||
+					tool.toolType == ToolType.REPORT) {
 				ToolStatus toolStatus = getToolStatus(os, appId,
 						tool.toolId);
 				if (toolStatus == ToolStatus.ERROR) {

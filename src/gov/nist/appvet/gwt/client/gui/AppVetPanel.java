@@ -34,7 +34,7 @@ import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolStatusGwt;
 import gov.nist.appvet.gwt.shared.UserInfoGwt;
-import gov.nist.appvet.shared.analysis.AnalysisType;
+import gov.nist.appvet.shared.analysis.ToolType;
 import gov.nist.appvet.shared.appvetparameters.AppVetParameter;
 import gov.nist.appvet.shared.os.DeviceOS;
 import gov.nist.appvet.shared.role.Role;
@@ -114,7 +114,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	private UserInfoGwt userInfo = null;
 	private String userName = null;
 	private PushButton deleteButton = null;
-	private PushButton downloadButton = null;
+	private PushButton downloadReportsButton = null;
 	private PushButton uploadReportButton = null;
 	private PushButton downloadAppButton = null;
 	private PushButton logButton = null;
@@ -281,12 +281,12 @@ public class AppVetPanel extends DockLayoutPanel {
 												+ appName + "</div>";
 										uploadReportButton.setEnabled(true);
 										deleteButton.setEnabled(true);
-										downloadButton.setEnabled(true);
+										downloadReportsButton.setEnabled(true);
 										downloadAppButton.setEnabled(true);
 									} else {
 										appNameHtml = "<div id=\"endorsed\" style='color: dimgray; size:18; weight: bold'>"
 												+ appName + "</div>";
-										downloadButton.setEnabled(false);
+										downloadReportsButton.setEnabled(false);
 									}
 
 									appInfoName.setHTML(appNameHtml);
@@ -327,10 +327,10 @@ public class AppVetPanel extends DockLayoutPanel {
 								int summaryCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
-									AnalysisType analysisType = toolResults
-											.get(i).getAnalysisType();
+									ToolType analysisType = toolResults
+											.get(i).getToolType();
 
-									if (analysisType == AnalysisType.SUMMARY) {
+									if (analysisType == ToolType.SUMMARY) {
 										summaryCount++;
 										statuses += getToolStatusHtmlDisplay(toolResults
 												.get(i));
@@ -346,10 +346,10 @@ public class AppVetPanel extends DockLayoutPanel {
 								int preprocessorToolCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
-									AnalysisType analysisType = toolResults
-											.get(i).getAnalysisType();
+									ToolType toolType = toolResults
+											.get(i).getToolType();
 
-									if (analysisType == AnalysisType.PREPROCESSOR) {
+									if (toolType == ToolType.PREPROCESSOR) {
 										preprocessorToolCount++;
 										statuses += getPreprocessorStatusHtmlDisplay(toolResults
 												.get(i));
@@ -365,11 +365,11 @@ public class AppVetPanel extends DockLayoutPanel {
 								int analysisToolCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
-									AnalysisType analysisType = toolResults
-											.get(i).getAnalysisType();
+									ToolType toolType = toolResults
+											.get(i).getToolType();
 
-									if (analysisType == AnalysisType.TESTTOOL
-											|| analysisType == AnalysisType.REPORT) {
+									if (toolType == ToolType.TESTTOOL
+											|| toolType == ToolType.REPORT) {
 										analysisToolCount++;
 										statuses += getToolStatusHtmlDisplay(toolResults
 												.get(i));
@@ -385,10 +385,10 @@ public class AppVetPanel extends DockLayoutPanel {
 								int auditCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
-									AnalysisType analysisType = toolResults
-											.get(i).getAnalysisType();
+									ToolType toolType = toolResults
+											.get(i).getToolType();
 
-									if (analysisType == AnalysisType.AUDIT) {
+									if (toolType == ToolType.AUDIT) {
 										auditCount++;
 										statuses += getToolStatusHtmlDisplay(toolResults
 												.get(i));
@@ -608,7 +608,7 @@ public class AppVetPanel extends DockLayoutPanel {
 					sessionExpirationLong = new Date().getTime()
 							+ MAX_SESSION_IDLE_DURATION;
 					timeoutMessageDisplayed = false;
-					log.info("Setting session timeout and display=false");
+					//log.info("Setting session timeout and display=false");
 				}
 
 			}
@@ -1073,7 +1073,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoPanel.setStyleName("iconPanel");
 		appInfoVerticalPanel.add(appInfoPanel);
 		appInfoVerticalPanel.setCellWidth(appInfoPanel, "100%");
-		appInfoPanel.setSize("100%", "");
+		appInfoPanel.setSize("", "");
 		appInfoIcon = new Image("");
 		appInfoIcon.setVisible(false);
 		appInfoIcon.setAltText("");
@@ -1272,6 +1272,7 @@ public class AppVetPanel extends DockLayoutPanel {
 							osToolCount++;
 						}
 					}
+
 					if (osToolCount == 0) {
 						showMessageDialog("AppVet Error",
 								"No tools available for this app.", true);
@@ -1377,17 +1378,17 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		});
 		deleteButton.setSize("80px", "");
-		downloadButton = new PushButton("Download Reports");
-		downloadButton.setHTML("<img width=\"80px\" src=\"images/download-reports.png\" alt=\"Download Reports\" />");
+		downloadReportsButton = new PushButton("Download Reports");
+		downloadReportsButton.setHTML("<img width=\"80px\" src=\"images/download-reports.png\" alt=\"Download Reports\" />");
 		// REMOVE REPORT DOWNLOAD BUTTON
-		appHorizontalButtonPanel.add(downloadButton);
-		appHorizontalButtonPanel.setCellVerticalAlignment(downloadButton,
+		appHorizontalButtonPanel.add(downloadReportsButton);
+		appHorizontalButtonPanel.setCellVerticalAlignment(downloadReportsButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		appHorizontalButtonPanel.setCellHorizontalAlignment(downloadButton,
+		appHorizontalButtonPanel.setCellHorizontalAlignment(downloadReportsButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		downloadButton.setTitle("Download Reports");
-		downloadButton.setEnabled(true);
-		downloadButton.addClickHandler(new ClickHandler() {
+		downloadReportsButton.setTitle("Download Reports");
+		downloadReportsButton.setEnabled(true);
+		downloadReportsButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				final AppInfoGwt selected = appSelectionModel
@@ -1408,13 +1409,13 @@ public class AppVetPanel extends DockLayoutPanel {
 				}
 			}
 		});
-		horizontalPanel.setCellHorizontalAlignment(downloadButton,
+		horizontalPanel.setCellHorizontalAlignment(downloadReportsButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel.setCellVerticalAlignment(downloadButton,
+		horizontalPanel.setCellVerticalAlignment(downloadReportsButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		appsListButtonPanel.setCellHorizontalAlignment(downloadButton,
+		appsListButtonPanel.setCellHorizontalAlignment(downloadReportsButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		downloadButton.setSize("80px", "");
+		downloadReportsButton.setSize("80px", "");
 
 		downloadAppButton = new PushButton("Download App");
 		downloadAppButton.setHTML("<img width=\"80px\" src=\"images/download-app.png\" alt=\"Download App\" />");
@@ -1465,7 +1466,7 @@ public class AppVetPanel extends DockLayoutPanel {
 			logButton.setEnabled(false);
 			uploadReportButton.setEnabled(false);
 			deleteButton.setEnabled(false);
-			downloadButton.setEnabled(false);
+			downloadReportsButton.setEnabled(false);
 			downloadAppButton.setEnabled(false);
 		}
 		pollServer(userName);
@@ -1584,8 +1585,6 @@ public class AppVetPanel extends DockLayoutPanel {
 
 	@Override
 	public void onBrowserEvent(Event event) {
-		log.info("Browser event! " + event.getString());
-		// newBrowserEvent = true;
 		sessionExpirationLong = new Date().getTime()
 				+ MAX_SESSION_IDLE_DURATION;
 	}
@@ -1620,47 +1619,23 @@ public class AppVetPanel extends DockLayoutPanel {
 		// First adjust apps list table
 		final int appsListButtonPanelHeight = appsListButtonPanel
 				.getOffsetHeight();
-		log.info("-------------------------------------");
-		log.info("appVetPanelHeight: " + appVetPanelHeight);
-		log.info("NORTH_PANEL_HEIGHT: " + NORTH_PANEL_HEIGHT);
-		log.info("SOUTH_PANEL_HEIGHT: " + SOUTH_PANEL_HEIGHT);
-		log.info("appsListButtonPanelHeight: " + appsListButtonPanelHeight);
-		log.info("MARGIN_HEIGHT: " + MARGIN_HEIGHT);
+//		log.info("-------------------------------------");
+//		log.info("appVetPanelHeight: " + appVetPanelHeight);
+//		log.info("NORTH_PANEL_HEIGHT: " + NORTH_PANEL_HEIGHT);
+//		log.info("SOUTH_PANEL_HEIGHT: " + SOUTH_PANEL_HEIGHT);
+//		log.info("appsListButtonPanelHeight: " + appsListButtonPanelHeight);
+//		log.info("MARGIN_HEIGHT: " + MARGIN_HEIGHT);
 
 		final int appsListTableHeight = appVetPanelHeight
 				- (int) NORTH_PANEL_HEIGHT - (int) SOUTH_PANEL_HEIGHT
 				- appsListButtonPanelHeight - MARGIN_HEIGHT;
-		log.info("appsListTableHeight = " + appsListTableHeight + "px = "
-				+ " - " + (int) NORTH_PANEL_HEIGHT + " - "
-				+ (int) SOUTH_PANEL_HEIGHT + " - " + appsListButtonPanelHeight
-				+ " - " + MARGIN_HEIGHT);
+//		log.info("appsListTableHeight = " + appsListTableHeight + "px = "
+//				+ " - " + (int) NORTH_PANEL_HEIGHT + " - "
+//				+ (int) SOUTH_PANEL_HEIGHT + " - " + appsListButtonPanelHeight
+//				+ " - " + MARGIN_HEIGHT);
 
 		appsListTable.setSize("100%", appsListTableHeight + "px");
 		appsListTable.dataGrid.redraw();
-
-		// Set apps list button panel width
-		// final int appVetPanelWidth = getOffsetWidth();
-
-		// final int MARGIN_WIDTH = 10;
-		// final int appsListButtonPanelWidth =
-		// appsListButtonPanel.getOffsetWidth() - MARGIN_WIDTH;
-		// log.info("appsListButtonPanelWidth = " + appsListButtonPanelWidth );
-		// appsListButtonPanel.setSize(appsListButtonPanelWidth + "px", "100%");
-
-		// String width2 = appsListButtonPanelWidth + "px";
-		// String height2 = appsListButtonPanel.getOffsetHeight() + "px";
-		// appsListButtonPanel.setSize(width2, height2);
-		//
-		// // Set right panel
-		// final int rightCenterPanelHeight = appVetPanelHeight
-		// - (int) NORTH_PANEL_HEIGHT - (int) SOUTH_PANEL_HEIGHT -
-		// MARGIN_HEIGHT;
-		//
-		// log.info("rightCenterPanelHeight = " + rightCenterPanelHeight +
-		// "px = " + appVetPanelHeight
-		// + " - " + (int) NORTH_PANEL_HEIGHT
-		// + " - " + (int) SOUTH_PANEL_HEIGHT + " - " + MARGIN_HEIGHT);
-		// rightCenterPanel.setSize("100%", rightCenterPanelHeight + "px");
 
 	}
 
@@ -1755,13 +1730,7 @@ public class AppVetPanel extends DockLayoutPanel {
 																		// ID
 					if (displayedAppItem.appId.equals(app.appId)) {
 						AppStatus displayedAppStatus = displayedAppItem.appStatus;
-						log.info("Displayed app status: "
-								+ displayedAppStatus.name()
-								+ " and Actual app status: "
-								+ actualAppStatus.name());
 						if (displayedAppStatus != actualAppStatus) {
-							log.info("CHANGING DISPLAYED STATUS TO: "
-									+ actualAppStatus.name());
 							appsListTable.set(0, app);
 
 						}
@@ -1855,13 +1824,12 @@ public class AppVetPanel extends DockLayoutPanel {
 		long diffMinutes = diff / (60 * 1000) % 60;
 
 		if (diff < 0) {
-			log.warning("Time expired: " + diffMinutes + "min " + diffSeconds
-					+ "sec");
+//			log.warning("Time expired: " + diffMinutes + "min " + diffSeconds
+//					+ "sec");
 			return false;
 		} else {
-			log.info("Time remaining: " + diffMinutes + "min " + diffSeconds
-					+ "sec");
-
+//			log.info("Time remaining: " + diffMinutes + "min " + diffSeconds
+//					+ "sec");
 			if (diffMinutes == 0 && timeoutMessageDisplayed == false) {
 				timeoutMessageDisplayed = true;
 				showTimeoutDialog();

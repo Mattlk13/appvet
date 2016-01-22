@@ -220,10 +220,7 @@ public class UserListDialogBox extends DialogBox {
 		addButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				log.info("Got Add click");
 				editUser(true);
-				log.info("End Add click");
-
 			}
 		});
 		addButton.setHTML("Add");
@@ -237,10 +234,7 @@ public class UserListDialogBox extends DialogBox {
 		editButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				log.info("Got Add click");
 				editUser(false);
-				log.info("End Add click");
-
 			}
 		});
 		final PushButton pshbtnNewButton = new PushButton("Delete");

@@ -17,40 +17,21 @@
  * Permission to use this software is contingent upon your acceptance
  * of the terms of this agreement.
  */
-package gov.nist.appvet.shared.status;
+package gov.nist.appvet.shared.analysis;
 
 /**
- * Enumeration of permissible tool statuses.
- * 
  * @author steveq@nist.gov
  */
-public enum ToolStatus {
-	// Tool not available.
-	NA,
-	// Tool report available (used only for SUMMARY reports)
-	AVAILABLE, 
-	// App was submitted to tool.
-	SUBMITTED,
-	// Tool found app to be of low-risk.
-	//PASS,
-	LOW,
-	// Tool found app to be of moderate-risk.
-	//WARNING,
-	MODERATE,
-	// Tool found app to be of high-risk.
-	//FAIL,
-	HIGH,
-	// Tool had an error processing the app.
-	ERROR;
-
-	private ToolStatus() {
+public enum RestrictionType {
+	NONE, RESTRICTED;
+	private RestrictionType() {
 	}
 
-	public static ToolStatus getStatus(String name) {
-		if (name != null) {
-			for (final ToolStatus s : ToolStatus.values()) {
-				if (name.equalsIgnoreCase(s.name())) {
-					return s;
+	public static RestrictionType getRestrictionType(String analysisName) {
+		if (analysisName != null) {
+			for (final RestrictionType a : RestrictionType.values()) {
+				if (analysisName.equalsIgnoreCase(a.name())) {
+					return a;
 				}
 			}
 		}

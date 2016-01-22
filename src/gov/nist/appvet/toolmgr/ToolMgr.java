@@ -25,7 +25,7 @@ import gov.nist.appvet.shared.Database;
 import gov.nist.appvet.shared.FileUtil;
 import gov.nist.appvet.shared.Logger;
 import gov.nist.appvet.shared.MemoryUtil;
-import gov.nist.appvet.shared.analysis.AnalysisType;
+import gov.nist.appvet.shared.analysis.ToolType;
 import gov.nist.appvet.shared.app.AppInfo;
 import gov.nist.appvet.shared.os.DeviceOS;
 import gov.nist.appvet.shared.status.AppStatus;
@@ -161,7 +161,7 @@ public class ToolMgr implements Runnable {
 							// Only process test tools (not preprocessors,
 							// audit, or
 							// manual reports).
-							if (tool.analysisType == AnalysisType.TESTTOOL) {
+							if (tool.toolType == ToolType.TESTTOOL) {
 								if (!appFileAvailable
 										&& tool.appSubmitType == AppSubmitType.APP_FILE) {
 									// Do not execute tool if app file is
@@ -187,7 +187,7 @@ public class ToolMgr implements Runnable {
 						// Wait for tools to complete
 						for (int i = 0; i < availableTools.size(); i++) {
 							final ToolAdapter tool = availableTools.get(i);
-							if (tool.analysisType == AnalysisType.TESTTOOL) {
+							if (tool.toolType == ToolType.TESTTOOL) {
 								if (!appFileAvailable
 										&& tool.appSubmitType == AppSubmitType.APP_FILE) {
 									// Do not wait for tool if app file was
@@ -201,7 +201,7 @@ public class ToolMgr implements Runnable {
 						// Stop tools if they are still running
 						for (int i = 0; i < availableTools.size(); i++) {
 							final ToolAdapter tool = availableTools.get(i);
-							if (tool.analysisType == AnalysisType.TESTTOOL) {
+							if (tool.toolType == ToolType.TESTTOOL) {
 								if (!appFileAvailable
 										&& tool.appSubmitType == AppSubmitType.APP_FILE) {
 									// Do not clean up tool if app file was

@@ -22,7 +22,7 @@ package gov.nist.appvet.shared.analysis;
 /**
  * @author steveq@nist.gov
  */
-public enum AnalysisType {
+public enum ToolType {
 	PREPROCESSOR, TESTTOOL,
 	// Use REPORT when tool is not accessible and tool report is uploaded
 	// manually. Audit is used aas final risk assessment and SUMMARY is
@@ -30,12 +30,12 @@ public enum AnalysisType {
 	// are located at the bottom of the app info panel while SUMMARYs are
 	// located at the top of the app info panel reports.
 	REPORT, AUDIT, SUMMARY;
-	private AnalysisType() {
+	private ToolType() {
 	}
 
-	public static AnalysisType getAnalysisType(String analysisName) {
+	public static ToolType getAnalysisType(String analysisName) {
 		if (analysisName != null) {
-			for (final AnalysisType a : AnalysisType.values()) {
+			for (final ToolType a : ToolType.values()) {
 				if (analysisName.equalsIgnoreCase(a.name())) {
 					return a;
 				}

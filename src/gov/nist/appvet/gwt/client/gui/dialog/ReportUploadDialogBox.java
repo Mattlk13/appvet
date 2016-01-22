@@ -65,6 +65,7 @@ public class ReportUploadDialogBox extends DialogBox {
 			String appid, String servletURL, DeviceOS os,
 			final ArrayList<ToolInfoGwt> tools) {
 		super(false, true);
+
 		setWidth("100%");
 		setAnimationEnabled(false);
 		final VerticalPanel dialogVPanel = new VerticalPanel();
@@ -119,12 +120,12 @@ public class ReportUploadDialogBox extends DialogBox {
 		hiddenToolID.setTitle("toolid");
 		hiddenToolID.setName("toolid");
 		verticalPanel.add(hiddenToolID);
-		
+
 		hiddenToolRisk = new Hidden();
 		hiddenToolRisk.setTitle("toolrisk");
 		hiddenToolRisk.setName("toolrisk");
 		verticalPanel.add(hiddenToolRisk);
-		
+
 		final Grid grid = new Grid(5, 2);
 		grid.setTitle("grid");
 		grid.setCellPadding(5);
@@ -147,7 +148,7 @@ public class ReportUploadDialogBox extends DialogBox {
 		analystTextBox.setAlignment(TextAlignment.LEFT);
 		analystTextBox.setText(username);
 		analystTextBox.setEnabled(false);
-		//analystTextBox.setReadOnly(true);
+		// analystTextBox.setReadOnly(true);
 		grid.setWidget(0, 1, analystTextBox);
 		grid.getCellFormatter().setHeight(0, 1, "18px");
 		grid.getCellFormatter().setWidth(0, 1, "200px");
@@ -165,7 +166,7 @@ public class ReportUploadDialogBox extends DialogBox {
 		appIdTextBox.setAlignment(TextAlignment.LEFT);
 		appIdTextBox.setText(appid);
 		appIdTextBox.setEnabled(false);
-		//appIdTextBox.setReadOnly(true);
+		// appIdTextBox.setReadOnly(true);
 		grid.setWidget(1, 1, appIdTextBox);
 		grid.getCellFormatter().setStyleName(1, 1, "reportUploadWidget");
 		appIdTextBox.setSize("220px", "18px");
@@ -192,15 +193,41 @@ public class ReportUploadDialogBox extends DialogBox {
 		toolNamesComboBox.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent arg0) {
+
 				int i = toolNamesComboBox.getSelectedIndex();
 				String selectedToolName = toolNamesComboBox.getItemText(i);
 				for (int j = 0; j < tools.size(); j++) {
-					ToolInfoGwt tool2 = tools.get(j);
-					if (tool2.getName().equals(selectedToolName)) {
-						String reportFileType = tool2.getReportFileType();
+					ToolInfoGwt selectedTool = tools.get(j);
+					if (selectedTool.getName().equals(selectedToolName)) {
+						String reportFileType = selectedTool
+								.getReportFileType();
+						if (reportFileType == null) {
+							log.warning("Report file type is null");
+						} 
 						String filter = "." + reportFileType;
 						fileUpload.getElement().setAttribute("accept", filter);
-						statusLabel.setText(selectedToolName + " requires a " + reportFileType + " report.");
+
+						String toolType = selectedTool.getType();
+
+						if (toolType.equals("SUMMARY")) {
+							if (toolRiskComboBox != null) {
+								toolRiskComboBox.setVisible(false);
+								statusLabel.setText(selectedToolName
+										+ " requires a " + reportFileType
+										+ " report.");
+							} else {
+								log.warning("toolRiskComboBox is null");
+							}
+						} else {
+							if (toolRiskComboBox != null) {
+								toolRiskComboBox.setVisible(true);
+								statusLabel.setText(selectedToolName
+										+ " requires a " + reportFileType
+										+ " report.");
+							} else {
+								log.warning("toolRiskComboBox is null");
+							}
+						}
 					}
 				}
 			}
@@ -222,17 +249,7 @@ public class ReportUploadDialogBox extends DialogBox {
 		grid.getCellFormatter().setHeight(3, 1, "18px");
 		grid.getCellFormatter().setStyleName(3, 1, "reportUploadWidget");
 		fileUpload.setSize("189px", "22px");
-		// Set report type filter for first tool in list
-		String selectedToolName = toolNamesComboBox.getItemText(0);
-		for (int k = 0; k < tools.size(); k++) {
-			ToolInfoGwt tool3 = tools.get(k);
-			if (tool3.getName().equals(selectedToolName)) {
-				String reportFileType = tool3.getReportFileType();
-				String filter = "." + reportFileType;
-				fileUpload.getElement().setAttribute("accept", filter);
-				statusLabel.setText(selectedToolName + " requires a " + reportFileType + " report.");
-			}
-		}
+
 		final Label riskLabel = new Label("Risk: ");
 		riskLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		grid.setWidget(4, 0, riskLabel);
@@ -285,9 +302,47 @@ public class ReportUploadDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		grid.getCellFormatter().setHorizontalAlignment(0, 1,
 				HasHorizontalAlignment.ALIGN_LEFT);
-		grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_RIGHT);
+		grid.getCellFormatter().setHorizontalAlignment(0, 0,
+				HasHorizontalAlignment.ALIGN_RIGHT);
 		
-		//statusLabel = new Label("");
+		// Set report type filter for first tool in list
+		String selectedToolName = toolNamesComboBox.getItemText(0);
+		for (int k = 0; k < tools.size(); k++) {
+			ToolInfoGwt tool3 = tools.get(k);
+			if (tool3.getName().equals(selectedToolName)) {
+				String reportFileType = tool3.getReportFileType();
+				String filter = "." + reportFileType;
+				fileUpload.getElement().setAttribute("accept", filter);
+				String filter2 = "." + reportFileType;
+				fileUpload.getElement().setAttribute("accept", filter2);
+
+				String toolType = tool3.getType();
+
+				if (toolType.equals("SUMMARY")) {
+
+					if (toolRiskComboBox != null) {
+						//toolRiskComboBox.setEnabled(false);
+						toolRiskComboBox.setVisible(false);
+						statusLabel.setText(selectedToolName
+								+ " requires a " + reportFileType
+								+ " report.");
+					} else {
+						log.warning("toolRiskComboBox is null");
+					}
+				} else {
+					if (toolRiskComboBox != null) {
+						toolRiskComboBox.setVisible(true);
+						statusLabel.setText(selectedToolName
+								+ " requires a " + reportFileType
+								+ " report.");
+					} else {
+						log.warning("toolRiskComboBox is null");
+					}
+				}
+			}
+		}
+
+		// statusLabel = new Label("");
 		dialogVPanel.add(statusLabel);
 		statusLabel.setStyleName("submissionRequirementsLabel");
 		verticalPanel.setCellWidth(statusLabel, "100%");
@@ -317,7 +372,7 @@ public class ReportUploadDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalButtonPanel.setCellHorizontalAlignment(cancelButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		
+
 		Label lblNewLabel = new Label("");
 		horizontalButtonPanel.add(lblNewLabel);
 		lblNewLabel.setWidth("50px");
@@ -335,6 +390,7 @@ public class ReportUploadDialogBox extends DialogBox {
 			public void onClick(ClickEvent event) {
 				// Set toolid first
 				String toolID = null;
+				String toolType = null;
 				int selectedToolNameIndex = toolNamesComboBox
 						.getSelectedIndex();
 				String selectedToolName = toolNamesComboBox
@@ -342,13 +398,20 @@ public class ReportUploadDialogBox extends DialogBox {
 				for (int i = 0; i < tools.size(); i++) {
 					if (selectedToolName.equals(tools.get(i).getName())) {
 						toolID = tools.get(i).getId();
+						toolType = tools.get(i).getType();
 						break;
 					}
 				}
-				
-				int selectedRiskIndex = toolRiskComboBox.getSelectedIndex();
-				String risk = toolRiskComboBox.getValue(selectedRiskIndex);
-				
+
+				String risk = null;
+				if (toolType.equals("SUMMARY")) {
+					// SUMMARY reports only have status of LOW (which is displayed as "AVAILABLE")
+					risk = "AVAILABLE";
+				} else {
+					int selectedRiskIndex = toolRiskComboBox.getSelectedIndex();
+					risk = toolRiskComboBox.getValue(selectedRiskIndex);
+				}
+
 				if (toolID != null) {
 					hiddenToolID.setValue(toolID);
 					hiddenToolRisk.setValue(risk);

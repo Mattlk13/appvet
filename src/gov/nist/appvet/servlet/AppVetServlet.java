@@ -1047,6 +1047,11 @@ public class AppVetServlet extends HttpServlet {
 						+ " to ERROR status.");
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 						tool.toolId, ToolStatus.ERROR);
+			} else if (appInfo.toolRisk.equals("AVAILABLE")) {
+				appInfo.log.debug("Setting " + appInfo.toolId
+						+ " to AVAILABLE status.");
+				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+						tool.toolId, ToolStatus.AVAILABLE);	
 			} else {
 				appInfo.log.error("Unknown risk type '" + appInfo.toolRisk
 						+ "' received from " + appInfo.ownerName);

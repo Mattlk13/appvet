@@ -27,7 +27,8 @@ import gov.nist.appvet.shared.Database;
 import gov.nist.appvet.shared.ErrorMessage;
 import gov.nist.appvet.shared.Logger;
 import gov.nist.appvet.shared.ReportFileType;
-import gov.nist.appvet.shared.analysis.AnalysisType;
+import gov.nist.appvet.shared.analysis.RestrictionType;
+import gov.nist.appvet.shared.analysis.ToolType;
 import gov.nist.appvet.shared.app.AppInfo;
 import gov.nist.appvet.shared.os.DeviceOS;
 import gov.nist.appvet.shared.status.ToolStatus;
@@ -74,7 +75,8 @@ public class ToolAdapter implements Runnable {
 	public String name = null; 
 	// Tool ID (and tools database table column name)
 	public String toolId = null; 
-	public AnalysisType analysisType = null;
+	public ToolType toolType = null;
+	public RestrictionType restrictionType = null;
 	public DeviceOS os = null;
 	public String vendorName = null;
 	public String webSite = null;
@@ -110,9 +112,9 @@ public class ToolAdapter implements Runnable {
 		toolId = xml.getXPathValue("/ToolAdapter/Description/Id");
 		checkNullString(configFileName, "id", toolId);
 
-		String analysisValue = xml
+		String toolValue = xml
 				.getXPathValue("/ToolAdapter/Description/Category");
-		analysisType = AnalysisType.getAnalysisType(analysisValue);
+		toolType = ToolType.getAnalysisType(toolValue);
 
 		String osStr = xml.getXPathValue("/ToolAdapter/Description/OS");
 		os = DeviceOS.getOS(osStr);
@@ -123,6 +125,10 @@ public class ToolAdapter implements Runnable {
 		vendorName = xml.getXPathValue("/ToolAdapter/Description/VendorName");
 
 		webSite = xml.getXPathValue("/ToolAdapter/Description/VendorWebsite");
+		
+		String restrictionValue = xml
+				.getXPathValue("/ToolAdapter/Description/Restriction");
+		restrictionType = RestrictionType.getRestrictionType(restrictionValue);
 
 		// Authorization requirements
 		final String booleanStringValue = xml
@@ -175,7 +181,8 @@ public class ToolAdapter implements Runnable {
 		log.debug("Adding Tool:\n" + "Config file: " + configFileName + "\n"
 				+ "Tool name: " + name + "\n" 
 				+ "Tool ID: " + toolId + "\n"
-				+ "Analysis type: " + analysisType + "\n" 
+				+ "Tool type: " + toolType + "\n" 
+				+ "Restriction type: " + restrictionType + "\n"
 				+ "OS: " + os.name()
 				+ "\n" + "Vendor: " + vendorName + "\n" 
 				+ "Website: " + webSite
@@ -320,14 +327,14 @@ public class ToolAdapter implements Runnable {
 	
 	
 
-	public static ToolAdapter getAudit(DeviceOS os) {
+/*	public static ToolAdapter getAudit(DeviceOS os) {
 
 		if (os == DeviceOS.ANDROID) {
 
 			for (int i = 0; i < AppVetProperties.androidTools.size(); i++) {
-				AnalysisType analysisType = AppVetProperties.androidTools
-						.get(i).analysisType;
-				if (analysisType == AnalysisType.AUDIT) {
+				ToolType toolType = AppVetProperties.androidTools
+						.get(i).toolType;
+				if (toolType == ToolType.AUDIT) {
 					return AppVetProperties.androidTools.get(i);
 				}
 
@@ -338,9 +345,9 @@ public class ToolAdapter implements Runnable {
 		} else if (os == DeviceOS.IOS) {
 
 			for (int i = 0; i < AppVetProperties.iosTools.size(); i++) {
-				AnalysisType analysisType = AppVetProperties.iosTools.get(i).analysisType;
+				ToolType analysisType = AppVetProperties.iosTools.get(i).toolType;
 
-				if (analysisType == AnalysisType.AUDIT) {
+				if (analysisType == ToolType.AUDIT) {
 					return AppVetProperties.iosTools.get(i);
 				}
 
@@ -353,17 +360,17 @@ public class ToolAdapter implements Runnable {
 			return null;
 		}
 
-	}
+	}*/
 	
 	
-	public static ToolAdapter getSummary(DeviceOS os) {
+/*	public static ToolAdapter getSummary(DeviceOS os) {
 
 		if (os == DeviceOS.ANDROID) {
 
 			for (int i = 0; i < AppVetProperties.androidTools.size(); i++) {
-				AnalysisType analysisType = AppVetProperties.androidTools
-						.get(i).analysisType;
-				if (analysisType == AnalysisType.SUMMARY) {
+				ToolType toolType = AppVetProperties.androidTools
+						.get(i).toolType;
+				if (toolType == ToolType.SUMMARY) {
 					return AppVetProperties.androidTools.get(i);
 				}
 
@@ -374,9 +381,9 @@ public class ToolAdapter implements Runnable {
 		} else if (os == DeviceOS.IOS) {
 
 			for (int i = 0; i < AppVetProperties.iosTools.size(); i++) {
-				AnalysisType analysisType = AppVetProperties.iosTools.get(i).analysisType;
+				ToolType toolType = AppVetProperties.iosTools.get(i).toolType;
 
-				if (analysisType == AnalysisType.SUMMARY) {
+				if (toolType == ToolType.SUMMARY) {
 					return AppVetProperties.iosTools.get(i);
 				}
 
@@ -389,7 +396,7 @@ public class ToolAdapter implements Runnable {
 			return null;
 		}
 
-	}
+	}*/
 
 	
 	public static String getHtmlReportString(String reportPath, AppInfo appInfo) {

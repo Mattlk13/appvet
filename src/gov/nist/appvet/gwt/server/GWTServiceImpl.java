@@ -31,7 +31,7 @@ import gov.nist.appvet.shared.Authenticate;
 import gov.nist.appvet.shared.Database;
 import gov.nist.appvet.shared.FileUtil;
 import gov.nist.appvet.shared.Logger;
-import gov.nist.appvet.shared.analysis.AnalysisType;
+import gov.nist.appvet.shared.analysis.ToolType;
 import gov.nist.appvet.shared.appvetparameters.AppVetParameter;
 import gov.nist.appvet.shared.os.DeviceOS;
 import gov.nist.appvet.shared.role.Role;
@@ -200,15 +200,14 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			for (int i = 0; i < androidTools.size(); i++) {
 				final ToolAdapter androidTool = androidTools.get(i);
 				if (androidTool != null
-						&& (androidTool.analysisType == AnalysisType.TESTTOOL || 
-						androidTool.analysisType == AnalysisType.REPORT ||
-						androidTool.analysisType == AnalysisType.AUDIT ||
-						androidTool.analysisType == AnalysisType.SUMMARY
-								)) {
+						&& (androidTool.toolType != ToolType.PREPROCESSOR)) {
 					ToolInfoGwt toolInfo = new ToolInfoGwt();
 					toolInfo.setOs(DeviceOS.ANDROID.name());
 					toolInfo.setName(androidTool.name);
 					toolInfo.setId(androidTool.toolId);
+					toolInfo.setType(androidTool.toolType.name());
+					toolInfo.setRestrictionType(androidTool.restrictionType.name());
+					
 					toolInfo.setAuthenticationRequired(androidTool.authenticationRequired);
 					if (toolInfo.requiresAuthentication()) {
 						toolInfo.setAuthenticationParameterNames(androidTool.authenticationParams);
@@ -231,15 +230,12 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			for (int i = 0; i < iosTools.size(); i++) {
 				final ToolAdapter iosTool = iosTools.get(i);
 				if (iosTool != null
-						&& (iosTool.analysisType == AnalysisType.TESTTOOL ||
-						iosTool.analysisType == AnalysisType.REPORT ||
-						iosTool.analysisType == AnalysisType.AUDIT ||
-						iosTool.analysisType == AnalysisType.SUMMARY
-								)) {
+						&& (iosTool.toolType != ToolType.PREPROCESSOR)) {
 					ToolInfoGwt toolInfo = new ToolInfoGwt();
 					toolInfo.setOs(DeviceOS.IOS.name());
 					toolInfo.setName(iosTool.name);
 					toolInfo.setId(iosTool.toolId);
+					toolInfo.setType(iosTool.toolType.name());
 					toolInfo.setAuthenticationRequired(iosTool.authenticationRequired);
 					if (toolInfo.requiresAuthentication()) {
 						toolInfo.setAuthenticationParameterNames(iosTool.authenticationParams);
@@ -385,11 +381,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		// Tool and manual report uploaded statuses
 		for (int i = 0; i < tools.size(); i++) {
 			tool = tools.get(i);
-			if (tool.analysisType == AnalysisType.TESTTOOL
-					|| tool.analysisType == AnalysisType.REPORT ||
-					tool.analysisType == AnalysisType.AUDIT ||
-					tool.analysisType == AnalysisType.SUMMARY
-					) {
+			if (tool.toolType != ToolType.PREPROCESSOR) {
 				toolStatus = getToolStatusHtml(os, sessionId, appId, tool);
 				if (toolStatus != null) {
 					toolStatusList.add(toolStatus);
@@ -416,7 +408,8 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		} else {
 			websiteHrefTag = tool.name;
 		}
-		toolStatusGwt.setAnalysisType(tool.analysisType);
+		toolStatusGwt.setToolType(tool.toolType);
+		toolStatusGwt.setRestrictionType(tool.restrictionType);
 		toolStatusGwt.setToolDisplayName(websiteHrefTag);
 		boolean toolCompleted = false;
 		final ToolStatus toolStatus = ToolStatusManager.getToolStatus(os,
@@ -438,6 +431,12 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			toolCompleted = true;
 			toolStatusGwt
 					.setStatusHtml("<div id=\"tabledim\" style='color: gray'>N/A</div>");
+			
+		} else if (toolStatus == ToolStatus.AVAILABLE) {
+			toolCompleted = true;
+			toolStatusGwt
+					.setStatusHtml("<div id=\"tabledim\" style='color: black'>AVAILABLE</div>");	
+			
 		} else if (toolStatus == ToolStatus.HIGH) {
 			toolCompleted = true;
 			toolStatusGwt
