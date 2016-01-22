@@ -4,7 +4,7 @@ xmlns:appvet="http://appvet.github.io/appvet/schemas"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 xsi:schemaLocation="http://appvet.github.io/appvet/schemas/ToolAdapter.xsd ">
   <appvet:Description>
-    <appvet:Name>Carwash Summary</appvet:Name>
+    <appvet:Name>Analysis Summary</appvet:Name>
     <!-- Audits will always have Id = 'audit' -->
     <appvet:Id>androidsummary</appvet:Id>
     <appvet:Category>SUMMARY</appvet:Category>
