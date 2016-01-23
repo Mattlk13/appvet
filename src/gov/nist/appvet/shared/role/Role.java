@@ -30,13 +30,13 @@ public enum Role {
 	// An ANALYST is a user that can view all apps and add
 	// tool reports, but does not have access to other user accounts.
 	ANALYST, 
-    // An ORG_ANALYST is a user of the AppVet system that has access
-    // to the apps submitted by other organizational users. An ORG_ANALYST
+    // An ORG_ANALYST is a user of the AppVet system that can access
+    // all apps submitted by other organizational users. An ORG_ANALYST
     // can submit tool reports for apps belonging to organizational users
     // but cannot access other organizational user accounts.
     ORG_ANALYST,
-    // An DEPT_ANALYST is a user of the AppVet system that has access
-    // to the apps submitted by other departmental users of the same
+    // An DEPT_ANALYST is a user of the AppVet system that can access
+    // all apps submitted by other departmental users of the same
     // organization. An DEPT_ANALYST
     // can submit tool reports for apps belonging to departmental users
     // but cannot access other departmental user accounts.

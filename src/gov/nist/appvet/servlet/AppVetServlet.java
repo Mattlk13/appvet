@@ -110,12 +110,14 @@ public class AppVetServlet extends HttpServlet {
 						ErrorMessage.AUTHENTICATION_ERROR.getDescription(),
 						true);
 			} else {
-
+				// Username and password authenticated
 			}
 		} else {
+			// Session authenticated
 			requesterUserName = Database.getSessionUser(sessionId);
 		}
-		// Validate AppVet command.
+		
+		// Validate AppVet command
 		String commandStr = request.getParameter(AppVetParameter.COMMAND.value);
 		AppVetServletCommand command = AppVetServletCommand
 				.getCommand(commandStr);
@@ -135,6 +137,16 @@ public class AppVetServlet extends HttpServlet {
 				return;
 			}
 		}
+		
+		// Ensure user is authorized to access to app ID
+		boolean authorizedForAppId = 
+				requesterAuthorizedToAccessAppId(appId, requesterUserName);
+		if (!authorizedForAppId) {
+			sendHttpResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
+					ErrorMessage.AUTHORIZATION_ERROR.getDescription(), true);
+			return;
+		}
+		
 		// Validate tool ID. Required only for GET_TOOL_REPORT command.
 		String toolId = request.getParameter(AppVetParameter.TOOLID.value);
 		if (command == AppVetServletCommand.GET_TOOL_REPORT) {
@@ -193,7 +205,8 @@ public class AppVetServlet extends HttpServlet {
 					if (toolStatus == ToolStatus.ERROR
 							|| toolStatus == ToolStatus.LOW
 							|| toolStatus == ToolStatus.MODERATE
-							|| toolStatus == ToolStatus.HIGH) {
+							|| toolStatus == ToolStatus.HIGH
+							|| toolStatus == ToolStatus.AVAILABLE) {
 						returnReport(response, appId, toolId, clientIpAddress);
 					} else if (toolStatus != ToolStatus.NA) {
 						sendHttpResponse(response,
@@ -544,6 +557,79 @@ public class AppVetServlet extends HttpServlet {
 		toolMgr = new ToolMgr();
 		toolMgrThread = new Thread(toolMgr);
 		toolMgrThread.start();
+	}
+	
+	public boolean requesterAuthorizedToAccessAppId(String appId, String requesterUsername) {
+		
+		// Check if the owner is the requester
+		String ownerName = Database.getOwner(appId);
+		
+		if (ownerName.equals(requesterUsername)) {
+			// Owner is the requester
+			log.debug("Requester " + requesterUsername + " is the owner of app " + appId);
+			return true;
+		} else {
+			log.warn("Requester " + requesterUsername + " is not the owner of app " + appId);
+		}
+		
+		// Check if requester is an admin
+		Role requesterRole = Database.getRole(requesterUsername);
+		if (requesterRole == Role.ADMIN){
+			// Requester is an admin
+			log.debug("Admin " + requesterUsername + " is authorized to access app " + appId);
+			return true;
+		} else if (requesterRole == Role.ANALYST) {
+			// Requester is an analyst
+			log.debug("Analyst " + requesterUsername + " is authorized to access app " + appId);
+			return true;
+		} else {
+			log.warn("Requester " + requesterUsername + " is not an admin or analyst");
+		}
+		
+		// Check if requester is an ORG or DEPT analyst
+		if (requesterRole != Role.ORG_ANALYST) {
+			// Requester is not an org analyst
+			log.debug("Requester is not an org analyst. Aborting authorization");
+			return false;
+		} else if (requesterRole != Role.DEPT_ANALYST) {
+			log.debug("Requester is not a dept analyst. Aborting authorization");
+			return false;
+		}
+		
+		// Check if requester is in the same org or dept as the owner
+		if (requesterRole == Role.ORG_ANALYST) {
+			
+			String requesterOrg = Database.getOrganization(requesterUsername);
+			String ownerOrg = Database.getOrganization(ownerName);
+			
+			if (!ownerOrg.equals(requesterOrg)) {
+				// Owner org is not the same as requester org
+				log.debug("Owner org is not the same as requester org. Aborting authorization");
+				return false;
+			} else {
+				// Requester is ORG analyst and in same org
+				log.debug("ORG analyst " + requesterUsername + " is authorized to access app " + appId);
+				return true;
+			}
+			
+		} else if (requesterRole == Role.DEPT_ANALYST) {
+			
+			String requesterDept = Database.getDepartment(requesterUsername);
+			String ownerDept = Database.getDepartment(ownerName);
+			
+			if (!ownerDept.equals(requesterDept)) {
+				// Requester dept is not the same as owner dept
+				log.debug("Owner dept is not the same as requester dept. Aborting authorization");
+				return false;
+			} else {
+				// Requester is DEPT analyst and in same dept as owner
+				log.debug("DEPT analyst " + requesterUsername + " is authorized to access app " + appId);
+				return true;
+			}
+		}
+		
+		log.debug("Authorization failed for " + requesterUsername);
+		return false;
 	}
 
 	/** TODO: Search app store for metadata. */
