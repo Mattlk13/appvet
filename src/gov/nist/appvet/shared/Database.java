@@ -1173,7 +1173,7 @@ public class Database {
 		Date date = null;
 		try {
 			if (sessionId == null) {
-				log.warn("sessionID is null or has expired");
+				//log.warn("sessionID is null or has expired");
 				return -1;
 			}
 			if (clientIpAddress == null || clientIpAddress.isEmpty()) {

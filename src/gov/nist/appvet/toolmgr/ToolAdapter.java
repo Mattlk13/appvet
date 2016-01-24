@@ -324,79 +324,6 @@ public class ToolAdapter implements Runnable {
 		}
 
 	}
-	
-	
-
-/*	public static ToolAdapter getAudit(DeviceOS os) {
-
-		if (os == DeviceOS.ANDROID) {
-
-			for (int i = 0; i < AppVetProperties.androidTools.size(); i++) {
-				ToolType toolType = AppVetProperties.androidTools
-						.get(i).toolType;
-				if (toolType == ToolType.AUDIT) {
-					return AppVetProperties.androidTools.get(i);
-				}
-
-			}
-
-			log.error("Android audit report does not exist!");
-			return null;
-		} else if (os == DeviceOS.IOS) {
-
-			for (int i = 0; i < AppVetProperties.iosTools.size(); i++) {
-				ToolType analysisType = AppVetProperties.iosTools.get(i).toolType;
-
-				if (analysisType == ToolType.AUDIT) {
-					return AppVetProperties.iosTools.get(i);
-				}
-
-			}
-
-			log.error("iOS audit report does not exist!");
-			return null;
-		} else {
-			log.error("Invalid OS: " + os);
-			return null;
-		}
-
-	}*/
-	
-	
-/*	public static ToolAdapter getSummary(DeviceOS os) {
-
-		if (os == DeviceOS.ANDROID) {
-
-			for (int i = 0; i < AppVetProperties.androidTools.size(); i++) {
-				ToolType toolType = AppVetProperties.androidTools
-						.get(i).toolType;
-				if (toolType == ToolType.SUMMARY) {
-					return AppVetProperties.androidTools.get(i);
-				}
-
-			}
-
-			log.error("Android summary report does not exist!");
-			return null;
-		} else if (os == DeviceOS.IOS) {
-
-			for (int i = 0; i < AppVetProperties.iosTools.size(); i++) {
-				ToolType toolType = AppVetProperties.iosTools.get(i).toolType;
-
-				if (toolType == ToolType.SUMMARY) {
-					return AppVetProperties.iosTools.get(i);
-				}
-
-			}
-
-			log.error("iOS summary report does not exist!");
-			return null;
-		} else {
-			log.error("Invalid OS: " + os);
-			return null;
-		}
-
-	}*/
 
 	
 	public static String getHtmlReportString(String reportPath, AppInfo appInfo) {
@@ -524,31 +451,6 @@ public class ToolAdapter implements Runnable {
 									+ appInfo.appId + "'");
 							
 							paramValue = appInfo.appId;
-
-//							if (paramName.equals("appid")) {
-//								appInfo.log.debug("Found " + paramName + " = "
-//										+ "'APPVET_DEFINED' for tool '" + id
-//										+ "'. Setting to appid = '"
-//										+ appInfo.appId + "'");
-//								paramValue = appInfo.appId;
-//							} else if (paramName.equals("msgId")) {
-//								appInfo.log.debug("Found " + paramName + " = "
-//										+ "'APPVET_DEFINED' for tool '" + id
-//										+ "'. Setting to msgId = '"
-//										+ appInfo.appId + "'");
-//								paramValue = appInfo.appId;
-//								
-//								
-//							} else {
-//								appInfo.log
-//										.error("Found "
-//												+ paramName
-//												+ " = "
-//												+ "'APPVET_DEFINED' for tool '"
-//												+ id
-//												+ "' but no actual value is set by AppVet. Aborting.");
-//								return null;
-//							}
 							
 						}
 						
@@ -661,21 +563,19 @@ public class ToolAdapter implements Runnable {
 						&& userToolCredential.os.equals(os.name())) {
 
 					for (int j = 0; j < userToolCredential.authParamNames.length; j++) {
+						
 						String paramName = userToolCredential.authParamNames[j];
 						String paramValue = userToolCredential.authParamValues[j];
-//						log.debug("Adding " + appInfo.ownerName
-//								+ " tool credentials for " + id);
-//						authParamNames.add(paramName);
-//						authParamValues.add(paramValue);
+
 						if (paramValue == null || paramValue.isEmpty()
 								|| paramValue.equals("null")) {
-							log.warn("Tool authentication parameter value "
+							appInfo.log.warn("Tool authentication parameter value "
 									+ "cannot be null. Setting tool to NA");
 							ToolStatusManager.setToolStatus(appInfo.os,
 									appInfo.appId, this.toolId, ToolStatus.NA);
 							return;
 						} else {
-							log.debug("Adding " + appInfo.ownerName
+							appInfo.log.debug("Adding " + appInfo.ownerName
 									+ " tool credentials for " + toolId);
 							authParamNames.add(paramName);
 							authParamValues.add(paramValue);
@@ -789,8 +689,7 @@ public class ToolAdapter implements Runnable {
 							.toString();
 					if ((httpResponseVal.indexOf("HTTP/1.1 202 Accepted") > -1)
 							|| (httpResponseVal.indexOf("HTTP/1.1 200 OK") > -1)) {
-						appInfo.log.info("Received from " + toolId + ": "
-								+ httpResponseVal);
+						// Received 200 OK
 					} else if (httpResponseVal.indexOf("HTTP/1.1 404 Not Found") > -1) {
 						appInfo.log.error("Received from " + toolId + ": "
 								+ httpResponseVal
@@ -819,8 +718,8 @@ public class ToolAdapter implements Runnable {
 				final long endTime = endDate.getTime();
 				endDate = null;
 				final long elapsedTime = endTime - startTime;
-				appInfo.log.info(name + " elapsed: "
-						+ Logger.formatElapsed(elapsedTime));
+//				appInfo.log.info(name + " elapsed: "
+//						+ Logger.formatElapsed(elapsedTime));
 			} catch (final Exception e) {
 				appInfo.log.error(e.toString());
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,

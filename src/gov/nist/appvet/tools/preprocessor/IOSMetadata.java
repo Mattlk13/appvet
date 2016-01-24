@@ -22,7 +22,6 @@ package gov.nist.appvet.tools.preprocessor;
 import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.shared.Database;
 import gov.nist.appvet.shared.FileUtil;
-import gov.nist.appvet.shared.Logger;
 import gov.nist.appvet.shared.app.AppInfo;
 import gov.nist.appvet.shared.os.DeviceOS;
 import gov.nist.appvet.shared.status.ToolStatus;
@@ -49,8 +48,6 @@ import com.dd.plist.PropertyListParser;
  * @author steveq@nist.gov
  */
 public class IOSMetadata {
-
-	private static final Logger log = AppVetProperties.log;
 	
 	private static final DeviceOS OS = DeviceOS.IOS;
 
@@ -62,19 +59,19 @@ public class IOSMetadata {
 		
 		appinfoTool = ToolAdapter.getByToolId(OS, METADATA_TOOL_ID);
 		if (appinfoTool == null) {
-			log.error("iOS tool adapter 'appinfo' was not found. Cannot get app metadata.");
+			appInfo.log.error("iOS tool adapter 'appinfo' was not found. Cannot get app metadata.");
 			return false;
 		}
 		
-		log.debug("Acquiring iOS metadata for app " + appInfo.appId);
+		appInfo.log.debug("Acquiring iOS metadata for app " + appInfo.appId);
 		final String reportsPath = appInfo.getReportsPath();
 		if (reportsPath == null) {
-			log.error("Reports path is null for app " + appInfo.appId);
+			appInfo.log.error("Reports path is null for app " + appInfo.appId);
 			return false;
 		}
 	
 		if (appinfoTool.reportName == null) {
-			log.error("App info tool report name is null.");
+			appInfo.log.error("App info tool report name is null.");
 			return false;
 		}
 		
@@ -96,13 +93,13 @@ public class IOSMetadata {
 			if (ipaFile.exists()) {
 				if (ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 						appinfoTool.toolId, ToolStatus.SUBMITTED)) {
-					log.debug("Set " + appinfoTool.toolId + " status for app " + appInfo.appId);
+					appInfo.log.debug("Set " + appinfoTool.toolId + " status for app " + appInfo.appId);
 				} else {
-					log.error("Could not set " + appinfoTool.toolId + " status for app " + appInfo.appId);
+					appInfo.log.error("Could not set " + appinfoTool.toolId + " status for app " + appInfo.appId);
 					return false;
 				}
 			} else {
-				log.error("IPA file for app " + appInfo.appId + " does not exist.");
+				appInfo.log.error("IPA file for app " + appInfo.appId + " does not exist.");
 				return false;
 			}
 			String zipFilePath = appInfo.getIdPath() + "/" + appInfo.appName
@@ -118,13 +115,13 @@ public class IOSMetadata {
 			Enumeration<? extends ZipEntry> iosFileEntries = zipFile.entries();
 			
 			try {
-				log.debug("Examining IPA file entries for app " + appInfo.appId);
+				appInfo.log.debug("Examining IPA file entries for app " + appInfo.appId);
 				// Check if there is an iTunesArtwork file. If there isn't,
 				// we will need to scan below for a png file.
 				while (iosFileEntries.hasMoreElements()) {
 					ZipEntry entry = iosFileEntries.nextElement();
 					if (entry.getName().indexOf("iTunesArtwork") > -1) {
-						log.debug("Found IPA artwork for app " + appInfo.appId);
+						appInfo.log.debug("Found IPA artwork for app " + appInfo.appId);
 						iconFound = true;
 						InputStream inputStream = zipFile.getInputStream(entry);
 						int numBytesRead;
@@ -138,7 +135,7 @@ public class IOSMetadata {
 						inputStream.close();
 						fos.close();
 					} else if (entry.getName().indexOf(".plist") > -1) {
-						log.debug("Found plist for app " + appInfo.appId);
+						appInfo.log.debug("Found plist for app " + appInfo.appId);
 
 						// Extract the PLIST file from the zip file
 						InputStream inputStream = zipFile.getInputStream(entry);
@@ -184,7 +181,7 @@ public class IOSMetadata {
 
 				// Couldn't find icon, so just use default Apple icon
 				if (!iconFound) {
-					log.debug("Couldnt find icon for app " + appInfo.appId + ". Using default icon.");
+					appInfo.log.debug("Couldnt find icon for app " + appInfo.appId + ". Using default icon.");
 					String appIcon = null;
 					if (appInfo.os == DeviceOS.ANDROID) {
 						appIcon = "default_android_large.png";
@@ -194,12 +191,12 @@ public class IOSMetadata {
 					File sourceIcon = new File(AppVetProperties.APP_IMAGES
 							+ "/" + appIcon);
 					if (!sourceIcon.exists()) {
-						log.error("Default IOS or Android icon is missing from Tomcat/webapps/appvet_images. Aborting metadata processing.");
+						appInfo.log.error("Default IOS or Android icon is missing from Tomcat/webapps/appvet_images. Aborting metadata processing.");
 						return false;
 					}
 					File destIcon = new File(AppVetProperties.APP_IMAGES + "/"
 							+ appInfo.appId + ".png");
-					log.debug("Copying " + sourceIcon.getAbsolutePath() + " to " + 
+					appInfo.log.debug("Copying " + sourceIcon.getAbsolutePath() + " to " + 
 							destIcon.getAbsolutePath());
 					FileUtil.copyFile(sourceIcon, destIcon);
 				}
@@ -208,34 +205,34 @@ public class IOSMetadata {
 
 				// Get PLIST information
 				try {
-					log.debug("Getting plist info for app " + appInfo.appId);
+					appInfo.log.debug("Getting plist info for app " + appInfo.appId);
 					NSObject x = PropertyListParser.parse(new File(
 							destPlistPath));
 					// check the data in it
 					NSDictionary d = (NSDictionary) x;
 					playListName = d.get("playlistName");
 					if (playListName == null) {
-						log.warn("iOS playlist name is null. Setting to 'N/A'");
+						appInfo.log.warn("iOS playlist name is null. Setting to 'N/A'");
 						playListName.wrap("N/A");
 					}
 					softwareVersionBundleId = d.get("softwareVersionBundleId");
 					if (softwareVersionBundleId == null) {
-						log.warn("iOS software bundle ID is null. Setting to 'N/A'");
+						appInfo.log.warn("iOS software bundle ID is null. Setting to 'N/A'");
 						softwareVersionBundleId.wrap("N/A");
 					}
 					bundleVersion = d.get("bundleVersion");
 					if (bundleVersion == null) {
-						log.warn("iOS software version is null. Setting to 'N/A'");
+						appInfo.log.warn("iOS software version is null. Setting to 'N/A'");
 						bundleVersion.wrap("N/A");
 					}
 					releaseDate = d.get("releaseDate");
 					if (releaseDate == null) {
-						log.warn("iOS software release date is null. Setting to 'N/A'");
+						appInfo.log.warn("iOS software release date is null. Setting to 'N/A'");
 						releaseDate.wrap("N/A");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
-					log.error("Could not get plist info for app " + appInfo.appId);
+					appInfo.log.error("Could not get plist info for app " + appInfo.appId);
 					return false;
 				}
 
@@ -249,7 +246,7 @@ public class IOSMetadata {
 			appinfoReport = new BufferedWriter(
 					new FileWriter(appinfoReportPath));
 			if (appinfoReport == null) {
-				log.error("Metadata report for app " + appInfo.appId + " is null. Aborting metadata processing.");
+				appInfo.log.error("Metadata report for app " + appInfo.appId + " is null. Aborting metadata processing.");
 				return false;
 			}
 
@@ -277,30 +274,30 @@ public class IOSMetadata {
 			appinfoReport.write("File: \t\t" + appInfo.getAppFileName() + "\n");
 			appinfoReport.write("Date: \t\t" + currentDate + "\n\n");
 			if (playListName == null || playListName.toString() == null) {
-				log.warn("iOS playlist name is null. Setting app name to 'N/A'");
+				appInfo.log.warn("iOS playlist name is null. Setting app name to 'N/A'");
 				appInfo.appName = "N/A";
 			} else {
 				appInfo.appName = playListName.toString();
 			}
-			log.debug("Playlist Name: \t\t" + appInfo.appName + "\n");
+			appInfo.log.debug("Playlist Name: \t\t" + appInfo.appName + "\n");
 			appinfoReport.write("Playlist Name: \t\t" + appInfo.appName + "\n");
 
 			if (softwareVersionBundleId == null || softwareVersionBundleId.toString() == null) {
-				log.warn("iOS software bundle ID is null. Setting package name to 'N/A'");
+				appInfo.log.warn("iOS software bundle ID is null. Setting package name to 'N/A'");
 				appInfo.packageName = "N/A";
 			} else {
 				appInfo.packageName = softwareVersionBundleId.toString();
 			}
-			log.debug("Bundle ID: \t\t" + appInfo.packageName + "\n");
+			appInfo.log.debug("Bundle ID: \t\t" + appInfo.packageName + "\n");
 			appinfoReport.write("Bundle ID: \t\t" + appInfo.packageName + "\n");
 
 			if (bundleVersion == null || bundleVersion.toString() == null) {
-				log.warn("iOS bundle version is null. Setting version name to 'N/A'");
+				appInfo.log.warn("iOS bundle version is null. Setting version name to 'N/A'");
 				appInfo.versionName = "N/A";
 			} else {
 				appInfo.versionName = bundleVersion.toString();
 			}
-			log.debug("Bundle Version: \t" + appInfo.versionName
+			appInfo.log.debug("Bundle Version: \t" + appInfo.versionName
 					+ "\n");
 			appinfoReport.write("Bundle Version: \t" + appInfo.versionName
 					+ "\n");
@@ -317,7 +314,7 @@ public class IOSMetadata {
 			final String fileNameUpperCase = appInfo.getAppFileName()
 					.toUpperCase();
 			if (fileNameUpperCase == null) {
-				log.error("Filename upper case is null.");
+				appInfo.log.error("Filename upper case is null.");
 				return false;
 			}
 			if (fileNameUpperCase.endsWith(".IPA")) {
@@ -325,7 +322,7 @@ public class IOSMetadata {
 						appinfoTool.toolId, ToolStatus.SUBMITTED);
 
 			} else {
-				log.error("App " + appInfo.appId + " is not an .IPA file.");
+				appInfo.log.error("App " + appInfo.appId + " is not an .IPA file.");
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 						appinfoTool.toolId, ToolStatus.ERROR);
 				return false;
@@ -335,28 +332,28 @@ public class IOSMetadata {
 			if (Database.updateAppMetadata(appInfo.appId, appInfo.appName,
 					appInfo.packageName, appInfo.versionCode,
 					appInfo.versionName)) {
-				log.debug("Updated iOS metadata for app " + appInfo.appId);
+				appInfo.log.debug("Updated iOS metadata for app " + appInfo.appId);
 			} else {
-				log.error("Could not update iOS metadata for app " + appInfo.appId);
+				appInfo.log.error("Could not update iOS metadata for app " + appInfo.appId);
 				return false;
 			}
 
 			if (ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 					appinfoTool.toolId, ToolStatus.LOW)) {
-				log.debug("Updated tool status for app " + appInfo.appId);
+				appInfo.log.debug("Updated tool status for app " + appInfo.appId);
 			} else {
-				log.error("Could not update tool status for app " + appInfo.appId);
+				appInfo.log.error("Could not update tool status for app " + appInfo.appId);
 				return false;
 			}
 			appinfoReport
 					.write("\nStatus:\t\t<font color=\"black\">COMPLETED</font>\n");
-			log.debug("End iOS metadata preprocessing for app "
+			appInfo.log.debug("End iOS metadata preprocessing for app "
 					+ appInfo.appId);
 
 			return true;
 
 		} catch (final IOException e) {
-			log.error(e.toString());
+			appInfo.log.error(e.toString());
 			return false;
 		} finally {
 			try {
@@ -368,7 +365,7 @@ public class IOSMetadata {
 					appinfoReport = null;
 				}
 			} catch (final IOException e) {
-				log.error(e.toString());
+				appInfo.log.error(e.toString());
 			}
 		}
 	}

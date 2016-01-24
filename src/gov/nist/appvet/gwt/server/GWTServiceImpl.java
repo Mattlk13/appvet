@@ -57,8 +57,8 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = AppVetProperties.log;
 	static {
-		log.info("*** Starting GWT Service " + AppVetProperties.APPVET_VERSION
-				+ " on " + AppVetProperties.URL);
+//		log.debug("*** Starting GWT Service " + AppVetProperties.APPVET_VERSION
+//				+ " on " + AppVetProperties.URL);
 	}
 
 	@Override

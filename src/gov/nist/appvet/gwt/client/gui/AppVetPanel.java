@@ -97,8 +97,9 @@ import com.google.gwt.view.client.SingleSelectionModel;
  */
 @SuppressWarnings("deprecation")
 public class AppVetPanel extends DockLayoutPanel {
-	private static Logger log = Logger.getLogger("AppVetPanel"); // See
-	// appvet.gwt.xml
+
+	// See appvet.gwt.xml
+	private static Logger log = Logger.getLogger("AppVetPanel");
 	private SingleSelectionModel<AppInfoGwt> appSelectionModel = null;
 	private static long MAX_SESSION_IDLE_DURATION = 0;
 	private static int POLLING_INTERVAL = 0;
@@ -152,8 +153,10 @@ public class AppVetPanel extends DockLayoutPanel {
 		AppVetPanel appVetPanel = null;
 
 		public AppListHandler(AppVetPanel appVetPanel, ConfigInfoGwt configInfo) {
+
 			this.appVetPanel = appVetPanel;
 			this.configInfo = configInfo;
+
 		}
 
 		@Override
@@ -163,14 +166,18 @@ public class AppVetPanel extends DockLayoutPanel {
 					.getSelectedObject();
 
 			if (selectedApp != null) {
+
 				appVetServiceAsync.getToolsResults(selectedApp.os, sessionId,
 						selectedApp.appId,
 						new AsyncCallback<List<ToolStatusGwt>>() {
+
 							@Override
 							public void onFailure(Throwable caught) {
+
 								showMessageDialog("AppVet Error",
 										"System error retrieving app info",
 										true);
+
 							}
 
 							@Override
@@ -179,15 +186,23 @@ public class AppVetPanel extends DockLayoutPanel {
 
 								if ((toolsResults == null)
 										|| toolsResults.isEmpty()) {
+
 									showMessageDialog("AppVet Error: ",
 											"Could not retrieve app info.",
 											true);
+
 								} else {
+
 									String defaultIcon = null;
+
 									if (selectedApp.os == DeviceOS.ANDROID) {
+
 										defaultIcon = "default_android_large.png";
+
 									} else if (selectedApp.os == DeviceOS.IOS) {
+
 										defaultIcon = "default_ios_large.png";
+
 									}
 
 									String appNameHtml = null;
@@ -196,15 +211,21 @@ public class AppVetPanel extends DockLayoutPanel {
 									appInfoIcon.setAltText("App Icon");
 
 									if (selectedApp.appStatus == AppStatus.REGISTERING) {
+
 										// log.info("Displaying REGISTERING");
 										iconVersion++;
 										String URL = null;
 										if (PROXY_URL != null
 												&& !PROXY_URL.isEmpty()) {
+
 											URL = PROXY_URL;
+
 										} else {
+
 											URL = HOST_URL;
+
 										}
+
 										final String iconPath = URL
 												+ "/appvet_images/"
 												+ defaultIcon + "?v"
@@ -220,55 +241,82 @@ public class AppVetPanel extends DockLayoutPanel {
 										appInfoVersion
 												.setHTML("<b>Version: </b>N/A");
 										return;
+
 									} else if (selectedApp.appStatus == AppStatus.PENDING) {
+
 										// log.info("Displaying PENDING");
 										String URL = null;
 										if (PROXY_URL != null
 												&& !PROXY_URL.isEmpty()) {
+
 											URL = PROXY_URL;
+
 										} else {
+
 											URL = HOST_URL;
+
 										}
+
 										final String iconPath = URL
 												+ "/appvet_images/"
 												+ defaultIcon;
 										appInfoIcon.setUrl(iconPath);
+
 									} else if (selectedApp.appStatus == AppStatus.PROCESSING) {
+
 										// log.info("Displaying PROCESSING");
 										String URL = null;
 										if (PROXY_URL != null
 												&& !PROXY_URL.isEmpty()) {
+
 											URL = PROXY_URL;
+
 										} else {
+
 											URL = HOST_URL;
+
 										}
+
 										iconVersion++;
+
 										final String iconPath = URL
 												+ "/appvet_images/"
 												+ selectedApp.appId + ".png?v"
 												+ iconVersion;
 										appInfoIcon.setUrl(iconPath);
+
 									} else {
+
 										// log.info("Displaying OTHER");
 										String URL = null;
 										if (PROXY_URL != null
 												&& !PROXY_URL.isEmpty()) {
+
 											URL = PROXY_URL;
+
 										} else {
+
 											URL = HOST_URL;
+
 										}
+
 										final String iconPath = URL
 												+ "/appvet_images/"
 												+ selectedApp.appId + ".png?v";
 										appInfoIcon.setUrl(iconPath);
+
 									}
 
 									String appName = null;
 
 									if (selectedApp.appName == null) {
+
 										appName = "Retrieving...";
+
 									} else {
+
 										appName = selectedApp.appName;
+
 									}
 
 									/* Set app status */
@@ -277,28 +325,36 @@ public class AppVetPanel extends DockLayoutPanel {
 											|| (selectedApp.appStatus == AppStatus.HIGH)
 											|| (selectedApp.appStatus == AppStatus.MODERATE)
 											|| (selectedApp.appStatus == AppStatus.LOW)) {
+
 										appNameHtml = "<div id=\"endorsed\" style='color: darkslategray; size:18; weight: bold'>"
 												+ appName + "</div>";
 										uploadReportButton.setEnabled(true);
 										deleteButton.setEnabled(true);
 										downloadReportsButton.setEnabled(true);
 										downloadAppButton.setEnabled(true);
+
 									} else {
+
 										appNameHtml = "<div id=\"endorsed\" style='color: dimgray; size:18; weight: bold'>"
 												+ appName + "</div>";
 										downloadReportsButton.setEnabled(false);
+
 									}
 
 									appInfoName.setHTML(appNameHtml);
 									if ((selectedApp.packageName == null)
 											|| selectedApp.packageName
 													.equals("")) {
+
 										appInfoPackage
 												.setHTML("<b>Package: </b>N/A");
+
 									} else {
+
 										appInfoPackage
 												.setHTML("<b>Package: </b>"
 														+ selectedApp.packageName);
+
 									}
 
 									if ((selectedApp.versionName == null)
@@ -327,8 +383,8 @@ public class AppVetPanel extends DockLayoutPanel {
 								int summaryCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
-									ToolType analysisType = toolResults
-											.get(i).getToolType();
+									ToolType analysisType = toolResults.get(i)
+											.getToolType();
 
 									if (analysisType == ToolType.SUMMARY) {
 										summaryCount++;
@@ -340,14 +396,14 @@ public class AppVetPanel extends DockLayoutPanel {
 								if (summaryCount == 0) {
 									statuses += getNAStatus();
 								}
-								
+
 								/* Get pre-processing analysis results */
 								statuses += "<hr><h3 title=\"App Metadata\" id=\"appInfoSectionHeader\">App Metadata</h3>\n";
 								int preprocessorToolCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
-									ToolType toolType = toolResults
-											.get(i).getToolType();
+									ToolType toolType = toolResults.get(i)
+											.getToolType();
 
 									if (toolType == ToolType.PREPROCESSOR) {
 										preprocessorToolCount++;
@@ -365,8 +421,8 @@ public class AppVetPanel extends DockLayoutPanel {
 								int analysisToolCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
-									ToolType toolType = toolResults
-											.get(i).getToolType();
+									ToolType toolType = toolResults.get(i)
+											.getToolType();
 
 									if (toolType == ToolType.TESTTOOL
 											|| toolType == ToolType.REPORT) {
@@ -385,8 +441,8 @@ public class AppVetPanel extends DockLayoutPanel {
 								int auditCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
-									ToolType toolType = toolResults
-											.get(i).getToolType();
+									ToolType toolType = toolResults.get(i)
+											.getToolType();
 
 									if (toolType == ToolType.AUDIT) {
 										auditCount++;
@@ -608,7 +664,7 @@ public class AppVetPanel extends DockLayoutPanel {
 					sessionExpirationLong = new Date().getTime()
 							+ MAX_SESSION_IDLE_DURATION;
 					timeoutMessageDisplayed = false;
-					//log.info("Setting session timeout and display=false");
+					// log.info("Setting session timeout and display=false");
 				}
 
 			}
@@ -780,7 +836,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel_6.setCellVerticalAlignment(searchButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 
-		// Your org_logo.png should be placed in $CATALINA_HOME/webapps/appvet-images directory.
+		// Your org_logo.png should be placed in
+		// $CATALINA_HOME/webapps/appvet-images directory.
 		Image orgLogo = new Image("../appvet_images/org_logo.png");
 		orgLogo.setSize("120px", "120px");
 		String orgLogoAltText = configInfo.getOrgLogoAltText();
@@ -1180,7 +1237,8 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		});
 		final PushButton viewAllButton = new PushButton("Show All Apps");
-		viewAllButton.setHTML("<img width=\"80px\" src=\"images/view-all.png\" alt=\"View All Apps\" />");
+		viewAllButton
+				.setHTML("<img width=\"80px\" src=\"images/view-all.png\" alt=\"View All Apps\" />");
 		viewAllButton.setTitle("Show All Apps");
 		viewAllButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -1246,7 +1304,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoVerticalPanel.setCellVerticalAlignment(appHorizontalButtonPanel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		uploadReportButton = new PushButton("Upload Report");
-		uploadReportButton.setHTML("<img width=\"80px\" src=\"images/upload-report.png\" alt=\"Upload Report\" />");
+		uploadReportButton
+				.setHTML("<img width=\"80px\" src=\"images/upload-report.png\" alt=\"Upload Report\" />");
 		appHorizontalButtonPanel.add(uploadReportButton);
 		appHorizontalButtonPanel.setCellHorizontalAlignment(uploadReportButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
@@ -1303,7 +1362,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		uploadReportButton.setSize("80px", "");
 		logButton = new PushButton("View Log");
-		logButton.setHTML("<img width=\"80px\" src=\"images/view-log.png\" alt=\"View Log\"/>");
+		logButton
+				.setHTML("<img width=\"80px\" src=\"images/view-log.png\" alt=\"View Log\"/>");
 		appHorizontalButtonPanel.add(logButton);
 		appHorizontalButtonPanel.setCellHorizontalAlignment(logButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
@@ -1332,7 +1392,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		logButton.setSize("80px", "");
 		logButton.setVisible(true);
 		deleteButton = new PushButton("Delete App");
-		deleteButton.setHTML("<img width=\"80px\" src=\"images/delete-app.png\" alt=\"Delete App\" />");
+		deleteButton
+				.setHTML("<img width=\"80px\" src=\"images/delete-app.png\" alt=\"Delete App\" />");
 		appHorizontalButtonPanel.add(deleteButton);
 		appHorizontalButtonPanel.setCellHorizontalAlignment(deleteButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
@@ -1379,13 +1440,14 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		deleteButton.setSize("80px", "");
 		downloadReportsButton = new PushButton("Download Reports");
-		downloadReportsButton.setHTML("<img width=\"80px\" src=\"images/download-reports.png\" alt=\"Download Reports\" />");
+		downloadReportsButton
+				.setHTML("<img width=\"80px\" src=\"images/download-reports.png\" alt=\"Download Reports\" />");
 		// REMOVE REPORT DOWNLOAD BUTTON
 		appHorizontalButtonPanel.add(downloadReportsButton);
-		appHorizontalButtonPanel.setCellVerticalAlignment(downloadReportsButton,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		appHorizontalButtonPanel.setCellHorizontalAlignment(downloadReportsButton,
-				HasHorizontalAlignment.ALIGN_CENTER);
+		appHorizontalButtonPanel.setCellVerticalAlignment(
+				downloadReportsButton, HasVerticalAlignment.ALIGN_MIDDLE);
+		appHorizontalButtonPanel.setCellHorizontalAlignment(
+				downloadReportsButton, HasHorizontalAlignment.ALIGN_CENTER);
 		downloadReportsButton.setTitle("Download Reports");
 		downloadReportsButton.setEnabled(true);
 		downloadReportsButton.addClickHandler(new ClickHandler() {
@@ -1418,7 +1480,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		downloadReportsButton.setSize("80px", "");
 
 		downloadAppButton = new PushButton("Download App");
-		downloadAppButton.setHTML("<img width=\"80px\" src=\"images/download-app.png\" alt=\"Download App\" />");
+		downloadAppButton
+				.setHTML("<img width=\"80px\" src=\"images/download-app.png\" alt=\"Download App\" />");
 		downloadAppButton.setTitle("Download App");
 		appHorizontalButtonPanel.add(downloadAppButton);
 		downloadAppButton.setSize("80px", "");
@@ -1439,15 +1502,14 @@ public class AppVetPanel extends DockLayoutPanel {
 					final String dateString = "?nocache" + new Date().getTime();
 					final String url = SERVLET_URL + dateString + "&"
 							+ AppVetParameter.COMMAND.value + "="
-							+ AppVetServletCommand.DOWNLOAD_APP.name()
-							+ "&" + AppVetParameter.APPID.value + "=" + appId
-							+ "&" + AppVetParameter.SESSIONID.value + "="
-							+ sessionId;
+							+ AppVetServletCommand.DOWNLOAD_APP.name() + "&"
+							+ AppVetParameter.APPID.value + "=" + appId + "&"
+							+ AppVetParameter.SESSIONID.value + "=" + sessionId;
 					Window.open(url, "_self", "");
 				}
 			}
 		});
-		
+
 		uploadReportButton.setVisible(true);
 		toolResultsHtml = new HTML("", true);
 		appInfoVerticalPanel.add(toolResultsHtml);
@@ -1616,20 +1678,20 @@ public class AppVetPanel extends DockLayoutPanel {
 		// First adjust apps list table
 		final int appsListButtonPanelHeight = appsListButtonPanel
 				.getOffsetHeight();
-//		log.info("-------------------------------------");
-//		log.info("appVetPanelHeight: " + appVetPanelHeight);
-//		log.info("NORTH_PANEL_HEIGHT: " + NORTH_PANEL_HEIGHT);
-//		log.info("SOUTH_PANEL_HEIGHT: " + SOUTH_PANEL_HEIGHT);
-//		log.info("appsListButtonPanelHeight: " + appsListButtonPanelHeight);
-//		log.info("MARGIN_HEIGHT: " + MARGIN_HEIGHT);
+		// log.info("-------------------------------------");
+		// log.info("appVetPanelHeight: " + appVetPanelHeight);
+		// log.info("NORTH_PANEL_HEIGHT: " + NORTH_PANEL_HEIGHT);
+		// log.info("SOUTH_PANEL_HEIGHT: " + SOUTH_PANEL_HEIGHT);
+		// log.info("appsListButtonPanelHeight: " + appsListButtonPanelHeight);
+		// log.info("MARGIN_HEIGHT: " + MARGIN_HEIGHT);
 
 		final int appsListTableHeight = appVetPanelHeight
 				- (int) NORTH_PANEL_HEIGHT - (int) SOUTH_PANEL_HEIGHT
 				- appsListButtonPanelHeight - MARGIN_HEIGHT;
-//		log.info("appsListTableHeight = " + appsListTableHeight + "px = "
-//				+ " - " + (int) NORTH_PANEL_HEIGHT + " - "
-//				+ (int) SOUTH_PANEL_HEIGHT + " - " + appsListButtonPanelHeight
-//				+ " - " + MARGIN_HEIGHT);
+		// log.info("appsListTableHeight = " + appsListTableHeight + "px = "
+		// + " - " + (int) NORTH_PANEL_HEIGHT + " - "
+		// + (int) SOUTH_PANEL_HEIGHT + " - " + appsListButtonPanelHeight
+		// + " - " + MARGIN_HEIGHT);
 
 		appsListTable.setSize("100%", appsListTableHeight + "px");
 		appsListTable.dataGrid.redraw();
@@ -1821,12 +1883,12 @@ public class AppVetPanel extends DockLayoutPanel {
 		long diffMinutes = diff / (60 * 1000) % 60;
 
 		if (diff < 0) {
-//			log.warning("Time expired: " + diffMinutes + "min " + diffSeconds
-//					+ "sec");
+			// log.warning("Time expired: " + diffMinutes + "min " + diffSeconds
+			// + "sec");
 			return false;
 		} else {
-//			log.info("Time remaining: " + diffMinutes + "min " + diffSeconds
-//					+ "sec");
+			// log.info("Time remaining: " + diffMinutes + "min " + diffSeconds
+			// + "sec");
 			if (diffMinutes == 0 && timeoutMessageDisplayed == false) {
 				timeoutMessageDisplayed = true;
 				showTimeoutDialog();

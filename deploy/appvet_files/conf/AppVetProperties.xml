@@ -17,10 +17,10 @@
 	</Host>
 	
 	<Logging>
-		<Level>DEBUG</Level>
+		<Level>INFO</Level>
 		<!-- For development, set ToConsole to true to view logging in Eclipse 
 			console. For production deployment, set to false. -->
-		<ToConsole>true</ToConsole>
+		<ToConsole>false</ToConsole>
 	</Logging>
 
 	<UseSSO>false</UseSSO>

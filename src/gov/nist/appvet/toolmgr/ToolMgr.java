@@ -46,13 +46,13 @@ public class ToolMgr implements Runnable {
 	private static final long TOOL_ADAPTER_SHUTDOWN_TIMEOUT = 10000;
 
 	public ToolMgr() {
-		log.info("*** Starting AppVet Tool Manager "
-				+ AppVetProperties.APPVET_VERSION + " on "
-				+ AppVetProperties.URL);
+//		log.info("*** Starting AppVet Tool Manager "
+//				+ AppVetProperties.APPVET_VERSION + " on "
+//				+ AppVetProperties.URL);
 	}
 
 	public void removeAppFiles(AppInfo appInfo) {
-		log.debug("Removing app files from: " + appInfo.getIdPath());
+		appInfo.log.info("Removing app files from: " + appInfo.getIdPath());
 		if (appInfo.os == DeviceOS.IOS) {
 			// Newly received iOS apps use "Receiving...zip" as the expanded
 			// name.
@@ -68,7 +68,7 @@ public class ToolMgr implements Runnable {
 			}
 		} else {
 			String projectPath = appInfo.getProjectPath();
-			log.debug("Project Path: " + projectPath);
+			appInfo.log.info("Project Path: " + projectPath);
 			final File projectDirectory = new File(projectPath);
 			// Remove project directory (i.e., decompressed app file)
 			if (projectDirectory.exists()) {
@@ -94,18 +94,18 @@ public class ToolMgr implements Runnable {
 			if (appInfo.getAppFileName() != null) {
 				return AndroidMetadata.getFromFile(appInfo);
 			} else {
-				log.error("No file provided to acquire metadata.");
+				appInfo.log.error("No file provided to acquire metadata.");
 				return false;
 			}
 		} else if (appInfo.os == DeviceOS.IOS) {
 			if (appInfo.getAppFileName() != null) {
 				return IOSMetadata.getFromFile(appInfo);
 			} else {
-				log.error("No file provided to acquire metadata.");
+				appInfo.log.error("No file provided to acquire metadata.");
 				return false;
 			}
 		} else {
-			log.error("Unknown OS");
+			appInfo.log.error("Unknown OS");
 			return false;
 		}
 	}
@@ -134,10 +134,12 @@ public class ToolMgr implements Runnable {
 				AppInfo appInfo = null;
 				final String appid = Database.getNextApp(AppStatus.PENDING);
 				if (appid != null) {
-					log.debug("App " + appid + " now processing.");
-					final long startTime = new Date().getTime();
-					log.debug(MemoryUtil.getFreeHeap("ToolMgr.run()"));
+
 					appInfo = new AppInfo(appid);
+					appInfo.log.info("App " + appid + " processing.");
+					final long startTime = new Date().getTime();
+					appInfo.log.debug(MemoryUtil.getFreeHeap("ToolMgr.run()"));
+					
 					// Get app metadata.
 					if (!getAppMetaData(appInfo) && !AppVetProperties.KEEP_APPS) {
 						// If we can't get metadata info for the app, this is an
@@ -152,7 +154,7 @@ public class ToolMgr implements Runnable {
 						} else if (appInfo.os == DeviceOS.IOS) {
 							availableTools = AppVetProperties.iosTools;
 						}
-						log.debug("availableTools.size: "
+						appInfo.log.debug("availableTools.size: "
 								+ availableTools.size());
 						boolean appFileAvailable = appInfo.getAppFileName() != null;
 						for (int i = 0; i < availableTools.size(); i++) {
@@ -167,7 +169,7 @@ public class ToolMgr implements Runnable {
 									// Do not execute tool if app file is
 									// required but
 									// not available
-									log.debug("Skipping tool "
+									appInfo.log.warn("Skipping tool "
 											+ tool.name
 											+ " since app file is not available.");
 								} else {
@@ -176,7 +178,7 @@ public class ToolMgr implements Runnable {
 									// require either app file or metadata
 									tool.setApp(appInfo);
 									final Thread thread = tool.getThread();
-									log.debug("App " + appInfo.appId
+									appInfo.log.debug("App " + appInfo.appId
 											+ " starting " + tool.name);
 									thread.start();
 									// Delay to keep processes from blocking
@@ -214,8 +216,8 @@ public class ToolMgr implements Runnable {
 						}
 						final long endTime = new Date().getTime();
 						final long elapsedTime = endTime - startTime;
-						appInfo.log.info("Total elapsed: "
-								+ Logger.formatElapsed(elapsedTime));
+						//appInfo.log.debug("Total elapsed: "
+						//		+ Logger.formatElapsed(elapsedTime));
 						appInfo.log.debug(MemoryUtil
 								.getFreeHeap("End ToolMgr.run()"));
 						availableTools = null;
@@ -241,9 +243,9 @@ public class ToolMgr implements Runnable {
 		try {
 			// Wait for tool adapter thread to shut down.
 			tool.thread.join(TOOL_ADAPTER_SHUTDOWN_TIMEOUT);
-			log.debug("Tool " + tool.toolId + " shut down.");
+			appInfo.log.info(tool.toolId + " shutting down.");
 		} catch (final InterruptedException e) {
-			appInfo.log.warn("Tool " + tool.toolId + " shut down after "
+			appInfo.log.warn(tool.toolId + " shut down after "
 					+ AppVetProperties.APP_PROCESSING_TIMEOUT + "ms timeout");
 			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId, tool.toolId,
 					ToolStatus.ERROR);

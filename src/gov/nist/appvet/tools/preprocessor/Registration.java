@@ -23,7 +23,6 @@ import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.shared.Database;
 import gov.nist.appvet.shared.ErrorMessage;
 import gov.nist.appvet.shared.FileUtil;
-import gov.nist.appvet.shared.Logger;
 import gov.nist.appvet.shared.app.AppInfo;
 import gov.nist.appvet.shared.os.DeviceOS;
 import gov.nist.appvet.shared.status.AppStatus;
@@ -47,7 +46,6 @@ import java.util.Date;
  */
 public class Registration {
 
-	private static final Logger log = AppVetProperties.log;
 	private AppInfo appInfo = null;
 
 	public Registration(AppInfo appInfo) {
@@ -55,7 +53,7 @@ public class Registration {
 	}
 
 	public boolean registerApp() {
-		log.debug("Registering app " + appInfo.appId);
+		appInfo.log.debug("Registering app " + appInfo.appId);
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ToolAdapter registrationTool = ToolAdapter.getByToolId(
@@ -215,6 +213,8 @@ public class Registration {
 				regReportWriter.write("</HTML>\n");
 				// Close writer.
 				regReportWriter.close();
+				appInfo.log.info("Registered app " + appInfo.appId);
+
 				return true;
 				
 			} else {

@@ -138,13 +138,17 @@ public class AppVetServlet extends HttpServlet {
 			}
 		}
 		
-		// Ensure user is authorized to access to app ID
-		boolean authorizedForAppId = 
-				requesterAuthorizedToAccessAppId(appId, requesterUserName);
-		if (!authorizedForAppId) {
-			sendHttpResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
-					ErrorMessage.AUTHORIZATION_ERROR.getDescription(), true);
-			return;
+		// Ensure user is authorized to access to app ID. Required for all GET commands except
+		// GET_APPVET_LOG and DOWNLOAD_LOG.
+		if (command != AppVetServletCommand.GET_APPVET_LOG
+				&& command != AppVetServletCommand.DOWNLOAD_LOG) {
+			boolean authorizedForAppId = 
+					requesterAuthorizedToAccessAppId(appId, requesterUserName);
+			if (!authorizedForAppId) {
+				sendHttpResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
+						ErrorMessage.AUTHORIZATION_ERROR.getDescription(), true);
+				return;
+			}
 		}
 		
 		// Validate tool ID. Required only for GET_TOOL_REPORT command.
