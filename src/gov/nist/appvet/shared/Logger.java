@@ -88,7 +88,7 @@ public class Logger {
 			if (!logFile.exists()) {
 				logFile.getParentFile().mkdirs();
 				logFile.createNewFile();
-				System.out.println("Created AppVet log file " + logFilePath);
+				//System.out.println("Created AppVet log file " + logFilePath);
 			}
 			logToConsole = new Boolean(AppVetProperties.LOG_TO_CONSOLE)
 					.booleanValue();

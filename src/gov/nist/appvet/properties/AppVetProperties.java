@@ -57,7 +57,7 @@ public class AppVetProperties {
 	public static String ORG_LOGO_ALT_TEXT = null;
 
 	static {
-		System.out.println("*** Starting AppVet v" + APPVET_VERSION + " ***");
+		//System.out.println("*** Starting AppVet v" + APPVET_VERSION + " ***");
 
 		JAVA_HOME = System.getenv("JAVA_HOME");
 		if (JAVA_HOME == null || JAVA_HOME.isEmpty()) {
@@ -167,7 +167,7 @@ public class AppVetProperties {
 		File appsDir = new File(APPS_ROOT);
 		if (!appsDir.exists()) {
 			appsDir.mkdirs();			
-			System.out.println("Created apps directory for AppVet");
+			//System.out.println("Created apps directory for AppVet");
 		}
 		TEMP_ROOT = APPVET_FILES_HOME + "/tmp";
 		printVal("TEMP_ROOT", TEMP_ROOT);

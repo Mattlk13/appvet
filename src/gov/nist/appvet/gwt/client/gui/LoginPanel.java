@@ -358,7 +358,6 @@ public class LoginPanel extends DockLayoutPanel {
 				}
 				
 				log.fine("STACK TRACE LOG: " + stackTraceStr);
-				System.out.println("STACK TRACE: " + stackTraceStr);
 
 				showMessageDialog("AppVet Error",
 
