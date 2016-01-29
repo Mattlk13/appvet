@@ -33,22 +33,6 @@ public class AppInfoGwt extends AppInfoBase {
 		super();
 	}
 
-	/**
-	 * Get the time/date of the last updated apps list. Used to refresh the list
-	 * of displayed apps.
-	 */
-//	public long getLastAppUpdate() {
-//		return lastListUpdate;
-//	}
-
-	/**
-	 * Set the time/date of the last updated apps list. Used to refresh the list
-	 * of displayed apps.
-	 */
-//	public void setLastAppUpdate(long lastListUpdate) {
-//		this.lastListUpdate = lastListUpdate;
-//	}
-
 	/** This method matches keyword tokens for searching. */
 	public boolean tokenMatch(String token) {
 		final String lowerCaseToken = token.toLowerCase();

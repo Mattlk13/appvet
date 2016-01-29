@@ -74,8 +74,9 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		});
 		appIdColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dataGrid.addColumn(appIdColumn, "ID");
-		dataGrid.setColumnWidth(appIdColumn, "50px");
+		dataGrid.setColumnWidth(appIdColumn, "47px");
 		dataGrid.setTitle("Apps list");
+		
 		// Platform/OS Icon 
 		final SafeHtmlCell osIconCell = new SafeHtmlCell();
 		final Column<T, SafeHtml> osIconColumn = new Column<T, SafeHtml>(
@@ -176,6 +177,28 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		dataGrid.addColumn(appNameColumn, "");
 		dataGrid.setColumnWidth(appNameColumn, "100px");
 		
+		
+		// App Version
+		final Column<T, String> appVersionColumn = new Column<T, String>(
+				new TextCell()) {
+			@Override
+			public String getValue(T object) {
+				return ((AppInfoGwt) object).versionName;
+			}
+		};
+		appVersionColumn.setSortable(SORTING_ON);
+		sortHandler.setComparator(appVersionColumn, new Comparator<T>() {
+			@Override
+			public int compare(T o1, T o2) {
+				return ((AppInfoGwt) o1).versionName
+						.compareTo(((AppInfoGwt) o2).versionName);
+			}
+		});
+		appVersionColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		dataGrid.addColumn(appVersionColumn, "Version");
+		dataGrid.setColumnWidth(appVersionColumn, "40px");		
+		
+		
 		// Status
 		final SafeHtmlCell statusCell = new SafeHtmlCell();
 		final Column<T, SafeHtml> statusColumn = new Column<T, SafeHtml>(
@@ -188,27 +211,19 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 				if (appStatus == AppStatus.ERROR) {
 					statusHtml = "<div id=\"error\" style='color: black'>ERROR</div>";
 				} else if (appStatus == AppStatus.MODERATE) {
-//					statusHtml = "<div id=\"warning\" style='color: orange'>"
-//							+ "COMPLETED" + "</div>";
 					statusHtml = "<div id=\"warning\" style='color: orange'>"
 							+ "MODERATE" + "</div>";					
 				} else if (appStatus == AppStatus.LOW) {
-//					statusHtml = "<div id=\"endorsed\" style='color: green'>"
-//							+ "COMPLETED" + "</div>";
 					statusHtml = "<div id=\"endorsed\" style='color: green'>"
 							+ "LOW" + "</div>";					
 				} else if (appStatus == AppStatus.HIGH) {
-//					statusHtml = "<div id=\"error\" style='color: red'>COMPLETED</div>";
 					statusHtml = "<div id=\"error\" style='color: red'>HIGH</div>";
-				
 				} else if (appStatus == AppStatus.NA) {
 					statusHtml = "<div id=\"error\" style='color: gray'>N/A</div>";
 				} else {
 					statusHtml = "<div id=\"error\" style='color: black'>"
 							+ appStatus.name() + "</div>";
 				}
-				
-				
 				
 				sb.appendHtmlConstant(statusHtml);
 				return sb.toSafeHtml();
@@ -224,7 +239,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 			}
 		});
 		dataGrid.addColumn(statusColumn, "Status/Risk");
-		dataGrid.setColumnWidth(statusColumn, "60px");
+		dataGrid.setColumnWidth(statusColumn, "45px");
 		
 		// Submitter 
 		final Column<T, String> submitterColumn = new Column<T, String>(
@@ -274,7 +289,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		submitTimeColumn
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dataGrid.addColumn(submitTimeColumn, "Date/Time");
-		dataGrid.setColumnWidth(submitTimeColumn, "100px");
+		dataGrid.setColumnWidth(submitTimeColumn, "75px");
 	}
 
 	public void setAppVetHostUrl(String appVetHostUrl) {
