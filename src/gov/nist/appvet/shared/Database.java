@@ -899,11 +899,6 @@ public class Database {
 				sql = "SELECT * FROM apps where username='" + username + 
 					"' ORDER BY submittime DESC";
 				break; 
-			case CLIENT: 
-				// Clients can only view apps submitted by them
-				sql = "SELECT * FROM apps where username='" + username + 
-					"' ORDER BY submittime DESC";
-				break;
 			case USER: 
 				// Users can only see apps they have submitted
 				sql = "SELECT * FROM apps where username='" + username + 
@@ -974,11 +969,6 @@ public class Database {
 				sql = "SELECT * FROM apps where username='" + username + 
 					"' and updated='1'";
 				break; 
-			case CLIENT: 
-				// Clients can only view apps submitted by them
-				sql = "SELECT * FROM apps where username='" + username + 
-					"' and updated='1'";
-				break;
 			case USER: 
 				// Users can only see apps they have submitted
 				sql = "SELECT * FROM apps where username='" + username + 

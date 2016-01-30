@@ -313,12 +313,13 @@ public class UserAcctAdminDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_8.setCellHorizontalAlignment(roleComboBox,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		roleComboBox.addItem(Role.ADMIN.name());
-		roleComboBox.addItem(Role.ANALYST.name());
-		roleComboBox.addItem(Role.ORG_ANALYST.name());
-		roleComboBox.addItem(Role.TOOL_PROVIDER.name());
 		roleComboBox.addItem(Role.USER.name());
-		roleComboBox.addItem(Role.CLIENT.name());
+		roleComboBox.addItem(Role.TOOL_PROVIDER.name());
+		roleComboBox.addItem(Role.DEPT_ANALYST.name());
+		roleComboBox.addItem(Role.ORG_ANALYST.name());
+		roleComboBox.addItem(Role.ANALYST.name());
+		roleComboBox.addItem(Role.ADMIN.name());
+		
 		roleComboBox.setWidth("190px");
 		final HorizontalPanel horizontalPanel_13 = new HorizontalPanel();
 		verticalPanel_1.add(horizontalPanel_13);
@@ -520,18 +521,19 @@ public class UserAcctAdminDialogBox extends DialogBox {
 			fromHostTextBox.setText(userInfo.getFromHost());
 			organizationTextBox.setText(userInfo.getOrganization());
 			departmentTextBox.setText(userInfo.getDepartment());
-			emailTextBox.setText(userInfo.getEmail());			
-			if (userInfo.getRole().equals(Role.ADMIN.name())) {
+			emailTextBox.setText(userInfo.getEmail());		
+			
+			if (userInfo.getRole().equals(Role.USER.name())) {
 				roleComboBox.setSelectedIndex(0);
-			} else if (userInfo.getRole().equals(Role.ANALYST.name())) {
-				roleComboBox.setSelectedIndex(1);
-			} else if (userInfo.getRole().equals(Role.ORG_ANALYST.name())) {
-				roleComboBox.setSelectedIndex(2);
 			} else if (userInfo.getRole().equals(Role.TOOL_PROVIDER.name())) {
+				roleComboBox.setSelectedIndex(1);
+			} else if (userInfo.getRole().equals(Role.DEPT_ANALYST.name())) {
+				roleComboBox.setSelectedIndex(2);
+			} else if (userInfo.getRole().equals(Role.ORG_ANALYST.name())) {
 				roleComboBox.setSelectedIndex(3);
-			} else if (userInfo.getRole().equals(Role.USER.name())) {
+			} else if (userInfo.getRole().equals(Role.ANALYST.name())) {
 				roleComboBox.setSelectedIndex(4);
-			} else if (userInfo.getRole().equals(Role.CLIENT.name())) {
+			} else if (userInfo.getRole().equals(Role.ADMIN.name())) {
 				roleComboBox.setSelectedIndex(5);
 			}
 		}

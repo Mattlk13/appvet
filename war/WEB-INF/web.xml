@@ -3,7 +3,6 @@
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	id="WebApp_ID" version="3.0">
-	<!-- $$Id: web.xml 38558 2014-03-30 16:09:22Z steveq $$ -->
 	<servlet>
 		<servlet-name>GWTServlet</servlet-name>
 		<servlet-class>gov.nist.appvet.gwt.server.GWTServiceImpl</servlet-class>
