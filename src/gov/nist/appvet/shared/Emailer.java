@@ -105,10 +105,11 @@ public class Emailer {
 
 			// Step3
 			Transport transport = getMailSession.getTransport("smtp");
-			// Use the following if no authentication is required
-			transport.connect();
-			// Use the following if SMTP authentication is required
-			//transport.connect(host, senderEmail, "MyPassword1234"); 
+			if (!smtpAuth) {
+				transport.connect();
+			} else {
+				transport.connect(smtpHost, senderEmail, senderEmailPassword); 
+			}
 			transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
 			transport.close();
 			log.debug("\nEmail '" + subject + "' successfully sent to " + recipient);
