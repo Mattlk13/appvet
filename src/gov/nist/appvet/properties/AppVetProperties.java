@@ -209,8 +209,11 @@ public class AppVetProperties {
 		printVal("SENDER_NAME", SENDER_NAME);
 		SMTP_AUTH = new Boolean(xml.getXPathValue("/AppVet/Email/SMTPAuth")).booleanValue();
 		printVal("SMTP_AUTH", SMTP_AUTH);
-		SENDER_EMAIL_PASSWORD = xml.getXPathValue("/AppVet/Email/SenderEmailPassword");
-		printVal("SENDER_EMAIL_PASSWORD", SENDER_EMAIL_PASSWORD);
+		if (SMTP_AUTH) {
+			// SMTP server requires authentication so get password
+			SENDER_EMAIL_PASSWORD = xml.getXPathValue("/AppVet/Email/SenderEmailPassword");
+			printVal("SENDER_EMAIL_PASSWORD", SENDER_EMAIL_PASSWORD);
+		}
 		
 		// Tool services
 		CONNECTION_TIMEOUT = new Integer(
