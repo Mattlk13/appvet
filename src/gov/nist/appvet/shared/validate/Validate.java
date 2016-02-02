@@ -28,9 +28,9 @@ import gov.nist.appvet.shared.role.Role;
 public class Validate {
 
 	public static final int USERNAME_MIN_LENGTH = 3;
-	public static final int USERNAME_MAX_LENGTH = 32;
+	public static final int USERNAME_MAX_LENGTH = 254;
 	public static final int PASSWORD_MIN_LENGTH = 4;
-	public static final int PASSWORD_MAX_LENGTH = 32;
+	public static final int PASSWORD_MAX_LENGTH = 254;
 
 	public static boolean isPrintable(String s) {
 		if (s == null) {

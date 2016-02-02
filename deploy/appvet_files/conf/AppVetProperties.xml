@@ -17,10 +17,10 @@
 	</Host>
 	
 	<Logging>
-		<Level>INFO</Level>
+		<Level>DEBUG</Level>
 		<!-- For development, set ToConsole to true to view logging in Eclipse 
 			console. For production deployment, set to false. -->
-		<ToConsole>false</ToConsole>
+		<ToConsole>true</ToConsole>
 	</Logging>
 
 	<UseSSO>false</UseSSO>
@@ -37,6 +37,16 @@
 		<UserName>root</UserName>
 		<Password>mypassword1</Password>
 	</Database>
+	
+    <Email>
+		<SMTPHost>smtp.test.com</SMTPHost>
+		<SMTPPort>25</SMTPPort>
+		<EnableTLS>true</EnableTLS>
+		<SenderEmail>appvet@test.com</SenderEmail>
+		<SenderName>My AppVet</SenderName>
+		<SMTPAuth>true</SMTPAuth>
+		<SenderEmailPassword>MyEmailPassword</SenderEmailPassword>
+	</Email>
 	
 	<ToolServices>
 		<PollingInterval>1000</PollingInterval>

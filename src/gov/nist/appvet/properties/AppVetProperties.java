@@ -99,6 +99,15 @@ public class AppVetProperties {
 	public static String DB_URL = null;
 	public static String DB_USERNAME = null;
 	public static String DB_PASSWORD = null;
+	// Email properties (optional)
+	public static String SMTP_HOST = null;
+	public static String SMTP_PORT = null;
+	public static boolean SMTP_AUTH = false;
+	public static boolean ENABLE_TLS = false;
+	public static String SENDER_EMAIL = null;
+	public static String SENDER_NAME = null;
+	public static String SENDER_EMAIL_PASSWORD = null;
+	
 	/** Timeout in milliseconds until a URL connection is established. */
 	public static int CONNECTION_TIMEOUT = 0;
 	/**
@@ -169,6 +178,7 @@ public class AppVetProperties {
 			appsDir.mkdirs();			
 			//System.out.println("Created apps directory for AppVet");
 		}
+		
 		TEMP_ROOT = APPVET_FILES_HOME + "/tmp";
 		printVal("TEMP_ROOT", TEMP_ROOT);
 		CONF_ROOT = APPVET_FILES_HOME + "/conf";
@@ -177,12 +187,32 @@ public class AppVetProperties {
 		printVal("TOOLS_CONF_ROOT", TOOLS_CONF_ROOT);
 		APP_IMAGES = CATALINA_HOME + "/webapps/appvet_images";
 		printVal("APP_IMAGES", APP_IMAGES);
+		
+		// Database properties
 		DB_URL = xml.getXPathValue("/AppVet/Database/URL");
 		printVal("DB_URL", DB_URL);
 		DB_USERNAME = xml.getXPathValue("/AppVet/Database/UserName");
 		printVal("DB_USERNAME", DB_USERNAME);
 		DB_PASSWORD = xml.getXPathValue("/AppVet/Database/Password");
 		printVal("DB_PASSWORD", DB_PASSWORD);
+		
+		// Email notification properties
+		SMTP_HOST = xml.getXPathValue("/AppVet/Email/SMTPHost");
+		printVal("SMTP_HOST", SMTP_HOST);
+		SMTP_PORT = xml.getXPathValue("/AppVet/Email/SMTPPort");
+		printVal("SMTP_PORT", SMTP_PORT);
+		ENABLE_TLS = new Boolean(xml.getXPathValue("/AppVet/Email/EnableTLS")).booleanValue();
+		printVal("ENABLE_TLS", ENABLE_TLS);
+		SENDER_EMAIL = xml.getXPathValue("/AppVet/Email/SenderEmail");
+		printVal("SENDER_EMAIL", SENDER_EMAIL);
+		SENDER_NAME = xml.getXPathValue("/AppVet/Email/SenderName");
+		printVal("SENDER_NAME", SENDER_NAME);
+		SMTP_AUTH = new Boolean(xml.getXPathValue("/AppVet/Email/SMTPAuth")).booleanValue();
+		printVal("SMTP_AUTH", SMTP_AUTH);
+		SENDER_EMAIL_PASSWORD = xml.getXPathValue("/AppVet/Email/SenderEmailPassword");
+		printVal("SENDER_EMAIL_PASSWORD", SENDER_EMAIL_PASSWORD);
+		
+		// Tool services
 		CONNECTION_TIMEOUT = new Integer(
 				xml.getXPathValue("/AppVet/ToolServices/ConnectionTimeout"))
 				.intValue();
