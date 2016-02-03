@@ -17,6 +17,7 @@
 		<li class="big"><a href="#database" target="rightframe">Database</a></li>
 		<li class="big"><a href="#toolservices" target="rightframe">ToolServices</a></li>
 		<li class="big"><a href="#apps" target="rightframe">Apps</a></li>
+		<li class="big"><a href="#email" target="rightframe">Email</a></li>
 	</ul>
 	<hr>
 	Configuring AppVet involves editing the AppVet Properties file located in 
@@ -145,6 +146,28 @@
 	is set to
 	<code>false</code>
 	.
+
+	<h2 id="email">Email Settings</h2>
+	The <code>Email</code> property defines the Host, Port, and 
+	sender information of your AppVet email server. 
+	<p>
+	<pre>
+		<code>
+&lt;Email&gt;
+    &lt;!-- SMTPHost is the host or IP address of your SMTP server --&gt;
+    &lt;SMTPHost&gt;123.45.67.89&lt;/SMTPHost&gt; &lt;-- Change 'SMTPHost'
+    &lt;SMTPPort&gt;25&lt;/SMTPPort&gt;
+    &lt;!-- EnableTLS if your SMTP server requires TLS --&gt;
+    &lt;EnableTLS&gt;true&lt;/EnableTLS&gt;
+    &lt;SenderEmail&gt;youremail@example.com&lt;/SenderEmail&gt; &lt;-- Change 'SenderEmail'
+    &lt;!-- SenderName displays as the sender in the recipient's inbox --&gt;
+    &lt;SenderName&gt;Your Organization&lt;/SenderName&gt; &lt;-- Change 'SenderName'
+    &lt;!-- SMTPAuth should be set to true if authentication is required --&gt;
+    &lt;SMTPAuth>false&lt;/SMTPAuth&gt;
+&lt;/Email&gt;
+	</code>
+		</pre>
+	</p>
 
 </body>
 
