@@ -261,19 +261,24 @@ public class Database {
 			userInfo.setRole(getNonNullAttributeValue(resultSet.getString(8)));
 			userInfo.setLastLogon(getNonNullAttributeValue(resultSet.getString(9)));
 			userInfo.setFromHost(getNonNullAttributeValue(resultSet.getString(10)));
-			String toolCredentialsStr = resultSet.getString(11);
 			
-			ArrayList<UserToolCredentialsGwt> toolCredentialsList = null;
-			if (toolCredentialsStr == null) {
-				// Create new tool credentials list
-				toolCredentialsList = createToolCredentialsList(username, tools);
-			} else {
-				toolCredentialsList = getToolCredentials(toolCredentialsStr);
-				// Check to make sure user credential objects exist for each
-				// tool. This is important if a new tool was recently added.
-				updateToolCredentials(username, toolCredentialsList, tools);
+			if (tools != null && tools.size() != 0) {
+				String toolCredentialsStr = resultSet.getString(11);
+				
+				ArrayList<UserToolCredentialsGwt> toolCredentialsList = null;
+				if (toolCredentialsStr == null) {
+					// Create new tool credentials list
+					toolCredentialsList = createToolCredentialsList(username, tools);
+				} else {
+					toolCredentialsList = getToolCredentials(toolCredentialsStr);
+					// Check to make sure user credential objects exist for each
+					// tool. This is important if a new tool was recently added.
+					updateToolCredentials(username, toolCredentialsList, tools);
+				}
+				userInfo.setToolCredentials(toolCredentialsList);
+				
 			}
-			userInfo.setToolCredentials(toolCredentialsList);
+
 
 			return userInfo;
 		} catch (final Exception e) {
@@ -602,8 +607,39 @@ public class Database {
 		}
 		return foundAdmin;
 	}
+	
+//	public static List<String> getAdmins() {
+//		Connection connection = null;
+//		Statement statement = null;
+//		ResultSet resultSet = null;
+//		String sql = null;
+//		ArrayList<String> arrayList = null;
+//		try {
+//			connection = getConnection();
+//			sql = "SELECT * FROM users where role='" + Role.ADMIN.name() + "'";
+//			arrayList = new ArrayList<String>();
+//			statement = connection.createStatement();
+//			resultSet = statement.executeQuery(sql);
+//			while (resultSet.next()) {
+//				arrayList.add(resultSet.getString(1));
+//			}
+//		} catch (final SQLException e) {
+//			log.error(e.toString());
+//			arrayList = null;
+//		} finally {
+//			sql = null;
+//			cleanUpResultSet(resultSet);
+//			cleanUpStatement(statement);
+//			cleanUpConnection(connection);
+//		}
+//		return arrayList;
+//	}
 
-	public static List<UserInfoGwt> getUsers() {
+	/**
+	 * @param role If null, select all users.
+	 * @return
+	 */
+	public static List<UserInfoGwt> getUsers(Role role) {
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -612,7 +648,12 @@ public class Database {
 		ArrayList<UserInfoGwt> arrayList = null;
 		try {
 			connection = getConnection();
-			sql = "SELECT * FROM users ORDER BY lastName ASC";
+			if (role == null) {
+				sql = "SELECT * FROM users ORDER BY lastName ASC";
+			} else {
+				sql = "SELECT * FROM users WHERE role='" + role + "' ORDER BY lastName ASC";
+			} 
+			
 			arrayList = new ArrayList<UserInfoGwt>();
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);

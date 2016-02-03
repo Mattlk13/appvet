@@ -38,6 +38,8 @@
 		<Password>mypassword1</Password>
 	</Database>
 	
+<!-- EMAIL OPTIONAL
+
     <Email>
 		<SMTPHost>smtp.test.com</SMTPHost>
 		<SMTPPort>25</SMTPPort>
@@ -47,6 +49,7 @@
 		<SMTPAuth>true</SMTPAuth>
 		<SenderEmailPassword>MyEmailPassword</SenderEmailPassword>
 	</Email>
+-->
 	
 	<ToolServices>
 		<PollingInterval>1000</PollingInterval>

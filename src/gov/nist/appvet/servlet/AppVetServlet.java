@@ -19,14 +19,17 @@
  */
 package gov.nist.appvet.servlet;
 
+import gov.nist.appvet.gwt.shared.UserInfoGwt;
 import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.shared.Authenticate;
 import gov.nist.appvet.shared.Database;
+import gov.nist.appvet.shared.Emailer;
 import gov.nist.appvet.shared.ErrorMessage;
 import gov.nist.appvet.shared.FileUtil;
 import gov.nist.appvet.shared.Logger;
 import gov.nist.appvet.shared.ReportFileType;
 import gov.nist.appvet.shared.Zip;
+import gov.nist.appvet.shared.analysis.ToolType;
 import gov.nist.appvet.shared.app.AppInfo;
 import gov.nist.appvet.shared.appvetparameters.AppVetParameter;
 import gov.nist.appvet.shared.os.DeviceOS;
@@ -1150,6 +1153,25 @@ public class AppVetServlet extends HttpServlet {
 					+ tool.name + " on " + "app " + appInfo.appId + " with "
 					+ appInfo.fileItem.getName() + " setting tool status to "
 					+ appInfo.toolRisk);
+			
+			UserInfoGwt userInfo = Database.getUserInfo(appInfo.ownerName, null);
+
+			if (tool.toolType == ToolType.AUDIT){
+				// Email notify
+				String emailSubject = "Final determination for app " + appInfo.appId + " '" + appInfo.appName + "' has been uploaded";
+				String emailContent = "Final determination for app " + appInfo.appId + " '" + appInfo.appName + "' has been uploaded.";
+				log.debug(emailSubject);
+				Emailer.sendEmail(userInfo.getEmail(), emailSubject, emailContent);
+			
+			} else if (tool.toolType == ToolType.SUMMARY){
+				// Email notify
+				String emailSubject = "Summary report for app " + appInfo.appId + " '" + appInfo.appName + "' has been uploaded";
+				String emailContent = "Summary report for app " + appInfo.appId + " '" + appInfo.appName + "' has been uploaded.";
+				log.debug(emailSubject);
+				Emailer.sendEmail(userInfo.getEmail(), emailSubject, emailContent);
+			}
+
+			
 		} else {
 			appInfo.log.error("Error saving report!");
 		}

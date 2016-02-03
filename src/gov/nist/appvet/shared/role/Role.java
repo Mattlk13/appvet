@@ -46,13 +46,7 @@ public enum Role {
 	TOOL_PROVIDER, 
 	// A USER is a user of the AppVet system. A USER has access to
 	// only the apps that they submit and cannot submit tool reports.
-	USER, 
-	// A CLIENT is a user that uses the AppVet API to submit
-	// apps. A CLIENT does not use the AppVet GUI to interact
-	// with AppVet. A CLIENT can submit apps but cannot submit
-	// tool reports. Examples CLIENTs include app stores or other automated
-	// clients.
-	CLIENT;
+	USER;
 	private Role() {
 	}
 

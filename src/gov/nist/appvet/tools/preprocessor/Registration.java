@@ -19,8 +19,10 @@
  */
 package gov.nist.appvet.tools.preprocessor;
 
+import gov.nist.appvet.gwt.shared.UserInfoGwt;
 import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.shared.Database;
+import gov.nist.appvet.shared.Emailer;
 import gov.nist.appvet.shared.ErrorMessage;
 import gov.nist.appvet.shared.FileUtil;
 import gov.nist.appvet.shared.app.AppInfo;
@@ -215,6 +217,10 @@ public class Registration {
 				regReportWriter.close();
 				appInfo.log.info("Registered app " + appInfo.appId);
 
+				// Email notify
+				UserInfoGwt userInfo = Database.getUserInfo(appInfo.ownerName, null);
+				appInfo.log.debug("App " + appInfo.appId + " has been uploaded by " + appInfo.ownerName);
+				Emailer.sendEmail(userInfo.getEmail(), "App " + appInfo.appId + "has been uploaded by " + appInfo.ownerName, "App " + appInfo.appId + " has been uploaded by " + appInfo.ownerName + ".");
 				return true;
 				
 			} else {

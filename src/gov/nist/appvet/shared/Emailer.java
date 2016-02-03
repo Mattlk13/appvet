@@ -1,7 +1,10 @@
 package gov.nist.appvet.shared;
 
+import gov.nist.appvet.gwt.shared.UserInfoGwt;
 import gov.nist.appvet.properties.AppVetProperties;
+import gov.nist.appvet.shared.role.Role;
 
+import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -18,6 +21,13 @@ public class Emailer {
 	static Properties mailServerProperties;
 	static Session getMailSession;
 	static MimeMessage generateMailMessage;
+	static List<UserInfoGwt> adminUsers = null;
+	
+	static {
+		adminUsers = Database.getUsers(Role.ADMIN);
+	}
+	
+	// TODO Add ADMINs here
 
 /*	public static void main(String args[]) throws AddressException, MessagingException {
 
@@ -42,13 +52,9 @@ public class Emailer {
 			return;
 		}
 	}*/
-
-//	public static void generateAndSendEmail(String host, String port, 
-//			String recipient, String sender, String senderName, String subject,
-//			String content) {
 		
-	public static void generateAndSendEmail( 
-			String recipient, String subject,String content) {
+	public static void sendEmail(String recipient, String subject, 
+			String content) {
 		
 		String smtpHost = AppVetProperties.SMTP_HOST;
 		String smtpPort = AppVetProperties.SMTP_PORT;
@@ -57,8 +63,6 @@ public class Emailer {
 		String senderEmail = AppVetProperties.SENDER_EMAIL;
 		String senderName = AppVetProperties.SENDER_NAME;
 		String senderEmailPassword = AppVetProperties.SENDER_EMAIL_PASSWORD; 
-		
-		
 		
 		if (smtpHost == null) {
 			log.error("SMTP host is null. Cannot send email notification");
@@ -84,7 +88,6 @@ public class Emailer {
 
 		try {
 			// Step1
-			System.out.println("Setting Mail Server Properties...");
 			mailServerProperties = System.getProperties();
 			mailServerProperties.put("mail.smtp.host", smtpHost); // e.g., smtp.gmail.com
 			mailServerProperties.put("mail.smtp.port", smtpPort); // e.g., 587
@@ -99,7 +102,13 @@ public class Emailer {
 			generateMailMessage = new MimeMessage(getMailSession);
 			generateMailMessage.setFrom(new InternetAddress(senderEmail, senderName));
 			generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
-			// generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress("test2@test.com"));
+			// Add all admins as CC'd recipients
+			for (int i = 0; i < adminUsers.size(); i++) {
+				UserInfoGwt adminUser = adminUsers.get(i);
+				generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress(adminUser.getEmail()));
+				
+			}
+			
 			generateMailMessage.setSubject(subject);
 			generateMailMessage.setContent(content, "text/html");
 

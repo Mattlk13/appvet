@@ -19,9 +19,11 @@
  */
 package gov.nist.appvet.toolmgr;
 
+import gov.nist.appvet.gwt.shared.UserInfoGwt;
 import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.shared.AppSubmitType;
 import gov.nist.appvet.shared.Database;
+import gov.nist.appvet.shared.Emailer;
 import gov.nist.appvet.shared.FileUtil;
 import gov.nist.appvet.shared.Logger;
 import gov.nist.appvet.shared.MemoryUtil;
@@ -159,27 +161,27 @@ public class ToolMgr implements Runnable {
 						boolean appFileAvailable = appInfo.getAppFileName() != null;
 						for (int i = 0; i < availableTools.size(); i++) {
 							//staggerStart(AppVetProperties.TOOL_MGR_STAGGER_INTERVAL);
-							final ToolAdapter tool = availableTools.get(i);
+							final ToolAdapter toolAdapter = availableTools.get(i);
 							// Only process test tools (not preprocessors,
 							// audit, or
 							// manual reports).
-							if (tool.toolType == ToolType.TESTTOOL) {
+							if (toolAdapter.toolType == ToolType.TESTTOOL) {
 								if (!appFileAvailable
-										&& tool.appSubmitType == AppSubmitType.APP_FILE) {
+										&& toolAdapter.appSubmitType == AppSubmitType.APP_FILE) {
 									// Do not execute tool if app file is
 									// required but
 									// not available
 									appInfo.log.warn("Skipping tool "
-											+ tool.name
+											+ toolAdapter.name
 											+ " since app file is not available.");
 								} else {
 									// If app file available, we run through
 									// tools that
 									// require either app file or metadata
-									tool.setApp(appInfo);
-									final Thread thread = tool.getThread();
+									toolAdapter.setApp(appInfo);
+									final Thread thread = toolAdapter.getThread();
 									appInfo.log.debug("App " + appInfo.appId
-											+ " starting " + tool.name);
+											+ " starting " + toolAdapter.name);
 									thread.start();
 									// Delay to keep processes from blocking
 									delay(AppVetProperties.TOOL_MGR_STAGGER_INTERVAL);
@@ -188,29 +190,29 @@ public class ToolMgr implements Runnable {
 						}
 						// Wait for tools to complete
 						for (int i = 0; i < availableTools.size(); i++) {
-							final ToolAdapter tool = availableTools.get(i);
-							if (tool.toolType == ToolType.TESTTOOL) {
+							final ToolAdapter toolAdapter = availableTools.get(i);
+							if (toolAdapter.toolType == ToolType.TESTTOOL) {
 								if (!appFileAvailable
-										&& tool.appSubmitType == AppSubmitType.APP_FILE) {
+										&& toolAdapter.appSubmitType == AppSubmitType.APP_FILE) {
 									// Do not wait for tool if app file was
 									// required but
 									// not available
 								} else {
-									wait(appInfo, tool);
+									wait(appInfo, toolAdapter);
 								}
 							}
 						}
 						// Stop tools if they are still running
 						for (int i = 0; i < availableTools.size(); i++) {
-							final ToolAdapter tool = availableTools.get(i);
-							if (tool.toolType == ToolType.TESTTOOL) {
+							final ToolAdapter toolAdapter = availableTools.get(i);
+							if (toolAdapter.toolType == ToolType.TESTTOOL) {
 								if (!appFileAvailable
-										&& tool.appSubmitType == AppSubmitType.APP_FILE) {
+										&& toolAdapter.appSubmitType == AppSubmitType.APP_FILE) {
 									// Do not clean up tool if app file was
 									// required but
 									// not available
 								} else {
-									tool.shutdown(appInfo, true);
+									toolAdapter.shutdown(appInfo, true);
 								}
 							}
 						}
@@ -218,6 +220,13 @@ public class ToolMgr implements Runnable {
 						final long elapsedTime = endTime - startTime;
 						//appInfo.log.debug("Total elapsed: "
 						//		+ Logger.formatElapsed(elapsedTime));
+						
+						// Email notify
+						UserInfoGwt userInfo = Database.getUserInfo(appInfo.ownerName, null);
+						log.debug("App " + appInfo.appId + " '" + appInfo.appName + "' has completed processing");
+						Emailer.sendEmail(userInfo.getEmail(), "App " + appInfo.appId + " '" + appInfo.appName + "' has completed processing", "App " + appInfo.appId + " '" + appInfo.appName + "' has completed processing.");
+						
+						
 						appInfo.log.debug(MemoryUtil
 								.getFreeHeap("End ToolMgr.run()"));
 						availableTools = null;

@@ -324,7 +324,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 
 	@Override
 	public List<UserInfoGwt> getUsersList() throws IllegalArgumentException {
-		return Database.getUsers();
+		return Database.getUsers(null);
 	}
 
 	@Override
