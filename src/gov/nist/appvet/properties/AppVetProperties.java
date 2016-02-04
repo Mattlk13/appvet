@@ -100,6 +100,7 @@ public class AppVetProperties {
 	public static String DB_USERNAME = null;
 	public static String DB_PASSWORD = null;
 	// Email properties (optional)
+	public static boolean emailEnabled = false;
 	public static String SMTP_HOST = null;
 	public static String SMTP_PORT = null;
 	public static boolean SMTP_AUTH = false;
@@ -209,10 +210,28 @@ public class AppVetProperties {
 		printVal("SENDER_NAME", SENDER_NAME);
 		SMTP_AUTH = new Boolean(xml.getXPathValue("/AppVet/Email/SMTPAuth")).booleanValue();
 		printVal("SMTP_AUTH", SMTP_AUTH);
-		if (SMTP_AUTH) {
-			// SMTP server requires authentication so get password
-			SENDER_EMAIL_PASSWORD = xml.getXPathValue("/AppVet/Email/SenderEmailPassword");
-			printVal("SENDER_EMAIL_PASSWORD", SENDER_EMAIL_PASSWORD);
+		
+		if (SMTP_HOST != null &&
+				SMTP_PORT != null &&
+				SENDER_EMAIL != null &&
+				SENDER_NAME != null) {
+								
+					if (SMTP_AUTH) {
+						// SMTP server requires authentication so get password
+						SENDER_EMAIL_PASSWORD = xml.getXPathValue("/AppVet/Email/SenderEmailPassword");
+						printVal("SENDER_EMAIL_PASSWORD", SENDER_EMAIL_PASSWORD);
+						
+						if (SENDER_EMAIL_PASSWORD == null) {
+							emailEnabled = false;
+							log.error("Email requires authentication but no password was provided. Disabling email");
+						} else {
+							emailEnabled = true;
+							log.debug("Email is enabled");
+						}
+					}		
+		} else {
+			// All required Email parameters are null, so disable email
+			log.debug("Email is disabled due to null email parameters");
 		}
 		
 		// Tool services

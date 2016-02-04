@@ -55,76 +55,83 @@ public class Emailer {
 		
 	public static void sendEmail(String recipient, String subject, 
 			String content) {
-		
-		String smtpHost = AppVetProperties.SMTP_HOST;
-		String smtpPort = AppVetProperties.SMTP_PORT;
-		boolean smtpAuth = AppVetProperties.SMTP_AUTH;
-		boolean enableTls = AppVetProperties.ENABLE_TLS;
-		String senderEmail = AppVetProperties.SENDER_EMAIL;
-		String senderName = AppVetProperties.SENDER_NAME;
-		String senderEmailPassword = AppVetProperties.SENDER_EMAIL_PASSWORD; 
-		
-		if (smtpHost == null) {
-			log.error("SMTP host is null. Cannot send email notification");
-			return;
-		} else if (smtpPort == null) {
-			log.error("SMTP port is null. Cannot send email notification");
-			return;
-		} else if (senderEmail == null) {
-			log.error("Sender email address is null. Cannot send email notification");
-			return;
-		} else if (senderName == null) {
-			log.error("Sender name is null. Using sender email address.");
-			senderName = senderEmail;
-		}
-		
-		if (smtpAuth) {
-			// SMTP requires authentication password
-			if (senderEmailPassword == null) {
-				log.error("SMTP requires authentication but password is null");
-				return;
-			}
-		}
-
-		try {
-			// Step1
-			mailServerProperties = System.getProperties();
-			mailServerProperties.put("mail.smtp.host", smtpHost); // e.g., smtp.gmail.com
-			mailServerProperties.put("mail.smtp.port", smtpPort); // e.g., 587
-			mailServerProperties.put("mail.from", senderEmail); // e.g., joe@test.com
-			mailServerProperties.put("mail.user", senderEmail); // e.g., joe@test.com
-			mailServerProperties.put("mail.smtp.auth", smtpAuth); // e.g., false
-			mailServerProperties.put("mail.smtp.starttls.enable", enableTls); // e.g., true
-
-			// Step2
-			// TODO: Need to add Authenticator for the following
-			getMailSession = Session.getDefaultInstance(mailServerProperties, null);
-			generateMailMessage = new MimeMessage(getMailSession);
-			generateMailMessage.setFrom(new InternetAddress(senderEmail, senderName));
-			generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
-			// Add all admins as CC'd recipients
-			for (int i = 0; i < adminUsers.size(); i++) {
-				UserInfoGwt adminUser = adminUsers.get(i);
-				generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress(adminUser.getEmail()));
 				
+		if (AppVetProperties.emailEnabled) {
+			String smtpHost = AppVetProperties.SMTP_HOST;
+			String smtpPort = AppVetProperties.SMTP_PORT;
+			boolean smtpAuth = AppVetProperties.SMTP_AUTH;
+			boolean enableTls = AppVetProperties.ENABLE_TLS;
+			String senderEmail = AppVetProperties.SENDER_EMAIL;
+			String senderName = AppVetProperties.SENDER_NAME;
+			String senderEmailPassword = AppVetProperties.SENDER_EMAIL_PASSWORD; 
+			
+//			if (smtpHost == null) {
+//				log.warn("SMTP host is null. Cannot send email notification");
+//				return;
+//			} else if (smtpPort == null) {
+//				log.warn("SMTP port is null. Cannot send email notification");
+//				return;
+//			} else if (senderEmail == null) {
+//				log.warn("Sender email address is null. Cannot send email notification");
+//				return;
+//			} else if (senderName == null) {
+//				log.error("Sender name is null. Using sender email address.");
+//				senderName = senderEmail;
+//			}
+//			
+//			if (smtpAuth) {
+//				// SMTP requires authentication password
+//				if (senderEmailPassword == null) {
+//					log.error("SMTP requires authentication but password is null");
+//					return;
+//				}
+//			}
+
+			try {
+				// Step1
+				mailServerProperties = System.getProperties();
+				mailServerProperties.put("mail.smtp.host", smtpHost); // e.g., smtp.gmail.com
+				mailServerProperties.put("mail.smtp.port", smtpPort); // e.g., 587
+				mailServerProperties.put("mail.from", senderEmail); // e.g., joe@test.com
+				mailServerProperties.put("mail.user", senderEmail); // e.g., joe@test.com
+				mailServerProperties.put("mail.smtp.auth", smtpAuth); // e.g., false
+				mailServerProperties.put("mail.smtp.starttls.enable", enableTls); // e.g., true
+
+				// Step2
+				// TODO: Need to add Authenticator for the following
+				getMailSession = Session.getDefaultInstance(mailServerProperties, null);
+				generateMailMessage = new MimeMessage(getMailSession);
+				generateMailMessage.setFrom(new InternetAddress(senderEmail, senderName));
+				generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+				// Add all admins as CC'd recipients
+				for (int i = 0; i < adminUsers.size(); i++) {
+					UserInfoGwt adminUser = adminUsers.get(i);
+					String adminUserEmail = adminUser.getEmail();
+					if (!adminUserEmail.equals(senderEmail)) {
+						// Only add admin if not also the sender
+						generateMailMessage.addRecipient(Message.RecipientType.BCC, new InternetAddress(adminUserEmail));
+					}
+				}
+				
+				generateMailMessage.setSubject(subject);
+				generateMailMessage.setContent(content, "text/html");
+
+				// Step3
+				Transport transport = getMailSession.getTransport("smtp");
+				if (!smtpAuth) {
+					transport.connect();
+				} else {
+					transport.connect(smtpHost, senderEmail, senderEmailPassword); 
+				}
+				transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
+				transport.close();
+				log.debug("\nEmail '" + subject + "' successfully sent to " + recipient);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			
-			generateMailMessage.setSubject(subject);
-			generateMailMessage.setContent(content, "text/html");
-
-			// Step3
-			Transport transport = getMailSession.getTransport("smtp");
-			if (!smtpAuth) {
-				transport.connect();
-			} else {
-				transport.connect(smtpHost, senderEmail, senderEmailPassword); 
-			}
-			transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
-			transport.close();
-			log.debug("\nEmail '" + subject + "' successfully sent to " + recipient);
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+
 	}
 
 	public static void showUsage() {
