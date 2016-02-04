@@ -32,44 +32,47 @@
 					</xs:annotation>
 				</xs:element>
 				<xs:element name="Proxy" type="xs:string" maxOccurs="1"
-					minOccurs="0"></xs:element>
+					minOccurs="0">
+				</xs:element>
 
-				<xs:element name="Logging" type="LoggingType" maxOccurs="1"
-					minOccurs="1">
+				<xs:element name="Logging" type="LoggingType"
+					maxOccurs="1" minOccurs="1">
 					<xs:annotation>
 						<xs:documentation>
 							The Logging element defines properties of
-							the
-							AppVet logger.
+							the AppVet logger.
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
 
-				<xs:element name="UseSSO" type="xs:boolean" maxOccurs="1"
-					minOccurs="1"></xs:element>
-                <xs:element name="OrgLogoAltText" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
-                <xs:element name="Sessions" type="SessionType" maxOccurs="1"
-					minOccurs="1">
+				<xs:element name="UseSSO" type="xs:boolean"
+					maxOccurs="1" minOccurs="1">
+				</xs:element>
+				<xs:element name="OrgLogoAltText" type="xs:string"
+					maxOccurs="1" minOccurs="0">
+				</xs:element>
+				<xs:element name="Sessions" type="SessionType"
+					maxOccurs="1" minOccurs="1">
 					<xs:annotation>
 						<xs:documentation>
 							The Sessions defines properties of AppVet
-							user
-							sessions.
+							user sessions.
 						</xs:documentation>
 					</xs:annotation>
-				</xs:element>
+				</xs:element>
+
 
 				<xs:element name="Database" type="DatabaseType"
 					maxOccurs="1" minOccurs="1">
 					<xs:annotation>
 						<xs:documentation>
 							The Database element defines properties of
-							the
-							AppVet database.
+							the AppVet database.
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
 
+				<xs:element name="Email" type="EmailType" maxOccurs="1" minOccurs="0"></xs:element>
 				<xs:element name="ToolServices" type="ToolServicesType"
 					maxOccurs="1" minOccurs="1">
 					<xs:annotation>
@@ -84,8 +87,7 @@
 					<xs:annotation>
 						<xs:documentation>
 							The Apps element defines properties of
-							AppVet
-							apps.
+							AppVet apps.
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
@@ -363,6 +365,45 @@
 						apps on the system can lead to large disk usage.
 					</xs:documentation>
 				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="EmailType">
+		<xs:sequence>
+
+			<xs:element name="SMTPHost" type="xs:string" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						SMTP host or IP address (e.g., smtp.google.com
+						or 123.456.7.89).
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SMTPPort" type="xs:string" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The SMTP port number (port 25 is typicaly used
+						for SMTP).
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="EnableTLS" type="xs:boolean" maxOccurs="1"
+				minOccurs="1">
+			</xs:element>
+			<xs:element name="SenderEmail" type="xs:string"
+				maxOccurs="1" minOccurs="1">
+			</xs:element>
+
+			<xs:element name="SenderName" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+			<xs:element name="SMTPAuth" type="xs:boolean" maxOccurs="1"
+				minOccurs="1">
+			</xs:element>
+			<xs:element name="SenderEmailPassword" type="xs:string"
+				maxOccurs="1" minOccurs="0">
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>

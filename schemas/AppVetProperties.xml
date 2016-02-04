@@ -41,6 +41,19 @@
 		<UserName>root</UserName>
 		<Password>dbpassword1</Password>
 	</Database>
+	
+	<!-- EMAIL OPTIONAL
+
+    <Email>
+		<SMTPHost>smtp.test.com</SMTPHost>
+		<SMTPPort>25</SMTPPort>
+		<EnableTLS>true</EnableTLS>
+		<SenderEmail>appvet@test.com</SenderEmail>
+		<SenderName>My AppVet</SenderName>
+		<SMTPAuth>true</SMTPAuth>
+		<SenderEmailPassword>MyEmailPassword</SenderEmailPassword>
+	</Email>
+-->
 
 	<ToolServices>
 		<PollingInterval>2000</PollingInterval>
