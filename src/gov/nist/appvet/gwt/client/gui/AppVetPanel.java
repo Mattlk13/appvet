@@ -1337,7 +1337,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								"No tools available for this app.", true);
 					} else {
 						reportUploadDialogBox = new ReportUploadDialogBox(
-								userName, sessionId, selected.appId,
+								userInfo, sessionId, selected.appId,
 								SERVLET_URL, selected.os, tools);
 						reportUploadDialogBox.setText("Upload Report for "
 								+ selected.appName);

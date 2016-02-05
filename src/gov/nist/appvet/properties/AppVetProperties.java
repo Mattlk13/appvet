@@ -335,7 +335,7 @@ public class AppVetProperties {
 
 	private static void printVal(String parameter, Object obj) {
 		if (obj == null) {
-			log.error(parameter + ": \tnull", false);
+			log.warn(parameter + ": \tnull", false);
 		} else {
 			log.debug(parameter + ": \t" + obj.toString(), false);
 		}

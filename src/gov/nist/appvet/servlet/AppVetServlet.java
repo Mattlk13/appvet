@@ -594,12 +594,9 @@ public class AppVetServlet extends HttpServlet {
 		}
 		
 		// Check if requester is an ORG or DEPT analyst
-		if (requesterRole != Role.ORG_ANALYST) {
+		if (requesterRole != Role.ORG_ANALYST && requesterRole != Role.DEPT_ANALYST) {
 			// Requester is not an org analyst
-			log.debug("Requester is not an org analyst. Aborting authorization");
-			return false;
-		} else if (requesterRole != Role.DEPT_ANALYST) {
-			log.debug("Requester is not a dept analyst. Aborting authorization");
+			log.debug("Requester is not an org or dept analyst. Aborting authorization");
 			return false;
 		}
 		

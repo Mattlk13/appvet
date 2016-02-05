@@ -19,6 +19,8 @@
  */
 package gov.nist.appvet.gwt.shared;
 
+import gov.nist.appvet.shared.analysis.ToolType;
+
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 // TODO: See if this class can be deleted since most of this information is
@@ -34,17 +36,18 @@ public class ToolInfoGwt implements IsSerializable {
 	private String[] authenticationParameterNames = null;
 	private String reportFileType = null;
 	private String os = null; // From DeviceOS.name()
-	private String toolType = null;
+	// TODO Change toolType to type ToolType since it is added as a GWT module
+	private ToolType toolType = null;
 	private String restrictionType = null;
 
 	public ToolInfoGwt() {
 	}
 	
-	public String getType() {
+	public ToolType getType() {
 		return toolType;
 	}
 	
-	public void setType(String type) {
+	public void setType(ToolType type) {
 		this.toolType = type;
 	}
 

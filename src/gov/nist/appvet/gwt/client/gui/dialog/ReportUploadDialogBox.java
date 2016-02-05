@@ -23,7 +23,10 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
+import gov.nist.appvet.gwt.shared.UserInfoGwt;
+import gov.nist.appvet.shared.analysis.ToolType;
 import gov.nist.appvet.shared.os.DeviceOS;
+import gov.nist.appvet.shared.role.Role;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -60,12 +63,13 @@ public class ReportUploadDialogBox extends DialogBox {
 	public ListBox toolNamesComboBox = null;
 	public Hidden hiddenToolID = null;
 	public Hidden hiddenToolRisk = null;
+	public ArrayList<ToolInfoGwt> permittedToolReports = new ArrayList<ToolInfoGwt>();
 
-	public ReportUploadDialogBox(String username, String sessionId,
+	public ReportUploadDialogBox(UserInfoGwt userInfo, String sessionId,
 			String appid, String servletURL, DeviceOS os,
 			final ArrayList<ToolInfoGwt> tools) {
 		super(false, true);
-
+		
 		setWidth("100%");
 		setAnimationEnabled(false);
 		final VerticalPanel dialogVPanel = new VerticalPanel();
@@ -103,7 +107,7 @@ public class ReportUploadDialogBox extends DialogBox {
 		final Hidden hiddenUsername = new Hidden();
 		hiddenAppid.setTitle("username");
 		hiddenUsername.setName("username");
-		hiddenUsername.setValue(username);
+		hiddenUsername.setValue(userInfo.getUserName());
 		verticalPanel.add(hiddenUsername);
 		final Hidden hiddenSessionId = new Hidden();
 		hiddenAppid.setTitle("sessionid");
@@ -146,7 +150,7 @@ public class ReportUploadDialogBox extends DialogBox {
 		analystTextBox.setName("User");
 		analystTextBox.setTitle("User is non-editable");
 		analystTextBox.setAlignment(TextAlignment.LEFT);
-		analystTextBox.setText(username);
+		analystTextBox.setText(userInfo.getUserName());
 		analystTextBox.setEnabled(false);
 		// analystTextBox.setReadOnly(true);
 		grid.setWidget(0, 1, analystTextBox);
@@ -183,41 +187,85 @@ public class ReportUploadDialogBox extends DialogBox {
 		grid.getCellFormatter().setStyleName(2, 1, "reportUploadWidget");
 		toolNamesComboBox.setSize("231px", "22px");
 		statusLabel = new Label("");
-		// Set tools in combo box
+		
+		
+		// Add tools to toolNamesComboBox. Note only ADMINS can submit
+		// SUMMARY reports while only ADMINs and all ANALYSTs can submit
+		// final determination reports (AUDITs).
+		String roleStr = userInfo.getRole();
+		if (roleStr == null) 
+			log.severe("roleStr is null");
+		Role role = Role.getRole(roleStr);
+		if (role == null)
+			log.severe("role is null");
+		
+
+		// Set new list with only permitted tools
+		log.info("tools size: " + tools.size());
 		for (int i = 0; i < tools.size(); i++) {
 			ToolInfoGwt tool = tools.get(i);
+			if (tool.getType() == ToolType.SUMMARY) {
+				if (role == Role.ADMIN){
+					permittedToolReports.add(tool);
+				}
+				
+			} else if (tool.getType() == ToolType.AUDIT) {
+				if (role == Role.ADMIN || role == Role.ANALYST || role == Role.ORG_ANALYST || role == Role.DEPT_ANALYST) {
+					permittedToolReports.add(tool);
+
+				}
+				
+			} else if (tool.getType() == ToolType.TESTTOOL) {
+				permittedToolReports.add(tool);
+
+			}
+		}
+		
+		// Set tools in combo box
+		for (int i = 0; i < permittedToolReports.size(); i++) {
+			ToolInfoGwt tool = permittedToolReports.get(i);
 			if (tool.getOs().equals(os.name())) {
+				
 				toolNamesComboBox.addItem(tool.getName());
 			}
 		}
+				
 		toolNamesComboBox.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent arg0) {
 
 				int i = toolNamesComboBox.getSelectedIndex();
 				String selectedToolName = toolNamesComboBox.getItemText(i);
-				for (int j = 0; j < tools.size(); j++) {
-					ToolInfoGwt selectedTool = tools.get(j);
+				
+				for (int j = 0; j < permittedToolReports.size(); j++) {
+					
+					ToolInfoGwt selectedTool = permittedToolReports.get(j);
+					
 					if (selectedTool.getName().equals(selectedToolName)) {
+						
 						String reportFileType = selectedTool
 								.getReportFileType();
 						if (reportFileType == null) {
 							log.warning("Report file type is null");
 						} 
+						
 						String filter = "." + reportFileType;
 						fileUpload.getElement().setAttribute("accept", filter);
 
-						String toolType = selectedTool.getType();
+						ToolType toolType = selectedTool.getType();
 
-						if (toolType.equals("SUMMARY")) {
+						if (toolType == ToolType.SUMMARY) {
+							
 							if (toolRiskComboBox != null) {
 								toolRiskComboBox.setVisible(false);
 								statusLabel.setText(selectedToolName
 										+ " requires a " + reportFileType
 										+ " report.");
+								
 							} else {
 								log.warning("toolRiskComboBox is null");
 							}
+							
 						} else {
 							if (toolRiskComboBox != null) {
 								toolRiskComboBox.setVisible(true);
@@ -232,6 +280,7 @@ public class ReportUploadDialogBox extends DialogBox {
 				}
 			}
 		});
+		
 
 		final Label lblReport = new Label("Report: ");
 		lblReport.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
@@ -305,10 +354,13 @@ public class ReportUploadDialogBox extends DialogBox {
 		grid.getCellFormatter().setHorizontalAlignment(0, 0,
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		
+		
 		// Set report type filter for first tool in list
 		String selectedToolName = toolNamesComboBox.getItemText(0);
-		for (int k = 0; k < tools.size(); k++) {
-			ToolInfoGwt tool3 = tools.get(k);
+		
+		
+		for (int k = 0; k < permittedToolReports.size(); k++) {
+			ToolInfoGwt tool3 = permittedToolReports.get(k);
 			if (tool3.getName().equals(selectedToolName)) {
 				String reportFileType = tool3.getReportFileType();
 				String filter = "." + reportFileType;
@@ -316,9 +368,9 @@ public class ReportUploadDialogBox extends DialogBox {
 				String filter2 = "." + reportFileType;
 				fileUpload.getElement().setAttribute("accept", filter2);
 
-				String toolType = tool3.getType();
+				ToolType toolType = tool3.getType();
 
-				if (toolType.equals("SUMMARY")) {
+				if (toolType == ToolType.SUMMARY) {
 
 					if (toolRiskComboBox != null) {
 						//toolRiskComboBox.setEnabled(false);
@@ -341,6 +393,7 @@ public class ReportUploadDialogBox extends DialogBox {
 				}
 			}
 		}
+		
 
 		// statusLabel = new Label("");
 		dialogVPanel.add(statusLabel);
@@ -390,21 +443,21 @@ public class ReportUploadDialogBox extends DialogBox {
 			public void onClick(ClickEvent event) {
 				// Set toolid first
 				String toolID = null;
-				String toolType = null;
+				ToolType toolType = null;
 				int selectedToolNameIndex = toolNamesComboBox
 						.getSelectedIndex();
 				String selectedToolName = toolNamesComboBox
 						.getValue(selectedToolNameIndex);
-				for (int i = 0; i < tools.size(); i++) {
-					if (selectedToolName.equals(tools.get(i).getName())) {
-						toolID = tools.get(i).getId();
-						toolType = tools.get(i).getType();
+				for (int i = 0; i < permittedToolReports.size(); i++) {
+					if (selectedToolName.equals(permittedToolReports.get(i).getName())) {
+						toolID = permittedToolReports.get(i).getId();
+						toolType = permittedToolReports.get(i).getType();
 						break;
 					}
 				}
 
 				String risk = null;
-				if (toolType.equals("SUMMARY")) {
+				if (toolType == ToolType.SUMMARY) {
 					// SUMMARY reports only have status of LOW (which is displayed as "AVAILABLE")
 					risk = "AVAILABLE";
 				} else {
@@ -419,14 +472,6 @@ public class ReportUploadDialogBox extends DialogBox {
 				}
 			}
 		});
-		for (int i = 0; i < tools.size(); i++) {
-			ToolInfoGwt tool = tools.get(i);
-			if (tool.getOs().equals(os)) {
-				String toolName = tool.getName();
-				if ((toolName != null) && !toolName.isEmpty()) {
-					toolNamesComboBox.addItem(toolName);
-				}
-			}
-		}
+		
 	}
 }

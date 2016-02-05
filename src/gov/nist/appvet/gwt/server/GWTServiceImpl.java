@@ -206,7 +206,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					toolInfo.setName(androidTool.name);
 					toolInfo.setId(androidTool.toolId);
 					log.debug("Checking restriction for : " + androidTool.toolId);
-					toolInfo.setType(androidTool.toolType.name());
+					toolInfo.setType(androidTool.toolType);
 					toolInfo.setRestrictionType(androidTool.restrictionType.name());
 					
 					toolInfo.setAuthenticationRequired(androidTool.authenticationRequired);
@@ -236,7 +236,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					toolInfo.setOs(DeviceOS.IOS.name());
 					toolInfo.setName(iosTool.name);
 					toolInfo.setId(iosTool.toolId);
-					toolInfo.setType(iosTool.toolType.name());
+					toolInfo.setType(iosTool.toolType);
 					toolInfo.setAuthenticationRequired(iosTool.authenticationRequired);
 					if (toolInfo.requiresAuthentication()) {
 						toolInfo.setAuthenticationParameterNames(iosTool.authenticationParams);
