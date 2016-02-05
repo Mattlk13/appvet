@@ -1102,6 +1102,24 @@ public class AppVetServlet extends HttpServlet {
 		}
 		final ToolAdapter tool = ToolAdapter.getByToolId(appInfo.os,
 				appInfo.toolId);
+		
+		Role submitterRole = Database.getRole(submitterUserName);
+		
+		if (tool.toolType == ToolType.SUMMARY) {
+			// Only ADMINs can update SUMMARY reports
+			if (submitterRole != Role.ADMIN) {
+				appInfo.log.error("Submitter " + submitterUserName + " not authorized to submit " + tool.toolType.name() + " reports");
+				return;
+			}
+		} else if (tool.toolType == ToolType.AUDIT){
+			// Only ADMINs, ANALYSTs, and ORG/DEPT ANALYSTs can update AUDIT and SUMMARY reports.
+			if (submitterRole != Role.ADMIN && submitterRole != Role.ANALYST &&
+					submitterRole != Role.ORG_ANALYST && submitterRole != Role.DEPT_ANALYST) {
+				appInfo.log.error("Submitter " + submitterUserName + " not authorized to submit " + tool.toolType.name() + " reports");
+				return;
+			}
+		} 
+
 		String reportName = null;
 		if (appInfo.toolId == null) {
 			appInfo.log.error("appInfo.reportType is null");

@@ -908,8 +908,7 @@ public class Database {
 		ResultSet resultSet = null;
 		String sql = null;
 		Role userRole = getRole(username);
-		String organization = null;
-		String department = null;
+
 		try {
 			// Get apps based on user's role
 			userRole = getRole(username);
@@ -923,17 +922,12 @@ public class Database {
 				sql = "SELECT * FROM apps ORDER BY submittime DESC";
 				break;
 			case ORG_ANALYST: 
-				// Organizational analyst can view all organizational apps
-				organization = Database.getOrganization(username);
-				sql = "SELECT * FROM apps where org='" + organization + "' "
-						+ "ORDER BY submittime DESC";
+				// Filtered below for just organization's apps
+				sql = "SELECT * FROM apps ORDER BY submittime DESC";
 				break;
 			case DEPT_ANALYST: 
-				// Dept analyst can view all dept apps for an organization
-				organization = Database.getOrganization(username);
-				department = Database.getDepartment(username); 
-				sql = "SELECT * FROM apps where org='" + organization + "' "
-						+ " and dept='" + department + "' ORDER BY submittime DESC";
+				// Filtered below for just department's apps
+				sql = "SELECT * FROM apps ORDER BY submittime DESC";
 				break;
 			case TOOL_PROVIDER: 
 				// Tool provider can only view apps submitted by them (for testing)
@@ -953,10 +947,30 @@ public class Database {
 			connection = getConnection();
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
-
+			String userOrg = Database.getOrganization(username);
+			String userDept = Database.getDepartment(username); 
+			
 			while (resultSet.next()) {
 				AppInfoGwt appInfo = getAppInfo(resultSet);
-				appsList.add(appInfo);
+				
+				if (userRole == Role.ORG_ANALYST) {
+					// An ORG_ANALYST can view all apps from an org
+					String appSubmitterUser = appInfo.ownerName;
+					String submitterOrg = Database.getOrganization(appSubmitterUser);
+					if (userOrg.equals(submitterOrg)) {
+						appsList.add(appInfo);
+					}
+				} else if (userRole == Role.DEPT_ANALYST) {
+					// A DEPT_ANALYST can view all apps from a dept in an org
+					String appSubmitterUser = appInfo.ownerName;
+					String submitterOrg = Database.getOrganization(appSubmitterUser);
+					String submitterDept = Database.getDepartment(appSubmitterUser);
+					if (userOrg.equals(submitterOrg) && userDept.equals(submitterDept)) {
+						appsList.add(appInfo);
+					}
+				} else {
+					appsList.add(appInfo);
+				}
 			}
 		} catch (final SQLException e) {
 			log.error(username + ": " + e.toString());
@@ -978,8 +992,7 @@ public class Database {
 		String sql = null;
 		AppInfoGwt appInfo = null;
 		ArrayList<AppInfoGwt> appsList = new ArrayList<AppInfoGwt>();
-		String organization = null;
-		String department = null;
+
 		try {
 			// Get apps based on user's role
 			userRole = getRole(username);
@@ -993,17 +1006,12 @@ public class Database {
 				sql = "SELECT * FROM apps where updated='1'";
 				break;
 			case ORG_ANALYST: 
-				// Organizational analyst can view all organizational apps
-				organization = Database.getOrganization(username);
-				sql = "SELECT * FROM apps where org='" + organization + "' "
-						+ " and updated='1'";
+				// Filtered below for just organization's apps
+				sql = "SELECT * FROM apps where updated='1'";
 				break;
 			case DEPT_ANALYST:
-				// Dept analyst can view all dept apps for an organization
-				organization = Database.getOrganization(username);
-				department = Database.getDepartment(username); 
-				sql = "SELECT * FROM apps where org='" + organization + "' "
-						+ " and dept='" + department + "' and updated='1'";
+				// Filtered below for just department's apps for an org
+				sql = "SELECT * FROM apps where updated='1'";
 				break;
 			case TOOL_PROVIDER:
 				// Tool provider can only view apps submitted by them (for testing)
@@ -1023,13 +1031,35 @@ public class Database {
 			connection = getConnection();
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
+			
 			if (resultSet.wasNull()) {
 				log.debug("resultSet was null");
 			}
 			
+			String userOrg = Database.getOrganization(username);
+			String userDept = Database.getDepartment(username); 
+			
 			while (resultSet.next()) {
 				appInfo = getAppInfo(resultSet);
-				appsList.add(appInfo);
+				
+				if (userRole == Role.ORG_ANALYST) {
+					// An ORG_ANALYST can view all apps from an org
+					String appSubmitterUser = appInfo.ownerName;
+					String submitterOrg = Database.getOrganization(appSubmitterUser);
+					if (userOrg.equals(submitterOrg)) {
+						appsList.add(appInfo);
+					}
+				} else if (userRole == Role.DEPT_ANALYST) {
+					// A DEPT_ANALYST can view all apps from a dept in an org
+					String appSubmitterUser = appInfo.ownerName;
+					String submitterOrg = Database.getOrganization(appSubmitterUser);
+					String submitterDept = Database.getDepartment(appSubmitterUser);
+					if (userOrg.equals(submitterOrg) && userDept.equals(submitterDept)) {
+						appsList.add(appInfo);
+					}
+				} else {
+					appsList.add(appInfo);
+				}
 			}
 			return appsList;
 		} catch (final SQLException e) {
