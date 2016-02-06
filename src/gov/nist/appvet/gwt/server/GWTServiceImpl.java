@@ -342,7 +342,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	}
 
 	@Override
-	public Long updateSessionExpiration(String sessionId, long sessionTimeout)
+	public Long updateSessionExpiration(String sessionId, long newSessionTimeout)
 			throws IllegalArgumentException {
 		final String clientIpAddress = getThreadLocalRequest().getRemoteAddr();
 		final long sessionValid = Database.isSessionExpired(sessionId,
@@ -352,8 +352,8 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			return new Long(-1);
 		} else {
 			Database.updateSessionExpiration(sessionId, clientIpAddress,
-					sessionTimeout);
-			return new Long(sessionTimeout);
+					newSessionTimeout);
+			return new Long(newSessionTimeout);
 		}
 	}
 

@@ -1363,9 +1363,9 @@ public class Database {
 	}
 
 	public static boolean updateSessionExpiration(String sessionId,
-			String clientIpAddress, long newExpirationTimeLong) {
+			String clientIpAddress, long newSesionTimeout) {
 		return update("UPDATE sessions SET expiretime='"
-				+ newExpirationTimeLong + "' WHERE (clientaddress='"
+				+ newSesionTimeout + "' WHERE (clientaddress='"
 				+ clientIpAddress + "' OR clientaddress='127.0.0.1') "
 				+ "AND sessionid='" + sessionId + "'");
 	}

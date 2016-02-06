@@ -112,20 +112,24 @@ public class ToolMgr implements Runnable {
 		}
 	}
 
+	
 	@Override
 	public void run() {
 		// Set the time that the app processing timeout will occur
-		Date currentAppTimeout = new Date(System.currentTimeMillis() + AppVetProperties.APP_PROCESSING_TIMEOUT);
+		Date currentAppTimeout = null;
+		
 		for (;;) {
+			
 			delay(AppVetProperties.TOOL_MGR_POLLING_INTERVAL); // Wait to see if another app is processing
+			// Get the currently processing app ID
 			String currentProcessingAppId = Database.getCurrentProcessingAppId();
 			if (currentProcessingAppId != null) {
 				// An app already has a status of PROCESSING so no other apps
 				// will be processed. 
-				//log.debug("An app is already processing. Waiting...");
 				
 				// Check if current app has exceeded processing timeout
 				Date currentTime = new Date(System.currentTimeMillis());
+				log.debug("Current time: " + currentTime.toString() + ", Timeout: " + currentAppTimeout.toString());
 				if (currentTime.after(currentAppTimeout)) {
 					// Timeout occurred waiting for one or more reports to be received
 					// Get app info to set the status of these tools to ERROR
@@ -133,11 +137,16 @@ public class ToolMgr implements Runnable {
 					Database.killProcessingTools(currentProcessingAppId, DeviceOS.getOS(appOS));
 				}				
 			} else {
-				AppInfo appInfo = null;
+				
+				// Get the next PENDING app
 				final String appid = Database.getNextApp(AppStatus.PENDING);
 				if (appid != null) {
 
-					appInfo = new AppInfo(appid);
+					// Set timeout for this app
+					currentAppTimeout = new Date(System.currentTimeMillis() + 
+							AppVetProperties.APP_PROCESSING_TIMEOUT);
+					
+					AppInfo appInfo = new AppInfo(appid);
 					appInfo.log.info("App " + appid + " processing.");
 					final long startTime = new Date().getTime();
 					appInfo.log.debug(MemoryUtil.getFreeHeap("ToolMgr.run()"));

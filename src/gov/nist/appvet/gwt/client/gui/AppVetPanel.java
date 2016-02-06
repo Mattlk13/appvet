@@ -123,7 +123,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	private TextBox searchTextBox = null;
 	private String sessionId = null;
 	private static long sessionExpirationLong = 0;
-	private Timer pollingTimer = null;
+	private static Timer pollingTimer = null;
 	private HorizontalPanel appsListButtonPanel = null;
 	private SimplePanel rightCenterPanel = null;
 	private static AppUploadDialogBox appUploadDialogBox = null;
@@ -145,7 +145,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	private static double SOUTH_PANEL_HEIGHT = 47.0;
 	private static boolean searchMode = false;
 	private MenuItem accountMenuItem = null;
-	public static boolean timeoutMessageDisplayed = false;
+	public static boolean timeoutWarningMessage = false;
 
 	class AppListHandler implements SelectionChangeEvent.Handler {
 
@@ -645,7 +645,11 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 	}
 
-	public static void showTimeoutDialog() {
+	public static void showTimeoutDialog(final long expirationTime) {
+		killDialogBox(messageDialogBox);
+
+		timeoutWarningMessage = true;
+		
 		messageDialogBox = new MessageDialogBox(
 				"Your AppVet session will expire in less than 60 seconds. Please select OK to continue using AppVet.",
 				false);
@@ -655,18 +659,19 @@ public class AppVetPanel extends DockLayoutPanel {
 		messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				killDialogBox(messageDialogBox);
-				// Reset session timeout if close button clicked
-				if (!sessionTimeLeft(sessionExpirationLong)) {
-					showExpiredSessionMessage();
 
+				Date currentDate = new Date();
+				long diff = expirationTime - currentDate.getTime();
+				if (diff <= 0) {
+					// Didn't click within the 60s alert period, so expire
+					pollingTimer.cancel();
+					showExpiredSessionMessage();
 				} else {
 					sessionExpirationLong = new Date().getTime()
 							+ MAX_SESSION_IDLE_DURATION;
-					timeoutMessageDisplayed = false;
-					// log.info("Setting session timeout and display=false");
+					killDialogBox(messageDialogBox);
+					timeoutWarningMessage = false;
 				}
-
 			}
 		});
 	}
@@ -1095,12 +1100,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		if (userInfo.getRole().equals(Role.ADMIN.name())) {
 			appVetMenuBar.addItem(adminMenuItem);
 		}
-		// Remove first element containing the lastUpdate timestamp
-		AppInfoGwt timeStampObject = null;
-		// if (initialApps != null && initialApps.size() > 0) {
-		// timeStampObject = initialApps.remove(0);
-		// lastAppsListUpdate = timeStampObject.getLastAppUpdate();
-		// }
+
 		final HorizontalSplitPanel centerAppVetSplitPanel = new HorizontalSplitPanel();
 		centerAppVetSplitPanel.setTitle("AppVet split pane");
 		centerAppVetSplitPanel.setSplitPosition("65%");
@@ -1408,8 +1408,7 @@ public class AppVetPanel extends DockLayoutPanel {
 			public void onClick(ClickEvent event) {
 				final AppInfoGwt selected = appSelectionModel
 						.getSelectedObject();
-				// deleteConfirmDialogBox = new DeleteAppConfirmDialogBox(
-				// selected.appId, selected.appName);
+
 				deleteConfirmDialogBox = new YesNoConfirmDialog(
 						"<p align=\"center\">\r\nAre you sure you want to delete app #"
 								+ selected.appId + " '" + selected.appId
@@ -1653,11 +1652,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		pollingTimer = new Timer() {
 			@Override
 			public void run() {
-				// if (newBrowserEvent) {
-				// newBrowserEvent = false;
-				// }
 				updateSessionExpiration();
-
 				getUpdatedApps(user);
 			}
 		};
@@ -1862,38 +1857,26 @@ public class AppVetPanel extends DockLayoutPanel {
 
 					@Override
 					public void onSuccess(Long expirationTime) {
-						if (expirationTime == -1) {
-							// Session has expired
-							pollingTimer.cancel();
-							showExpiredSessionMessage();
-						} else {
-							sessionTimeLeft(expirationTime);
-						}
+						sessionTimeLeft(expirationTime);
 					}
 				});
 	}
 
-	public static boolean sessionTimeLeft(long expirationTime) {
+	public static void sessionTimeLeft(long expirationTime) {
 		Date currentDate = new Date();
-		Date expiresDate = new Date(expirationTime);
-
-		long diff = expiresDate.getTime() - currentDate.getTime();
-
-		long diffSeconds = diff / 1000 % 60;
-		long diffMinutes = diff / (60 * 1000) % 60;
-
-		if (diff < 0) {
-			// log.warning("Time expired: " + diffMinutes + "min " + diffSeconds
-			// + "sec");
-			return false;
+		long diff = expirationTime - currentDate.getTime();
+		//log.info("diff: " + diff);
+		if (diff <= 0) {
+			// Session has expired
+			pollingTimer.cancel();
+			showExpiredSessionMessage();
+		} else if (diff <= 60000 && timeoutWarningMessage == false){
+			// 60 seconds left before timeout, alert user
+			showTimeoutDialog(expirationTime);
+		} else if (diff <= 6000 && timeoutWarningMessage == true) {
+			// Timeout warning already displayed. Do nothing.
 		} else {
-			// log.info("Time remaining: " + diffMinutes + "min " + diffSeconds
-			// + "sec");
-			if (diffMinutes == 0 && timeoutMessageDisplayed == false) {
-				timeoutMessageDisplayed = true;
-				showTimeoutDialog();
-			}
-			return true;
+			// Do nothing
 		}
 	}
 
@@ -1968,10 +1951,7 @@ public class AppVetPanel extends DockLayoutPanel {
 									updatedUserInfo.setChangePassword(false);
 									updatedUserInfo.setPassword("");
 									userInfo.setRole(updatedUserInfo.getRole());
-									// showMessageDialog(
-									// "Update Status",
-									// "Account settings updated successfully",
-									// false);
+								
 									killDialogBox(userAcctDialogBox);
 								} else {
 									showMessageDialog(
