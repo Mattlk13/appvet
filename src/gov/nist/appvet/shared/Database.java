@@ -337,9 +337,9 @@ public class Database {
 				// Skip appid column
 				String toolId = androidTools.get(i);
 				sql = "SELECT " + toolId + " FROM " + androidTableName + " WHERE appid='" + appId + "'";
-				log.debug("SQL for tool timeout: " + sql);
+				//log.debug("SQL for tool timeout: " + sql);
 				String toolStatusString = Database.getString(sql);
-				log.debug("toolStatusString: " + toolStatusString);
+				//log.debug("toolStatusString: " + toolStatusString);
 				ToolStatus toolStatus = ToolStatus.getStatus(toolStatusString);
 				if (toolStatus == null) {
 					log.error("Unknown Android tool status encountered while killing active tool");
@@ -364,9 +364,9 @@ public class Database {
 				// Skip appid column
 				String toolId = androidTools.get(i);
 				sql = "SELECT " + toolId + " FROM " + iosTableName + " WHERE appid='" + appId + "'";
-				log.debug("SQL for tool timeout: " + sql);
+				//log.debug("SQL for tool timeout: " + sql);
 				String toolStatusString = Database.getString(sql);
-				log.debug("toolStatusString: " + toolStatusString);
+				//log.debug("toolStatusString: " + toolStatusString);
 				ToolStatus toolStatus = ToolStatus.getStatus(toolStatusString);
 				if (toolStatus == null) {
 					log.error("Unknown iOS tool status encountered while killing active tool");
@@ -1089,7 +1089,7 @@ public class Database {
 			appInfo.versionCode = getNonNullAttributeValue(resultSet.getString(5));
 			appInfo.versionName = getNonNullAttributeValue(resultSet.getString(6));
 			// Skip file and project name until end			
-			appInfo.submitTime = resultSet.getTimestamp(8).getTime();
+			appInfo.submitTime = resultSet.getTimestamp(8);
 			String appStatusString = resultSet.getString(9);
 			appInfo.appStatus = AppStatus.getStatus(appStatusString);
 			appInfo.ownerName = getNonNullAttributeValue(resultSet.getString(10));

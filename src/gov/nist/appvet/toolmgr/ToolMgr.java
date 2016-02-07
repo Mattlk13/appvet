@@ -129,7 +129,7 @@ public class ToolMgr implements Runnable {
 				
 				// Check if current app has exceeded processing timeout
 				Date currentTime = new Date(System.currentTimeMillis());
-				log.debug("Current time: " + currentTime.toString() + ", Timeout: " + currentAppTimeout.toString());
+				//log.debug("Current time: " + currentTime.toString() + ", Timeout: " + currentAppTimeout.toString());
 				if (currentTime.after(currentAppTimeout)) {
 					// Timeout occurred waiting for one or more reports to be received
 					// Get app info to set the status of these tools to ERROR

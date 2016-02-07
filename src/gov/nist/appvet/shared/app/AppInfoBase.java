@@ -23,6 +23,7 @@ import gov.nist.appvet.shared.os.DeviceOS;
 import gov.nist.appvet.shared.status.AppStatus;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * This class defines the core metadata of an app. This class is extended by
@@ -64,7 +65,7 @@ public class AppInfoBase implements Serializable {
 	/** The submitter (owner) of an app during app submission. */
 	public String ownerName = null;
 	/** Submission date and time of the app. */
-	public long submitTime = 0;
+	public Date submitTime = null;
 	/** The status of the app. */
 	public AppStatus appStatus = null;
 	/** The client host from which this app was submitted. */

@@ -268,8 +268,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 			@Override
 			public String getValue(T object) {
 				final AppInfoGwt appInfo = (AppInfoGwt) object;
-				final Date date = new Date(appInfo.submitTime);
-				final String dateString = dateTimeFormat.format(date);
+				final String dateString = dateTimeFormat.format(appInfo.submitTime);
 				return dateString;
 			}
 		};
@@ -278,11 +277,9 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 			@Override
 			public int compare(T o1, T o2) {
 				final AppInfoGwt appInfo1 = (AppInfoGwt) o1;
-				final Date date1 = new Date(appInfo1.submitTime);
-				final String dateString1 = dateTimeFormat.format(date1);
+				final String dateString1 = dateTimeFormat.format(appInfo1.submitTime);
 				final AppInfoGwt appInfo2 = (AppInfoGwt) o2;
-				final Date date2 = new Date(appInfo2.submitTime);
-				final String dateString2 = dateTimeFormat.format(date2);
+				final String dateString2 = dateTimeFormat.format(appInfo2.submitTime);
 				return dateString1.compareTo(dateString2);
 			}
 		});
