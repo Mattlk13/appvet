@@ -19,21 +19,89 @@
  */
 package gov.nist.appvet.gwt.shared;
 
-import gov.nist.appvet.shared.app.AppInfoBase;
+import gov.nist.appvet.shared.all.AppStatus;
+import gov.nist.appvet.shared.all.DeviceOS;
+
+import java.io.Serializable;
+import java.util.Date;
+
 
 /**
- * This class defines app metadata that may be used by a GWT client.
+ * This class defines the core metadata of an app. This class is extended by
+ * AppInfoGwt, for defining app metadata that may be used by GWT clients, and by
+ * AppInfo, for defining app metadata used by all other components.
  * 
  * @author steveq@nist.gov
  */
-public class AppInfoGwt extends AppInfoBase {
+public class AppInfoGwt implements Serializable {
 	private static final long serialVersionUID = 1L;
+	/** The AppVet ID of the app. */
+	public String appId = null;
+	/** Used by AppVet to determine if an app's status was recently updated 
+	 * (but not yet consumed by AppVet). Rarely used within an AppInfoCore 
+	 * object.
+	 */
+	public boolean updated = false;
+	/** The display name of the app. */
+	public String appName = null;
+	/** The package of bundle name of the app. */
+	public String packageName = null;
+	/**
+	 * The filename of the app. Note that whitespace in filenames are replaced
+	 * with underscore. Further note that apps submitted as metadata only (name,
+	 * version, etc.) will have a null file name.
+	 */
+	public String appFileName = null;
+	/**
+	 * The file name of the app minus the file extension (e.g., '.apk'). The app
+	 * project name is typically used to store a decompressed binary app file.
+	 */
+	public String appProjectName = null;
+	/** The version code of the app. */
+	public String versionCode = null;
+	/** The displayed version code of the app. */
+	public String versionName = null;
+	/** The target OS platform for the app. */
+	public DeviceOS os = null;
+	/** The submitter (owner) of an app during app submission. */
+	public String ownerName = null;
+	/** Submission date and time of the app. */
+	public Date submitTime = null;
+	/** The status of the app. */
+	public AppStatus appStatus = null;
+	/** The client host from which this app was submitted. */
+	public String clientHost = null;
+	/** The icon name (default or actual) */
+	//public String iconFileName = null;
 
+	/** Empty constructor. */
 	public AppInfoGwt() {
-		super();
 	}
 
-	/** This method matches keyword tokens for searching. */
+	/** Set the app filename and project name. */
+	public void setAppFileAndProjectName(String appFileName, DeviceOS os) {
+		this.appFileName = appFileName;
+		String extension = null;
+		if (os == DeviceOS.ANDROID) {
+			extension = ".APK";
+		} else if (os == DeviceOS.IOS) {
+			extension = ".IPA";
+		}
+		int extensionIndex = appFileName.toUpperCase().indexOf(extension);
+		this.appProjectName = appFileName.substring(0, extensionIndex);
+	}
+
+	/** Get the app project name. */
+	public String getAppProjectName() {
+		return appProjectName;
+	}
+
+	/** Get the app filename. */
+	public String getAppFileName() {
+		return appFileName;
+	}
+	
+	/** This method ised only by AppVetPanel to match keyword tokens for searching. */
 	public boolean tokenMatch(String token) {
 		final String lowerCaseToken = token.toLowerCase();
 		if (appId.toLowerCase().indexOf(lowerCaseToken) > -1) {
@@ -65,4 +133,6 @@ public class AppInfoGwt extends AppInfoBase {
 		}
 		return false;
 	}
+
+
 }

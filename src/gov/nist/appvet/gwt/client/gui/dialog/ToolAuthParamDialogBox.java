@@ -22,8 +22,8 @@ package gov.nist.appvet.gwt.client.gui.dialog;
 import gov.nist.appvet.gwt.client.GWTService;
 import gov.nist.appvet.gwt.client.GWTServiceAsync;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
-import gov.nist.appvet.gwt.shared.UserToolCredentialsGwt;
-import gov.nist.appvet.shared.os.DeviceOS;
+import gov.nist.appvet.shared.all.DeviceOS;
+import gov.nist.appvet.shared.all.UserToolCredentials;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -55,7 +55,7 @@ public class ToolAuthParamDialogBox extends DialogBox {
 	public ListBox toolParametersListBox = null;
 	public int selectedParameterIndex = 0;
 	public Label toolParamStatusLabel = null;
-	public ArrayList<UserToolCredentialsGwt> toolCredentials = null;
+	public ArrayList<UserToolCredentials> toolCredentials = null;
 	final PushButton editButton = new PushButton("Edit");
 	final PushButton saveButton = new PushButton("Save");
 	public PushButton doneButton = null;
@@ -91,7 +91,7 @@ public class ToolAuthParamDialogBox extends DialogBox {
 					"toolCredentials size: " + toolCredentials.size());
 		}
 		for (int i = 0; i < toolCredentials.size(); i++) {
-			UserToolCredentialsGwt toolCreds = toolCredentials.get(i);
+			UserToolCredentials toolCreds = toolCredentials.get(i);
 			if (toolCreds.os.equals(DeviceOS.ANDROID.name())) {
 				toolsListBox.addItem(DeviceOS.ANDROID.name() + ": "
 						+ toolCreds.toolName);
@@ -191,7 +191,7 @@ public class ToolAuthParamDialogBox extends DialogBox {
 				int selectedToolIndex = toolsListBox.getSelectedIndex();
 				String selectedToolName = toolsListBox
 						.getItemText(selectedToolIndex);
-				UserToolCredentialsGwt selectedTool = getToolCredentials(selectedToolName);
+				UserToolCredentials selectedTool = getToolCredentials(selectedToolName);
 				for (int i = 0; i < selectedTool.authParamNames.length; i++) {
 					String parameterNameAndValue = toolParametersListBox
 							.getItemText(i);
@@ -267,7 +267,7 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		});
 	}
 
-	public void displayAuthenticationRequirements(UserToolCredentialsGwt tool) {
+	public void displayAuthenticationRequirements(UserToolCredentials tool) {
 		if (tool == null) {
 			log.log(Level.SEVERE, "toolInfo is null");
 		}
@@ -289,7 +289,7 @@ public class ToolAuthParamDialogBox extends DialogBox {
 	 * @return
 	 */
 	public void displayToolCredentials(String selectedToolListName) {
-		UserToolCredentialsGwt selectedTool = getToolCredentials(selectedToolListName);
+		UserToolCredentials selectedTool = getToolCredentials(selectedToolListName);
 		if (selectedTool != null) {
 			// Display credentials list
 			displayAuthenticationRequirements(selectedTool);
@@ -306,14 +306,14 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		}
 	}
 
-	public UserToolCredentialsGwt getToolCredentials(String selectedToolListName) {
+	public UserToolCredentials getToolCredentials(String selectedToolListName) {
 		// Parse out the tool name
 		String[] selectedToolListNameArray = selectedToolListName.split(": ");
 		if (selectedToolListNameArray.length == 2) {
 			String os = selectedToolListNameArray[0];
 			String selectedToolName = selectedToolListNameArray[1];
 			for (int i = 0; i < toolCredentials.size(); i++) {
-				UserToolCredentialsGwt toolCreds = toolCredentials.get(i);
+				UserToolCredentials toolCreds = toolCredentials.get(i);
 				if (toolCreds.toolName.equals(selectedToolName)
 						&& toolCreds.os.equals(os)) {
 					return toolCreds;

@@ -20,7 +20,7 @@
 package gov.nist.appvet.gwt.client.gui.table.appslist;
 
 import gov.nist.appvet.gwt.client.gui.table.PagingDataGrid;
-import gov.nist.appvet.gwt.shared.UserInfoGwt;
+import gov.nist.appvet.shared.all.UserInfo;
 
 import java.util.Comparator;
 
@@ -46,15 +46,15 @@ public class UsersListPagingDataGrid<T> extends PagingDataGrid<T> {
 				new TextCell()) {
 			@Override
 			public String getValue(T object) {
-				return ((UserInfoGwt) object).getLastName();
+				return ((UserInfo) object).getLastName();
 			}
 		};
 		lastNameColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(lastNameColumn, new Comparator<T>() {
 			@Override
 			public int compare(T o1, T o2) {
-				return ((UserInfoGwt) o1).getLastName().compareTo(
-						((UserInfoGwt) o2).getLastName());
+				return ((UserInfo) o1).getLastName().compareTo(
+						((UserInfo) o2).getLastName());
 			}
 		});
 		dataGrid.addColumn(lastNameColumn, "Last Name");
@@ -65,15 +65,15 @@ public class UsersListPagingDataGrid<T> extends PagingDataGrid<T> {
 				new TextCell()) {
 			@Override
 			public String getValue(T object) {
-				return ((UserInfoGwt) object).getFirstName();
+				return ((UserInfo) object).getFirstName();
 			}
 		};
 		firstNameColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(firstNameColumn, new Comparator<T>() {
 			@Override
 			public int compare(T o1, T o2) {
-				return ((UserInfoGwt) o1).getFirstName().compareTo(
-						((UserInfoGwt) o2).getFirstName());
+				return ((UserInfo) o1).getFirstName().compareTo(
+						((UserInfo) o2).getFirstName());
 			}
 		});
 		dataGrid.addColumn(firstNameColumn, "First Name");
@@ -84,15 +84,15 @@ public class UsersListPagingDataGrid<T> extends PagingDataGrid<T> {
 				new TextCell()) {
 			@Override
 			public String getValue(T object) {
-				return ((UserInfoGwt) object).getUserName();
+				return ((UserInfo) object).getUserName();
 			}
 		};
 		userIdColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(userIdColumn, new Comparator<T>() {
 			@Override
 			public int compare(T o1, T o2) {
-				return ((UserInfoGwt) o1).getUserName().compareTo(
-						((UserInfoGwt) o2).getUserName());
+				return ((UserInfo) o1).getUserName().compareTo(
+						((UserInfo) o2).getUserName());
 			}
 		});
 		dataGrid.addColumn(userIdColumn, "User ID");

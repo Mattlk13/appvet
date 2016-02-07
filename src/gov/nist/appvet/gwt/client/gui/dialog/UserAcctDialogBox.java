@@ -22,7 +22,7 @@ package gov.nist.appvet.gwt.client.gui.dialog;
 import java.util.logging.Logger;
 
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
-import gov.nist.appvet.gwt.shared.UserInfoGwt;
+import gov.nist.appvet.shared.all.UserInfo;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -43,7 +43,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author steveq@nist.gov
  */
 public class UserAcctDialogBox extends DialogBox {
-	public UserInfoGwt userInfoGwt = null;
+	public UserInfo userInfoGwt = null;
 	public PushButton okButton = null;
 	public PushButton updateButton = null;
 	public TextBox lastNameTextBox = null;

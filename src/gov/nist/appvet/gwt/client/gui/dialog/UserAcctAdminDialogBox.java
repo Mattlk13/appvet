@@ -20,8 +20,8 @@
 package gov.nist.appvet.gwt.client.gui.dialog;
 
 import gov.nist.appvet.gwt.client.gui.table.appslist.UsersListPagingDataGrid;
-import gov.nist.appvet.gwt.shared.UserInfoGwt;
-import gov.nist.appvet.shared.role.Role;
+import gov.nist.appvet.shared.all.Role;
+import gov.nist.appvet.shared.all.UserInfo;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -61,18 +61,18 @@ public class UserAcctAdminDialogBox extends DialogBox {
 	public TextBox departmentTextBox = null;
 	public TextBox emailTextBox = null;
 	public ListBox roleComboBox = null;
-	public List<UserInfoGwt> allUsers = null;
+	public List<UserInfo> allUsers = null;
 	public boolean newUser = false;
-	public UsersListPagingDataGrid<UserInfoGwt> usersListTable = null;
+	public UsersListPagingDataGrid<UserInfo> usersListTable = null;
 	public SimpleCheckBox changePasswordCheckBox = null;
 	public Label passwordLabel = null;
 	public Label passwordAgainLabel = null;
 	private static Logger log = Logger.getLogger("UserAcctAdminDialogBox");
 
 	@SuppressWarnings("deprecation")
-	public UserAcctAdminDialogBox(UserInfoGwt userInfo,
-			UsersListPagingDataGrid<UserInfoGwt> usersListTable,
-			List<UserInfoGwt> allUsers) {
+	public UserAcctAdminDialogBox(UserInfo userInfo,
+			UsersListPagingDataGrid<UserInfo> usersListTable,
+			List<UserInfo> allUsers) {
 		setWidth("386px");
 		this.usersListTable = usersListTable;
 		this.allUsers = allUsers;

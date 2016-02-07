@@ -19,8 +19,8 @@
  */
 package gov.nist.appvet.servlet.shared;
 
-import gov.nist.appvet.shared.Logger;
-import gov.nist.appvet.shared.app.AppInfo;
+import gov.nist.appvet.shared.backend.AppInfo;
+import gov.nist.appvet.shared.backend.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;

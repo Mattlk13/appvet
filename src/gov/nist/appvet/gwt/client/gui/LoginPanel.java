@@ -25,9 +25,11 @@ import gov.nist.appvet.gwt.client.GWTServiceAsync;
 import gov.nist.appvet.gwt.client.gui.dialog.MessageDialogBox;
 import gov.nist.appvet.gwt.shared.AppInfoGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
-import gov.nist.appvet.shared.validate.Validate;
+import gov.nist.appvet.shared.all.Validate;
+
 import java.util.List;
 import java.util.logging.Logger;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -44,7 +46,6 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Image;
-
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootLayoutPanel;

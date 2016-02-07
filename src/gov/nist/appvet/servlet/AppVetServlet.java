@@ -19,29 +19,30 @@
  */
 package gov.nist.appvet.servlet;
 
-import gov.nist.appvet.gwt.shared.UserInfoGwt;
-import gov.nist.appvet.properties.AppVetProperties;
-import gov.nist.appvet.shared.Authenticate;
-import gov.nist.appvet.shared.Database;
-import gov.nist.appvet.shared.Emailer;
-import gov.nist.appvet.shared.ErrorMessage;
-import gov.nist.appvet.shared.FileUtil;
-import gov.nist.appvet.shared.Logger;
-import gov.nist.appvet.shared.ReportFileType;
-import gov.nist.appvet.shared.Zip;
-import gov.nist.appvet.shared.analysis.ToolType;
-import gov.nist.appvet.shared.app.AppInfo;
-import gov.nist.appvet.shared.appvetparameters.AppVetParameter;
-import gov.nist.appvet.shared.os.DeviceOS;
-import gov.nist.appvet.shared.servletcommands.AppVetServletCommand;
-import gov.nist.appvet.shared.status.AppStatus;
-import gov.nist.appvet.shared.status.AppStatusManager;
-import gov.nist.appvet.shared.status.ToolStatus;
-import gov.nist.appvet.shared.status.ToolStatusManager;
-import gov.nist.appvet.shared.validate.Validate;
-import gov.nist.appvet.toolmgr.ToolMgr;
-import gov.nist.appvet.toolmgr.ToolAdapter;
-import gov.nist.appvet.tools.preprocessor.Registration;
+import gov.nist.appvet.servlet.preprocessor.Registration;
+import gov.nist.appvet.servlet.shared.Emailer;
+import gov.nist.appvet.servlet.shared.ErrorMessage;
+import gov.nist.appvet.servlet.shared.ReportFileType;
+import gov.nist.appvet.servlet.shared.Zip;
+import gov.nist.appvet.servlet.toolmgr.ToolMgr;
+import gov.nist.appvet.shared.all.AppStatus;
+import gov.nist.appvet.shared.all.AppVetParameter;
+import gov.nist.appvet.shared.all.AppVetServletCommand;
+import gov.nist.appvet.shared.all.DeviceOS;
+import gov.nist.appvet.shared.all.Role;
+import gov.nist.appvet.shared.all.ToolType;
+import gov.nist.appvet.shared.all.UserInfo;
+import gov.nist.appvet.shared.all.Validate;
+import gov.nist.appvet.shared.backend.AppInfo;
+import gov.nist.appvet.shared.backend.AppStatusManager;
+import gov.nist.appvet.shared.backend.AppVetProperties;
+import gov.nist.appvet.shared.backend.Authenticate;
+import gov.nist.appvet.shared.backend.Database;
+import gov.nist.appvet.shared.backend.FileUtil;
+import gov.nist.appvet.shared.backend.Logger;
+import gov.nist.appvet.shared.backend.ToolAdapter;
+import gov.nist.appvet.shared.backend.ToolStatus;
+import gov.nist.appvet.shared.backend.ToolStatusManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -68,8 +69,6 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.http.entity.mime.content.AbstractContentBody;
 import org.apache.http.entity.mime.content.ByteArrayBody;
-
-import gov.nist.appvet.shared.role.Role;
 
 /**
  * This class defines the AppVet HTTP GET and POST server.
@@ -1169,7 +1168,7 @@ public class AppVetServlet extends HttpServlet {
 					+ appInfo.fileItem.getName() + " setting tool status to "
 					+ appInfo.toolRisk);
 			
-			UserInfoGwt userInfo = Database.getUserInfo(appInfo.ownerName, null);
+			UserInfo userInfo = Database.getUserInfo(appInfo.ownerName, null);
 
 			if (tool.toolType == ToolType.AUDIT){
 				// Email notify

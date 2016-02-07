@@ -24,21 +24,21 @@ import gov.nist.appvet.gwt.shared.AppInfoGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolStatusGwt;
-import gov.nist.appvet.gwt.shared.UserInfoGwt;
-import gov.nist.appvet.gwt.shared.UserToolCredentialsGwt;
-import gov.nist.appvet.properties.AppVetProperties;
-import gov.nist.appvet.shared.Authenticate;
-import gov.nist.appvet.shared.Database;
-import gov.nist.appvet.shared.FileUtil;
-import gov.nist.appvet.shared.Logger;
-import gov.nist.appvet.shared.analysis.ToolType;
-import gov.nist.appvet.shared.appvetparameters.AppVetParameter;
-import gov.nist.appvet.shared.os.DeviceOS;
-import gov.nist.appvet.shared.role.Role;
-import gov.nist.appvet.shared.servletcommands.AppVetServletCommand;
-import gov.nist.appvet.shared.status.ToolStatus;
-import gov.nist.appvet.shared.status.ToolStatusManager;
-import gov.nist.appvet.toolmgr.ToolAdapter;
+import gov.nist.appvet.shared.all.AppVetParameter;
+import gov.nist.appvet.shared.all.AppVetServletCommand;
+import gov.nist.appvet.shared.all.DeviceOS;
+import gov.nist.appvet.shared.all.Role;
+import gov.nist.appvet.shared.all.ToolType;
+import gov.nist.appvet.shared.all.UserInfo;
+import gov.nist.appvet.shared.all.UserToolCredentials;
+import gov.nist.appvet.shared.backend.AppVetProperties;
+import gov.nist.appvet.shared.backend.Authenticate;
+import gov.nist.appvet.shared.backend.Database;
+import gov.nist.appvet.shared.backend.FileUtil;
+import gov.nist.appvet.shared.backend.Logger;
+import gov.nist.appvet.shared.backend.ToolAdapter;
+import gov.nist.appvet.shared.backend.ToolStatus;
+import gov.nist.appvet.shared.backend.ToolStatusManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -62,7 +62,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	}
 
 	@Override
-	public List<UserInfoGwt> adminSetUser(UserInfoGwt userInfo)
+	public List<UserInfo> adminSetUser(UserInfo userInfo)
 			throws IllegalArgumentException {
 		if (userInfo.isNewUser()) {
 			if (Database.adminAddNewUser(userInfo)) {
@@ -253,14 +253,14 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		}
 		configInfo.setTools(tools);
 		// Get user's information
-		final UserInfoGwt userInfo = Database.getUserInfo(username, tools);
+		final UserInfo userInfo = Database.getUserInfo(username, tools);
 		if (userInfo == null) {
 			log.error("GWT DataProvider could not get user information");
 			return null;
 		} else {
 			configInfo.setUserInfo(userInfo);
 		}
-		ArrayList<UserToolCredentialsGwt> toolCredentials = configInfo
+		ArrayList<UserToolCredentials> toolCredentials = configInfo
 				.getUserInfo().getToolCredentials();
 		if (toolCredentials == null)
 			log.error("toolCredentials is null in GWTServiceImpl");
@@ -323,7 +323,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	}
 
 	@Override
-	public List<UserInfoGwt> getUsersList() throws IllegalArgumentException {
+	public List<UserInfo> getUsersList() throws IllegalArgumentException {
 		return Database.getUsers(null);
 	}
 
@@ -494,14 +494,14 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	}
 
 	@Override
-	public Boolean updateSelf(UserInfoGwt userInfo)
+	public Boolean updateSelf(UserInfo userInfo)
 			throws IllegalArgumentException {
 		return Database.updateUser(userInfo);
 	}
 
 	@Override
 	public Boolean updateUserToolCredentials(String username,
-			ArrayList<UserToolCredentialsGwt> credentialsList)
+			ArrayList<UserToolCredentials> credentialsList)
 			throws IllegalArgumentException {
 		// Update user's tool credentials in user table
 		Database.saveUserToolCredentials(username, credentialsList);

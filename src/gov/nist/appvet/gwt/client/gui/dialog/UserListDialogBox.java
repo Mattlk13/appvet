@@ -22,8 +22,8 @@ package gov.nist.appvet.gwt.client.gui.dialog;
 import gov.nist.appvet.gwt.client.GWTService;
 import gov.nist.appvet.gwt.client.GWTServiceAsync;
 import gov.nist.appvet.gwt.client.gui.table.appslist.UsersListPagingDataGrid;
-import gov.nist.appvet.gwt.shared.UserInfoGwt;
-import gov.nist.appvet.shared.validate.Validate;
+import gov.nist.appvet.shared.all.UserInfo;
+import gov.nist.appvet.shared.all.Validate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,10 +97,10 @@ public class UserListDialogBox extends DialogBox {
 		});
 	}
 
-	public List<UserInfoGwt> allUsers = null;
-	public SingleSelectionModel<UserInfoGwt> usersSelectionModel = null;
-	public UsersListPagingDataGrid<UserInfoGwt> usersListTable = null;
-	public UserInfoGwt user = null;
+	public List<UserInfo> allUsers = null;
+	public SingleSelectionModel<UserInfo> usersSelectionModel = null;
+	public UsersListPagingDataGrid<UserInfo> usersListTable = null;
+	public UserInfo user = null;
 	public boolean searchMode = true;
 	public TextBox searchTextBox = null;
 	public PushButton addButton = null;
@@ -109,7 +109,7 @@ public class UserListDialogBox extends DialogBox {
 		super(false, true);
 		setSize("", "450px");
 		setAnimationEnabled(false);
-		usersSelectionModel = new SingleSelectionModel<UserInfoGwt>();
+		usersSelectionModel = new SingleSelectionModel<UserInfo>();
 		usersSelectionModel
 				.addSelectionChangeHandler(new UserListHandler(this));
 		final DockPanel dockPanel = new DockPanel();
@@ -198,7 +198,7 @@ public class UserListDialogBox extends DialogBox {
 		verticalPanel.setCellHorizontalAlignment(dockLayoutPanel,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		dockLayoutPanel.setSize("", "380px");
-		usersListTable = new UsersListPagingDataGrid<UserInfoGwt>();
+		usersListTable = new UsersListPagingDataGrid<UserInfo>();
 		usersListTable.dataGrid.setSize("342px", "342px");
 		usersListTable.dataGrid
 				.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
@@ -241,7 +241,7 @@ public class UserListDialogBox extends DialogBox {
 		pshbtnNewButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				final UserInfoGwt selected = usersSelectionModel
+				final UserInfo selected = usersSelectionModel
 						.getSelectedObject();
 				final YesNoConfirmDialog deleteConfirmDialogBox = new YesNoConfirmDialog(
 						"<p align=\"center\">\r\nAre you sure you want to delete user"
@@ -351,7 +351,7 @@ public class UserListDialogBox extends DialogBox {
 						.getValue();
 				final String newPassword2 = userInfoDialogBox.password2TextBox
 						.getValue();
-				final UserInfoGwt userInfo = new UserInfoGwt();
+				final UserInfo userInfo = new UserInfo();
 				userInfo.setUserName(userInfoDialogBox.userIdTextBox.getText());
 				userInfo.setChangePassword(userInfoDialogBox.changePasswordCheckBox
 						.getValue().booleanValue());
@@ -389,7 +389,7 @@ public class UserListDialogBox extends DialogBox {
 			return false;
 		} else if (userInfoDialogBox.newUser) {
 			for (int i = 0; i < allUsers.size(); i++) {
-				final UserInfoGwt userInfo = allUsers.get(i);
+				final UserInfo userInfo = allUsers.get(i);
 				final String dbUserName = userInfo.getUserName();
 				if (userName.equals(dbUserName)) {
 					showMessageDialog("AppVet Error", "User " + dbUserName
@@ -431,8 +431,8 @@ public class UserListDialogBox extends DialogBox {
 		return true;
 	}
 
-	public void getAllUsers(List<UserInfoGwt> allUsers) {
-		final UserInfoGwt currentlySelectedUser = usersSelectionModel
+	public void getAllUsers(List<UserInfo> allUsers) {
+		final UserInfo currentlySelectedUser = usersSelectionModel
 				.getSelectedObject();
 		int currentlySelectedIndex = 0;
 		if (currentlySelectedUser != null) {
@@ -447,7 +447,7 @@ public class UserListDialogBox extends DialogBox {
 	}
 
 	public void getUsersList() {
-		appVetServiceAsync.getUsersList(new AsyncCallback<List<UserInfoGwt>>() {
+		appVetServiceAsync.getUsersList(new AsyncCallback<List<UserInfo>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				showMessageDialog("AppVet Error", "Could not retrieve users",
@@ -455,7 +455,7 @@ public class UserListDialogBox extends DialogBox {
 			}
 
 			@Override
-			public void onSuccess(List<UserInfoGwt> usersList) {
+			public void onSuccess(List<UserInfo> usersList) {
 				allUsers = usersList;
 				if (usersList == null) {
 					showMessageDialog("AppVet Error", "No users available",
@@ -467,7 +467,7 @@ public class UserListDialogBox extends DialogBox {
 		});
 	}
 
-	public int getUsersListIndex(UserInfoGwt item, List<UserInfoGwt> usersList) {
+	public int getUsersListIndex(UserInfo item, List<UserInfo> usersList) {
 		if (item != null) {
 			for (int i = 0; i < usersList.size(); i++) {
 				if (item.getLastName().equals(usersList.get(i).getLastName())) {
@@ -481,11 +481,11 @@ public class UserListDialogBox extends DialogBox {
 	public void search() {
 		final String[] tokens = searchTextBox.getValue().split("\\s+");
 		if (tokens != null) {
-			final ArrayList<UserInfoGwt> searchList = new ArrayList<UserInfoGwt>();
+			final ArrayList<UserInfo> searchList = new ArrayList<UserInfo>();
 			for (int i = 0; i < tokens.length; i++) {
 				if (Validate.isLegalSearchString(tokens[i])) {
 					for (int j = 0; j < allUsers.size(); j++) {
-						final UserInfoGwt userInfo = allUsers.get(j);
+						final UserInfo userInfo = allUsers.get(j);
 						if (userInfo.tokenMatch(tokens[i])) {
 							searchList.add(userInfo);
 						}
@@ -499,9 +499,9 @@ public class UserListDialogBox extends DialogBox {
 		}
 	}
 
-	public void submitUserInfo(UserInfoGwt userInfo) {
+	public void submitUserInfo(UserInfo userInfo) {
 		appVetServiceAsync.adminSetUser(userInfo,
-				new AsyncCallback<List<UserInfoGwt>>() {
+				new AsyncCallback<List<UserInfo>>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						showMessageDialog("AppVet Error",
@@ -509,7 +509,7 @@ public class UserListDialogBox extends DialogBox {
 					}
 
 					@Override
-					public void onSuccess(List<UserInfoGwt> result) {
+					public void onSuccess(List<UserInfo> result) {
 						if (result.size() == 0) {
 							showMessageDialog("Update Error",
 									"Error adding or updating user", true);

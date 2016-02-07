@@ -23,10 +23,10 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
-import gov.nist.appvet.gwt.shared.UserInfoGwt;
-import gov.nist.appvet.shared.analysis.ToolType;
-import gov.nist.appvet.shared.os.DeviceOS;
-import gov.nist.appvet.shared.role.Role;
+import gov.nist.appvet.shared.all.DeviceOS;
+import gov.nist.appvet.shared.all.Role;
+import gov.nist.appvet.shared.all.ToolType;
+import gov.nist.appvet.shared.all.UserInfo;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -65,7 +65,7 @@ public class ReportUploadDialogBox extends DialogBox {
 	public Hidden hiddenToolRisk = null;
 	public ArrayList<ToolInfoGwt> permittedToolReports = new ArrayList<ToolInfoGwt>();
 
-	public ReportUploadDialogBox(UserInfoGwt userInfo, String sessionId,
+	public ReportUploadDialogBox(UserInfo userInfo, String sessionId,
 			String appid, String servletURL, DeviceOS os,
 			final ArrayList<ToolInfoGwt> tools) {
 		super(false, true);

@@ -22,9 +22,9 @@ package gov.nist.appvet.gwt.client;
 import gov.nist.appvet.gwt.shared.AppInfoGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolStatusGwt;
-import gov.nist.appvet.gwt.shared.UserInfoGwt;
-import gov.nist.appvet.gwt.shared.UserToolCredentialsGwt;
-import gov.nist.appvet.shared.os.DeviceOS;
+import gov.nist.appvet.shared.all.DeviceOS;
+import gov.nist.appvet.shared.all.UserInfo;
+import gov.nist.appvet.shared.all.UserToolCredentials;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +36,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public interface GWTServiceAsync {
 	
-	void adminSetUser(UserInfoGwt userInfo,
-			AsyncCallback<List<UserInfoGwt>> callback)
+	void adminSetUser(UserInfo userInfo,
+			AsyncCallback<List<UserInfo>> callback)
 			throws IllegalArgumentException;
 
 	void authenticate(String username, String password, boolean sso, 
@@ -64,7 +64,7 @@ public interface GWTServiceAsync {
 			AsyncCallback<List<AppInfoGwt>> callback)
 			throws IllegalArgumentException;
 
-	void getUsersList(AsyncCallback<List<UserInfoGwt>> callback)
+	void getUsersList(AsyncCallback<List<UserInfo>> callback)
 			throws IllegalArgumentException;
 
 	void removeSession(String sessionId, AsyncCallback<Boolean> callback)
@@ -73,11 +73,11 @@ public interface GWTServiceAsync {
 	void updateSessionExpiration(String sessionId, long sessionTimeout,
 			AsyncCallback<Long> callback) throws IllegalArgumentException;
 
-	void updateSelf(UserInfoGwt userInfo, AsyncCallback<Boolean> callback)
+	void updateSelf(UserInfo userInfo, AsyncCallback<Boolean> callback)
 			throws IllegalArgumentException;
 
 	void updateUserToolCredentials(String username,
-			ArrayList<UserToolCredentialsGwt> credentialsList,
+			ArrayList<UserToolCredentials> credentialsList,
 			AsyncCallback<Boolean> callback) throws IllegalArgumentException;
 	
 }

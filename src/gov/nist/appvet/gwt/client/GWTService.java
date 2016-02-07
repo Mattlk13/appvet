@@ -22,9 +22,9 @@ package gov.nist.appvet.gwt.client;
 import gov.nist.appvet.gwt.shared.AppInfoGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolStatusGwt;
-import gov.nist.appvet.gwt.shared.UserInfoGwt;
-import gov.nist.appvet.gwt.shared.UserToolCredentialsGwt;
-import gov.nist.appvet.shared.os.DeviceOS;
+import gov.nist.appvet.shared.all.DeviceOS;
+import gov.nist.appvet.shared.all.UserInfo;
+import gov.nist.appvet.shared.all.UserToolCredentials;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("greet")
 public interface GWTService extends RemoteService {
 
-	List<UserInfoGwt> adminSetUser(UserInfoGwt userInfo)
+	List<UserInfo> adminSetUser(UserInfo userInfo)
 			throws IllegalArgumentException;
 
 	ConfigInfoGwt authenticate(String username, String password, boolean sso)
@@ -61,17 +61,17 @@ public interface GWTService extends RemoteService {
 	List<AppInfoGwt> getUpdatedApps(long lastClientUpdate, String username)
 			throws IllegalArgumentException;
 
-	List<UserInfoGwt> getUsersList() throws IllegalArgumentException;
+	List<UserInfo> getUsersList() throws IllegalArgumentException;
 
 	Boolean removeSession(String sessionId) throws IllegalArgumentException;
 
 	Long updateSessionExpiration(String sessionId, long sessionTimeout)
 			throws IllegalArgumentException;
 
-	Boolean updateSelf(UserInfoGwt userInfo) throws IllegalArgumentException;
+	Boolean updateSelf(UserInfo userInfo) throws IllegalArgumentException;
 
 	Boolean updateUserToolCredentials(String username,
-			ArrayList<UserToolCredentialsGwt> credentialsList)
+			ArrayList<UserToolCredentials> credentialsList)
 			throws IllegalArgumentException;
 
 }

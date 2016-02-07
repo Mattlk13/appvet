@@ -33,14 +33,14 @@ import gov.nist.appvet.gwt.shared.AppInfoGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolStatusGwt;
-import gov.nist.appvet.gwt.shared.UserInfoGwt;
-import gov.nist.appvet.shared.analysis.ToolType;
-import gov.nist.appvet.shared.appvetparameters.AppVetParameter;
-import gov.nist.appvet.shared.os.DeviceOS;
-import gov.nist.appvet.shared.role.Role;
-import gov.nist.appvet.shared.servletcommands.AppVetServletCommand;
-import gov.nist.appvet.shared.status.AppStatus;
-import gov.nist.appvet.shared.validate.Validate;
+import gov.nist.appvet.shared.all.AppStatus;
+import gov.nist.appvet.shared.all.AppVetParameter;
+import gov.nist.appvet.shared.all.AppVetServletCommand;
+import gov.nist.appvet.shared.all.DeviceOS;
+import gov.nist.appvet.shared.all.Role;
+import gov.nist.appvet.shared.all.ToolType;
+import gov.nist.appvet.shared.all.UserInfo;
+import gov.nist.appvet.shared.all.Validate;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -112,7 +112,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	private HTML toolResultsHtml = null;
 	private AppsListPagingDataGrid<AppInfoGwt> appsListTable = null;
 	private long lastAppsListUpdate = -1;
-	private UserInfoGwt userInfo = null;
+	private UserInfo userInfo = null;
 	private String userName = null;
 	private PushButton deleteButton = null;
 	private PushButton downloadReportsButton = null;
@@ -1908,7 +1908,7 @@ public class AppVetPanel extends DockLayoutPanel {
 						.getValue();
 				final String newPassword2 = userAcctDialogBox.password2TextBox
 						.getValue();
-				final UserInfoGwt updatedUserInfo = new UserInfoGwt();
+				final UserInfo updatedUserInfo = new UserInfo();
 				updatedUserInfo.setUserName(userInfo.getUserName());
 				updatedUserInfo.setLastName(newLastName);
 				updatedUserInfo.setFirstName(newFirstName);

@@ -19,6 +19,8 @@
  */
 package gov.nist.appvet.gwt.shared;
 
+import gov.nist.appvet.shared.all.UserInfo;
+
 import java.util.ArrayList;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -27,7 +29,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * @author steveq@nist.gov
  */
 public class ConfigInfoGwt implements IsSerializable {
-	private UserInfoGwt userInfo = null;
+	private UserInfo userInfo = null;
 	private String hostname = null;
 	private String appVetHostUrl = null;
 	private String appvetProxyUrl = null; // Only used if AppVet behind proxy
@@ -89,7 +91,7 @@ public class ConfigInfoGwt implements IsSerializable {
 		return getUpdatesDelay;
 	}
 
-	public UserInfoGwt getUserInfo() {
+	public UserInfo getUserInfo() {
 		return userInfo;
 	}
 
@@ -137,7 +139,7 @@ public class ConfigInfoGwt implements IsSerializable {
 		this.systemMessage = systemMessage;
 	}
 
-	public void setUserInfo(UserInfoGwt userInfo) {
+	public void setUserInfo(UserInfo userInfo) {
 		this.userInfo = userInfo;
 	}
 

@@ -21,8 +21,8 @@ package gov.nist.appvet.gwt.client.gui.table.appslist;
 
 import gov.nist.appvet.gwt.client.gui.table.PagingDataGrid;
 import gov.nist.appvet.gwt.shared.AppInfoGwt;
-import gov.nist.appvet.shared.os.DeviceOS;
-import gov.nist.appvet.shared.status.AppStatus;
+import gov.nist.appvet.shared.all.AppStatus;
+import gov.nist.appvet.shared.all.DeviceOS;
 
 import java.util.Comparator;
 import java.util.Date;

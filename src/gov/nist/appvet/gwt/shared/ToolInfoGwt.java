@@ -19,7 +19,7 @@
  */
 package gov.nist.appvet.gwt.shared;
 
-import gov.nist.appvet.shared.analysis.ToolType;
+import gov.nist.appvet.shared.all.ToolType;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 

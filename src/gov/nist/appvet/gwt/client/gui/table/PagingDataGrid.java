@@ -20,7 +20,7 @@
 package gov.nist.appvet.gwt.client.gui.table;
 
 import gov.nist.appvet.gwt.shared.AppInfoGwt;
-import gov.nist.appvet.gwt.shared.UserInfoGwt;
+import gov.nist.appvet.shared.all.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,8 +84,8 @@ public abstract class PagingDataGrid<T> extends Composite {
 	public List<T> deleteUser(String username) {
 		final List<T> list = dataProvider.getList();
 		for (int i = 0; i < list.size(); i++) {
-			final UserInfoGwt appInfoGwt = (UserInfoGwt) list.get(i);
-			if (appInfoGwt.getUserName().equals(username)) {
+			final UserInfo userInfoGwt = (UserInfo) list.get(i);
+			if (userInfoGwt.getUserName().equals(username)) {
 				list.remove(i);
 				break;
 			}
