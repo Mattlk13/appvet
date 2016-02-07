@@ -63,7 +63,7 @@ public class ToolStatusManager {
 			String toolId, ToolStatus toolStatus) {
 		
 		if (toolStatus == ToolStatus.ERROR){
-			log.error("------------- Setting " + toolId + " to ERROR for " + appId);
+			log.warn("Setting " + toolId + " to ERROR for " + appId);
 		}
 		
 		if (os == DeviceOS.ANDROID) {
