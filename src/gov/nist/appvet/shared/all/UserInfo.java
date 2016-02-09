@@ -20,6 +20,7 @@
 package gov.nist.appvet.shared.all;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import gov.nist.appvet.gwt.client.gui.AppVetPanel;
 
@@ -44,7 +45,7 @@ public class UserInfo implements IsSerializable {
 	private ArrayList<UserToolCredentials> toolCredentials = null;
 	// private String toolsCredentials = null;
 	// --------------- Updated only by AppVet --------------
-	private String lastLogon = null;
+	private Date lastLogon = null;
 	private String fromHost = null;
 
 	public UserInfo() {
@@ -66,7 +67,7 @@ public class UserInfo implements IsSerializable {
 		return firstName + " " + lastName;
 	}
 
-	public String getLastLogon() {
+	public Date getLastLogon() {
 		return lastLogon;
 	}
 
@@ -122,7 +123,7 @@ public class UserInfo implements IsSerializable {
 		this.fromHost = fromHost;
 	}
 
-	public void setLastLogon(String lastLogon) {
+	public void setLastLogon(Date lastLogon) {
 		this.lastLogon = lastLogon;
 	}
 
@@ -181,7 +182,7 @@ public class UserInfo implements IsSerializable {
 		if (role.toLowerCase().indexOf(lowerCaseToken) > -1) {
 			return true;
 		}
-		if (lastLogon.toLowerCase().indexOf(lowerCaseToken) > -1) {
+		if (lastLogon.toString().toLowerCase().indexOf(lowerCaseToken) > -1) {
 			return true;
 		}
 		if (fromHost.toLowerCase().indexOf(lowerCaseToken) > -1) {

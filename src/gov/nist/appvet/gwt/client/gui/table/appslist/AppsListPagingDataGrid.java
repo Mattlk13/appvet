@@ -25,7 +25,6 @@ import gov.nist.appvet.shared.all.AppStatus;
 import gov.nist.appvet.shared.all.DeviceOS;
 
 import java.util.Comparator;
-import java.util.Date;
 import java.util.logging.Logger;
 
 import com.google.gwt.cell.client.SafeHtmlCell;

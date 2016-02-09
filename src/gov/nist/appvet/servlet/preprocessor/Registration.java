@@ -37,6 +37,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,9 +51,11 @@ public class Registration {
 
 	private AppInfo appInfo = null;
 
+	
 	public Registration(AppInfo appInfo) {
 		this.appInfo = appInfo;
 	}
+	
 
 	public boolean registerApp() {
 		appInfo.log.debug("Registering app " + appInfo.appId);
@@ -67,15 +70,29 @@ public class Registration {
 		try {			
 			regReportWriter = new BufferedWriter(new FileWriter(
 					registrationReportPath));
-			
 			AppStatus appStatus = AppStatusManager.getAppStatus(appInfo.appId);
 			
 			if (appStatus == null) {
-				connection = Database.getConnection();
+				
+				// Add this app to the tools database table
+				ArrayList<ToolAdapter> availableTools = null;
+				if (appInfo.os == DeviceOS.ANDROID) {
+					availableTools = AppVetProperties.androidTools;
+				} else if (appInfo.os == DeviceOS.IOS) {
+					availableTools = AppVetProperties.iosTools;
+				}
 
-				// Add app metadata to database.
+				// Set default initial status (NA) for each tool
+				for (int i = 0; i < availableTools.size(); i++) {
+					final ToolAdapter tool = availableTools.get(i);
+					setInitialToolStatus(appInfo, tool);
+				}		
+				
+				
+				// Add this app to the apps database table
+				connection = Database.getConnection();
 				preparedStatement = connection
-						.prepareStatement("REPLACE INTO apps (appid, updated, appname, "
+						.prepareStatement("REPLACE INTO apps (appid, lastupdated, appname, "
 						+ "packagename, versioncode, versionname, filename, "
 						+ "submittime, appstatus, "
 						+ "username, clienthost, os"
@@ -84,8 +101,9 @@ public class Registration {
 				
 				// Set app ID.
 				preparedStatement.setString(1, appInfo.appId);
-				// Set updated (to signal GET requests of this update)
-				preparedStatement.setBoolean(2, true);
+				// Set last updated to now
+				Timestamp timestamp = new Timestamp(new Date().getTime());
+				preparedStatement.setTimestamp(2, timestamp);
 				// Set app name.
 				if (appInfo.appName == null) {
 					// Displayed when first uploaded to AppVet.
@@ -131,7 +149,6 @@ public class Registration {
 									+ "(appid) values (?)");
 				}
 
-				// Set app ID as a long value
 				preparedStatement.setString(1, appInfo.appId);
 				preparedStatement.executeUpdate();
 				preparedStatement.close();
@@ -139,25 +156,7 @@ public class Registration {
 				// Close DB connection
 				connection.close();
 				
-				// Get available tools.
-				ArrayList<ToolAdapter> availableTools = null;
-				if (appInfo.os == DeviceOS.ANDROID) {
-					availableTools = AppVetProperties.androidTools;
-				} else if (appInfo.os == DeviceOS.IOS) {
-					availableTools = AppVetProperties.iosTools;
-				}
-
-				// Set default initial status (NA) for each tool
-				for (int i = 0; i < availableTools.size(); i++) {
-					final ToolAdapter tool = availableTools.get(i);
-					setInitialToolStatus(appInfo, tool);
-				}
-				
-				// Set last update
-				Database.setAppIsUpdated(appInfo.appId, true);
-				
-				// Create registration report.
-
+				// Create registration report
 				regReportWriter.write("<HTML>\n");
 				regReportWriter.write("<head>\n");
 				regReportWriter.write("<style type=\"text/css\">\n");
@@ -199,10 +198,6 @@ public class Registration {
 							appInfo.getAppFileName());
 					
 				}
-
-				// Update registration status to LOW.
-				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-						registrationTool.toolId, ToolStatus.LOW);
 				
 				regReportWriter.write("Date: \t\t" + currentDate + "\n\n");
 				regReportWriter.write("App ID: \t" + appInfo.appId + "\n");
@@ -213,16 +208,21 @@ public class Registration {
 				regReportWriter.write("</pre>\n");
 				regReportWriter.write("</body>\n");
 				regReportWriter.write("</HTML>\n");
-				// Close writer.
 				regReportWriter.close();
 				appInfo.log.info("Registered app " + appInfo.appId);
+				
+				// Update registration status to LOW (i.e., COMPLETED).
+				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+						registrationTool.toolId, ToolStatus.LOW);
 
 				// Email notify
-				UserInfo userInfo = Database.getUserInfo(appInfo.ownerName, null);
-				appInfo.log.debug("App " + appInfo.appId + " has been uploaded by " + appInfo.ownerName);
-				Emailer.sendEmail(userInfo.getEmail(), "App " + appInfo.appId + "has been uploaded by " + appInfo.ownerName, "App " + appInfo.appId + " has been uploaded by " + appInfo.ownerName + ".");
-				return true;
+				if (AppVetProperties.emailEnabled) {
+					UserInfo userInfo = Database.getUserInfo(appInfo.ownerName, null);
+					Emailer.sendEmail(userInfo.getEmail(), "App " + appInfo.appId + "has been uploaded by " + appInfo.ownerName, "App " + appInfo.appId + " has been uploaded by " + appInfo.ownerName + ".");
+				}
 				
+				appInfo.log.debug("App " + appInfo.appId + " has been uploaded by " + appInfo.ownerName);
+				return true;
 			} else {
 				// Update registration status to ERROR.
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,

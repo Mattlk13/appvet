@@ -45,6 +45,7 @@ import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.i18n.client.DateTimeFormat;
 
 /**
  * @author steveq@nist.gov
@@ -68,6 +69,8 @@ public class UserAcctAdminDialogBox extends DialogBox {
 	public Label passwordLabel = null;
 	public Label passwordAgainLabel = null;
 	private static Logger log = Logger.getLogger("UserAcctAdminDialogBox");
+	private final DateTimeFormat dateTimeFormat = DateTimeFormat
+			.getFormat("yyyy-MM-dd HH:mm:ss");
 
 	@SuppressWarnings("deprecation")
 	public UserAcctAdminDialogBox(UserInfo userInfo,
@@ -517,7 +520,8 @@ public class UserAcctAdminDialogBox extends DialogBox {
 			firstNameTextBox.setText(userInfo.getFirstName());
 			userIdTextBox.setText(userInfo.getUserName());
 			userIdTextBox.setReadOnly(true);
-			lastLogonTextBox.setText(userInfo.getLastLogon());
+			String lastLoginStr = dateTimeFormat.format(userInfo.getLastLogon());
+			lastLogonTextBox.setText(lastLoginStr);
 			fromHostTextBox.setText(userInfo.getFromHost());
 			organizationTextBox.setText(userInfo.getOrganization());
 			departmentTextBox.setText(userInfo.getDepartment());

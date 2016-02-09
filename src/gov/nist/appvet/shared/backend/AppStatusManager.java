@@ -65,7 +65,7 @@ public class AppStatusManager {
 			final String sql = "UPDATE apps SET appstatus='" + appStatus.name()
 					+ "' where appid='" + appId + "'";
 			if (Database.update(sql)) {
-				if (Database.setAppIsUpdated(appId, true)) {
+				if (Database.setLastUpdated(appId)) {
 					log.debug("App " + appId + " update flag set successfully.");
 					return true;
 				} else {

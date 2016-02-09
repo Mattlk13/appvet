@@ -83,7 +83,7 @@ public class ToolStatusManager {
 			log.error("Unknown operating system encountered. Returning.");
 			return false;
 		}
-		boolean updatedApp = Database.setAppIsUpdated(appId, true);
+		boolean updatedApp = Database.setLastUpdated(appId);
 		if (updatedApp) {
 			log.debug("Set updated flag for app " + appId);
 			return computeAppStatus(os, appId);

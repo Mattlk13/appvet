@@ -19,13 +19,12 @@
  */
 package gov.nist.appvet.gwt.client;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 import gov.nist.appvet.gwt.client.gui.AppVetPanel;
 import gov.nist.appvet.gwt.client.gui.LoginPanel;
 import gov.nist.appvet.gwt.client.gui.dialog.MessageDialogBox;
-import gov.nist.appvet.gwt.shared.AppInfoGwt;
+import gov.nist.appvet.gwt.shared.AppsListGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -45,64 +44,56 @@ public class AppVet implements EntryPoint {
 	private static Logger log = Logger.getLogger("AppVet");
 	private final GWTServiceAsync appVetService = GWT.create(GWTService.class);
 	private static MessageDialogBox messageDialogBox = null;
-	
+
 
 	@Override
 	public void onModuleLoad() {
-
 		// If SSO is used, these parameters should not be null. If one or
 		// both parameters are null, send to AppVet GUI.
 		String username = Window.Location.getParameter("ssou");
 		String password = Window.Location.getParameter("ssop");
 
 		if (username == null || password == null) {
-			
+
 			// Send to AppVet GUI
 			final LoginPanel loginPanel = new LoginPanel(Unit.PX);
 			loginPanel.setTitle("Login panel");
 			final RootLayoutPanel rootPanel = RootLayoutPanel.get();
 			rootPanel.setTitle("Root panel");
 			rootPanel.add(loginPanel);
-			
+
 		} else if (username != null && password != null) {
-			
+
 			// Login attempt via SSO
 			log.info("AppVet GWT got: name=" + username);
 			// Authenticate SSO username and password
 			authenticateSSO(username, password);
-			
+
 		}
 	}
 
-	
-	public void authenticateSSO(final String username, final String password) {
 
+	public void authenticateSSO(final String username, final String password) {
 		appVetService.authenticate(username, password, true,
 				new AsyncCallback<ConfigInfoGwt>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				
 				showMessageDialog("AppVet Error",
-				"Authentication system error", true);
+						"Authentication system error", true);
 				return;
-				
 			}
 
 			@Override
 			public void onSuccess(final ConfigInfoGwt result) {
 
 				if (result == null) {
-					
 					showMessageDialog("AppVet Login Error",
-					"Unknown username or password", true);
+							"Unknown username or password", true);
 					return;
-					
 				} else {
-					
 					// checkConfigInfo(result);
 					startAppVet(result);
-					
 				}
 
 			}
@@ -111,45 +102,37 @@ public class AppVet implements EntryPoint {
 
 	}
 
-	
-	public void startAppVet(final ConfigInfoGwt configInfo) {
 
+	public void startAppVet(final ConfigInfoGwt configInfo) {
 		final String userName = configInfo.getUserInfo().getUserName();
 
 		if ((userName == null) || userName.isEmpty()) {
-			
 			log.warning("Error retrieving apps list: "
-			+ "username is null or empty");
+					+ "username is null or empty");
 			return;
-			
 		}
 
 		appVetService.getAllApps(userName,
-				new AsyncCallback<List<AppInfoGwt>>() {
+				new AsyncCallback<AppsListGwt>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				
 				caught.printStackTrace();
 				showMessageDialog(
-				"AppVet Error",
-				"Apps list retrieval error: "
-				+ caught.getMessage(), true);
+						"AppVet Error",
+						"Apps list retrieval error: "
+								+ caught.getMessage(), true);
 				return;
-				
 			}
 
 			@Override
-			public void onSuccess(List<AppInfoGwt> appsList) {
+			public void onSuccess(AppsListGwt appsList) {
 
 				if (appsList == null) {
-					
 					showMessageDialog("AppVet Error",
-					"No apps are available", true);
+							"No apps are available", true);
 					return;
-					
 				} else {
-					
 					final AppVetPanel appVetPanel = new AppVetPanel(
 							Unit.PX, configInfo, appsList);
 					appVetPanel.setTitle("AppVet Panel");
@@ -158,7 +141,6 @@ public class AppVet implements EntryPoint {
 					rootLayoutPanel.setTitle("Root panel");
 					rootLayoutPanel.clear();
 					rootLayoutPanel.add(appVetPanel);
-					
 				}
 
 			}
@@ -167,10 +149,9 @@ public class AppVet implements EntryPoint {
 
 	}
 
-	
+
 	private void showMessageDialog(String windowTitle, String message,
 			boolean isError) {
-		
 		messageDialogBox = new MessageDialogBox(message, isError);
 		messageDialogBox.setText(windowTitle);
 		messageDialogBox.center();
@@ -179,10 +160,10 @@ public class AppVet implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				
+
 				messageDialogBox.hide();
 				messageDialogBox = null;
-				
+
 			}
 		});
 	}

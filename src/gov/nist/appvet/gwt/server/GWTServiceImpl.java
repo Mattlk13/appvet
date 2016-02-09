@@ -20,7 +20,7 @@
 package gov.nist.appvet.gwt.server;
 
 import gov.nist.appvet.gwt.client.GWTService;
-import gov.nist.appvet.gwt.shared.AppInfoGwt;
+import gov.nist.appvet.gwt.shared.AppsListGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolStatusGwt;
@@ -114,13 +114,6 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			log.debug("User '" + username + "' exists in database.");
 		}
 		
-//		boolean userExists = 
-//				Database.exists("SELECT * FROM users WHERE username='" + username + "'");
-//		if (!userExists) {
-//			log.error("No such user: " + username);
-//			return null;
-//		}
-		
 		if (Authenticate.isAuthenticated(username, password)) {
 			
 			log.debug("User '" + username + "' authenticated");
@@ -143,10 +136,21 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			}
 			
 			log.debug(username + " logged into GWT from: " + clientIpAddress);
-			final String sessionId = Database.setSession(username,
+
+			// Clear all expired sessions
+			Database.clearExpiredSessions();
+			
+			final String sessionId = Database.createNewSession(username,
 					clientIpAddress);
-			final long sessionExpiration = Database.getSessionExpiration(
+			final Date sessionExpiration = Database.getSessionExpiration(
 					sessionId, clientIpAddress);
+			
+			if (sessionExpiration == null) {
+				// Session already expired
+				log.warn("Session expiration for " + sessionId + " could not be retrieved.");
+				return null;
+			}
+			
 			// If SSO login, randomly change current password so it cannot 
 			// be copied by another user and used as a query parameter to 
 			// directly access AppVet.
@@ -159,7 +163,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			}
 			return getConfigInfo(username, sessionId, sessionExpiration);
 		} else {
-			log.error("Could not authenticate user: " + username);
+			log.debug("Could not authenticate user: " + username);
 			return null;
 		}
 	}
@@ -180,7 +184,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	}
 
 	private static ConfigInfoGwt getConfigInfo(String username,
-			String sessionId, long sessionExpiration) {
+			String sessionId, Date sessionExpiration) {
 		
 		final ConfigInfoGwt configInfo = new ConfigInfoGwt();
 		configInfo.setAppVetHostUrl(AppVetProperties.HOST_URL);
@@ -191,7 +195,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		configInfo.setOrgLogoAltText(AppVetProperties.ORG_LOGO_ALT_TEXT);
 		configInfo.setMaxIdleTime(AppVetProperties.MAX_SESSION_IDLE_DURATION);
 		configInfo.setGetUpdatesDelay(AppVetProperties.GET_UPDATES_DELAY);
-		configInfo.setSessionExpirationLong(sessionExpiration);
+		configInfo.setSessionExpiration(sessionExpiration);
 		configInfo.setSystemMessage(AppVetProperties.STATUS_MESSAGE);
 		final ArrayList<ToolInfoGwt> tools = new ArrayList<ToolInfoGwt>();
 		// Get Android tools
@@ -305,7 +309,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	}
 
 	@Override
-	public List<AppInfoGwt> getAllApps(String username)
+	public AppsListGwt getAllApps(String username)
 			throws IllegalArgumentException {
 		return Database.getAllApps(username);
 	}
@@ -317,7 +321,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	}
 
 	@Override
-	public List<AppInfoGwt> getUpdatedApps(long lastClientUpdate,
+	public AppsListGwt getUpdatedApps(Date lastClientUpdate,
 			String username) throws IllegalArgumentException {
 		return Database.getUpdatedApps(username, lastClientUpdate);
 	}
@@ -342,18 +346,21 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	}
 
 	@Override
-	public Long updateSessionExpiration(String sessionId, long newSessionTimeout)
+	public Date updateSessionExpiration(String sessionId, Date newSessionTimeout)
 			throws IllegalArgumentException {
 		final String clientIpAddress = getThreadLocalRequest().getRemoteAddr();
-		final long sessionValid = Database.isSessionExpired(sessionId,
-				clientIpAddress);
-		if (sessionValid == -1) {
-			Database.clearExpiredSessions();
-			return new Long(-1);
+		
+		// First check if session has already expired
+		if (!Database.sessionIsGood(sessionId, clientIpAddress)) {
+			return null;
 		} else {
-			Database.updateSessionExpiration(sessionId, clientIpAddress,
-					newSessionTimeout);
-			return new Long(newSessionTimeout);
+			if (Database.updateSessionExpiration(sessionId, clientIpAddress,
+					newSessionTimeout)) {
+				return newSessionTimeout;
+			} else {
+				log.error("Could not update session expiration");
+				return null;
+			}
 		}
 	}
 

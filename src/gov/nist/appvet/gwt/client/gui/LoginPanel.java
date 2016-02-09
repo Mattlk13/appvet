@@ -23,11 +23,10 @@ package gov.nist.appvet.gwt.client.gui;
 import gov.nist.appvet.gwt.client.GWTService;
 import gov.nist.appvet.gwt.client.GWTServiceAsync;
 import gov.nist.appvet.gwt.client.gui.dialog.MessageDialogBox;
-import gov.nist.appvet.gwt.shared.AppInfoGwt;
+import gov.nist.appvet.gwt.shared.AppsListGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.shared.all.Validate;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
@@ -62,27 +61,19 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 public class LoginPanel extends DockLayoutPanel {
 
 	// See appvet.gwt.xml
-
 	private static Logger log = Logger.getLogger("LoginPanel");
-
 	private final Button loginButton = new Button("LOGIN");
-
 	private final TextBox userNameTextBox = new TextBox();
-
 	private final PasswordTextBox passwordTextBox = new PasswordTextBox();
-
 	private final Label loginStatusLabel = new Label("");
-
 	private final GWTServiceAsync appVetService = GWT.create(GWTService.class);
-
 	private static MessageDialogBox messageDialogBox = null;
 
+	
 	public LoginPanel(Unit unit) {
-
 		super(Unit.PX);
 
 		// WARNING! DO NOT CALL AppVetProperties ELSE CODE WILL NOT
-
 		// COMPILE WITH GOOGLE COMPILER!
 
 		setSize("100%", "");
@@ -125,405 +116,253 @@ public class LoginPanel extends DockLayoutPanel {
 		image.setSize("50px", "13px");
 
 		final VerticalPanel centerVerticalPanel = new VerticalPanel();
-
 		centerVerticalPanel
-
 		.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
-
 		centerVerticalPanel
-
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-
 		add(centerVerticalPanel);
 		centerVerticalPanel.setSize("100%", "80%");
 
 		final DecoratorPanel decoratorPanel = new DecoratorPanel();
-
 		centerVerticalPanel.add(decoratorPanel);
-
 		centerVerticalPanel.setCellWidth(decoratorPanel, "100%");
-
 		decoratorPanel.setSize("", "");
-
 		centerVerticalPanel.setCellHorizontalAlignment(decoratorPanel,
-
-		HasHorizontalAlignment.ALIGN_CENTER);
-
+				HasHorizontalAlignment.ALIGN_CENTER);
 		centerVerticalPanel.setCellVerticalAlignment(decoratorPanel,
-
-		HasVerticalAlignment.ALIGN_MIDDLE);
+				HasVerticalAlignment.ALIGN_MIDDLE);
 
 		final DockPanel dockPanel = new DockPanel();
-
 		dockPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-
 		dockPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-
 		decoratorPanel.setWidget(dockPanel);
-
 		dockPanel.setSize("100%", "200px");
 
 		final VerticalPanel verticalPanel = new VerticalPanel();
-
 		verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-
 		verticalPanel
-
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-
 		dockPanel.add(verticalPanel, DockPanel.NORTH);
-
 		dockPanel.setCellWidth(verticalPanel, "100%");
-
 		dockPanel.setCellVerticalAlignment(verticalPanel,
-
-		HasVerticalAlignment.ALIGN_MIDDLE);
-
+				HasVerticalAlignment.ALIGN_MIDDLE);
 		dockPanel.setCellHorizontalAlignment(verticalPanel,
-
-		HasHorizontalAlignment.ALIGN_CENTER);
-
+				HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.setSize("300px", "90px");
 
 		final Image appVetImage = new Image("images/appvet_logo.png");
 		appVetImage.setTitle("AppVet Mobile App Vetting System");
 		appVetImage.setAltText("AppVet Mobile App Vetting System");
-
 		appVetImage.setStyleName("loginPanelLogo");
-
 		verticalPanel.add(appVetImage);
-
 		verticalPanel.setCellHorizontalAlignment(appVetImage,
-
-		HasHorizontalAlignment.ALIGN_CENTER);
-
+				HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.setCellVerticalAlignment(appVetImage,
-
-		HasVerticalAlignment.ALIGN_MIDDLE);
-
+				HasVerticalAlignment.ALIGN_MIDDLE);
 		appVetImage.setSize("192px", "73px");
-
 		loginStatusLabel.setStyleName("submissionRequirementsLabel");
-
 		verticalPanel.add(loginStatusLabel);
-
 		loginStatusLabel.setVisible(true);
-
 		loginStatusLabel.setSize("200px", "20px");
-
 		verticalPanel.setCellHorizontalAlignment(loginStatusLabel,
-
-		HasHorizontalAlignment.ALIGN_CENTER);
+				HasHorizontalAlignment.ALIGN_CENTER);
 
 		final Grid grid = new Grid(2, 2);
-
 		grid.setStyleName("loginGrid");
-
 		dockPanel.add(grid, DockPanel.CENTER);
-
 		dockPanel.setCellWidth(grid, "100%");
-
 		grid.setHeight("");
-
 		dockPanel.setCellVerticalAlignment(grid,
-
-		HasVerticalAlignment.ALIGN_MIDDLE);
-
+				HasVerticalAlignment.ALIGN_MIDDLE);
 		dockPanel.setCellHorizontalAlignment(grid,
-
-		HasHorizontalAlignment.ALIGN_CENTER);
+				HasHorizontalAlignment.ALIGN_CENTER);
 
 		final Label usernameLabel = new Label("USERNAME");
-
 		usernameLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-
 		grid.setWidget(0, 0, usernameLabel);
-
 		usernameLabel.setSize("100px", "20px");
-
 		grid.getCellFormatter().setHorizontalAlignment(0, 0,
-
-		HasHorizontalAlignment.ALIGN_LEFT);
-
+				HasHorizontalAlignment.ALIGN_LEFT);
 		grid.getCellFormatter().setVerticalAlignment(0, 0,
-
-		HasVerticalAlignment.ALIGN_MIDDLE);
-
+				HasVerticalAlignment.ALIGN_MIDDLE);
 		grid.setWidget(0, 1, userNameTextBox);
 		userNameTextBox.setSize("180px", "15px");
-
 		grid.getCellFormatter().setHorizontalAlignment(0, 1,
-
-		HasHorizontalAlignment.ALIGN_RIGHT);
-
+				HasHorizontalAlignment.ALIGN_RIGHT);
 		grid.getCellFormatter().setVerticalAlignment(0, 1,
-
-		HasVerticalAlignment.ALIGN_MIDDLE);
+				HasVerticalAlignment.ALIGN_MIDDLE);
 
 		final Label passwordLabel = new Label("PASSWORD");
-
 		passwordLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-
 		grid.setWidget(1, 0, passwordLabel);
-
 		passwordLabel.setSize("100px", "20px");
-
 		grid.getCellFormatter().setHorizontalAlignment(1, 0,
-
-		HasHorizontalAlignment.ALIGN_LEFT);
-
+				HasHorizontalAlignment.ALIGN_LEFT);
 		grid.getCellFormatter().setVerticalAlignment(1, 0,
-
-		HasVerticalAlignment.ALIGN_MIDDLE);
+				HasVerticalAlignment.ALIGN_MIDDLE);
 
 		grid.setWidget(1, 1, passwordTextBox);
-
 		passwordTextBox.setSize("180px", "15px");
-
 		grid.getCellFormatter().setHorizontalAlignment(1, 1,
-
-		HasHorizontalAlignment.ALIGN_RIGHT);
-
+				HasHorizontalAlignment.ALIGN_RIGHT);
 		grid.getCellFormatter().setVerticalAlignment(1, 1,
-
-		HasVerticalAlignment.ALIGN_MIDDLE);
-
+				HasVerticalAlignment.ALIGN_MIDDLE);
 		passwordTextBox.addKeyPressHandler(new KeyPressHandler() {
 
 			@Override
 			public void onKeyPress(KeyPressEvent event_) {
-
 				final boolean enterPressed = KeyCodes.KEY_ENTER == event_
-
-				.getNativeEvent().getKeyCode();
-
+						.getNativeEvent().getKeyCode();
+				
 				if (enterPressed) {
-
 					getUserInput();
-
 				}
-
 			}
 
 		});
 
 		final SimplePanel simplePanel_3 = new SimplePanel();
-
 		simplePanel_3.setStyleName("buttonPanel");
-
 		dockPanel.add(simplePanel_3, DockPanel.SOUTH);
-
 		simplePanel_3.setHeight("28px");
-
 		dockPanel.setCellVerticalAlignment(simplePanel_3,
-
-		HasVerticalAlignment.ALIGN_MIDDLE);
-
+				HasVerticalAlignment.ALIGN_MIDDLE);
 		dockPanel.setCellHorizontalAlignment(simplePanel_3,
-
-		HasHorizontalAlignment.ALIGN_CENTER);
-
+				HasHorizontalAlignment.ALIGN_CENTER);
 		loginButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-
 				getUserInput();
-
 			}
 
 		});
 
 		simplePanel_3.setWidget(loginButton);
-
 		loginButton.setText("LOGIN");
-
 		loginButton.setSize("78px", "26px");
 
 	}
 
+	
 	public void authenticate(final String username, final String password) {
-
 		appVetService.authenticate(username, password, false, 
-
-		new AsyncCallback<ConfigInfoGwt>() {
+				new AsyncCallback<ConfigInfoGwt>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				
 				StackTraceElement[] trace = caught.getStackTrace();
 				String stackTraceStr = null;
 				for (int i = 0; i < trace.length; i++) {
 					StackTraceElement element = trace[i];
 					stackTraceStr += element.toString() + "\n";
 				}
-				
+
 				log.fine("STACK TRACE LOG: " + stackTraceStr);
-
 				showMessageDialog("AppVet Error",
-
-				"Authentication system error - See console", true);
+						"Authentication system error - See console", true);
 
 				return;
-
 			}
 
 			@Override
 			public void onSuccess(final ConfigInfoGwt result) {
 
 				if (result == null) {
-
 					showMessageDialog("AppVet Login Error",
-
-					"Unknown username or password", true);
-
+							"Unknown username or password", true);
 					return;
-
 				} else {
-
 					loginStatusLabel.setText("Retrieving data...");
-
 					// checkConfigInfo(result);
-
 					startAppVet(result);
-
 				}
 
 			}
 
 		});
-
 	}
 
+	
 	public void getUserInput() {
-
 		loginButton.setEnabled(false);
-
 		final String userName = userNameTextBox.getText();
-
 		final String password = passwordTextBox.getText();
 
 		if (!Validate.isValidUserName(userName)
-
-		|| !Validate.isValidPassword(password)) {
-
+				|| !Validate.isValidPassword(password)) {
 			showMessageDialog("AppVet Login Error",
-
-			"Invalid Username or Password", true);
-
+					"Invalid Username or Password", true);
 			return;
-
 		}
 
 		authenticate(userName, password);
-
 	}
 
+	
 	private void showMessageDialog(String windowTitle, String message,
-
-	boolean isError) {
-
+			boolean isError) {
 		messageDialogBox = new MessageDialogBox(message, isError);
-
 		messageDialogBox.setText(windowTitle);
-
 		messageDialogBox.center();
-
 		messageDialogBox.closeButton.setFocus(true);
-
 		messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-
 				userNameTextBox.setText("");
-
 				passwordTextBox.setText("");
-
 				messageDialogBox.hide();
-
 				messageDialogBox = null;
-
 				loginStatusLabel.setText("");
-
 				loginButton.setEnabled(true);
-
 			}
-
 		});
-
 	}
 
+	
 	public void startAppVet(final ConfigInfoGwt configInfo) {
-
 		final String userName = configInfo.getUserInfo().getUserName();
 
 		if ((userName == null) || userName.isEmpty()) {
-
 			log.warning("Error retrieving apps list: "
-
 			+ "username is null or empty");
-
 			return;
-
 		}
 
 		appVetService.getAllApps(userName,
-
-		new AsyncCallback<List<AppInfoGwt>>() {
+				new AsyncCallback<AppsListGwt>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
-
 				caught.printStackTrace();
-
 				showMessageDialog(
-
-				"AppVet Error",
-
-				"Apps list retrieval error: "
-
+						"AppVet Error",
+						"Apps list retrieval error: "
 				+ caught.getMessage(), true);
-
 				return;
-
 			}
 
 			@Override
-			public void onSuccess(List<AppInfoGwt> appsList) {
-
+			public void onSuccess(AppsListGwt appsList) {
 				if (appsList == null) {
-
 					showMessageDialog("AppVet Error",
-
-					"No apps are available", true);
-
+							"No apps are available", true);
 					return;
-
 				} else {
-
 					final AppVetPanel appVetPanel = new AppVetPanel(
-
-					Unit.PX, configInfo, appsList);
-					
+							Unit.PX, configInfo, appsList);
 					appVetPanel.setTitle("AppVet panel");
-
 					final RootLayoutPanel rootLayoutPanel = RootLayoutPanel
 
-					.get();
-					
+							.get();
 					rootLayoutPanel.setTitle("Root panel");
-
 					rootLayoutPanel.clear();
-
 					rootLayoutPanel.add(appVetPanel);
-
 				}
 
 			}
 
 		});
-
 	}
-
 }

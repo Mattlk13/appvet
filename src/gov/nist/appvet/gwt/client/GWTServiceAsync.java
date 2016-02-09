@@ -19,7 +19,7 @@
  */
 package gov.nist.appvet.gwt.client;
 
-import gov.nist.appvet.gwt.shared.AppInfoGwt;
+import gov.nist.appvet.gwt.shared.AppsListGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolStatusGwt;
 import gov.nist.appvet.shared.all.DeviceOS;
@@ -27,6 +27,7 @@ import gov.nist.appvet.shared.all.UserInfo;
 import gov.nist.appvet.shared.all.UserToolCredentials;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -53,15 +54,15 @@ public interface GWTServiceAsync {
 	void deleteUser(String username, AsyncCallback<Boolean> callback)
 			throws IllegalArgumentException;
 
-	void getAllApps(String username, AsyncCallback<List<AppInfoGwt>> callback)
+	void getAllApps(String username, AsyncCallback<AppsListGwt> callback)
 			throws IllegalArgumentException;
 
 	void getToolsResults(DeviceOS os, String sessionId, String appId,
 			AsyncCallback<List<ToolStatusGwt>> callback)
 			throws IllegalArgumentException;
 
-	void getUpdatedApps(long lastClientUpdate, String username,
-			AsyncCallback<List<AppInfoGwt>> callback)
+	void getUpdatedApps(Date lastClientUpdate, String username,
+			AsyncCallback<AppsListGwt> callback)
 			throws IllegalArgumentException;
 
 	void getUsersList(AsyncCallback<List<UserInfo>> callback)
@@ -70,8 +71,8 @@ public interface GWTServiceAsync {
 	void removeSession(String sessionId, AsyncCallback<Boolean> callback)
 			throws IllegalArgumentException;
 
-	void updateSessionExpiration(String sessionId, long sessionTimeout,
-			AsyncCallback<Long> callback) throws IllegalArgumentException;
+	void updateSessionExpiration(String sessionId, Date sessionExpiration,
+			AsyncCallback<Date> callback) throws IllegalArgumentException;
 
 	void updateSelf(UserInfo userInfo, AsyncCallback<Boolean> callback)
 			throws IllegalArgumentException;

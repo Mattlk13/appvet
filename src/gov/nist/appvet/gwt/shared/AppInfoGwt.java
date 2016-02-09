@@ -41,7 +41,8 @@ public class AppInfoGwt implements Serializable {
 	 * (but not yet consumed by AppVet). Rarely used within an AppInfoCore 
 	 * object.
 	 */
-	public boolean updated = false;
+	//public boolean updated = false;
+	public Date lastUpdated = null;
 	/** The display name of the app. */
 	public String appName = null;
 	/** The package of bundle name of the app. */

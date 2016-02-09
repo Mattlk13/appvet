@@ -6,6 +6,6 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class AppsListGwt implements IsSerializable {
-	Date appsLastChecked = null;
-	List<AppInfoGwt> apps = null;
+	public Date appsLastChecked = null;
+	public List<AppInfoGwt> apps = null;
 }

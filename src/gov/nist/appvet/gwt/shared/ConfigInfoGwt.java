@@ -22,6 +22,7 @@ package gov.nist.appvet.gwt.shared;
 import gov.nist.appvet.shared.all.UserInfo;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -40,7 +41,7 @@ public class ConfigInfoGwt implements IsSerializable {
 	private String sessionId = null;
 	private long maxIdleTime = 0;
 	private int getUpdatesDelay = 0;
-	private long sessionExpirationLong = 0;
+	private Date sessionExpiration = null;
 	private ArrayList<ToolInfoGwt> tools = null;
 	private String systemMessage = null;
 
@@ -75,8 +76,8 @@ public class ConfigInfoGwt implements IsSerializable {
 		return maxIdleTime;
 	}
 
-	public long getSessionExpirationLong() {
-		return sessionExpirationLong;
+	public Date getSessionExpiration() {
+		return sessionExpiration;
 	}
 
 	public String getSessionId() {
@@ -127,8 +128,8 @@ public class ConfigInfoGwt implements IsSerializable {
 		this.maxIdleTime = maxIdleTime;
 	}
 
-	public void setSessionExpirationLong(long sessionExpirationLong) {
-		this.sessionExpirationLong = sessionExpirationLong;
+	public void setSessionExpiration(Date sessionExpiration) {
+		this.sessionExpiration = sessionExpiration;
 	}
 
 	public void setSessionId(String sessionId) {
