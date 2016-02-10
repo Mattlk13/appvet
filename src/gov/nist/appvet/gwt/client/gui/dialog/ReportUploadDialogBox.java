@@ -270,7 +270,7 @@ public class ReportUploadDialogBox extends DialogBox {
 						} else if (toolType == ToolType.AUDIT) {
 							
 							if (toolRiskComboBox != null) {
-								toolRiskComboBox.setVisible(false);
+								toolRiskComboBox.setVisible(true);
 								String reportTemplateURL = selectedTool.getReportTemplateURL();
 								log.info("Report template URL: " + reportTemplateURL);
 								if (reportTemplateURL != null) {
@@ -409,7 +409,7 @@ public class ReportUploadDialogBox extends DialogBox {
 				} else if (toolType == ToolType.AUDIT) {
 					
 					if (toolRiskComboBox != null) {
-						toolRiskComboBox.setVisible(false);
+						toolRiskComboBox.setVisible(true);
 						String reportTemplateURL = tool3.getReportTemplateURL();
 						if (reportTemplateURL != null) {
 							// There is a report template available for download
