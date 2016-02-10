@@ -1447,7 +1447,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		downloadReportsButton = new PushButton("Download Reports");
 		downloadReportsButton
 				.setHTML("<img width=\"80px\" src=\"images/download-reports.png\" alt=\"Download Reports\" />");
-		// REMOVE REPORT DOWNLOAD BUTTON
 		appHorizontalButtonPanel.add(downloadReportsButton);
 		appHorizontalButtonPanel.setCellVerticalAlignment(
 				downloadReportsButton, HasVerticalAlignment.ALIGN_MIDDLE);
@@ -1637,7 +1636,7 @@ public class AppVetPanel extends DockLayoutPanel {
 							showMessageDialog("AppVet Database Error",
 									"Could not retrieve updated apps", true);
 						} else {
-							log.info("Update time: " + updatedAppsList.appsLastChecked.toString());
+							//log.info("Update time: " + updatedAppsList.appsLastChecked.toString());
 							lastAppsListUpdate = updatedAppsList.appsLastChecked;
 							if (updatedAppsList.apps.size() > 0) {
 								setUpdatedApps(updatedAppsList.apps);
@@ -1887,7 +1886,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	public static void sessionTimeLeft(Date expirationTime) {
 		Date currentDate = new Date();
 		long diff = expirationTime.getTime() - currentDate.getTime();
-		log.info("diff: " + diff);
+		//log.info("diff: " + diff);
 		if (diff <= 0) {
 			// Session has expired
 			pollingTimer.cancel();

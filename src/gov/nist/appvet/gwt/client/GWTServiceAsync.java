@@ -23,6 +23,7 @@ import gov.nist.appvet.gwt.shared.AppsListGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolStatusGwt;
 import gov.nist.appvet.shared.all.DeviceOS;
+import gov.nist.appvet.shared.all.OrgDepts;
 import gov.nist.appvet.shared.all.UserInfo;
 import gov.nist.appvet.shared.all.UserToolCredentials;
 
@@ -66,6 +67,9 @@ public interface GWTServiceAsync {
 			throws IllegalArgumentException;
 
 	void getUsersList(AsyncCallback<List<UserInfo>> callback)
+			throws IllegalArgumentException;
+	
+	void getOrgDeptsList(AsyncCallback<List<OrgDepts>> callback)
 			throws IllegalArgumentException;
 
 	void removeSession(String sessionId, AsyncCallback<Boolean> callback)

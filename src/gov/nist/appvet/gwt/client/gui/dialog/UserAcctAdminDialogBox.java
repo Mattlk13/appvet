@@ -20,6 +20,7 @@
 package gov.nist.appvet.gwt.client.gui.dialog;
 
 import gov.nist.appvet.gwt.client.gui.table.appslist.UsersListPagingDataGrid;
+import gov.nist.appvet.shared.all.OrgDepts;
 import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.UserInfo;
 
@@ -28,6 +29,8 @@ import java.util.logging.Logger;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -35,6 +38,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.SimpleCheckBox;
@@ -46,11 +50,16 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 
 /**
  * @author steveq@nist.gov
  */
 public class UserAcctAdminDialogBox extends DialogBox {
+	private static Logger log = Logger.getLogger("UserAcctAdminDialogBox");
+
 	public PushButton cancelButton = null;
 	public PushButton okButton = null;
 	public TextBox lastNameTextBox = null;
@@ -58,38 +67,49 @@ public class UserAcctAdminDialogBox extends DialogBox {
 	public TextBox userIdTextBox = null;
 	public PasswordTextBox password1TextBox = null;
 	public PasswordTextBox password2TextBox = null;
-	public TextBox organizationTextBox = null;
-	public TextBox departmentTextBox = null;
 	public TextBox emailTextBox = null;
 	public ListBox roleComboBox = null;
+	public SuggestBox orgSuggestBox = null;
+	public MultiWordSuggestOracle orgOracle = null;
+	public SuggestBox deptSuggestBox = null;
+	public MultiWordSuggestOracle deptOracle = null;
 	public List<UserInfo> allUsers = null;
+	public List<OrgDepts> orgDeptsList = null;
 	public boolean newUser = false;
 	public UsersListPagingDataGrid<UserInfo> usersListTable = null;
 	public SimpleCheckBox changePasswordCheckBox = null;
-	public Label passwordLabel = null;
+	//public Label passwordLabel = null;
 	public Label passwordAgainLabel = null;
-	private static Logger log = Logger.getLogger("UserAcctAdminDialogBox");
 	private final DateTimeFormat dateTimeFormat = DateTimeFormat
 			.getFormat("yyyy-MM-dd HH:mm:ss");
+	private static MessageDialogBox messageDialogBox = null;
 
 	@SuppressWarnings("deprecation")
 	public UserAcctAdminDialogBox(UserInfo userInfo,
 			UsersListPagingDataGrid<UserInfo> usersListTable,
-			List<UserInfo> allUsers) {
+			List<UserInfo> allUsers, final List<OrgDepts> orgDeptsList) {
 		setWidth("386px");
+		
 		this.usersListTable = usersListTable;
 		this.allUsers = allUsers;
+		this.orgDeptsList = orgDeptsList;
+		orgOracle = new MultiWordSuggestOracle();
+		for (int i = 0; i < orgDeptsList.size(); i++) {
+			orgOracle.add(orgDeptsList.get(i).orgName);
+		}
+		deptOracle = new MultiWordSuggestOracle();
+		
 		if (userInfo == null) {
 			newUser = true;
 		}
 		changePasswordCheckBox = new SimpleCheckBox();
 		if (newUser) {
-			passwordLabel = new Label("Password: ");
+			//passwordLabel = new Label("Password: ");
 		} else {
-			passwordLabel = new Label("Password Reset: ");
+			//passwordLabel = new Label("Password Reset: ");
 		}
-		passwordLabel
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+		//passwordLabel
+		//		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 		if (newUser) {
 			passwordAgainLabel = new Label("Password (again): ");
 		} else {
@@ -215,23 +235,18 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		horizontalPanel_6.setCellWidth(lblOrganization, "50%");
 		lblOrganization
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		organizationTextBox = new TextBox();
-		organizationTextBox.addChangeHandler(new ChangeHandler() {
-			public void onChange(ChangeEvent arg0) {
-				if (allFieldsFilled()) {
-					okButton.setEnabled(true);
-				}
+		
+		orgSuggestBox = new SuggestBox(orgOracle);
+		orgSuggestBox.addValueChangeHandler(new ValueChangeHandler<String>() {
+			public void onValueChange(ValueChangeEvent<String> arg0) {
+				deptSuggestBox.setEnabled(true);
 			}
 		});
-		organizationTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
-		organizationTextBox.setAlignment(TextAlignment.LEFT);
-		horizontalPanel_6.add(organizationTextBox);
-		horizontalPanel_6.setCellVerticalAlignment(organizationTextBox,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_6.setCellHorizontalAlignment(organizationTextBox,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_6.setCellWidth(organizationTextBox, "50%");
-		organizationTextBox.setWidth("180px");
+		horizontalPanel_6.add(orgSuggestBox);
+		horizontalPanel_6.setCellVerticalAlignment(orgSuggestBox, HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_6.setCellHorizontalAlignment(orgSuggestBox, HasHorizontalAlignment.ALIGN_CENTER);
+		horizontalPanel_6.setCellWidth(orgSuggestBox, "50%");
+		orgSuggestBox.setWidth("180px");
 		
 		HorizontalPanel horizontalPanel_14 = new HorizontalPanel();
 		horizontalPanel_14.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
@@ -243,18 +258,33 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		horizontalPanel_14.add(lblDepartment);
 		lblDepartment.setWidth("170px");
 		
-		departmentTextBox = new TextBox();
-		departmentTextBox.addChangeHandler(new ChangeHandler() {
-			public void onChange(ChangeEvent arg0) {
-				if (allFieldsFilled()) {
-					okButton.setEnabled(true);
-				}
+		deptSuggestBox = new SuggestBox(deptOracle);
+		deptSuggestBox.getTextBox().addFocusHandler(new FocusHandler() {
+
+			@Override
+			public void onFocus(FocusEvent arg0) {
+				deptOracle.clear();
+				String selectedOrg = orgSuggestBox.getValue();
+				log.info("Selected org is: " + selectedOrg);
+				for (int i = 0; i < orgDeptsList.size(); i++) {
+					OrgDepts orgDepts = orgDeptsList.get(i);
+					if (selectedOrg.equals(orgDepts.orgName)) {
+						for (int j = 0; j < orgDepts.deptNames.length; j++) {
+							deptOracle.add(orgDepts.deptNames[j]);
+						}
+						break;
+					}
+				}				
 			}
+			
 		});
-		departmentTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
-		departmentTextBox.setAlignment(TextAlignment.LEFT);
-		horizontalPanel_14.add(departmentTextBox);
-		departmentTextBox.setWidth("180px");
+		
+		horizontalPanel_14.add(deptSuggestBox);
+		horizontalPanel_14.setCellVerticalAlignment(deptSuggestBox, HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_14.setCellHorizontalAlignment(deptSuggestBox, HasHorizontalAlignment.ALIGN_CENTER);
+		horizontalPanel_14.setCellWidth(deptSuggestBox, "50%");
+		deptSuggestBox.setWidth("180px");
+		
 		final HorizontalPanel horizontalPanel_7 = new HorizontalPanel();
 		verticalPanel_1.add(horizontalPanel_7);
 		horizontalPanel_7
@@ -353,22 +383,9 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		horizontalPanel_13.add(lblNewLabel_2);
 		horizontalPanel_13.setCellVerticalAlignment(lblNewLabel_2,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		lblNewLabel_2.setWidth("340px");
-		final HorizontalPanel horizontalPanel_4 = new HorizontalPanel();
-		verticalPanel_1.add(horizontalPanel_4);
-		horizontalPanel_4
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_4
-				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_4.add(passwordLabel);
-		passwordLabel.setWidth("170px");
-		horizontalPanel_4.setCellWidth(passwordLabel, "50%");
-		horizontalPanel_4.setCellVerticalAlignment(passwordLabel,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_4.setCellHorizontalAlignment(passwordLabel,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		passwordLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		lblNewLabel_2.setWidth("150px");
 		password1TextBox = new PasswordTextBox();
+		horizontalPanel_13.add(password1TextBox);
 		password1TextBox.addChangeHandler(new ChangeHandler() {
 			public void onChange(ChangeEvent arg0) {
 				if (allFieldsFilled()) {
@@ -379,29 +396,28 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		password1TextBox.setEnabled(false);
 		password1TextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		password1TextBox.setAlignment(TextAlignment.LEFT);
-		horizontalPanel_4.add(password1TextBox);
-		horizontalPanel_4.setCellVerticalAlignment(password1TextBox,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_4.setCellHorizontalAlignment(password1TextBox,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_4.setCellWidth(password1TextBox, "50%");
 		password1TextBox.setSize("180px", "");
-		final HorizontalPanel horizontalPanel_5 = new HorizontalPanel();
-		verticalPanel_1.add(horizontalPanel_5);
-		horizontalPanel_5
+		final HorizontalPanel horizontalPanel_4 = new HorizontalPanel();
+		verticalPanel_1.add(horizontalPanel_4);
+		horizontalPanel_4.setWidth("170px");
+		horizontalPanel_4
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_5
+		horizontalPanel_4
 				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_5.add(passwordAgainLabel);
-		passwordAgainLabel.setWidth("170px");
-		horizontalPanel_5.setCellVerticalAlignment(passwordAgainLabel,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_5.setCellHorizontalAlignment(passwordAgainLabel,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_5.setCellWidth(passwordAgainLabel, "50%");
-		passwordAgainLabel
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		//horizontalPanel_4.add(passwordLabel);
+		//passwordLabel.setWidth("170px");
+		//horizontalPanel_4.setCellWidth(passwordLabel, "50%");
+		//horizontalPanel_4.setCellVerticalAlignment(passwordLabel,
+		//		HasVerticalAlignment.ALIGN_MIDDLE);
+		//horizontalPanel_4.setCellHorizontalAlignment(passwordLabel,
+		//		HasHorizontalAlignment.ALIGN_CENTER);
+		
+		Label lblNewLabel_3 = new Label("Password (again)");
+		lblNewLabel_3.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		horizontalPanel_4.add(lblNewLabel_3);
+		lblNewLabel_3.setWidth("170px");
 		password2TextBox = new PasswordTextBox();
+		horizontalPanel_4.add(password2TextBox);
 		password2TextBox.addChangeHandler(new ChangeHandler() {
 			public void onChange(ChangeEvent arg0) {
 				if (allFieldsFilled()) {
@@ -412,19 +428,11 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		password2TextBox.setEnabled(false);
 		password2TextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		password2TextBox.setAlignment(TextAlignment.LEFT);
-		horizontalPanel_5.add(password2TextBox);
-		horizontalPanel_5.setCellVerticalAlignment(password2TextBox,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_5.setCellHorizontalAlignment(password2TextBox,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_5.setCellWidth(password2TextBox, "50%");
 		password2TextBox.setSize("180px", "");
-		final HorizontalPanel horizontalPanel_9 = new HorizontalPanel();
-		verticalPanel_1.add(horizontalPanel_9);
-		horizontalPanel_9
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_9
-				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		//passwordLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		passwordAgainLabel.setWidth("170px");
+		passwordAgainLabel
+				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		final HorizontalPanel horizontalPanel_10 = new HorizontalPanel();
 		verticalPanel_1.add(horizontalPanel_10);
 		horizontalPanel_10
@@ -479,12 +487,6 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		horizontalPanel_11.setCellWidth(fromHostTextBox, "50%");
 		fromHostTextBox.setReadOnly(true);
 		fromHostTextBox.setWidth("180px");
-		final HorizontalPanel horizontalPanel_12 = new HorizontalPanel();
-		verticalPanel_1.add(horizontalPanel_12);
-		horizontalPanel_12
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_12
-				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		final HorizontalPanel horizontalPanel = new HorizontalPanel();
 		horizontalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel
@@ -523,8 +525,8 @@ public class UserAcctAdminDialogBox extends DialogBox {
 			String lastLoginStr = dateTimeFormat.format(userInfo.getLastLogon());
 			lastLogonTextBox.setText(lastLoginStr);
 			fromHostTextBox.setText(userInfo.getFromHost());
-			organizationTextBox.setText(userInfo.getOrganization());
-			departmentTextBox.setText(userInfo.getDepartment());
+			orgSuggestBox.setText(userInfo.getOrganization());
+			deptSuggestBox.setText(userInfo.getDepartment());
 			emailTextBox.setText(userInfo.getEmail());		
 			
 			if (userInfo.getRole().equals(Role.USER.name())) {
@@ -556,12 +558,29 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		dockPanel.add(simplePanel, DockPanel.CENTER);
 	}
 	
+
+	
+	public static void showMessageDialog(String windowTitle, String message,
+			boolean isError) {
+		messageDialogBox = new MessageDialogBox(message, isError);
+		messageDialogBox.setText(windowTitle);
+		messageDialogBox.center();
+		messageDialogBox.closeButton.setFocus(true);
+		messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				messageDialogBox.hide();
+				messageDialogBox = null;
+			}
+		});
+	}
+	
 	public boolean allFieldsFilled() {
 		if (!lastNameTextBox.getText().isEmpty() &&
 				!firstNameTextBox.getText().isEmpty() &&
 				!userIdTextBox.getText().isEmpty() &&
-				!organizationTextBox.getText().isEmpty() &&
-				!departmentTextBox.getText().isEmpty() &&
+				!orgSuggestBox.getText().isEmpty() &&
+				!deptSuggestBox.getText().isEmpty() &&
 				!emailTextBox.getText().isEmpty()) {
 			if (newUser) {
 				if (!password1TextBox.getText().isEmpty() &&

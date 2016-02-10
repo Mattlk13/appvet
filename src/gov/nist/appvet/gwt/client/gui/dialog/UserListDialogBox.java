@@ -22,6 +22,7 @@ package gov.nist.appvet.gwt.client.gui.dialog;
 import gov.nist.appvet.gwt.client.GWTService;
 import gov.nist.appvet.gwt.client.GWTServiceAsync;
 import gov.nist.appvet.gwt.client.gui.table.appslist.UsersListPagingDataGrid;
+import gov.nist.appvet.shared.all.OrgDepts;
 import gov.nist.appvet.shared.all.UserInfo;
 import gov.nist.appvet.shared.all.Validate;
 
@@ -98,6 +99,7 @@ public class UserListDialogBox extends DialogBox {
 	}
 
 	public List<UserInfo> allUsers = null;
+	public List<OrgDepts> orgDeptsList = null;
 	public SingleSelectionModel<UserInfo> usersSelectionModel = null;
 	public UsersListPagingDataGrid<UserInfo> usersListTable = null;
 	public UserInfo user = null;
@@ -292,6 +294,7 @@ public class UserListDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		doneButton.setSize("70px", "18px");
 		getUsersList();
+		//getOrgDeptList();
 	}
 
 	public void deleteUser(final String username) {
@@ -315,9 +318,13 @@ public class UserListDialogBox extends DialogBox {
 
 	@SuppressWarnings("deprecation")
 	public void editUser(final boolean newUser) {
+		
+		// Get updated org/dept list before displaying user info dialogbox
+		getOrgDeptList();
+
 		if (newUser) {
 			userInfoDialogBox = new UserAcctAdminDialogBox(null,
-					usersListTable, allUsers);
+					usersListTable, allUsers, orgDeptsList);
 			userInfoDialogBox.setText("Add User");
 			userInfoDialogBox.changePasswordCheckBox.setChecked(true);
 			userInfoDialogBox.changePasswordCheckBox.setEnabled(false);
@@ -327,7 +334,7 @@ public class UserListDialogBox extends DialogBox {
 		} else {
 			user = usersSelectionModel.getSelectedObject();
 			userInfoDialogBox = new UserAcctAdminDialogBox(user,
-					usersListTable, allUsers);
+					usersListTable, allUsers, orgDeptsList);
 			
 			userInfoDialogBox.changePasswordCheckBox.setChecked(false);
 			userInfoDialogBox.password1TextBox.setEnabled(false);
@@ -360,9 +367,9 @@ public class UserListDialogBox extends DialogBox {
 						.getText());
 				userInfo.setFirstName(userInfoDialogBox.firstNameTextBox
 						.getText());
-				userInfo.setOrganization(userInfoDialogBox.organizationTextBox
+				userInfo.setOrganization(userInfoDialogBox.orgSuggestBox
 						.getText());
-				userInfo.setDepartment(userInfoDialogBox.departmentTextBox
+				userInfo.setDepartment(userInfoDialogBox.deptSuggestBox
 						.getText());				
 				userInfo.setEmail(userInfoDialogBox.emailTextBox.getText());
 				final int selectedRoleIndex = userInfoDialogBox.roleComboBox
@@ -412,17 +419,17 @@ public class UserListDialogBox extends DialogBox {
 				return false;
 			}
 		}
-		if (!Validate.isPrintable(userInfoDialogBox.organizationTextBox
-				.getText())) {
-			showMessageDialog("AppVet Error", "Invalid Organization", true);
-			return false;
-		}
-		
-		if (!Validate.isPrintable(userInfoDialogBox.departmentTextBox
-				.getText())) {
-			showMessageDialog("AppVet Error", "Invalid Department", true);
-			return false;
-		}
+//		if (!Validate.isPrintable(userInfoDialogBox.organizationTextBox
+//				.getText())) {
+//			showMessageDialog("AppVet Error", "Invalid Organization", true);
+//			return false;
+//		}
+//		
+//		if (!Validate.isPrintable(userInfoDialogBox.departmentTextBox
+//				.getText())) {
+//			showMessageDialog("AppVet Error", "Invalid Department", true);
+//			return false;
+//		}
 		
 		if (!Validate.isValidEmail(userInfoDialogBox.emailTextBox.getText())) {
 			showMessageDialog("AppVet Error", "Invalid Email", true);
@@ -502,6 +509,7 @@ public class UserListDialogBox extends DialogBox {
 	public void submitUserInfo(UserInfo userInfo) {
 		appVetServiceAsync.adminSetUser(userInfo,
 				new AsyncCallback<List<UserInfo>>() {
+			
 					@Override
 					public void onFailure(Throwable caught) {
 						showMessageDialog("AppVet Error",
@@ -521,5 +529,23 @@ public class UserListDialogBox extends DialogBox {
 						}
 					}
 				});
+	}
+	
+	public void getOrgDeptList() {
+		appVetServiceAsync.getOrgDeptsList(new AsyncCallback<List<OrgDepts>>() {
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				log.severe("Got error trying to get org dept list");
+				showMessageDialog("AppVet Error", "Could not retrieve orgs/depts",
+						true);
+			}
+
+			@Override
+			public void onSuccess(List<OrgDepts> result) {
+				log.info("Got org list size: " + result.size());
+				orgDeptsList = result;
+			}
+		});
 	}
 }

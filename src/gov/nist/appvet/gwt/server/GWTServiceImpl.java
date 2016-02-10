@@ -27,6 +27,7 @@ import gov.nist.appvet.gwt.shared.ToolStatusGwt;
 import gov.nist.appvet.shared.all.AppVetParameter;
 import gov.nist.appvet.shared.all.AppVetServletCommand;
 import gov.nist.appvet.shared.all.DeviceOS;
+import gov.nist.appvet.shared.all.OrgDepts;
 import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.ToolType;
 import gov.nist.appvet.shared.all.UserInfo;
@@ -45,7 +46,10 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -513,5 +517,70 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		// Update user's tool credentials in user table
 		Database.saveUserToolCredentials(username, credentialsList);
 		return true;
+	}
+
+	
+	/** This method gets the organizations and departments for users. Note
+	 * that this method is very inefficient and should  be optimized.
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
+	@Override
+	public List<OrgDepts> getOrgDeptsList() throws IllegalArgumentException {
+		
+		Hashtable<String, List<String>> orgDeptHashtable = 
+				new Hashtable<String, List<String>>();
+		List<UserInfo> users = Database.getUsers(null);
+		
+		for (int i = 0; i < users.size(); i++) {
+			UserInfo user = users.get(i);	
+			log.debug("Adding org/dept for user: " + user.getUserName());
+			String userOrg = user.getOrganization();
+			String userDept = user.getDepartment();
+			if (!orgDeptHashtable.containsKey(userOrg)) {
+				log.debug("Adding new org " + userOrg);
+				// Add this org to the hashtable
+				List<String> deptList = new ArrayList<String>();
+				deptList.add(userDept);
+				log.debug("Adding new dept " + userDept + " for new org " + userOrg);
+//				OrgDepts od = new OrgDepts();
+//				od.orgName = userOrg;
+//				od.deptNames = deptList;
+				orgDeptHashtable.put(userOrg, deptList);
+			} else {
+				// Org is already in hashtable so check if dept is in its list
+				List<String> deptList = orgDeptHashtable.get(userOrg);
+				if (!exists(userDept, deptList)) {
+					// Add it to the list
+					deptList.add(userDept);
+					log.debug("Adding new dept " + userDept + " to existing org " + userOrg);
+				}
+			}
+		}
+		
+		List<OrgDepts> orgDeptsList = new ArrayList<OrgDepts>();
+		Set<String> keys = orgDeptHashtable.keySet();
+		for (String key: keys) {
+			List<String> deptList = orgDeptHashtable.get(key);
+			System.out.println("od: " + key);
+			for (int i = 0; i < deptList.size(); i++) {
+				log.debug("depts: " + deptList.get(i));
+			}
+			OrgDepts orgDepts = new OrgDepts();
+			orgDepts.orgName = key;
+			orgDepts.deptNames = deptList.toArray(new String[deptList.size()]);
+			orgDeptsList.add(orgDepts);
+		}
+
+		return orgDeptsList;
+	}
+	
+	public boolean exists(String item, List<String> list) {
+		for (int i = 0; i < list.size(); i++) {
+			if (item.equals(list.get(i))) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
