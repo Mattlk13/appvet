@@ -19,6 +19,8 @@
  */
 package gov.nist.appvet.gwt.client.gui.dialog;
 
+import gov.nist.appvet.gwt.client.GWTService;
+import gov.nist.appvet.gwt.client.GWTServiceAsync;
 import gov.nist.appvet.gwt.client.gui.table.appslist.UsersListPagingDataGrid;
 import gov.nist.appvet.shared.all.OrgDepts;
 import gov.nist.appvet.shared.all.Role;
@@ -27,10 +29,12 @@ import gov.nist.appvet.shared.all.UserInfo;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -78,38 +82,31 @@ public class UserAcctAdminDialogBox extends DialogBox {
 	public boolean newUser = false;
 	public UsersListPagingDataGrid<UserInfo> usersListTable = null;
 	public SimpleCheckBox changePasswordCheckBox = null;
-	//public Label passwordLabel = null;
 	public Label passwordAgainLabel = null;
 	private final DateTimeFormat dateTimeFormat = DateTimeFormat
 			.getFormat("yyyy-MM-dd HH:mm:ss");
 	private static MessageDialogBox messageDialogBox = null;
+	private final static GWTServiceAsync appVetServiceAsync = GWT
+			.create(GWTService.class);
 
 	@SuppressWarnings("deprecation")
 	public UserAcctAdminDialogBox(UserInfo userInfo,
 			UsersListPagingDataGrid<UserInfo> usersListTable,
-			List<UserInfo> allUsers, final List<OrgDepts> orgDeptsList) {
-		setWidth("386px");
+			List<UserInfo> allUsers) {
 		
+		// Get orgs and depts now
+		getOrgDeptList();
+		
+		setWidth("386px");
 		this.usersListTable = usersListTable;
 		this.allUsers = allUsers;
 		this.orgDeptsList = orgDeptsList;
-		orgOracle = new MultiWordSuggestOracle();
-		for (int i = 0; i < orgDeptsList.size(); i++) {
-			orgOracle.add(orgDeptsList.get(i).orgName);
-		}
-		deptOracle = new MultiWordSuggestOracle();
 		
 		if (userInfo == null) {
 			newUser = true;
 		}
 		changePasswordCheckBox = new SimpleCheckBox();
-		if (newUser) {
-			//passwordLabel = new Label("Password: ");
-		} else {
-			//passwordLabel = new Label("Password Reset: ");
-		}
-		//passwordLabel
-		//		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+
 		if (newUser) {
 			passwordAgainLabel = new Label("Password (again): ");
 		} else {
@@ -117,6 +114,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		}
 		passwordAgainLabel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+		
 		final VerticalPanel verticalPanel_1 = new VerticalPanel();
 		verticalPanel_1.setSize("100%", "100%");
 		verticalPanel_1.setSpacing(5);
@@ -236,7 +234,21 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		lblOrganization
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		
+		orgOracle = new MultiWordSuggestOracle();
 		orgSuggestBox = new SuggestBox(orgOracle);
+		orgSuggestBox.getTextBox().addFocusHandler(new FocusHandler() {
+
+			@Override
+			public void onFocus(FocusEvent arg0) {
+				if (orgDeptsList != null) {
+					for (int i = 0; i < orgDeptsList.size(); i++) {
+						orgOracle.add(orgDeptsList.get(i).orgName);
+					}
+				} else {
+					log.warning("orgDeptsList is null in orgSuggestBox.onFocus()");
+				}
+			}
+		});
 		orgSuggestBox.addValueChangeHandler(new ValueChangeHandler<String>() {
 			public void onValueChange(ValueChangeEvent<String> arg0) {
 				deptSuggestBox.setEnabled(true);
@@ -258,6 +270,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		horizontalPanel_14.add(lblDepartment);
 		lblDepartment.setWidth("170px");
 		
+		deptOracle = new MultiWordSuggestOracle();
 		deptSuggestBox = new SuggestBox(deptOracle);
 		deptSuggestBox.getTextBox().addFocusHandler(new FocusHandler() {
 
@@ -265,7 +278,6 @@ public class UserAcctAdminDialogBox extends DialogBox {
 			public void onFocus(FocusEvent arg0) {
 				deptOracle.clear();
 				String selectedOrg = orgSuggestBox.getValue();
-				log.info("Selected org is: " + selectedOrg);
 				for (int i = 0; i < orgDeptsList.size(); i++) {
 					OrgDepts orgDepts = orgDeptsList.get(i);
 					if (selectedOrg.equals(orgDepts.orgName)) {
@@ -558,7 +570,6 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		dockPanel.add(simplePanel, DockPanel.CENTER);
 	}
 	
-
 	
 	public static void showMessageDialog(String windowTitle, String message,
 			boolean isError) {
@@ -574,6 +585,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 			}
 		});
 	}
+	
 	
 	public boolean allFieldsFilled() {
 		if (!lastNameTextBox.getText().isEmpty() &&
@@ -596,5 +608,23 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		} else {
 			return false;
 		}
+	}
+	
+	
+	public void getOrgDeptList() {
+		appVetServiceAsync.getOrgDeptsList(new AsyncCallback<List<OrgDepts>>() {
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				log.severe("Got error trying to get org dept list");
+				showMessageDialog("AppVet Error", "Could not retrieve orgs/depts",
+						true);
+			}
+
+			@Override
+			public void onSuccess(List<OrgDepts> result) {
+				orgDeptsList = result;
+			}
+		});
 	}
 }

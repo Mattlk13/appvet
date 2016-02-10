@@ -18,28 +18,26 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/httpclient-4.5.1.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/httpcore-4.4.3.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/httpmime-4.5.1.jar"/>
-	<classpathentry kind="lib" path="/home/carwash/Google/gwt-2.6.1/validation-api-1.0.0.GA.jar" sourcepath="/home/carwash/Google/gwt-2.6.1/validation-api-1.0.0.GA-sources.jar"/>
-	<classpathentry kind="lib" path="/home/carwash/Google/gwt-2.6.1/validation-api-1.0.0.GA-sources.jar"/>
-	<classpathentry kind="lib" path="/home/carwash/Google/gwt-2.6.1/gwt-servlet.jar"/>
+	<classpathentry kind="lib" path="C:/Java/Google/gwt-2.6.1/validation-api-1.0.0.GA.jar" sourcepath="/home/carwash/Google/gwt-2.6.1/validation-api-1.0.0.GA-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Java/Google/gwt-2.6.1/gwt-servlet.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/plist.jar"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/carwash/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.6.0/gwt-2.6.0/gwt-user.jar">
+	<classpathentry kind="lib" path="C:/Java/Google/gwt-2.6.1/gwt-user.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/home/carwash/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.6.0/gwt-2.6.0/doc/javadoc/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/carwash/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.6.0/gwt-2.6.0/gwt-codeserver.jar">
+	<classpathentry kind="lib" path="C:/Java/Google/gwt-2.6.1/gwt-codeserver.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/home/carwash/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.6.0/gwt-2.6.0/doc/javadoc/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/carwash/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.6.0/gwt-2.6.0/gwt-dev.jar">
+	<classpathentry kind="lib" path="C:/Java/Google/gwt-2.6.1/gwt-dev.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/home/carwash/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.6.0/gwt-2.6.0/doc/javadoc/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/carwash/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.6.0/gwt-2.6.0/validation-api-1.0.0.GA.jar" sourcepath="/home/carwash/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.6.0/gwt-2.6.0/validation-api-1.0.0.GA-sources.jar"/>
-	<classpathentry kind="lib" path="/home/carwash/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.6.0/gwt-2.6.0/validation-api-1.0.0.GA-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Java/Google/gwt-2.6.1/validation-api-1.0.0.GA-sources.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/javax.mail.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

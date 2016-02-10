@@ -22,7 +22,6 @@ package gov.nist.appvet.gwt.client.gui.dialog;
 import gov.nist.appvet.gwt.client.GWTService;
 import gov.nist.appvet.gwt.client.GWTServiceAsync;
 import gov.nist.appvet.gwt.client.gui.table.appslist.UsersListPagingDataGrid;
-import gov.nist.appvet.shared.all.OrgDepts;
 import gov.nist.appvet.shared.all.UserInfo;
 import gov.nist.appvet.shared.all.Validate;
 
@@ -99,7 +98,6 @@ public class UserListDialogBox extends DialogBox {
 	}
 
 	public List<UserInfo> allUsers = null;
-	public List<OrgDepts> orgDeptsList = null;
 	public SingleSelectionModel<UserInfo> usersSelectionModel = null;
 	public UsersListPagingDataGrid<UserInfo> usersListTable = null;
 	public UserInfo user = null;
@@ -318,13 +316,10 @@ public class UserListDialogBox extends DialogBox {
 
 	@SuppressWarnings("deprecation")
 	public void editUser(final boolean newUser) {
-		
-		// Get updated org/dept list before displaying user info dialogbox
-		getOrgDeptList();
 
 		if (newUser) {
 			userInfoDialogBox = new UserAcctAdminDialogBox(null,
-					usersListTable, allUsers, orgDeptsList);
+					usersListTable, allUsers);
 			userInfoDialogBox.setText("Add User");
 			userInfoDialogBox.changePasswordCheckBox.setChecked(true);
 			userInfoDialogBox.changePasswordCheckBox.setEnabled(false);
@@ -334,8 +329,7 @@ public class UserListDialogBox extends DialogBox {
 		} else {
 			user = usersSelectionModel.getSelectedObject();
 			userInfoDialogBox = new UserAcctAdminDialogBox(user,
-					usersListTable, allUsers, orgDeptsList);
-			
+					usersListTable, allUsers);
 			userInfoDialogBox.changePasswordCheckBox.setChecked(false);
 			userInfoDialogBox.password1TextBox.setEnabled(false);
 			userInfoDialogBox.password2TextBox.setEnabled(false);
@@ -343,7 +337,6 @@ public class UserListDialogBox extends DialogBox {
 
 		}
 		userInfoDialogBox.center();
-		//userInfoDialogBox.cancelButton.setFocus(true);
 		userInfoDialogBox.cancelButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -529,23 +522,5 @@ public class UserListDialogBox extends DialogBox {
 						}
 					}
 				});
-	}
-	
-	public void getOrgDeptList() {
-		appVetServiceAsync.getOrgDeptsList(new AsyncCallback<List<OrgDepts>>() {
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				log.severe("Got error trying to get org dept list");
-				showMessageDialog("AppVet Error", "Could not retrieve orgs/depts",
-						true);
-			}
-
-			@Override
-			public void onSuccess(List<OrgDepts> result) {
-				log.info("Got org list size: " + result.size());
-				orgDeptsList = result;
-			}
-		});
 	}
 }

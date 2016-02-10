@@ -46,7 +46,6 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
@@ -521,9 +520,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 
 	
 	/** This method gets the organizations and departments for users. Note
-	 * that this method is very inefficient and should  be optimized.
-	 * @return
-	 * @throws IllegalArgumentException
+	 * that this method is inefficient and should  be optimized.
 	 */
 	@Override
 	public List<OrgDepts> getOrgDeptsList() throws IllegalArgumentException {
@@ -534,18 +531,15 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		
 		for (int i = 0; i < users.size(); i++) {
 			UserInfo user = users.get(i);	
-			log.debug("Adding org/dept for user: " + user.getUserName());
+			//log.debug("Adding org/dept for user: " + user.getUserName());
 			String userOrg = user.getOrganization();
 			String userDept = user.getDepartment();
 			if (!orgDeptHashtable.containsKey(userOrg)) {
-				log.debug("Adding new org " + userOrg);
+				//log.debug("Adding new org " + userOrg);
 				// Add this org to the hashtable
 				List<String> deptList = new ArrayList<String>();
 				deptList.add(userDept);
-				log.debug("Adding new dept " + userDept + " for new org " + userOrg);
-//				OrgDepts od = new OrgDepts();
-//				od.orgName = userOrg;
-//				od.deptNames = deptList;
+				//log.debug("Adding new dept " + userDept + " for new org " + userOrg);
 				orgDeptHashtable.put(userOrg, deptList);
 			} else {
 				// Org is already in hashtable so check if dept is in its list
@@ -553,7 +547,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 				if (!exists(userDept, deptList)) {
 					// Add it to the list
 					deptList.add(userDept);
-					log.debug("Adding new dept " + userDept + " to existing org " + userOrg);
+					//log.debug("Adding new dept " + userDept + " to existing org " + userOrg);
 				}
 			}
 		}
@@ -562,9 +556,9 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		Set<String> keys = orgDeptHashtable.keySet();
 		for (String key: keys) {
 			List<String> deptList = orgDeptHashtable.get(key);
-			System.out.println("od: " + key);
+			//log.debug("key: " + key);
 			for (int i = 0; i < deptList.size(); i++) {
-				log.debug("depts: " + deptList.get(i));
+				//log.debug("depts: " + deptList.get(i));
 			}
 			OrgDepts orgDepts = new OrgDepts();
 			orgDepts.orgName = key;
