@@ -14,7 +14,10 @@ xsi:schemaLocation="http://appvet.github.io/appvet/schemas/ToolAdapter.xsd ">
     <appvet:ReportFile>TXT</appvet:ReportFile>
     <appvet:AppSubmit>APP_FILE</appvet:AppSubmit>
     <appvet:Restriction>NONE</appvet:Restriction>
-    <appvet:AuthenticationRequired>false</appvet:AuthenticationRequired>	
+    <appvet:AuthenticationRequired>false</appvet:AuthenticationRequired>
+    
+    <appvet:ReportTemplateURL>https://appsec.nist.gov/appvet_images/report_template.pdf</appvet:ReportTemplateURL>	
+    
   </appvet:Description>
   <appvet:Protocol>
     <appvet:Internal/>

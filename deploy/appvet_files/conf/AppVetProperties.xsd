@@ -72,7 +72,9 @@
 					</xs:annotation>
 				</xs:element>
 
-				<xs:element name="Email" type="EmailType" maxOccurs="1" minOccurs="0"></xs:element>
+				<xs:element name="Email" type="EmailType" maxOccurs="1"
+					minOccurs="0">
+				</xs:element>
 				<xs:element name="ToolServices" type="ToolServicesType"
 					maxOccurs="1" minOccurs="1">
 					<xs:annotation>
@@ -91,6 +93,7 @@
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
+				<xs:element name="Reports" type="ReportsType" maxOccurs="1" minOccurs="1"></xs:element>
 			</xs:sequence>
 
 		</xs:complexType>
@@ -363,6 +366,19 @@
 						keep (true) or delete (false) received apps. Note that
 						keeping
 						apps on the system can lead to large disk usage.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+		<xs:complexType name="ReportsType">
+		<xs:sequence>
+			<xs:element name="AuditTemplateURL" type="xs:string" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						The URL for AUDIT report template download.
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>

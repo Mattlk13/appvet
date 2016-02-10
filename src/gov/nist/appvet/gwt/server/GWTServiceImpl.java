@@ -220,6 +220,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					if (toolInfo.requiresAuthentication()) {
 						toolInfo.setAuthenticationParameterNames(androidTool.authenticationParams);
 					}
+					toolInfo.setReportTemplateURL(androidTool.reportTemplateURL);
 					toolInfo.setReportFileType(androidTool.reportFileType
 							.name());
 					tools.add(toolInfo);

@@ -36,6 +36,7 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Hidden;
@@ -54,7 +55,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class ReportUploadDialogBox extends DialogBox {
 	private static Logger log = Logger.getLogger("ReportUploadDialogBox");
 	public FormPanel uploadReportForm = null;
-	public Label statusLabel = null;
+	public HTML statusLabel = null;
 	public FileUpload fileUpload = null;
 	public PushButton submitButton = null;
 	public PushButton cancelButton = null;
@@ -186,7 +187,7 @@ public class ReportUploadDialogBox extends DialogBox {
 		grid.getCellFormatter().setHeight(2, 1, "18px");
 		grid.getCellFormatter().setStyleName(2, 1, "reportUploadWidget");
 		toolNamesComboBox.setSize("231px", "22px");
-		statusLabel = new Label("");
+		statusLabel = new HTML("");
 		
 		
 		// Add tools to toolNamesComboBox. Note only ADMINS can submit
@@ -265,7 +266,28 @@ public class ReportUploadDialogBox extends DialogBox {
 							} else {
 								log.warning("toolRiskComboBox is null");
 							}
+							break;
+						} else if (toolType == ToolType.AUDIT) {
 							
+							if (toolRiskComboBox != null) {
+								toolRiskComboBox.setVisible(false);
+								String reportTemplateURL = selectedTool.getReportTemplateURL();
+								log.info("Report template URL: " + reportTemplateURL);
+								if (reportTemplateURL != null) {
+									// There is a report template available for download
+									statusLabel.setHTML(selectedToolName
+											+ " requires a " + reportFileType
+											+ " report. Download <a href=\"" + reportTemplateURL + "\"><b>template</b>.</a>");
+								} else {
+									statusLabel.setHTML(selectedToolName
+											+ " requires a " + reportFileType
+											+ " report.");
+								}
+								
+							} else {
+								log.warning("toolRiskComboBox is null");
+							}
+							break;
 						} else {
 							if (toolRiskComboBox != null) {
 								toolRiskComboBox.setVisible(true);
@@ -275,6 +297,7 @@ public class ReportUploadDialogBox extends DialogBox {
 							} else {
 								log.warning("toolRiskComboBox is null");
 							}
+							break;
 						}
 					}
 				}
@@ -365,8 +388,8 @@ public class ReportUploadDialogBox extends DialogBox {
 				String reportFileType = tool3.getReportFileType();
 				String filter = "." + reportFileType;
 				fileUpload.getElement().setAttribute("accept", filter);
-				String filter2 = "." + reportFileType;
-				fileUpload.getElement().setAttribute("accept", filter2);
+//				String filter2 = "." + reportFileType;
+//				fileUpload.getElement().setAttribute("accept", filter2);
 
 				ToolType toolType = tool3.getType();
 
@@ -381,7 +404,31 @@ public class ReportUploadDialogBox extends DialogBox {
 					} else {
 						log.warning("toolRiskComboBox is null");
 					}
+					break;
+					
+				} else if (toolType == ToolType.AUDIT) {
+					
+					if (toolRiskComboBox != null) {
+						toolRiskComboBox.setVisible(false);
+						String reportTemplateURL = tool3.getReportTemplateURL();
+						if (reportTemplateURL != null) {
+							// There is a report template available for download
+							statusLabel.setHTML(selectedToolName
+									+ " requires a " + reportFileType
+									+ " report. Download <a href=\"" + reportTemplateURL + "\"><b>template</b>.</a>");
+						} else {
+							statusLabel.setHTML(selectedToolName
+									+ " requires a " + reportFileType
+									+ " report.");
+						}
+						
+					} else {
+						log.warning("toolRiskComboBox is null");
+					}
+					break;
+
 				} else {
+					
 					if (toolRiskComboBox != null) {
 						toolRiskComboBox.setVisible(true);
 						statusLabel.setText(selectedToolName
@@ -390,6 +437,8 @@ public class ReportUploadDialogBox extends DialogBox {
 					} else {
 						log.warning("toolRiskComboBox is null");
 					}
+					
+					break;
 				}
 			}
 		}

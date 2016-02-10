@@ -83,6 +83,7 @@ public class ToolAdapter implements Runnable {
 	public ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 	public Thread thread = null;
 	public AppInfo appInfo = null;
+	public String reportTemplateURL = null;
 
 	public ToolAdapter(File configFile) {
 
@@ -123,7 +124,13 @@ public class ToolAdapter implements Runnable {
 		final String booleanStringValue = xml
 				.getXPathValue("/ToolAdapter/Description/AuthenticationRequired");
 		authenticationRequired = new Boolean(booleanStringValue).booleanValue();
-
+		
+		// Report template download URL (optional)
+		reportTemplateURL = xml.getXPathValue("/ToolAdapter/Description/ReportTemplateURL"); 
+		if (reportTemplateURL != null) {
+			log.debug("Report template URL: " + reportTemplateURL);
+			
+		}
 		if (authenticationRequired) {
 			// Get authorization parameter names
 			final String authenticationParamsString = xml
