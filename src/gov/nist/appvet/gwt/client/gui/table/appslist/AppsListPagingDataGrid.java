@@ -101,7 +101,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		osIconColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		osIconColumn.setSortable(false);
 		dataGrid.addColumn(osIconColumn, "OS");
-		dataGrid.setColumnWidth(osIconColumn, "20px");
+		dataGrid.setColumnWidth(osIconColumn, "15px");
 		
 		// App Icon
 		final SafeHtmlCell iconCell = new SafeHtmlCell();
@@ -174,7 +174,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		});
 		appNameColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dataGrid.addColumn(appNameColumn, "");
-		dataGrid.setColumnWidth(appNameColumn, "100px");
+		dataGrid.setColumnWidth(appNameColumn, "80px");
 		
 		
 		// App Version

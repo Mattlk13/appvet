@@ -33,7 +33,7 @@ import java.util.ArrayList;
 public class AppVetProperties {
 	public static boolean error = false;
 	/** AppVet Github release version number. */
-	public static final String APPVET_VERSION = "2.0.5"; 
+	public static final String APPVET_VERSION = "2.0.6"; 
 	// Logging
 	public static Logger log = null;
 	private static String APPVET_LOG_NAME = "appvet_log.txt";

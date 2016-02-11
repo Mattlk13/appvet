@@ -277,7 +277,7 @@ public class ReportUploadDialogBox extends DialogBox {
 									// There is a report template available for download
 									statusLabel.setHTML(selectedToolName
 											+ " requires a " + reportFileType
-											+ " report. Download <a href=\"" + reportTemplateURL + "\"><b>template</b>.</a>");
+											+ " report. Download <a href=\"" + reportTemplateURL + "\" target=\"_blank\"><b>template</b>.</a>");
 								} else {
 									statusLabel.setHTML(selectedToolName
 											+ " requires a " + reportFileType
@@ -415,7 +415,7 @@ public class ReportUploadDialogBox extends DialogBox {
 							// There is a report template available for download
 							statusLabel.setHTML(selectedToolName
 									+ " requires a " + reportFileType
-									+ " report. Download <a href=\"" + reportTemplateURL + "\"><b>template</b>.</a>");
+									+ " report. Download <a href=\"" + reportTemplateURL + "\" target=\"_blank\"><b>template</b>.</a>");
 						} else {
 							statusLabel.setHTML(selectedToolName
 									+ " requires a " + reportFileType

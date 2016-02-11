@@ -37,7 +37,6 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.DockPanel;
@@ -47,6 +46,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -62,7 +62,7 @@ public class LoginPanel extends DockLayoutPanel {
 
 	// See appvet.gwt.xml
 	private static Logger log = Logger.getLogger("LoginPanel");
-	private final Button loginButton = new Button("LOGIN");
+	private final PushButton loginButton = new PushButton("LOGIN");
 	private final TextBox userNameTextBox = new TextBox();
 	private final PasswordTextBox passwordTextBox = new PasswordTextBox();
 	private final Label loginStatusLabel = new Label("");
@@ -240,7 +240,7 @@ public class LoginPanel extends DockLayoutPanel {
 
 		simplePanel_3.setWidget(loginButton);
 		loginButton.setText("LOGIN");
-		loginButton.setSize("78px", "26px");
+		loginButton.setSize("78px", "");
 
 	}
 

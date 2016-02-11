@@ -249,11 +249,11 @@ public class UserAcctAdminDialogBox extends DialogBox {
 				}
 			}
 		});
-		orgSuggestBox.addValueChangeHandler(new ValueChangeHandler<String>() {
-			public void onValueChange(ValueChangeEvent<String> arg0) {
-				deptSuggestBox.setEnabled(true);
-			}
-		});
+//		orgSuggestBox.addValueChangeHandler(new ValueChangeHandler<String>() {
+//			public void onValueChange(ValueChangeEvent<String> arg0) {
+//				deptSuggestBox.setEnabled(true);
+//			}
+//		});
 		horizontalPanel_6.add(orgSuggestBox);
 		horizontalPanel_6.setCellVerticalAlignment(orgSuggestBox, HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_6.setCellHorizontalAlignment(orgSuggestBox, HasHorizontalAlignment.ALIGN_CENTER);

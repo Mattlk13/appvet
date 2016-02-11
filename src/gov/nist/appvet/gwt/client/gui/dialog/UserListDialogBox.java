@@ -154,6 +154,7 @@ public class UserListDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		searchTextBox.setSize("260px", "18px");
 		final PushButton searchButton = new PushButton("Search");
+		searchButton.setTitle("Search Users");
 		searchButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -175,6 +176,7 @@ public class UserListDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		searchButton.setSize("18px", "18px");
 		final PushButton viewAllButton = new PushButton("View All");
+		viewAllButton.setTitle("View All Users");
 		viewAllButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
