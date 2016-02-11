@@ -328,7 +328,7 @@ public class AppVetPanel extends DockLayoutPanel {
 											|| (selectedApp.appStatus == AppStatus.MODERATE)
 											|| (selectedApp.appStatus == AppStatus.LOW)) {
 
-										appNameHtml = "<div id=\"endorsed\" style='color: darkslategray; size:18; weight: bold'>"
+										appNameHtml = "<div id=\"endorsed\" style='color: darkslategray; size:22; weight: bold'>"
 												+ appName + "</div>";
 										uploadReportButton.setEnabled(true);
 										deleteButton.setEnabled(true);
@@ -337,7 +337,7 @@ public class AppVetPanel extends DockLayoutPanel {
 
 									} else {
 
-										appNameHtml = "<div id=\"endorsed\" style='color: dimgray; size:18; weight: bold'>"
+										appNameHtml = "<div id=\"endorsed\" style='color: dimgray; size:22; weight: bold'>"
 												+ appName + "</div>";
 										downloadReportsButton.setEnabled(false);
 
@@ -400,7 +400,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 
 								/* Get pre-processing analysis results */
-								statuses += "<hr><h3 title=\"App Metadata\" id=\"appInfoSectionHeader\">App Metadata</h3>\n";
+								statuses += "<h3 title=\"App Metadata\" id=\"appInfoSectionHeader\">App Metadata</h3>\n";
 								int preprocessorToolCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -419,7 +419,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 
 								// Get tool and manually-uploaded results.
-								statuses += "<hr><h3 title=\"Tool Analyses\"  id=\"appInfoSectionHeader\">Tool Analyses</h3>\n";
+								statuses += "<h3 title=\"Tool Analyses\"  id=\"appInfoSectionHeader\">Tool Analyses</h3>\n";
 								int analysisToolCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -439,7 +439,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 
 								/* Get audit results */
-								statuses += "<hr><h3 title=\"Final Organization Determination\" id=\"appInfoSectionHeader\">Final Organization Determination</h3>\n";
+								statuses += "<h3 title=\"Final Organization Determination\" id=\"appInfoSectionHeader\">Final Organization Determination</h3>\n";
 								int auditCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -824,11 +824,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel_6.setCellVerticalAlignment(searchTextBox,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		final PushButton searchButton = new PushButton("Search");
-		searchButton.getDownFace().setHTML("<img width=\"18px\" src=\"images/icon-search-down.png\" alt=\"search\" />");
-		searchButton.getUpHoveringFace().setHTML("<img width=\"18px\" src=\"images/icon-search-up-hover.png\" alt=\"search\" />");
-		searchButton.getUpDisabledFace().setHTML("<img width=\"18px\" src=\"images/icon-search-up-disabled.png\" alt=\"search\" />");
-		searchButton.getUpFace().setHTML("<img width=\"18px\" src=\"images/icon-search-up.png\" alt=\"search\" />");
-		searchButton.setStyleName("AppVetPushButton");
 		searchButton.setTitle("Search by app ID, name, release kit, etc.");
 		searchButton.setSize("18px", "18px");
 		searchButton
@@ -1200,12 +1195,6 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		horizontalPanel.setSize("", "");
 		final PushButton submitButton = new PushButton("Upload App");
-		submitButton.getDownHoveringFace().setHTML("<img width=\"80px\" src=\"images/upload-app-up.png\" alt=\"Upload App\" />");
-		submitButton.getDownFace().setHTML("<img width=\"80px\" src=\"images/upload-app-down.png\" alt=\"Upload App\" />");
-		submitButton.getUpHoveringFace().setHTML("<img width=\"80px\" src=\"images/upload-app-up-hover.png\" alt=\"Upload App\" />");
-		submitButton.getUpDisabledFace().setHTML("<img width=\"80px\" src=\"images/upload-app-up-disabled.png\" alt=\"Upload App\" />");
-		submitButton.getUpFace().setHTML("<img width=\"80px\" src=\"images/upload-app-up.png\" alt=\"Upload App\" />");
-		submitButton.setStyleName("AppVetPushButton");
 		submitButton.setTitle("Upload App");
 		submitButton
 				.setHTML("<img width=\"80px\" src=\"images/upload-app-up.png\" alt=\"Upload App\" />");
@@ -1252,11 +1241,6 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		});
 		final PushButton viewAllButton = new PushButton("View All Apps");
-		viewAllButton.getUpDisabledFace().setHTML("<img width=\"80px\" src=\"images/view-all-up-disabled.png\" alt=\"View All Apps\" />");
-		viewAllButton.getDownFace().setHTML("<img width=\"80px\" src=\"images/view-all-down.png\" alt=\"View All Apps\" />");
-		viewAllButton.getUpHoveringFace().setHTML("<img width=\"80px\" src=\"images/view-all-up-hover.png\" alt=\"View All Apps\" />");
-		viewAllButton.getUpFace().setHTML("<img width=\"80px\" src=\"images/view-all-up.png\" alt=\"View All Apps\" />");
-		viewAllButton.setStyleName("AppVetPushButton");
 		viewAllButton
 				.setHTML("<img width=\"80px\" src=\"images/view-all-up.png\" alt=\"View All Apps\" />");
 		viewAllButton.setTitle("View All Apps");
@@ -1320,13 +1304,12 @@ public class AppVetPanel extends DockLayoutPanel {
 		
 		HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
 		appInfoVerticalPanel.add(horizontalPanel_1);
+		
+		Label label = new Label("");
+		horizontalPanel_1.add(label);
+		label.setSize("0", "0");
 		uploadReportButton = new PushButton("Upload Report");
 		horizontalPanel_1.add(uploadReportButton);
-		uploadReportButton.getDownFace().setHTML("<img width=\"80px\" src=\"images/upload-report-down.png\" alt=\"Upload App\" />");
-		uploadReportButton.getUpHoveringFace().setHTML("<img width=\"80px\" src=\"images/upload-report-up-hover.png\" alt=\"Upload App\" />");
-		uploadReportButton.getUpDisabledFace().setHTML("<img width=\"80px\" src=\"images/upload-report-up-disabled.png\" alt=\"Upload App\" />");
-		uploadReportButton.getUpFace().setHTML("<img width=\"80px\" src=\"images/upload-report-up.png\" alt=\"Upload App\" />");
-		uploadReportButton.setStyleName("AppVetPushButton");
 		uploadReportButton
 				.setHTML("<img width=\"80px\" src=\"images/upload-report-up.png\" alt=\"Upload App\" />");
 		horizontalPanel.setCellVerticalAlignment(uploadReportButton,
@@ -1381,11 +1364,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		uploadReportButton.setSize("80px", "");
 		logButton = new PushButton("View Log");
 		horizontalPanel_1.add(logButton);
-		logButton.getUpHoveringFace().setHTML("<img width=\"80px\" src=\"images/view-log-up-hover.png\" alt=\"Upload App\" />");
-		logButton.getDownFace().setHTML("<img width=\"80px\" src=\"images/view-log-down.png\" alt=\"Upload App\" />");
-		logButton.getUpDisabledFace().setHTML("<img width=\"80px\" src=\"images/view-log-up-disabled.png\" alt=\"Upload App\" />");
-		logButton.getUpFace().setHTML("<img width=\"80px\" src=\"images/view-log-up.png\" alt=\"Upload App\" />");
-		logButton.setStyleName("AppVetPushButton");
 		logButton
 				.setHTML("<img width=\"80px\" src=\"images/view-log-up.png\" alt=\"Upload App\" />");
 		horizontalPanel.setCellVerticalAlignment(logButton,
@@ -1411,11 +1389,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		logButton.setSize("80px", "");
 		deleteButton = new PushButton("Delete App");
 		horizontalPanel_1.add(deleteButton);
-		deleteButton.getDownFace().setHTML("<img width=\"80px\" src=\"images/delete-app-down.png\" alt=\"Upload App\" />");
-		deleteButton.getUpHoveringFace().setHTML("<img width=\"80px\" src=\"images/delete-app-up-hover.png\" alt=\"Upload App\" />");
-		deleteButton.getUpDisabledFace().setHTML("<img width=\"80px\" src=\"images/delete-app-up-disabled.png\" alt=\"Upload App\" />");
-		deleteButton.getUpFace().setHTML("<img width=\"80px\" src=\"images/delete-app-up.png\" alt=\"Upload App\" />");
-		deleteButton.setStyleName("AppVetPushButton");
 		deleteButton
 				.setHTML("<img width=\"80px\" src=\"images/delete-app-up.png\" alt=\"Upload App\" />");
 		horizontalPanel.setCellVerticalAlignment(deleteButton,
@@ -1459,11 +1432,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		deleteButton.setSize("80px", "");
 		downloadReportsButton = new PushButton("Download Reports");
 		horizontalPanel_1.add(downloadReportsButton);
-		downloadReportsButton.getUpHoveringFace().setHTML("<img width=\"80px\" src=\"images/download-reports-up-hover.png\" alt=\"Download Reports\" />");
-		downloadReportsButton.getUpFace().setHTML("<img width=\"80px\" src=\"images/download-reports-up.png\" alt=\"Download Reports\"/>");
-		downloadReportsButton.getUpDisabledFace().setHTML("<img width=\"80px\" src=\"images/download-reports-up-disabled.png\" alt=\"Download Reports\" />");
-		downloadReportsButton.getDownFace().setHTML("<img width=\"80px\" src=\"images/download-report-down.png\" alt=\"Upload App\" />");
-		downloadReportsButton.setStyleName("AppVetPushButton");
 		downloadReportsButton
 				.setHTML("<img width=\"80px\" src=\"images/download-reports-up.png\" alt=\"Download Reports\" />");
 		downloadReportsButton.setTitle("Download Reports");
@@ -1499,11 +1467,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		
 				downloadAppButton = new PushButton("Download App");
 				horizontalPanel_1.add(downloadAppButton);
-				downloadAppButton.getDownFace().setHTML("<img width=\"80px\" src=\"images/download-app-down.png\" alt=\"Upload App\" />");
-				downloadAppButton.getUpHoveringFace().setHTML("<img width=\"80px\" src=\"images/download-app-up-hover.png\" alt=\"Upload App\" />");
-				downloadAppButton.getUpDisabledFace().setHTML("<img width=\"80px\" src=\"images/download-app-up-disabled.png\" alt=\"Upload App\" />");
-				downloadAppButton.getUpFace().setHTML("<img width=\"80px\" src=\"images/download-app-up.png\" alt=\"Upload App\" />");
-				downloadAppButton.setStyleName("AppVetPushButton");
 				downloadAppButton
 						.setHTML("<img width=\"80px\" src=\"images/download-app-up.png\" alt=\"Download App\" />");
 				downloadAppButton.setTitle("Download App");

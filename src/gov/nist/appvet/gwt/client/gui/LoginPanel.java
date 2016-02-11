@@ -229,11 +229,7 @@ public class LoginPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		dockPanel.setCellHorizontalAlignment(simplePanel_3,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		loginButton.getUpFace().setHTML("<font color=\"#000000\">LOGIN</font>");
-		loginButton.getUpDisabledFace().setHTML("<font color=\"#b3b3b3\">LOGIN</font>");
-		loginButton.getUpHoveringFace().setHTML("<font color=\"#0000ff\">LOGIN</font>");
-		loginButton.getDownFace().setHTML("<font color=\"#00ff55\">LOGIN</font>");
-		loginButton.setStyleName("AppVetPushButton");
+		loginButton.getUpFace().setHTML("");
 		loginButton.addClickHandler(new ClickHandler() {
 
 			@Override
