@@ -54,21 +54,17 @@ public class AppVet implements EntryPoint {
 		String password = Window.Location.getParameter("ssop");
 
 		if (username == null || password == null) {
-
 			// Send to AppVet GUI
 			final LoginPanel loginPanel = new LoginPanel(Unit.PX);
 			loginPanel.setTitle("Login panel");
 			final RootLayoutPanel rootPanel = RootLayoutPanel.get();
 			rootPanel.setTitle("Root panel");
 			rootPanel.add(loginPanel);
-
 		} else if (username != null && password != null) {
-
 			// Login attempt via SSO
 			log.info("AppVet GWT got: name=" + username);
 			// Authenticate SSO username and password
 			authenticateSSO(username, password);
-
 		}
 	}
 

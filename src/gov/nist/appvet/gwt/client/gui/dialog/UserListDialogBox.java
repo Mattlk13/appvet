@@ -161,7 +161,7 @@ public class UserListDialogBox extends DialogBox {
 			}
 		});
 		searchButton
-				.setHTML("<img width=\"18px\" src=\"images/icon-search.png\" alt=\"search\" />");
+				.setHTML("<img width=\"18px\" src=\"images/icon-search-up.png\" alt=\"Search\" />");
 		searchButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -185,7 +185,7 @@ public class UserListDialogBox extends DialogBox {
 			}
 		});
 		viewAllButton
-				.setHTML("<img width=\"18px\" src=\"images/icon-view-all.png\" alt=\"view-all\" />");
+				.setHTML("<img width=\"18px\" src=\"images/icon-view-all-up.png\" alt=\"View All\" />");
 		horizontalPanel_1.add(viewAllButton);
 		horizontalPanel_1.setCellHorizontalAlignment(viewAllButton,
 				HasHorizontalAlignment.ALIGN_CENTER);

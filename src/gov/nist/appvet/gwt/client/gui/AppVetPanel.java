@@ -1331,32 +1331,53 @@ public class AppVetPanel extends DockLayoutPanel {
 							osToolCount++;
 						}
 					}
+					
+					reportUploadDialogBox = new ReportUploadDialogBox(
+							userInfo, sessionId, selected.appId,
+							SERVLET_URL, selected.os, tools);
+					reportUploadDialogBox.setText("Upload Report for "
+							+ selected.appName);
+					reportUploadDialogBox.center();
+					// reportUploadDialogBox.cancelButton.setFocus(true);
+					reportUploadDialogBox.toolNamesComboBox.setFocus(true);
 
-					if (osToolCount == 0) {
-						showMessageDialog("AppVet Error",
-								"No tools available for this app.", true);
-					} else {
-						reportUploadDialogBox = new ReportUploadDialogBox(
-								userInfo, sessionId, selected.appId,
-								SERVLET_URL, selected.os, tools);
-						reportUploadDialogBox.setText("Upload Report for "
-								+ selected.appName);
-						reportUploadDialogBox.center();
-						// reportUploadDialogBox.cancelButton.setFocus(true);
-						reportUploadDialogBox.toolNamesComboBox.setFocus(true);
+					reportUploadDialogBox.cancelButton
+							.addClickHandler(new ClickHandler() {
+								@Override
+								public void onClick(ClickEvent event) {
+									killDialogBox(reportUploadDialogBox);
+								}
+							});
+					reportUploadDialogBox.uploadReportForm
+							.addFormHandler(new ReportUploadFormHandler(
+									reportUploadDialogBox, userName,
+									selected));
 
-						reportUploadDialogBox.cancelButton
-								.addClickHandler(new ClickHandler() {
-									@Override
-									public void onClick(ClickEvent event) {
-										killDialogBox(reportUploadDialogBox);
-									}
-								});
-						reportUploadDialogBox.uploadReportForm
-								.addFormHandler(new ReportUploadFormHandler(
-										reportUploadDialogBox, userName,
-										selected));
-					}
+//					if (osToolCount == 0) {
+//						showMessageDialog("AppVet Error",
+//								"No tools available for this app.", true);
+//					} else {
+//						reportUploadDialogBox = new ReportUploadDialogBox(
+//								userInfo, sessionId, selected.appId,
+//								SERVLET_URL, selected.os, tools);
+//						reportUploadDialogBox.setText("Upload Report for "
+//								+ selected.appName);
+//						reportUploadDialogBox.center();
+//						// reportUploadDialogBox.cancelButton.setFocus(true);
+//						reportUploadDialogBox.toolNamesComboBox.setFocus(true);
+//
+//						reportUploadDialogBox.cancelButton
+//								.addClickHandler(new ClickHandler() {
+//									@Override
+//									public void onClick(ClickEvent event) {
+//										killDialogBox(reportUploadDialogBox);
+//									}
+//								});
+//						reportUploadDialogBox.uploadReportForm
+//								.addFormHandler(new ReportUploadFormHandler(
+//										reportUploadDialogBox, userName,
+//										selected));
+//					}
 				}
 			}
 		});
