@@ -232,7 +232,7 @@ public class AppVetPanel extends DockLayoutPanel {
 												+ defaultIcon + "?v"
 												+ iconVersion;
 										appInfoIcon.setUrl(iconPath);
-										appNameHtml = "<div id=\"endorsed\" style='color: darkslategray; size:18; weight: bold'>"
+										appNameHtml = "<div id=\"appNameInfo\">"
 												+ "Unknown" + "</div>";
 										appInfoName.setHTML(appNameHtml);
 										toolResultsHtml
@@ -305,7 +305,6 @@ public class AppVetPanel extends DockLayoutPanel {
 												+ "/appvet_images/"
 												+ selectedApp.appId + ".png?v";
 										appInfoIcon.setUrl(iconPath);
-										appInfoIcon.setSize("100px", "100px");
 
 									}
 
@@ -328,7 +327,7 @@ public class AppVetPanel extends DockLayoutPanel {
 											|| (selectedApp.appStatus == AppStatus.MODERATE)
 											|| (selectedApp.appStatus == AppStatus.LOW)) {
 
-										appNameHtml = "<div id=\"endorsed\" style='color: darkslategray; size:22; weight: bold'>"
+										appNameHtml = "<div id=\"appNameInfo\">"
 												+ appName + "</div>";
 										uploadReportButton.setEnabled(true);
 										deleteButton.setEnabled(true);
@@ -337,7 +336,7 @@ public class AppVetPanel extends DockLayoutPanel {
 
 									} else {
 
-										appNameHtml = "<div id=\"endorsed\" style='color: dimgray; size:22; weight: bold'>"
+										appNameHtml = "<div id=\"appNameInfo\">"
 												+ appName + "</div>";
 										downloadReportsButton.setEnabled(false);
 
@@ -400,7 +399,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 
 								/* Get pre-processing analysis results */
-								statuses += "<h3 title=\"App Metadata\" id=\"appInfoSectionHeader\">App Metadata</h3>\n";
+								statuses += "<hr><h3 title=\"App Metadata\" id=\"appInfoSectionHeader\">App Metadata</h3>\n";
 								int preprocessorToolCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -419,7 +418,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 
 								// Get tool and manually-uploaded results.
-								statuses += "<h3 title=\"Tool Analyses\"  id=\"appInfoSectionHeader\">Tool Analyses</h3>\n";
+								statuses += "<hr><h3 title=\"Tool Analyses\"  id=\"appInfoSectionHeader\">Tool Analyses</h3>\n";
 								int analysisToolCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -439,7 +438,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 
 								/* Get audit results */
-								statuses += "<h3 title=\"Final Organization Determination\" id=\"appInfoSectionHeader\">Final Organization Determination</h3>\n";
+								statuses += "<hr><h3 title=\"Final Organization Determination\" id=\"appInfoSectionHeader\">Final Organization Determination</h3>\n";
 								int auditCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -1141,7 +1140,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoPanel.add(appInfoIcon);
 		appInfoPanel.setCellVerticalAlignment(appInfoIcon,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		appInfoIcon.setSize("100px", "100px");
+		appInfoIcon.setSize("75px", "75px");
 		final VerticalPanel verticalPanel = new VerticalPanel();
 		appInfoPanel.add(verticalPanel);
 		appInfoName = new HTML("", true);

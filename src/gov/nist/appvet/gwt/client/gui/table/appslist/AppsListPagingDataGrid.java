@@ -154,7 +154,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		iconColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		iconColumn.setSortable(SORTING_ON);
 		dataGrid.addColumn(iconColumn, "App");
-		dataGrid.setColumnWidth(iconColumn, "25px");
+		dataGrid.setColumnWidth(iconColumn, "20px");
 		
 		// App Name
 		final Column<T, String> appNameColumn = new Column<T, String>(
@@ -195,7 +195,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		});
 		appVersionColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dataGrid.addColumn(appVersionColumn, "Version");
-		dataGrid.setColumnWidth(appVersionColumn, "40px");		
+		dataGrid.setColumnWidth(appVersionColumn, "35px");		
 		
 		
 		// Status

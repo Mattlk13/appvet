@@ -16,6 +16,11 @@ h1 {
 	text-align: center;
 }
 
+h3 {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
 .sendButton {
 	display: block;
 	font-size: 16pt;
@@ -227,10 +232,19 @@ searchPanel {
 	font-weight: bold;
 }
 
+#appNameInfo {
+	color: darkslategray;
+	padding-bottom: 5px;
+	font-size: 28px;
+	font-weight: bold;
+}
+
 #appInfoSectionHeader {
 	color: dimgray;
 	font-size: 14px;
 	font-weight: bold;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 #tableitemgood {
@@ -330,15 +344,15 @@ searchPanel {
 
 .appInfoName {
 	color: darkslategray;
-	margin-left: 15px;
+	margin-left: 10px;
 	font-weight: bold;
 	font-size: 24px;
 }
 
 .appInfoVersion {
 	color: darkslategray;
-	margin-left: 15px;
-	font-size: 12px;
+	margin-left: 10px;
+	font-size: 14px;
 }
 
 .moreInfo {
