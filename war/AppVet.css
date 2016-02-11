@@ -420,6 +420,8 @@ searchPanel {
 
 .gwt-PushButton {
 	color: darkslategrey;
+	background-color: #ffffff;
+	background-image: none;
 }
 
 .seeLogTxt {
@@ -834,4 +836,8 @@ searchPanel {
 	margin-top: 5px;
 	margin-bottom: 5px;
 	margin-left: 5px;
+}
+.AppVetPushButton {
+	cursor: hand;
+	cursor: pointer;
 }

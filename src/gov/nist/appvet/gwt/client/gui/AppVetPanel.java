@@ -305,6 +305,7 @@ public class AppVetPanel extends DockLayoutPanel {
 												+ "/appvet_images/"
 												+ selectedApp.appId + ".png?v";
 										appInfoIcon.setUrl(iconPath);
+										appInfoIcon.setSize("100px", "100px");
 
 									}
 
@@ -823,11 +824,15 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel_6.setCellVerticalAlignment(searchTextBox,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		final PushButton searchButton = new PushButton("Search");
+		searchButton.getDownFace().setHTML("<img width=\"18px\" src=\"images/icon-search-down.png\" alt=\"search\" />");
+		searchButton.getUpHoveringFace().setHTML("<img width=\"18px\" src=\"images/icon-search-up-hover.png\" alt=\"search\" />");
+		searchButton.getUpDisabledFace().setHTML("<img width=\"18px\" src=\"images/icon-search-up-disabled.png\" alt=\"search\" />");
+		searchButton.getUpFace().setHTML("<img width=\"18px\" src=\"images/icon-search-up.png\" alt=\"search\" />");
+		searchButton.setStyleName("AppVetPushButton");
 		searchButton.setTitle("Search by app ID, name, release kit, etc.");
-		searchButton.getUpFace().setHTML("");
 		searchButton.setSize("18px", "18px");
 		searchButton
-				.setHTML("<img width=\"18px\" src=\"images/icon-search.png\" alt=\"search\" />");
+				.setHTML("<img width=\"18px\" src=\"images/icon-search-up.png\" alt=\"search\" />");
 		searchButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1141,7 +1146,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoPanel.add(appInfoIcon);
 		appInfoPanel.setCellVerticalAlignment(appInfoIcon,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		appInfoIcon.setSize("70px", "70px");
+		appInfoIcon.setSize("100px", "100px");
 		final VerticalPanel verticalPanel = new VerticalPanel();
 		appInfoPanel.add(verticalPanel);
 		appInfoName = new HTML("", true);
@@ -1195,9 +1200,15 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		horizontalPanel.setSize("", "");
 		final PushButton submitButton = new PushButton("Upload App");
+		submitButton.getDownHoveringFace().setHTML("<img width=\"80px\" src=\"images/upload-app-up.png\" alt=\"Upload App\" />");
+		submitButton.getDownFace().setHTML("<img width=\"80px\" src=\"images/upload-app-down.png\" alt=\"Upload App\" />");
+		submitButton.getUpHoveringFace().setHTML("<img width=\"80px\" src=\"images/upload-app-up-hover.png\" alt=\"Upload App\" />");
+		submitButton.getUpDisabledFace().setHTML("<img width=\"80px\" src=\"images/upload-app-up-disabled.png\" alt=\"Upload App\" />");
+		submitButton.getUpFace().setHTML("<img width=\"80px\" src=\"images/upload-app-up.png\" alt=\"Upload App\" />");
+		submitButton.setStyleName("AppVetPushButton");
 		submitButton.setTitle("Upload App");
 		submitButton
-				.setHTML("<img width=\"80px\" src=\"images/upload-app2.png\" alt=\"Upload App\" />");
+				.setHTML("<img width=\"80px\" src=\"images/upload-app-up.png\" alt=\"Upload App\" />");
 		submitButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1241,9 +1252,14 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		});
 		final PushButton viewAllButton = new PushButton("View All Apps");
+		viewAllButton.getUpDisabledFace().setHTML("<img width=\"80px\" src=\"images/view-all-up-disabled.png\" alt=\"View All Apps\" />");
+		viewAllButton.getDownFace().setHTML("<img width=\"80px\" src=\"images/view-all-down.png\" alt=\"View All Apps\" />");
+		viewAllButton.getUpHoveringFace().setHTML("<img width=\"80px\" src=\"images/view-all-up-hover.png\" alt=\"View All Apps\" />");
+		viewAllButton.getUpFace().setHTML("<img width=\"80px\" src=\"images/view-all-up.png\" alt=\"View All Apps\" />");
+		viewAllButton.setStyleName("AppVetPushButton");
 		viewAllButton
-				.setHTML("<img width=\"80px\" src=\"images/view-all2.png\" alt=\"View All Apps\" />");
-		viewAllButton.setTitle("Show All Apps");
+				.setHTML("<img width=\"80px\" src=\"images/view-all-up.png\" alt=\"View All Apps\" />");
+		viewAllButton.setTitle("View All Apps");
 		viewAllButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1301,24 +1317,18 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel_2.setCellHorizontalAlignment(nistLogo,
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		nistLogo.setSize("50px", "13px");
-
-		HorizontalPanel appHorizontalButtonPanel = new HorizontalPanel();
-		appInfoVerticalPanel.add(appHorizontalButtonPanel);
-		appHorizontalButtonPanel.setWidth("410px");
-		appInfoVerticalPanel.setCellVerticalAlignment(appHorizontalButtonPanel,
-				HasVerticalAlignment.ALIGN_MIDDLE);
 		
-		Label lblNewLabel = new Label("");
-		appHorizontalButtonPanel.add(lblNewLabel);
-		lblNewLabel.setWidth("");
+		HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
+		appInfoVerticalPanel.add(horizontalPanel_1);
 		uploadReportButton = new PushButton("Upload Report");
+		horizontalPanel_1.add(uploadReportButton);
+		uploadReportButton.getDownFace().setHTML("<img width=\"80px\" src=\"images/upload-report-down.png\" alt=\"Upload App\" />");
+		uploadReportButton.getUpHoveringFace().setHTML("<img width=\"80px\" src=\"images/upload-report-up-hover.png\" alt=\"Upload App\" />");
+		uploadReportButton.getUpDisabledFace().setHTML("<img width=\"80px\" src=\"images/upload-report-up-disabled.png\" alt=\"Upload App\" />");
+		uploadReportButton.getUpFace().setHTML("<img width=\"80px\" src=\"images/upload-report-up.png\" alt=\"Upload App\" />");
+		uploadReportButton.setStyleName("AppVetPushButton");
 		uploadReportButton
-				.setHTML("<img width=\"80px\" src=\"images/upload-report2.png\" alt=\"Upload Report\" />");
-		appHorizontalButtonPanel.add(uploadReportButton);
-		appHorizontalButtonPanel.setCellHorizontalAlignment(uploadReportButton,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		appHorizontalButtonPanel.setCellVerticalAlignment(uploadReportButton,
-				HasVerticalAlignment.ALIGN_MIDDLE);
+				.setHTML("<img width=\"80px\" src=\"images/upload-report-up.png\" alt=\"Upload App\" />");
 		horizontalPanel.setCellVerticalAlignment(uploadReportButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		uploadReportButton.setTitle("Upload Report");
@@ -1370,13 +1380,14 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		uploadReportButton.setSize("80px", "");
 		logButton = new PushButton("View Log");
+		horizontalPanel_1.add(logButton);
+		logButton.getUpHoveringFace().setHTML("<img width=\"80px\" src=\"images/view-log-up-hover.png\" alt=\"Upload App\" />");
+		logButton.getDownFace().setHTML("<img width=\"80px\" src=\"images/view-log-down.png\" alt=\"Upload App\" />");
+		logButton.getUpDisabledFace().setHTML("<img width=\"80px\" src=\"images/view-log-up-disabled.png\" alt=\"Upload App\" />");
+		logButton.getUpFace().setHTML("<img width=\"80px\" src=\"images/view-log-up.png\" alt=\"Upload App\" />");
+		logButton.setStyleName("AppVetPushButton");
 		logButton
-				.setHTML("<img width=\"80px\" src=\"images/view-log2.png\" alt=\"View Log\"/>");
-		appHorizontalButtonPanel.add(logButton);
-		appHorizontalButtonPanel.setCellHorizontalAlignment(logButton,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		appHorizontalButtonPanel.setCellVerticalAlignment(logButton,
-				HasVerticalAlignment.ALIGN_MIDDLE);
+				.setHTML("<img width=\"80px\" src=\"images/view-log-up.png\" alt=\"Upload App\" />");
 		horizontalPanel.setCellVerticalAlignment(logButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		logButton.setTitle("View Log");
@@ -1398,15 +1409,15 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		});
 		logButton.setSize("80px", "");
-		logButton.setVisible(true);
 		deleteButton = new PushButton("Delete App");
+		horizontalPanel_1.add(deleteButton);
+		deleteButton.getDownFace().setHTML("<img width=\"80px\" src=\"images/delete-app-down.png\" alt=\"Upload App\" />");
+		deleteButton.getUpHoveringFace().setHTML("<img width=\"80px\" src=\"images/delete-app-up-hover.png\" alt=\"Upload App\" />");
+		deleteButton.getUpDisabledFace().setHTML("<img width=\"80px\" src=\"images/delete-app-up-disabled.png\" alt=\"Upload App\" />");
+		deleteButton.getUpFace().setHTML("<img width=\"80px\" src=\"images/delete-app-up.png\" alt=\"Upload App\" />");
+		deleteButton.setStyleName("AppVetPushButton");
 		deleteButton
-				.setHTML("<img width=\"80px\" src=\"images/delete-app2.png\" alt=\"Delete App\" />");
-		appHorizontalButtonPanel.add(deleteButton);
-		appHorizontalButtonPanel.setCellHorizontalAlignment(deleteButton,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		appHorizontalButtonPanel.setCellVerticalAlignment(deleteButton,
-				HasVerticalAlignment.ALIGN_MIDDLE);
+				.setHTML("<img width=\"80px\" src=\"images/delete-app-up.png\" alt=\"Upload App\" />");
 		horizontalPanel.setCellVerticalAlignment(deleteButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		deleteButton.setTitle("Delete App");
@@ -1447,13 +1458,14 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		deleteButton.setSize("80px", "");
 		downloadReportsButton = new PushButton("Download Reports");
+		horizontalPanel_1.add(downloadReportsButton);
+		downloadReportsButton.getUpHoveringFace().setHTML("<img width=\"80px\" src=\"images/download-reports-up-hover.png\" alt=\"Download Reports\" />");
+		downloadReportsButton.getUpFace().setHTML("<img width=\"80px\" src=\"images/download-reports-up.png\" alt=\"Download Reports\"/>");
+		downloadReportsButton.getUpDisabledFace().setHTML("<img width=\"80px\" src=\"images/download-reports-up-disabled.png\" alt=\"Download Reports\" />");
+		downloadReportsButton.getDownFace().setHTML("<img width=\"80px\" src=\"images/download-report-down.png\" alt=\"Upload App\" />");
+		downloadReportsButton.setStyleName("AppVetPushButton");
 		downloadReportsButton
-				.setHTML("<img width=\"80px\" src=\"images/download-reports2.png\" alt=\"Download Reports\" />");
-		appHorizontalButtonPanel.add(downloadReportsButton);
-		appHorizontalButtonPanel.setCellVerticalAlignment(
-				downloadReportsButton, HasVerticalAlignment.ALIGN_MIDDLE);
-		appHorizontalButtonPanel.setCellHorizontalAlignment(
-				downloadReportsButton, HasHorizontalAlignment.ALIGN_CENTER);
+				.setHTML("<img width=\"80px\" src=\"images/download-reports-up.png\" alt=\"Download Reports\" />");
 		downloadReportsButton.setTitle("Download Reports");
 		downloadReportsButton.setEnabled(true);
 		downloadReportsButton.addClickHandler(new ClickHandler() {
@@ -1484,39 +1496,41 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsListButtonPanel.setCellHorizontalAlignment(downloadReportsButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		downloadReportsButton.setSize("80px", "");
-
-		downloadAppButton = new PushButton("Download App");
-		downloadAppButton
-				.setHTML("<img width=\"80px\" src=\"images/download-app2.png\" alt=\"Download App\" />");
-		downloadAppButton.setTitle("Download App");
-		appHorizontalButtonPanel.add(downloadAppButton);
-		downloadAppButton.setSize("80px", "");
-		appHorizontalButtonPanel.setCellHorizontalAlignment(downloadAppButton,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		appHorizontalButtonPanel.setCellVerticalAlignment(downloadAppButton,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		downloadAppButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				final AppInfoGwt selected = appSelectionModel
-						.getSelectedObject();
-				if (selected == null) {
-					showMessageDialog("AppVet Error", "No app is selected",
-							true);
-				} else {
-					final String appId = selected.appId;
-					final String dateString = "?nocache" + new Date().getTime();
-					final String url = SERVLET_URL + dateString + "&"
-							+ AppVetParameter.COMMAND.value + "="
-							+ AppVetServletCommand.DOWNLOAD_APP.name() + "&"
-							+ AppVetParameter.APPID.value + "=" + appId + "&"
-							+ AppVetParameter.SESSIONID.value + "=" + sessionId;
-					Window.open(url, "_self", "");
-				}
-			}
-		});
-
-		uploadReportButton.setVisible(true);
+		
+				downloadAppButton = new PushButton("Download App");
+				horizontalPanel_1.add(downloadAppButton);
+				downloadAppButton.getDownFace().setHTML("<img width=\"80px\" src=\"images/download-app-down.png\" alt=\"Upload App\" />");
+				downloadAppButton.getUpHoveringFace().setHTML("<img width=\"80px\" src=\"images/download-app-up-hover.png\" alt=\"Upload App\" />");
+				downloadAppButton.getUpDisabledFace().setHTML("<img width=\"80px\" src=\"images/download-app-up-disabled.png\" alt=\"Upload App\" />");
+				downloadAppButton.getUpFace().setHTML("<img width=\"80px\" src=\"images/download-app-up.png\" alt=\"Upload App\" />");
+				downloadAppButton.setStyleName("AppVetPushButton");
+				downloadAppButton
+						.setHTML("<img width=\"80px\" src=\"images/download-app-up.png\" alt=\"Download App\" />");
+				downloadAppButton.setTitle("Download App");
+				downloadAppButton.setSize("80px", "");
+				downloadAppButton.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						final AppInfoGwt selected = appSelectionModel
+								.getSelectedObject();
+						if (selected == null) {
+							showMessageDialog("AppVet Error", "No app is selected",
+									true);
+						} else {
+							final String appId = selected.appId;
+							final String dateString = "?nocache" + new Date().getTime();
+							final String url = SERVLET_URL + dateString + "&"
+									+ AppVetParameter.COMMAND.value + "="
+									+ AppVetServletCommand.DOWNLOAD_APP.name() + "&"
+									+ AppVetParameter.APPID.value + "=" + appId + "&"
+									+ AppVetParameter.SESSIONID.value + "=" + sessionId;
+							Window.open(url, "_self", "");
+						}
+					}
+				});
+		logButton.setVisible(true);
+		
+				uploadReportButton.setVisible(true);
 		toolResultsHtml = new HTML("", true);
 		appInfoVerticalPanel.add(toolResultsHtml);
 		appInfoVerticalPanel.setCellWidth(toolResultsHtml, "100%");
