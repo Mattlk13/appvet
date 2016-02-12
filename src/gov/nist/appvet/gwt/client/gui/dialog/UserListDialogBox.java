@@ -105,7 +105,7 @@ public class UserListDialogBox extends DialogBox {
 	public TextBox searchTextBox = null;
 	public PushButton addButton = null;
 
-	public UserListDialogBox() {
+	public UserListDialogBox(int numRowsUsersList) {
 		super(false, true);
 		setSize("", "450px");
 		setAnimationEnabled(false);
@@ -201,6 +201,7 @@ public class UserListDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		dockLayoutPanel.setSize("", "380px");
 		usersListTable = new UsersListPagingDataGrid<UserInfo>();
+		usersListTable.setPageSize(numRowsUsersList);
 		usersListTable.dataGrid.setSize("342px", "342px");
 		usersListTable.dataGrid
 				.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);

@@ -98,4 +98,9 @@ public class UsersListPagingDataGrid<T> extends PagingDataGrid<T> {
 		dataGrid.addColumn(userIdColumn, "User ID");
 		dataGrid.setColumnWidth(userIdColumn, "50px");
 	}
+	
+	/** Set the number of rows shown on each page. */
+	public void setPageSize(int pageSize) {
+		this.dataGrid.setPageSize(pageSize);
+	}
 }

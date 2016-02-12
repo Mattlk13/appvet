@@ -287,6 +287,11 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		dataGrid.addColumn(submitTimeColumn, "Date/Time");
 		dataGrid.setColumnWidth(submitTimeColumn, "75px");
 	}
+	
+	/** Set the number of rows shown on each page. */
+	public void setPageSize(int pageSize) {
+		this.dataGrid.setPageSize(pageSize);
+	}
 
 	public void setAppVetHostUrl(String appVetHostUrl) {
 		this.appVetHostUrl = appVetHostUrl;

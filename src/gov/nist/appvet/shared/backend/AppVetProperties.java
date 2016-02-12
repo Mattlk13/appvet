@@ -136,6 +136,10 @@ public class AppVetProperties {
 	/** HTTP address of host /appvet/AppVetServlet directory */
 	public static String SERVLET_URL = null;
 	public static boolean KEEP_APPS = false;
+	/** Display parameters.*/
+	public static int NUM_ROWS_APPS_LIST = 0;
+	public static int NUM_ROWS_USERS_LIST = 0;
+	
 	// Tools
 	public static ArrayList<ToolAdapter> androidTools = null;
 	public static ArrayList<ToolAdapter> iosTools = null;
@@ -224,7 +228,10 @@ public class AppVetProperties {
 							emailEnabled = true;
 							log.debug("Email is enabled");
 						}
-					}		
+					} else {		
+						emailEnabled = true;
+						log.debug("Email is enabled");
+					}
 		} else {
 			// All required Email parameters are null, so disable email
 			log.debug("Email is disabled due to null email parameters");
@@ -307,6 +314,20 @@ public class AppVetProperties {
 		KEEP_APPS = new Boolean(xml.getXPathValue("/AppVet/Apps/KeepApps"))
 				.booleanValue();
 		printVal("KEEP_APPS", KEEP_APPS);
+		
+		NUM_ROWS_APPS_LIST = new Integer(xml.getXPathValue("/AppVet/Display/NumRowsAppsList")).intValue();
+		printVal("NUM_ROWS_APPS_LIST", NUM_ROWS_APPS_LIST);
+		if (NUM_ROWS_APPS_LIST <= 0) {
+			// Cannot have <=0 rows in apps list
+			NUM_ROWS_APPS_LIST = 20;
+		}
+		NUM_ROWS_USERS_LIST = new Integer(xml.getXPathValue("/AppVet/Display/NumRowsUsersList")).intValue();
+		printVal("NUM_ROWS_USERS_LIST", NUM_ROWS_USERS_LIST);
+		if (NUM_ROWS_USERS_LIST <= 0) {
+			// Cannot have <=0 rows in admin's users list
+			NUM_ROWS_USERS_LIST = 20;
+		}
+
 		// Apache logging
 		System.setProperty("org.apache.commons.logging.Log",
 				"org.apache.commons.logging.impl.SimpleLog");

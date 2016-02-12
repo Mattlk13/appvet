@@ -44,6 +44,8 @@ public class ConfigInfoGwt implements IsSerializable {
 	private Date sessionExpiration = null;
 	private ArrayList<ToolInfoGwt> tools = null;
 	private String systemMessage = null;
+	private int numRowsAppsList = 0;
+	private int numRowsUsersList = 0;
 
 	public ConfigInfoGwt() {
 	}
@@ -166,5 +168,21 @@ public class ConfigInfoGwt implements IsSerializable {
 
 	public void setOrgLogoAltText(String orgLogoAltText) {
 		this.orgLogoAltText = orgLogoAltText;
+	}
+
+	public int getNumRowsAppsList() {
+		return numRowsAppsList;
+	}
+
+	public void setNumRowsAppsList(int numRowsAppsList) {
+		this.numRowsAppsList = numRowsAppsList;
+	}
+
+	public int getNumRowsUsersList() {
+		return numRowsUsersList;
+	}
+
+	public void setNumRowsUsersList(int numRowsUsersList) {
+		this.numRowsUsersList = numRowsUsersList;
 	}
 }

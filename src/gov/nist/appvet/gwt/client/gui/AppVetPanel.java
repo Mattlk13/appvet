@@ -1086,7 +1086,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				new Command() {
 					@Override
 					public void execute() {
-						usersDialogBox = new UserListDialogBox();
+						usersDialogBox = new UserListDialogBox(configInfo.getNumRowsUsersList());
 						usersDialogBox.setText("Users");
 						usersDialogBox.center();
 						usersDialogBox.doneButton.setFocus(true);
@@ -1263,6 +1263,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		submitButton.setSize("80px", "");
 		appsListTable = new AppsListPagingDataGrid<AppInfoGwt>();
+		appsListTable.setPageSize(configInfo.getNumRowsAppsList());
 		appsListTable.dataGrid
 				.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 		appsListTable.dataGrid.setStyleName("dataGrid");

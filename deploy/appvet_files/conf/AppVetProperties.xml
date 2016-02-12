@@ -67,8 +67,9 @@
 		<KeepApps>true</KeepApps>
 	</Apps>
 	
-	<Reports>
-		<AuditTemplateURL>https://appsec.nist.gov/appvet_images/report_template.pdf</AuditTemplateURL>
-	</Reports>
+	<Display>
+		<NumRowsAppsList>20</NumRowsAppsList>
+		<NumRowsUsersList>20</NumRowsUsersList>
+	</Display>
 	
 </AppVet>

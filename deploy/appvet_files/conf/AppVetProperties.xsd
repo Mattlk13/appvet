@@ -93,7 +93,7 @@
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-				<xs:element name="Reports" type="ReportsType" maxOccurs="1" minOccurs="1"></xs:element>
+				<xs:element name="Display" type="DisplayType"></xs:element>
 			</xs:sequence>
 
 		</xs:complexType>
@@ -372,16 +372,25 @@
 		</xs:sequence>
 	</xs:complexType>
 	
-		<xs:complexType name="ReportsType">
+	<xs:complexType name="DisplayType">
 		<xs:sequence>
-			<xs:element name="AuditTemplateURL" type="xs:string" maxOccurs="1"
+			<xs:element name="NumRowsAppsList" type="xs:string" maxOccurs="1"
 				minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>
-						The URL for AUDIT report template download.
+						The number of rows per page for the apps list.
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="NumRowsUsersList" type="xs:string" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						The number of rows per page for the admin user's list.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			
 		</xs:sequence>
 	</xs:complexType>
 
