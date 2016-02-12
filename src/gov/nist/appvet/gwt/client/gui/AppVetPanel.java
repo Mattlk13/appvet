@@ -598,11 +598,11 @@ public class AppVetPanel extends DockLayoutPanel {
 
 	public static void killDialogBox(DialogBox dialogBox) {
 		if (dialogBox != null) {
-			log.log(Level.FINE, "Closing dialog box");
+			//log.log(Level.FINE, "Closing dialog box");
 			dialogBox.hide();
 			dialogBox = null;
 		} else {
-			log.fine("Can't close dialog box. dialogBox is null");
+			//log.fine("Can't close dialog box. dialogBox is null");
 		}
 	}
 

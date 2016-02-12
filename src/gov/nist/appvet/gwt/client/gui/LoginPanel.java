@@ -259,7 +259,7 @@ public class LoginPanel extends DockLayoutPanel {
 					stackTraceStr += element.toString() + "\n";
 				}
 
-				log.fine("STACK TRACE LOG: " + stackTraceStr);
+				log.severe("STACK TRACE LOG: " + stackTraceStr);
 				showMessageDialog("AppVet Error",
 						"Authentication system error - See console", true);
 

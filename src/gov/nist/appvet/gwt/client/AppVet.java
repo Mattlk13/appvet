@@ -62,7 +62,7 @@ public class AppVet implements EntryPoint {
 			rootPanel.add(loginPanel);
 		} else if (username != null && password != null) {
 			// Login attempt via SSO
-			log.info("AppVet GWT got: name=" + username);
+			//log.info("AppVet GWT got: name=" + username);
 			// Authenticate SSO username and password
 			authenticateSSO(username, password);
 		}

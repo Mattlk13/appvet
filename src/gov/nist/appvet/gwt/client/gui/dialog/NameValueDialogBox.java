@@ -90,8 +90,8 @@ public class NameValueDialogBox extends DialogBox {
 	}
 
 	public boolean valueChanged() {
-		log.log(Level.INFO, "value: " + valueTextBox.getText() + ", previous: "
-				+ previousValue);
+//		log.log(Level.INFO, "value: " + valueTextBox.getText() + ", previous: "
+//				+ previousValue);
 		if (this.valueTextBox.getText().equals(previousValue)) {
 			return false;
 		} else {

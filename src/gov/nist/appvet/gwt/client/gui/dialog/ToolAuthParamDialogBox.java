@@ -87,8 +87,8 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		if (toolCredentials == null)
 			log.severe("toolCredentials is null");
 		else {
-			log.log(Level.INFO,
-					"toolCredentials size: " + toolCredentials.size());
+//			log.log(Level.INFO,
+//					"toolCredentials size: " + toolCredentials.size());
 		}
 		for (int i = 0; i < toolCredentials.size(); i++) {
 			UserToolCredentials toolCreds = toolCredentials.get(i);
@@ -159,22 +159,22 @@ public class ToolAuthParamDialogBox extends DialogBox {
 				// Get parameter name and value
 				int selectedParameterIndex = toolParametersListBox
 						.getSelectedIndex();
-				log.log(Level.INFO, "selected param index to edit: "
-						+ selectedParameterIndex);
+//				log.log(Level.INFO, "selected param index to edit: "
+//						+ selectedParameterIndex);
 				String selectedParameterString = toolParametersListBox
 						.getItemText(selectedParameterIndex);
-				log.log(Level.INFO, "selectedParameterString to edit: "
-						+ selectedParameterString);
+//				log.log(Level.INFO, "selectedParameterString to edit: "
+//						+ selectedParameterString);
 				String selectedParameterNoWhitespace = selectedParameterString
 						.replaceAll("\\s+", "");
 				String[] selectedParameter = selectedParameterNoWhitespace
 						.split("=");
 				String selectedParameterName = selectedParameter[0];
-				log.log(Level.INFO, "selectedParameterName to edit: "
-						+ selectedParameterName);
+//				log.log(Level.INFO, "selectedParameterName to edit: "
+//						+ selectedParameterName);
 				String selectedParameterValue = selectedParameter[1];
-				log.log(Level.INFO, "selectedParameterValue to edit: "
-						+ selectedParameterValue);
+//				log.log(Level.INFO, "selectedParameterValue to edit: "
+//						+ selectedParameterValue);
 				editParameterValue(selectedParameterName,
 						selectedParameterValue);
 			}
@@ -334,7 +334,7 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		nameValueDialogBox.okButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				log.log(Level.INFO, "Clicked OK");
+				//log.log(Level.INFO, "Clicked OK");
 				nameValueDialogBox.hide();
 				String paramName = nameValueDialogBox.getParameterName();
 				String paramValue = nameValueDialogBox.getParameterValue();
@@ -346,10 +346,10 @@ public class ToolAuthParamDialogBox extends DialogBox {
 				toolParametersListBox.setItemText(selectedParameterIndex,
 						paramName + "=" + paramValue);
 				if (nameValueDialogBox.valueChanged()) {
-					log.log(Level.INFO, "Value changed");
+					//log.log(Level.INFO, "Value changed");
 					saveButton.setEnabled(true);
 				} else {
-					log.log(Level.INFO, "Value didnt' change");
+					//log.log(Level.INFO, "Value didnt' change");
 				}
 			}
 		});

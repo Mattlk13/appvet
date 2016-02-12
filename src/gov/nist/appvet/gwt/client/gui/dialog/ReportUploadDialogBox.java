@@ -202,7 +202,7 @@ public class ReportUploadDialogBox extends DialogBox {
 		
 
 		// Set new list with only permitted tools
-		log.info("tools size: " + tools.size());
+		//log.info("tools size: " + tools.size());
 		for (int i = 0; i < tools.size(); i++) {
 			ToolInfoGwt tool = tools.get(i);
 			if (tool.getType() == ToolType.SUMMARY) {
@@ -272,7 +272,7 @@ public class ReportUploadDialogBox extends DialogBox {
 							if (toolRiskComboBox != null) {
 								toolRiskComboBox.setVisible(true);
 								String reportTemplateURL = selectedTool.getReportTemplateURL();
-								log.info("Report template URL: " + reportTemplateURL);
+								//log.info("Report template URL: " + reportTemplateURL);
 								if (reportTemplateURL != null) {
 									// There is a report template available for download
 									statusLabel.setHTML(selectedToolName
@@ -388,8 +388,6 @@ public class ReportUploadDialogBox extends DialogBox {
 				String reportFileType = tool3.getReportFileType();
 				String filter = "." + reportFileType;
 				fileUpload.getElement().setAttribute("accept", filter);
-//				String filter2 = "." + reportFileType;
-//				fileUpload.getElement().setAttribute("accept", filter2);
 
 				ToolType toolType = tool3.getType();
 

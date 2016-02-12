@@ -29,7 +29,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
- * Yes/No (i.e., OK/Cancel) dialog.sssssss
+ * Yes/No (i.e., OK/Cancel)  
  * @author steveq@nist.gov
  */
 public class YesNoConfirmDialog extends DialogBox {
