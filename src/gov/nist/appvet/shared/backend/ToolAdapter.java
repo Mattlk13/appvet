@@ -84,6 +84,7 @@ public class ToolAdapter implements Runnable {
 	public Thread thread = null;
 	public AppInfo appInfo = null;
 	public String reportTemplateURL = null;
+	public String iconURL = null;
 
 	public ToolAdapter(File configFile) {
 
@@ -129,8 +130,18 @@ public class ToolAdapter implements Runnable {
 		reportTemplateURL = xml.getXPathValue("/ToolAdapter/Description/ReportTemplateURL"); 
 		if (reportTemplateURL != null) {
 			log.debug("Report template URL: " + reportTemplateURL);
-			
+		} else {
+			log.warn("Report template URL is null");
 		}
+		
+		// Report icon (optional
+		iconURL = xml.getXPathValue("/ToolAdapter/Description/IconURL");
+		if (iconURL != null) {
+			log.debug("Icon URL: " + iconURL);
+		} else {
+			log.warn("Icon URL is null");
+		}
+		
 		if (authenticationRequired) {
 			// Get authorization parameter names
 			final String authenticationParamsString = xml

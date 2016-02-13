@@ -12,7 +12,7 @@ h1 {
 	padding-left: 10px;
 	border: outset;
 	font-size: 18em;
-	font-weight: bold;
+	font-weight: bold
 	text-align: center;
 }
 
@@ -78,7 +78,7 @@ h3 {
 	padding-right: 5px;
 	padding-left: 5px;
 	font-size: 14px;
-	font-weight: bold;
+	font-weight: bold
 	vertical-align: middle;
 }
 
@@ -86,7 +86,7 @@ h3 {
 	color: Black;
 	padding-top: 10px;
 	font-size: 24px;
-	font-weight: bold;
+	font-weight: bold
 }
 
 .versionTitle {
@@ -109,7 +109,7 @@ h3 {
 	padding-top: 15px;
 	padding-right: 10px;
 	font-size: 24px;
-	font-weight: bold;
+	font-weight: bold
 	background-color: Black;
 }
 
@@ -127,7 +127,7 @@ h3 {
 errorMessage {
 	color: #990000;
 	font-size: 14px;
-	font-weight: bold;
+	font-weight: bold
 	vertical-align: middle;
 	text-align: center;
 }
@@ -183,7 +183,7 @@ searchPanel {
 	padding-bottom: 10px;
 	padding-left: 10px;
 	font-size: 18px;
-	font-weight: bold;
+	font-weight: bold
 }
 
 .appInfoHtml {
@@ -213,7 +213,7 @@ searchPanel {
 	padding-bottom: 10px;
 	padding-left: 10px;
 	font-size: 18px;
-	font-weight: bold;
+	font-weight: bold
 }
 
 .appLogoEndorsed {
@@ -221,7 +221,7 @@ searchPanel {
 	padding-bottom: 10px;
 	padding-left: 10px;
 	font-size: 18px;
-	font-weight: bold;
+	font-weight: bold
 }
 
 .appLogoWarning {
@@ -229,22 +229,26 @@ searchPanel {
 	padding-bottom: 10px;
 	padding-left: 10px;
 	font-size: 18px;
-	font-weight: bold;
+	font-weight: bold
 }
 
 #appNameInfo {
 	color: darkslategray;
 	padding-bottom: 5px;
 	font-size: 28px;
-	font-weight: bold;
+	font-weight: bold
 }
 
 #appInfoSectionHeader {
 	color: dimgray;
 	font-size: 14px;
-	font-weight: bold;
+	font-weight: bold
 	margin-top: 10px;
 	margin-bottom: 10px;
+}
+
+#toolstable {
+	
 }
 
 #tableitemgood {
@@ -345,7 +349,7 @@ searchPanel {
 .appInfoName {
 	color: darkslategray;
 	margin-left: 10px;
-	font-weight: bold;
+	font-weight: bold
 	font-size: 24px;
 }
 
@@ -806,7 +810,6 @@ searchPanel {
 
 .gwt-HorizontalSplitPanel {
 	border: 1px solid Silver;
-	font-weight: bold;
 }
 
 .gwt-DecoratorPanel {

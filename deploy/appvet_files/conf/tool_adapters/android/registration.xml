@@ -17,6 +17,10 @@
 		<!-- 
 		    <appvet:ReportTemplateURL>https://appsec.nist.gov/appvet_images/report_template.pdf</appvet:ReportTemplateURL>	
 		 -->	
+		 
+    <appvet:IconURL>images/icon-register.png</appvet:IconURL>	
+		 
+    <appvet:IconURL>http://cdn.flaticon.com/png/256/47152.png</appvet:IconURL>	
 	</appvet:Description>
 	<appvet:Protocol>
 		<appvet:Internal />

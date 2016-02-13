@@ -23,14 +23,20 @@ package gov.nist.appvet.shared.all;
  * @author steveq@nist.gov
  */
 public enum ToolType {
-	PREPROCESSOR, TESTTOOL,
+	PREPROCESSOR ("images/icon-metadata.png"), 
+	TESTTOOL ("images/icon-tool.png"),
+	APPROVAL ("images/icon-approve.png"),
 	// Use REPORT when tool is not accessible and tool report is uploaded
 	// manually. Audit is used aas final risk assessment and SUMMARY is
 	// used to describe overall summary of app and risk assessment. AUDITs
 	// are located at the bottom of the app info panel while SUMMARYs are
 	// located at the top of the app info panel reports.
-	REPORT, AUDIT, SUMMARY;
-	private ToolType() {
+	REPORT ("images/icon-tool.png"), AUDIT ("images/icon-seal.png"), SUMMARY ("images/icon-seal.png");
+	
+	private final String defaultIconURL;
+	
+	private ToolType(String defaultIconURL) {
+		this.defaultIconURL = defaultIconURL;
 	}
 
 	public static ToolType getAnalysisType(String analysisName) {
@@ -42,5 +48,9 @@ public enum ToolType {
 			}
 		}
 		return null;
+	}
+	
+	public String getDefaultIconURL() {
+		return defaultIconURL;
 	}
 }

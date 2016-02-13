@@ -167,6 +167,7 @@ public class AppVetPanel extends DockLayoutPanel {
 			final AppInfoGwt selectedApp = appSelectionModel
 					.getSelectedObject();
 
+			// Show selected app info results
 			if (selectedApp != null) {
 				appVetServiceAsync.getToolsResults(selectedApp.os, sessionId,
 						selectedApp.appId,
@@ -331,6 +332,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 							}
 
+							// Display all reports
 							public String getHtmlToolResults(String appId,
 									List<ToolStatusGwt> toolResults) {
 								/* Get summary report */
@@ -430,9 +432,21 @@ public class AppVetPanel extends DockLayoutPanel {
 								} else {
 									status = toolStatus.getStatusHtml();
 								}
+								
+								String toolIconURL = null;
+								if (toolStatus.getIconURL() != null) {
+									// Check for custom icon URL defined in tool adapter config file
+									toolIconURL = toolStatus.getIconURL();
+								} else {
+									// Use default icons
+									toolIconURL = toolStatus.getToolType().getDefaultIconURL();
+								}
 
 								return "<table>"
 										+ "<tr>\n"
+										+ "<td>"
+										+ "<img src=\"" + toolIconURL + "\" alt=\"Tool/Report\" height=\"20\" width=\"20\"> "
+										+ "</td>\n"
 										+ "<td title=\"Tool name\" align=\"left\" width=\"185\">"
 										+ toolStatus.getToolDisplayName()
 										+ "</td>\n"
@@ -446,8 +460,19 @@ public class AppVetPanel extends DockLayoutPanel {
 
 							public String getToolStatusHtmlDisplay(
 									ToolStatusGwt toolStatus) {
-								return "<table>"
+								
+								String toolIconURL = null;
+								if (toolStatus.getIconURL() != null) {
+									toolIconURL = toolStatus.getIconURL();
+								} else {
+									toolIconURL = toolStatus.getToolType().getDefaultIconURL();
+								}
+								
+								return "<table id=\toolstable\">"
 										+ "<tr>\n"
+										+ "<td>"
+										+ "<img src=\"" + toolIconURL + "\" alt=\"Tool/Report\" height=\"20\" width=\"20\"> "
+										+ "</td>\n"
 										+ "<td title=\"Tool name\" align=\"left\" width=\"185\">"
 										+ toolStatus.getToolDisplayName()
 										+ "</td>\n"
