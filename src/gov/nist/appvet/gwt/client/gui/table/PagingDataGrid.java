@@ -53,6 +53,7 @@ public abstract class PagingDataGrid<T> extends Composite {
 	public PagingDataGrid() {
 		initWidget(dock);
 		dataGrid = new DataGrid<T>();
+		dataGrid.setPageSize(3);
 		dataGrid.setWidth("100%");
 		final SimplePager.Resources pagerResources = GWT
 				.create(SimplePager.Resources.class);

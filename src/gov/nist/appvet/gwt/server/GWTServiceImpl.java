@@ -22,6 +22,8 @@ package gov.nist.appvet.gwt.server;
 import gov.nist.appvet.gwt.client.GWTService;
 import gov.nist.appvet.gwt.shared.AppsListGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
+import gov.nist.appvet.gwt.shared.SystemAlert;
+import gov.nist.appvet.gwt.shared.SystemAlertType;
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolStatusGwt;
 import gov.nist.appvet.shared.all.AppVetParameter;
@@ -64,6 +66,30 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 //				+ " on " + AppVetProperties.URL);
 	}
 
+	@Override
+	public Boolean setAlertMessage(String username, SystemAlert alert) {
+		if (Database.setAlertMessage(username, alert)) {
+			return new Boolean(true);
+		} else {
+			return new Boolean(false);
+		}
+	}
+	
+	@Override
+	public Boolean clearAlertMessage(String username) {
+		if (Database.update("DELETE FROM alerts")) {
+			return new Boolean(true);
+		} else {
+			return new Boolean(false);
+		}
+	}
+	
+	@Override
+	public SystemAlert getAlertMessage() {
+		return Database.getAlertMessage();
+	}
+	
+	
 	@Override
 	public List<UserInfo> adminSetUser(UserInfo userInfo)
 			throws IllegalArgumentException {

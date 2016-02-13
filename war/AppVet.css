@@ -806,6 +806,7 @@ searchPanel {
 
 .gwt-HorizontalSplitPanel {
 	border: 1px solid Silver;
+	font-weight: bold;
 }
 
 .gwt-DecoratorPanel {
@@ -854,4 +855,19 @@ searchPanel {
 .AppVetPushButton {
 	cursor: hand;
 	cursor: pointer;
+}
+.statusError {
+	color: #990000;
+	font-weight: bold;
+}
+.statusOk {
+	color: #0000ff;
+	font-weight: bold;
+}
+.statusWarning {
+	color: #cc6633;
+	font-weight: bold;
+}
+.appvetTextArea {
+	margin-right: 5px;
 }

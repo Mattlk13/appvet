@@ -21,6 +21,8 @@ package gov.nist.appvet.shared.backend;
 
 import gov.nist.appvet.gwt.shared.AppInfoGwt;
 import gov.nist.appvet.gwt.shared.AppsListGwt;
+import gov.nist.appvet.gwt.shared.SystemAlert;
+import gov.nist.appvet.gwt.shared.SystemAlertType;
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import gov.nist.appvet.shared.all.AppStatus;
 import gov.nist.appvet.shared.all.DeviceOS;
@@ -49,7 +51,75 @@ import java.util.UUID;
  * @author steveq@nist.gov
  */
 public class Database {
+	
 	private static final Logger log = AppVetProperties.log;
+	
+	
+	public static boolean setAlertMessage(String username, SystemAlert alert) {
+		// Clear existing message
+		if (!update("DELETE FROM alerts")) {
+			log.error("Could not clear alerts table");
+			return false;
+		} 
+		
+		// Add alert message
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			connection = getConnection();
+			preparedStatement = connection
+					.prepareStatement("INSERT INTO alerts (username, time, alerttype, message) "
+							+ "values (?, ?, ?, ?)");
+			preparedStatement.setString(1, username);
+			preparedStatement.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+			preparedStatement.setString(3, alert.type.name());
+			preparedStatement.setString(4, alert.message);
+			preparedStatement.executeUpdate();
+			return true;
+		} catch (final SQLException e) {
+			log.error(e.toString());
+			return false;
+		} finally {
+			cleanUpPreparedStatement(preparedStatement);
+			cleanUpConnection(connection);
+		}
+	}
+	
+	
+	public static boolean deleteAlerts() {
+		return update("DELETE FROM alerts");
+	}
+	
+	
+	public static SystemAlert getAlertMessage() {
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		String sql = null;
+		SystemAlert alert = null;
+		try {
+			connection = getConnection();
+			sql = "SELECT * FROM alerts";
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				// Return first (and should be only) alert message
+				alert = new SystemAlert();
+				String alertTypeStr = resultSet.getString(3);
+				alert.type = SystemAlertType.getType(alertTypeStr);
+				alert.message = resultSet.getString(4);
+				return alert;
+			}
+		} catch (final SQLException e) {
+			log.error(e.toString());
+		} finally {
+			sql = null;
+			cleanUpResultSet(resultSet);
+			cleanUpStatement(statement);
+			cleanUpConnection(connection);
+		}	
+		return null;
+	}
 
 	
 	public static boolean addTableColumn(String tableName, String columnName,

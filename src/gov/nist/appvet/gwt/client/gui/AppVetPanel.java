@@ -25,6 +25,7 @@ import gov.nist.appvet.gwt.client.gui.dialog.AboutDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.AppUploadDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.MessageDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.ReportUploadDialogBox;
+import gov.nist.appvet.gwt.client.gui.dialog.SetAlertDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.UserAcctDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.UserListDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.YesNoConfirmDialog;
@@ -32,6 +33,8 @@ import gov.nist.appvet.gwt.client.gui.table.appslist.AppsListPagingDataGrid;
 import gov.nist.appvet.gwt.shared.AppInfoGwt;
 import gov.nist.appvet.gwt.shared.AppsListGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
+import gov.nist.appvet.gwt.shared.SystemAlert;
+import gov.nist.appvet.gwt.shared.SystemAlertType;
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolStatusGwt;
 import gov.nist.appvet.shared.all.AppStatus;
@@ -153,32 +156,27 @@ public class AppVetPanel extends DockLayoutPanel {
 		ConfigInfoGwt configInfo = null;
 		AppVetPanel appVetPanel = null;
 
+		
 		public AppListHandler(AppVetPanel appVetPanel, ConfigInfoGwt configInfo) {
-
 			this.appVetPanel = appVetPanel;
 			this.configInfo = configInfo;
-
 		}
 
 		@Override
 		public void onSelectionChange(SelectionChangeEvent event) {
-
 			final AppInfoGwt selectedApp = appSelectionModel
 					.getSelectedObject();
 
 			if (selectedApp != null) {
-
 				appVetServiceAsync.getToolsResults(selectedApp.os, sessionId,
 						selectedApp.appId,
 						new AsyncCallback<List<ToolStatusGwt>>() {
 
 							@Override
 							public void onFailure(Throwable caught) {
-
 								showMessageDialog("AppVet Error",
 										"System error retrieving app info",
 										true);
-
 							}
 
 							@Override
@@ -187,23 +185,16 @@ public class AppVetPanel extends DockLayoutPanel {
 
 								if ((toolsResults == null)
 										|| toolsResults.isEmpty()) {
-
 									showMessageDialog("AppVet Error: ",
 											"Could not retrieve app info.",
 											true);
-
 								} else {
-
 									String defaultIcon = null;
 
 									if (selectedApp.os == DeviceOS.ANDROID) {
-
 										defaultIcon = "default_android_large.png";
-
 									} else if (selectedApp.os == DeviceOS.IOS) {
-
 										defaultIcon = "default_ios_large.png";
-
 									}
 
 									String appNameHtml = null;
@@ -212,19 +203,14 @@ public class AppVetPanel extends DockLayoutPanel {
 									appInfoIcon.setAltText("App Icon");
 
 									if (selectedApp.appStatus == AppStatus.REGISTERING) {
-
 										// log.info("Displaying REGISTERING");
 										iconVersion++;
 										String URL = null;
 										if (PROXY_URL != null
 												&& !PROXY_URL.isEmpty()) {
-
 											URL = PROXY_URL;
-
 										} else {
-
 											URL = HOST_URL;
-
 										}
 
 										final String iconPath = URL
@@ -242,82 +228,58 @@ public class AppVetPanel extends DockLayoutPanel {
 										appInfoVersion
 												.setHTML("<b>Version: </b>N/A");
 										return;
-
 									} else if (selectedApp.appStatus == AppStatus.PENDING) {
-
 										// log.info("Displaying PENDING");
 										String URL = null;
 										if (PROXY_URL != null
 												&& !PROXY_URL.isEmpty()) {
-
 											URL = PROXY_URL;
-
 										} else {
-
 											URL = HOST_URL;
-
 										}
 
 										final String iconPath = URL
 												+ "/appvet_images/"
 												+ defaultIcon;
 										appInfoIcon.setUrl(iconPath);
-
 									} else if (selectedApp.appStatus == AppStatus.PROCESSING) {
-
 										// log.info("Displaying PROCESSING");
 										String URL = null;
 										if (PROXY_URL != null
 												&& !PROXY_URL.isEmpty()) {
-
 											URL = PROXY_URL;
-
 										} else {
-
 											URL = HOST_URL;
-
 										}
 
 										iconVersion++;
-
 										final String iconPath = URL
 												+ "/appvet_images/"
 												+ selectedApp.appId + ".png?v"
 												+ iconVersion;
 										appInfoIcon.setUrl(iconPath);
-
 									} else {
-
 										// log.info("Displaying OTHER");
 										String URL = null;
 										if (PROXY_URL != null
 												&& !PROXY_URL.isEmpty()) {
-
 											URL = PROXY_URL;
-
 										} else {
-
 											URL = HOST_URL;
-
 										}
 
 										final String iconPath = URL
 												+ "/appvet_images/"
 												+ selectedApp.appId + ".png?v";
 										appInfoIcon.setUrl(iconPath);
-
 									}
 
 									String appName = null;
-
+									
 									if (selectedApp.appName == null) {
-
 										appName = "Retrieving...";
-
 									} else {
-
 										appName = selectedApp.appName;
-
 									}
 
 									/* Set app status */
@@ -326,36 +288,28 @@ public class AppVetPanel extends DockLayoutPanel {
 											|| (selectedApp.appStatus == AppStatus.HIGH)
 											|| (selectedApp.appStatus == AppStatus.MODERATE)
 											|| (selectedApp.appStatus == AppStatus.LOW)) {
-
 										appNameHtml = "<div id=\"appNameInfo\">"
 												+ appName + "</div>";
 										uploadReportButton.setEnabled(true);
 										deleteButton.setEnabled(true);
 										downloadReportsButton.setEnabled(true);
 										downloadAppButton.setEnabled(true);
-
 									} else {
-
 										appNameHtml = "<div id=\"appNameInfo\">"
 												+ appName + "</div>";
 										downloadReportsButton.setEnabled(false);
-
 									}
 
 									appInfoName.setHTML(appNameHtml);
 									if ((selectedApp.packageName == null)
 											|| selectedApp.packageName
 													.equals("")) {
-
 										appInfoPackage
 												.setHTML("<b>Package: </b>N/A");
-
 									} else {
-
 										appInfoPackage
 												.setHTML("<b>Package: </b>"
 														+ selectedApp.packageName);
-
 									}
 
 									if ((selectedApp.versionName == null)
@@ -866,6 +820,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		northAppVetPanel.setCellWidth(horizontalPanel_3, "100%");
 		final MenuBar appVetMenuBar = new MenuBar(false);
 		horizontalPanel_3.add(appVetMenuBar);
+		horizontalPanel_3.setCellWidth(appVetMenuBar, "25%");
 		horizontalPanel_3.setCellVerticalAlignment(appVetMenuBar,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appVetMenuBar.setStyleName("appVetMenuBar");
@@ -1009,15 +964,22 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel_3.setCellVerticalAlignment(statusMessageLabel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_3.setCellHorizontalAlignment(statusMessageLabel,
-				HasHorizontalAlignment.ALIGN_RIGHT);
-		horizontalPanel_3.setCellWidth(statusMessageLabel, "100%");
-		statusMessageLabel.setStyleName("devModeIndicator");
+				HasHorizontalAlignment.ALIGN_CENTER);
+		horizontalPanel_3.setCellWidth(statusMessageLabel, "50%");
+		statusMessageLabel.setStyleName("statusError");
 		statusMessageLabel
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		statusMessageLabel.setSize("420px", "18px");
+		statusMessageLabel.setTitle("Status message");
+		
+		Label lblNewLabel = new Label("");
+		horizontalPanel_3.add(lblNewLabel);
+		horizontalPanel_3.setCellWidth(lblNewLabel, "25%");
+		lblNewLabel.setHeight("");
 		final MenuBar adminMenuBar = new MenuBar(true);
 		adminMenuBar.setFocusOnHoverEnabled(true);
 
+		// Log menu
 		final MenuBar logMenubar = new MenuBar(true);
 		logMenubar.setFocusOnHoverEnabled(true);
 		final MenuItem mntmAppVetLog = new MenuItem("View", false,
@@ -1078,7 +1040,65 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				});
 		logMenubar.addItem(downloadAppVetLogMenuItem);
+		
+		// Alert menu
+		final MenuBar alertMenubar = new MenuBar(true);
+		alertMenubar.setFocusOnHoverEnabled(true);
+		
+		final MenuItem setAlertMenuItem = new MenuItem("Set", false,
+				new Command() {
+					@Override
+					public void execute() {
+						final SetAlertDialogBox setAlertDialogBox = new SetAlertDialogBox();
+						setAlertDialogBox.setText("Set Alert Message");
+						setAlertDialogBox.center();
+						setAlertDialogBox.cancelButton.setFocus(true);
+						setAlertDialogBox.cancelButton
+								.addClickHandler(new ClickHandler() {
+									@Override
+									public void onClick(ClickEvent event) {
+										killDialogBox(setAlertDialogBox);
+										return;
+									}
+								});
+						setAlertDialogBox.okButton
+								.addClickHandler(new ClickHandler() {
+									@Override
+									public void onClick(ClickEvent event) {
+										killDialogBox(setAlertDialogBox);
+										SystemAlertType alertType = null;
+										if (setAlertDialogBox.alertNormalRadioButton.isChecked())
+											alertType = SystemAlertType.NORMAL;
+										else if (setAlertDialogBox.alertWarningRadioButton.isChecked())
+											alertType = SystemAlertType.WARNING;
+										else if (setAlertDialogBox.alertCriticalRadioButton.isChecked())
+											alertType = SystemAlertType.CRITICAL;
+										
+										String alertMessage = setAlertDialogBox.alertTextArea.getText();
+										if (alertMessage == null || alertMessage.isEmpty()) {
+											showMessageDialog("AppVet Error",
+													"Alert message cannot be empty.",
+													true);
+										}
+										
+										setAlertMessage(userInfo.getUserName(), alertType, alertMessage);
+									}
+								});
+					}
+				});
+		alertMenubar.addItem(setAlertMenuItem);
+		
+		final MenuItem clearAlertMessageMenuItem = new MenuItem("Clear", false,
+				new Command() {
+					@Override
+					public void execute() {
+						clearAlertMessage(userInfo.getUserName());
+					}
+				});
+		alertMenubar.addItem(clearAlertMessageMenuItem);
+		
 
+		// Admin menubar
 		final MenuItem adminMenuItem = new MenuItem("Admin", true, adminMenuBar);
 		adminMenuBar.addItem("Log", logMenubar);
 
@@ -1100,6 +1120,10 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				});
 		adminMenuBar.addItem(usersMenuItem);
+		
+		adminMenuBar.addItem("Alerts", alertMenubar);
+		
+		
 		if (userInfo.getRole().equals(Role.ADMIN.name())) {
 			appVetMenuBar.addItem(adminMenuItem);
 		}
@@ -1354,31 +1378,6 @@ public class AppVetPanel extends DockLayoutPanel {
 									reportUploadDialogBox, userName,
 									selected));
 
-//					if (osToolCount == 0) {
-//						showMessageDialog("AppVet Error",
-//								"No tools available for this app.", true);
-//					} else {
-//						reportUploadDialogBox = new ReportUploadDialogBox(
-//								userInfo, sessionId, selected.appId,
-//								SERVLET_URL, selected.os, tools);
-//						reportUploadDialogBox.setText("Upload Report for "
-//								+ selected.appName);
-//						reportUploadDialogBox.center();
-//						// reportUploadDialogBox.cancelButton.setFocus(true);
-//						reportUploadDialogBox.toolNamesComboBox.setFocus(true);
-//
-//						reportUploadDialogBox.cancelButton
-//								.addClickHandler(new ClickHandler() {
-//									@Override
-//									public void onClick(ClickEvent event) {
-//										killDialogBox(reportUploadDialogBox);
-//									}
-//								});
-//						reportUploadDialogBox.uploadReportForm
-//								.addFormHandler(new ReportUploadFormHandler(
-//										reportUploadDialogBox, userName,
-//										selected));
-//					}
 				}
 			}
 		});
@@ -1535,6 +1534,52 @@ public class AppVetPanel extends DockLayoutPanel {
 		pollServer(userName);
 		scheduleResize();
 	}
+	
+	public void setAlertMessage(String username, SystemAlertType alertType, String alertMessage) {
+		SystemAlert alert = new SystemAlert();
+		alert.type = alertType;
+		alert.message = alertMessage;
+		
+		appVetServiceAsync.setAlertMessage(username, alert, 
+				new AsyncCallback<Boolean>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				showMessageDialog("AppVet Error",
+						"Could not set alert message", true);
+			}
+
+			@Override
+			public void onSuccess(Boolean setAlert) {
+				if (!setAlert) {
+					showMessageDialog("AppVet Error",
+							"Could not set alert message", true);
+				} else {
+					log.info("Alert message set");
+				}
+			}
+		});
+	}
+	
+	public void clearAlertMessage(String username) {
+		appVetServiceAsync.clearAlertMessage(username, 
+				new AsyncCallback<Boolean>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				showMessageDialog("AppVet Error",
+						"Could not clear alert message", true);
+			}
+
+			@Override
+			public void onSuccess(Boolean setAlert) {
+				if (!setAlert) {
+					showMessageDialog("AppVet Error",
+							"Could not clear alert message", true);
+				} else {
+					log.info("Alert message cleared");
+				}
+			}
+		});
+	}
 
 	public void clearLog() {
 		appVetServiceAsync.clearLog(new AsyncCallback<Boolean>() {
@@ -1645,6 +1690,8 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				});
 	}
+	
+	
 
 	@Override
 	public void onBrowserEvent(Event event) {
@@ -1657,8 +1704,12 @@ public class AppVetPanel extends DockLayoutPanel {
 		pollingTimer = new Timer() {
 			@Override
 			public void run() {
+				// The following methods hit the database. To increase performance,
+				// it might be good to combine the functionality of these three
+				// methods into a single method call to the server (and database).
 				updateSessionExpiration();
 				getUpdatedApps(user);
+				getAlertMessage();
 			}
 		};
 		pollingTimer.scheduleRepeating(POLLING_INTERVAL);
@@ -1856,7 +1907,36 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		}
 	}
+	
+	public void getAlertMessage() {
+		appVetServiceAsync.getAlertMessage(new AsyncCallback<SystemAlert>() {
+			
+					@Override
+					public void onFailure(Throwable caught) {
+						log.severe("Could not update session: "
+								+ caught.getMessage());
+					}
 
+					@Override
+					public void onSuccess(SystemAlert systemAlert) {
+						if (systemAlert != null) {
+							//log.info("system alert is not null. Setting message: " + systemAlert.message);
+							if (systemAlert.type == SystemAlertType.NORMAL) {
+								statusMessageLabel.setStyleName("statusOk");
+							} else if (systemAlert.type == SystemAlertType.WARNING) {
+								statusMessageLabel.setStyleName("statusWarning");
+							} else if (systemAlert.type == SystemAlertType.CRITICAL) {
+								statusMessageLabel.setStyleName("statusError");
+							}
+							
+							statusMessageLabel.setText(systemAlert.message);
+						} else {
+							//log.info("system alert is null. Setting message to ''");
+							statusMessageLabel.setText("");
+						}
+					}
+				});
+	}
 	
 	public void updateSessionExpiration() {
 		appVetServiceAsync.updateSessionExpiration(sessionId,

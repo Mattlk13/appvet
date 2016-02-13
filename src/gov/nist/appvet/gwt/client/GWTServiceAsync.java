@@ -21,6 +21,7 @@ package gov.nist.appvet.gwt.client;
 
 import gov.nist.appvet.gwt.shared.AppsListGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
+import gov.nist.appvet.gwt.shared.SystemAlert;
 import gov.nist.appvet.gwt.shared.ToolStatusGwt;
 import gov.nist.appvet.shared.all.DeviceOS;
 import gov.nist.appvet.shared.all.OrgDepts;
@@ -37,6 +38,17 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * @author steveq@nist.gov
  */
 public interface GWTServiceAsync {
+	
+	void setAlertMessage(String username, SystemAlert alert,
+			AsyncCallback<Boolean> callback)
+			throws IllegalArgumentException;
+	
+	void clearAlertMessage(String username,
+			AsyncCallback<Boolean> callback)
+			throws IllegalArgumentException;
+	
+	void getAlertMessage(AsyncCallback<SystemAlert> callback)
+			throws IllegalArgumentException;
 	
 	void adminSetUser(UserInfo userInfo,
 			AsyncCallback<List<UserInfo>> callback)
