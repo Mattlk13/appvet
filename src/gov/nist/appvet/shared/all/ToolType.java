@@ -24,14 +24,15 @@ package gov.nist.appvet.shared.all;
  */
 public enum ToolType {
 	PREPROCESSOR ("images/icon-metadata.png"), 
+	// TODO: Change TESTTOOL reports to AUTO_TOOL to denote automatic upload
+	// or reports by tools.
 	TESTTOOL ("images/icon-tool.png"),
-	APPROVAL ("images/icon-approve.png"),
-	// Use REPORT when tool is not accessible and tool report is uploaded
-	// manually. Audit is used aas final risk assessment and SUMMARY is
-	// used to describe overall summary of app and risk assessment. AUDITs
-	// are located at the bottom of the app info panel while SUMMARYs are
-	// located at the top of the app info panel reports.
-	REPORT ("images/icon-tool.png"), AUDIT ("images/icon-seal.png"), SUMMARY ("images/icon-seal.png");
+	// TODO: Change REPORT reports to MANUAL_TOOL to denote manual upload
+	// of reports by analysts.
+	REPORT ("images/icon-tool.png"), 
+	AUDIT ("images/icon-seal.png"), 
+	// TODO: Change SUMMARY reports to OVERVIEW reports
+	SUMMARY ("images/icon-seal.png");
 	
 	private final String defaultIconURL;
 	

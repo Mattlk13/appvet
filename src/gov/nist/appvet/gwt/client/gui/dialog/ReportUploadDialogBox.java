@@ -64,6 +64,7 @@ public class ReportUploadDialogBox extends DialogBox {
 	public ListBox toolNamesComboBox = null;
 	public Hidden hiddenToolID = null;
 	public Hidden hiddenToolRisk = null;
+	public Label riskLabel = null;
 	public ArrayList<ToolInfoGwt> permittedToolReports = new ArrayList<ToolInfoGwt>();
 
 	public ReportUploadDialogBox(UserInfo userInfo, String sessionId,
@@ -259,6 +260,7 @@ public class ReportUploadDialogBox extends DialogBox {
 							
 							if (toolRiskComboBox != null) {
 								toolRiskComboBox.setVisible(false);
+								riskLabel.setVisible(false);
 								statusLabel.setText(selectedToolName
 										+ " requires a " + reportFileType
 										+ " report.");
@@ -271,6 +273,7 @@ public class ReportUploadDialogBox extends DialogBox {
 							
 							if (toolRiskComboBox != null) {
 								toolRiskComboBox.setVisible(true);
+								riskLabel.setVisible(true);
 								String reportTemplateURL = selectedTool.getReportTemplateURL();
 								//log.info("Report template URL: " + reportTemplateURL);
 								if (reportTemplateURL != null) {
@@ -291,6 +294,7 @@ public class ReportUploadDialogBox extends DialogBox {
 						} else {
 							if (toolRiskComboBox != null) {
 								toolRiskComboBox.setVisible(true);
+								riskLabel.setVisible(true);
 								statusLabel.setText(selectedToolName
 										+ " requires a " + reportFileType
 										+ " report.");
@@ -322,7 +326,7 @@ public class ReportUploadDialogBox extends DialogBox {
 		grid.getCellFormatter().setStyleName(3, 1, "reportUploadWidget");
 		fileUpload.setSize("189px", "22px");
 
-		final Label riskLabel = new Label("Risk: ");
+		riskLabel = new Label("Risk: ");
 		riskLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		grid.setWidget(4, 0, riskLabel);
 		grid.getCellFormatter().setHorizontalAlignment(4, 0,

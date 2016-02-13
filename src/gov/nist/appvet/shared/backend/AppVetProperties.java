@@ -445,7 +445,8 @@ public class AppVetProperties {
 	}
 	
 	/** If AppVet is shutdown while an app is in the PROCESSING state, the
-	 * status of the app should be changed to an ERROR state.
+	 * status of the app should be changed to an ERROR state after AppVet
+	 * restarts.
 	 */
 	public static void checkForProcessingApps() {
 		Database.setProcessingStatusToError();

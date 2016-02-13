@@ -336,7 +336,7 @@ public class AppVetPanel extends DockLayoutPanel {
 							public String getHtmlToolResults(String appId,
 									List<ToolStatusGwt> toolResults) {
 								/* Get summary report */
-								String statuses = "<hr><h3 title=\"Summary\" id=\"appInfoSectionHeader\">Summary</h3>\n";
+								String statuses = "<hr><h3 title=\"Overview\" id=\"appInfoSectionHeader\">Overview</h3>\n";
 								int summaryCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -445,7 +445,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								return "<table>"
 										+ "<tr>\n"
 										+ "<td>"
-										+ "<img src=\"" + toolIconURL + "\" alt=\"Tool/Report\" height=\"20\" width=\"20\"> "
+										+ "<img src=\"" + toolIconURL + "\" alt=\"Tool/Report\" height=\"18\" width=\"18\"> "
 										+ "</td>\n"
 										+ "<td title=\"Tool name\" align=\"left\" width=\"185\">"
 										+ toolStatus.getToolDisplayName()
@@ -471,7 +471,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								return "<table id=\toolstable\">"
 										+ "<tr>\n"
 										+ "<td>"
-										+ "<img src=\"" + toolIconURL + "\" alt=\"Tool/Report\" height=\"20\" width=\"20\"> "
+										+ "<img src=\"" + toolIconURL + "\" alt=\"Tool/Report\" height=\"18\" width=\"18\"> "
 										+ "</td>\n"
 										+ "<td title=\"Tool name\" align=\"left\" width=\"185\">"
 										+ toolStatus.getToolDisplayName()
