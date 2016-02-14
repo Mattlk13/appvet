@@ -224,6 +224,9 @@ public class ToolMgr implements Runnable {
 								}
 							}
 						}
+						
+						// The following does not account for tools where reports
+						// have not yet come in before the timeout
 						final long endTime = new Date().getTime();
 						final long elapsedTime = endTime - startTime;
 						//appInfo.log.debug("Total elapsed: "
@@ -232,8 +235,10 @@ public class ToolMgr implements Runnable {
 						// Email notify
 						UserInfo userInfo = Database.getUserInfo(appInfo.ownerName, null);
 						log.debug("App " + appInfo.appId + " '" + appInfo.appName + "' has completed processing");
-						Emailer.sendEmail(userInfo.getEmail(), "App " + appInfo.appId + " '" + appInfo.appName + "' has completed processing", "App " + appInfo.appId + " '" + appInfo.appName + "' has completed processing.");
-						
+						Emailer.sendEmail(userInfo.getEmail(), 
+								"App " + appInfo.appId + " '" + appInfo.appName + "' completed", 
+								"App " + appInfo.appId + " '" + appInfo.appName + "' uploaded by " + 
+								appInfo.ownerName + " has completed processing.");
 						
 						appInfo.log.debug(MemoryUtil
 								.getFreeHeap("End ToolMgr.run()"));

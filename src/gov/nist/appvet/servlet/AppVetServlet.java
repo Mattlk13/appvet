@@ -1190,17 +1190,11 @@ public class AppVetServlet extends HttpServlet {
 			
 			UserInfo userInfo = Database.getUserInfo(appInfo.ownerName, null);
 
-			if (tool.toolType == ToolType.AUDIT){
-				// Email notify
-				String emailSubject = "Final determination for app " + appInfo.appId + " '" + appInfo.appName + "' has been uploaded";
-				String emailContent = "Final determination for app " + appInfo.appId + " '" + appInfo.appName + "' has been uploaded.";
-				log.debug(emailSubject);
-				Emailer.sendEmail(userInfo.getEmail(), emailSubject, emailContent);
-			
-			} else if (tool.toolType == ToolType.SUMMARY){
-				// Email notify
-				String emailSubject = "Summary report for app " + appInfo.appId + " '" + appInfo.appName + "' has been uploaded";
-				String emailContent = "Summary report for app " + appInfo.appId + " '" + appInfo.appName + "' has been uploaded.";
+			// Email if SUMMARY, REPORT, or AUDIT reports have been uploaded
+			if (tool.toolType == ToolType.AUDIT || tool.toolType == ToolType.SUMMARY || 
+					tool.toolType == ToolType.REPORT){
+				String emailSubject = tool.name + " report for app " + appInfo.appId + " '" + appInfo.appName + "' has been uploaded";
+				String emailContent = tool.name + " report for app " + appInfo.appId + " '" + appInfo.appName + "' has been uploaded.";
 				log.debug(emailSubject);
 				Emailer.sendEmail(userInfo.getEmail(), emailSubject, emailContent);
 			}

@@ -218,7 +218,9 @@ public class Registration {
 				// Email notify
 				if (AppVetProperties.emailEnabled) {
 					UserInfo userInfo = Database.getUserInfo(appInfo.ownerName, null);
-					Emailer.sendEmail(userInfo.getEmail(), "App " + appInfo.appId + "has been uploaded by " + appInfo.ownerName, "App " + appInfo.appId + " has been uploaded by " + appInfo.ownerName + ".");
+					Emailer.sendEmail(userInfo.getEmail(), 
+							"App " + appInfo.appId + " uploaded by " + appInfo.ownerName, 
+							"App " + appInfo.appId + " has been uploaded by " + appInfo.ownerName + ".");
 				}
 				
 				appInfo.log.debug("App " + appInfo.appId + " has been uploaded by " + appInfo.ownerName);
