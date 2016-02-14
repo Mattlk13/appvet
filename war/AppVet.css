@@ -263,6 +263,8 @@ searchPanel {
 	vertical-align: middle;
 	height: 18px;
 	width: 18px;
+	margin-left: 5px;
+	margin-right: 5px;
 }
 
 #toolstable {

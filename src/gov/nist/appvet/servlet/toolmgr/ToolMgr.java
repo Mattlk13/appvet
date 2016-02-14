@@ -234,7 +234,7 @@ public class ToolMgr implements Runnable {
 						
 						// Email notify
 						UserInfo userInfo = Database.getUserInfo(appInfo.ownerName, null);
-						log.debug("App " + appInfo.appId + " '" + appInfo.appName + "' has completed processing");
+						log.debug("Emailing: App " + appInfo.appId + " '" + appInfo.appName + "' has completed processing");
 						Emailer.sendEmail(userInfo.getEmail(), 
 								"App " + appInfo.appId + " '" + appInfo.appName + "' completed", 
 								"App " + appInfo.appId + " '" + appInfo.appName + "' uploaded by " + 

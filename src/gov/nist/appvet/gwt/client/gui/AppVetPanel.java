@@ -447,10 +447,10 @@ public class AppVetPanel extends DockLayoutPanel {
 										+ "<td>"
 										+ "<img class=\"toolimages\" src=\"" + toolIconURL + "\" alt=\"Tool/Report\"> "
 										+ "</td>\n"
-										+ "<td title=\"Tool name\" align=\"left\" width=\"185\">"
+										+ "<td title=\"Tool name\" align=\"left\" width=\"200\">"
 										+ toolStatus.getToolDisplayName()
 										+ "</td>\n"
-										+ "<td title=\"Tool status\"  align=\"left\" width=\"120\">"
+										+ "<td title=\"Tool status\"  align=\"left\" width=\"140\">"
 										+ status
 										+ "</td>\n"
 										+ "<td title=\"Tool report\" align=\"left\" width=\"45\">"
@@ -473,10 +473,10 @@ public class AppVetPanel extends DockLayoutPanel {
 										+ "<td>"
 										+ "<img class=\"toolimages\" src=\"" + toolIconURL + "\" alt=\"Tool/Report\"> "
 										+ "</td>\n"
-										+ "<td title=\"Tool name\" align=\"left\" width=\"185\">"
+										+ "<td title=\"Tool name\" align=\"left\" width=\"200\">"
 										+ toolStatus.getToolDisplayName()
 										+ "</td>\n"
-										+ "<td title=\"Tool status\" align=\"left\" width=\"120\">"
+										+ "<td title=\"Tool status\" align=\"left\" width=\"140\">"
 										+ toolStatus.getStatusHtml()
 										+ "</td>\n"
 										+ "<td title=\"Tool report\" align=\"left\" width=\"45\">"
@@ -1448,8 +1448,8 @@ public class AppVetPanel extends DockLayoutPanel {
 
 				deleteConfirmDialogBox = new YesNoConfirmDialog(
 						"<p align=\"center\">\r\nAre you sure you want to delete app #"
-								+ selected.appId + " '" + selected.appId
-								+ "'?\r\n</p>");
+								+ selected.appId
+								+ "?\r\n</p>");
 				deleteConfirmDialogBox.setText("Confirm Delete");
 				deleteConfirmDialogBox.center();
 				deleteConfirmDialogBox.cancelButton.setFocus(true);

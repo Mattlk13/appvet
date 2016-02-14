@@ -22,6 +22,7 @@ package gov.nist.appvet.shared.backend;
 /**
  * @author steveq@nist.gov
  */
+import gov.nist.appvet.servlet.shared.Emailer;
 import gov.nist.appvet.shared.all.DeviceOS;
 import gov.nist.appvet.shared.all.Validate;
 
@@ -29,6 +30,7 @@ import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Properties;
 
 public class AppVetProperties {
 	public static boolean error = false;
@@ -51,6 +53,7 @@ public class AppVetProperties {
 	public static String APPVET_FILES_HOME = null;
 	public static boolean useSSO = false;
 	public static String ORG_LOGO_ALT_TEXT = null;
+	public static String EMAIL_CONNECTION_TIMEOUT = "2000"; // In ms
 
 	static {
 		//System.out.println("*** Starting AppVet v" + APPVET_VERSION + " ***");
@@ -225,13 +228,12 @@ public class AppVetProperties {
 							emailEnabled = false;
 							log.error("Email requires authentication but no password was provided. Disabling email");
 						} else {
-							emailEnabled = true;
-							log.debug("Email is enabled");
+							emailEnabled = Emailer.testConnection();
 						}
 					} else {		
-						emailEnabled = true;
-						log.debug("Email is enabled");
+						emailEnabled = Emailer.testConnection();
 					}
+					
 		} else {
 			// All required Email parameters are null, so disable email
 			log.debug("Email is disabled due to null email parameters");

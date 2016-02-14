@@ -15,6 +15,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+
 public class Emailer {
 
 	private static final Logger log = AppVetProperties.log;
@@ -39,16 +40,18 @@ public class Emailer {
 			String senderEmail = AppVetProperties.SENDER_EMAIL;
 			String senderName = AppVetProperties.SENDER_NAME;
 			String senderEmailPassword = AppVetProperties.SENDER_EMAIL_PASSWORD; 
+			String connectionTimeout = AppVetProperties.EMAIL_CONNECTION_TIMEOUT;
 
 			try {
 				// Step1: Set up mail properties
 				mailServerProperties = System.getProperties();
-				mailServerProperties.put("mail.smtp.host", smtpHost); // e.g., smtp.gmail.com
-				mailServerProperties.put("mail.smtp.port", smtpPort); // e.g., 587
-				mailServerProperties.put("mail.from", senderEmail); // e.g., joe@test.com
-				mailServerProperties.put("mail.user", senderEmail); // e.g., joe@test.com
-				mailServerProperties.put("mail.smtp.auth", smtpAuth); // e.g., false
-				mailServerProperties.put("mail.smtp.starttls.enable", enableTls); // e.g., true
+				mailServerProperties.put("mail.smtp.host", smtpHost);  
+				mailServerProperties.put("mail.smtp.port", smtpPort);  
+				mailServerProperties.put("mail.from", senderEmail);  
+				mailServerProperties.put("mail.user", senderEmail);  
+				mailServerProperties.put("mail.smtp.auth", smtpAuth);  
+				mailServerProperties.put("mail.smtp.starttls.enable", enableTls);  
+				mailServerProperties.put("mail.smtp.connectiontimeout", connectionTimeout);
 
 				// Step2: Set up mail message.
 				// TODO: Need to add Authenticator for the following
@@ -56,7 +59,7 @@ public class Emailer {
 				generateMailMessage = new MimeMessage(getMailSession);
 				generateMailMessage.setFrom(new InternetAddress(senderEmail, senderName));
 				generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
-				
+
 				// Add all admins as BCC'd recipients
 				for (int i = 0; i < adminUsers.size(); i++) {
 					UserInfo adminUser = adminUsers.get(i);
@@ -72,59 +75,80 @@ public class Emailer {
 
 				// Step3: Set up transport and send.
 				Transport transport = getMailSession.getTransport("smtp");
-				
+
 				if (!smtpAuth) {
 					transport.connect();
 				} else {
 					transport.connect(smtpHost, senderEmail, senderEmailPassword); 
 				}
-				
+
 				transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
 				transport.close();
 				log.debug("\nEmail '" + subject + "' successfully sent to " + recipient);
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error("Error sending email.\n"
+						+ e.getMessage());
+			}
+		} else {
+			log.warn("Email is disabled. Cannot send message '" + subject + "'.");
+		}
+	}
+
+
+	public static boolean testConnection() {
+
+		String smtpHost = AppVetProperties.SMTP_HOST;
+		String smtpPort = AppVetProperties.SMTP_PORT;
+		boolean smtpAuth = AppVetProperties.SMTP_AUTH;
+		boolean enableTls = AppVetProperties.ENABLE_TLS;
+		String senderEmail = AppVetProperties.SENDER_EMAIL;
+		String senderName = AppVetProperties.SENDER_NAME;
+		String senderEmailPassword = AppVetProperties.SENDER_EMAIL_PASSWORD; 
+		String connectionTimeout = AppVetProperties.EMAIL_CONNECTION_TIMEOUT;
+		long startTime = System.currentTimeMillis();
+		
+		try {
+			// Step1: Set up mail properties
+			mailServerProperties = System.getProperties();
+			mailServerProperties.put("mail.smtp.host", smtpHost);  
+			mailServerProperties.put("mail.smtp.port", smtpPort);  
+			mailServerProperties.put("mail.from", senderEmail); 
+			mailServerProperties.put("mail.user", senderEmail); 
+			mailServerProperties.put("mail.smtp.auth", smtpAuth);  
+			mailServerProperties.put("mail.smtp.starttls.enable", enableTls);  
+			mailServerProperties.put("mail.smtp.connectiontimeout", connectionTimeout);
+
+			// Step2: Set up mail message.
+			// TODO: Need to add Authenticator for the following
+			getMailSession = Session.getDefaultInstance(mailServerProperties, null);
+			generateMailMessage = new MimeMessage(getMailSession);
+			generateMailMessage.setFrom(new InternetAddress(senderEmail, senderName));
+			// Add all admins as BCC'd recipients
+			for (int i = 0; i < adminUsers.size(); i++) {
+				UserInfo adminUser = adminUsers.get(i);
+				String adminUserEmail = adminUser.getEmail();
+				if (!adminUserEmail.equals(senderEmail)) {
+					// Only add admin if not also the sender
+					generateMailMessage.addRecipient(Message.RecipientType.BCC, new InternetAddress(adminUserEmail));
+				}
 			}
 
-		}
+			// Step3: Set up transport and test connection
+			Transport transport = getMailSession.getTransport("smtp");
 
+			if (!smtpAuth) {
+				transport.connect();
+			} else {
+				transport.connect(smtpHost, senderEmail, senderEmailPassword); 
+			}
+
+			transport.close();
+			log.debug("\nEmail connection established - Email enabled.");
+			return true;
+		} catch (Exception e) {
+			log.error("Email connection could not be established in " + (System.currentTimeMillis() - startTime) + "ms. Disabling email.\n"
+					+ e.getMessage());
+			return false;
+		}
 	}
-
-
-/*	public static void showUsage() {
-		System.out.println("Usage: java -jar emailer.jar [-h] host port recipient sender subject content\n");
-		System.out.println("Where\n");
-		System.out.println("host:\t The hostname or IP of the SMTP server (e.g., smtp.dhs.gov)\n");
-		System.out.println("port:\t The port number of the SMTP server (e.g., 25)\n");
-		System.out.println("to:\t The recipient's email address (e.g., recipient@test.com)\n");
-		System.out.println("to:\t The sender's email address (e.g., sender@test.com)\n");
-		System.out.println("to:\t The subject of the email (e.g., \"My subject\")\n");
-		System.out.println("to:\t The content of the email (e.g., \"This is a message.\")\n");
-		System.out.println("-h:\t This help message");
-	}
-
-
-	public static void main(String args[]) throws AddressException, MessagingException {
-
-		if (args == null || args.length == 0 || args[0].equals("-h")) {
-			showUsage();
-			return;
-		}
-
-		if (args.length == 7) {
-			log.debug("SMTP Host: " + args[0]);
-			log.debug("SMTP Port: " + args[1]);
-			log.debug("Recipient: " + args[2]);
-			log.debug("Sender: " + args[3]);
-			log.debug("Sender Name: " + args[4]);
-			log.debug("Subject: " + args[5]);
-			log.debug("Content: " + args[6]);
-
-			//generateAndSendEmail(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
-
-		} else {
-			showUsage();
-			return;
-		}
-	}*/
 }
