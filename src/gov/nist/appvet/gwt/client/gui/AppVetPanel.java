@@ -355,7 +355,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 
 								/* Get pre-processing analysis results */
-								statuses += "<hr><h3 title=\"App Metadata\" id=\"appInfoSectionHeader\">App Metadata</h3>\n";
+								statuses += "<h3 title=\"App Metadata\" id=\"appInfoSectionHeader\">App Metadata</h3>\n";
 								int preprocessorToolCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -374,7 +374,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 
 								// Get tool and manually-uploaded results.
-								statuses += "<hr><h3 title=\"Tool Analyses\"  id=\"appInfoSectionHeader\">Tool Analyses</h3>\n";
+								statuses += "<h3 title=\"Tool Analyses\"  id=\"appInfoSectionHeader\">Tool Analyses</h3>\n";
 								int analysisToolCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -394,7 +394,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 
 								/* Get audit results */
-								statuses += "<hr><h3 title=\"Final Organization Determination\" id=\"appInfoSectionHeader\">Final Organization Determination</h3>\n";
+								statuses += "<h3 title=\"Final Organization Determination\" id=\"appInfoSectionHeader\">Final Organization Determination</h3>\n";
 								int auditCount = 0;
 
 								for (int i = 0; i < toolResults.size(); i++) {
@@ -445,7 +445,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								return "<table>"
 										+ "<tr>\n"
 										+ "<td>"
-										+ "<img src=\"" + toolIconURL + "\" alt=\"Tool/Report\" height=\"18\" width=\"18\"> "
+										+ "<img class=\"toolimages\" src=\"" + toolIconURL + "\" alt=\"Tool/Report\"> "
 										+ "</td>\n"
 										+ "<td title=\"Tool name\" align=\"left\" width=\"185\">"
 										+ toolStatus.getToolDisplayName()
@@ -471,7 +471,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								return "<table id=\toolstable\">"
 										+ "<tr>\n"
 										+ "<td>"
-										+ "<img src=\"" + toolIconURL + "\" alt=\"Tool/Report\" height=\"18\" width=\"18\"> "
+										+ "<img class=\"toolimages\" src=\"" + toolIconURL + "\" alt=\"Tool/Report\"> "
 										+ "</td>\n"
 										+ "<td title=\"Tool name\" align=\"left\" width=\"185\">"
 										+ toolStatus.getToolDisplayName()
@@ -1787,7 +1787,6 @@ public class AppVetPanel extends DockLayoutPanel {
 
 	public int search() {
 		searchMode = true;
-		statusMessageLabel.setText("Searching...");
 		final String[] tokens = searchTextBox.getValue().split("\\s+");
 		if (tokens == null) {
 			return 0;
@@ -1806,7 +1805,6 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		}
 		searchTextBox.setText("Search");
-		statusMessageLabel.setText("");
 		appsListTable.setDataList(searchList);
 		if (searchList.size() == 0) {
 			showMessageDialog("Search Results", "No search results were found",
