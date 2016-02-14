@@ -442,33 +442,25 @@ public class AppVetPanel extends DockLayoutPanel {
 									toolIconURL = toolStatus.getToolType().getDefaultIconURL();
 								}
 
-								return "<table>"
-										+ "<tr>\n"
-										+ "<td>"
-										+ "<img class=\"toolimages\" src=\"" + toolIconURL + "\" alt=\"Tool/Report\"> "
-										+ "</td>\n"
-										+ "<td title=\"Tool name\" align=\"left\" width=\"200\">"
-										+ toolStatus.getToolDisplayName()
-										+ "</td>\n"
-										+ "<td title=\"Tool status\"  align=\"left\" width=\"140\">"
-										+ status
-										+ "</td>\n"
-										+ "<td title=\"Tool report\" align=\"left\" width=\"45\">"
-										+ toolStatus.getReport() + "</td>\n"
-										+ "</tr>\n" + "</table>";
+								// To over on table, add 'class=\"hovertable\"
+								return getToolRowHtml(toolIconURL, toolStatus);
 							}
 
 							public String getToolStatusHtmlDisplay(
 									ToolStatusGwt toolStatus) {
-								
 								String toolIconURL = null;
+								
 								if (toolStatus.getIconURL() != null) {
 									toolIconURL = toolStatus.getIconURL();
 								} else {
 									toolIconURL = toolStatus.getToolType().getDefaultIconURL();
 								}
 								
-								return "<table id=\toolstable\">"
+								return getToolRowHtml(toolIconURL, toolStatus);
+							}
+							
+							private String getToolRowHtml(String toolIconURL, ToolStatusGwt toolStatus) {
+								return "<table>"
 										+ "<tr>\n"
 										+ "<td>"
 										+ "<img class=\"toolimages\" src=\"" + toolIconURL + "\" alt=\"Tool/Report\"> "
@@ -483,6 +475,7 @@ public class AppVetPanel extends DockLayoutPanel {
 										+ toolStatus.getReport() + "</td>\n"
 										+ "</tr>\n" + "</table>";
 							}
+							
 						});
 			}
 		}

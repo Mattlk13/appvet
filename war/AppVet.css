@@ -267,10 +267,6 @@ searchPanel {
 	margin-right: 5px;
 }
 
-#toolstable {
-	
-}
-
 #tableitemgood {
 	text-align: left;
 	color: green;
@@ -893,4 +889,8 @@ searchPanel {
 }
 .appvetTextArea {
 	margin-right: 5px;
+}
+
+.hovertable tr:hover {
+	background: #F2F2F2;
 }
