@@ -457,7 +457,8 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		final ToolStatus toolStatus = ToolStatusManager.getToolStatus(os,
 				appId, tool.toolId);
 		if (toolStatus == null) {
-			log.warn(appId + ", " + tool.toolId + "-status: null!");
+			//log.warn(appId + ", " + tool.toolId + "-status: null!");
+			
 		}
 		// ---------------------- Compute Tool Status
 		// ---------------------------

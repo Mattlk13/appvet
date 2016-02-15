@@ -146,7 +146,7 @@ public class Emailer {
 			log.debug("\nEmail connection established - Email enabled.");
 			return true;
 		} catch (Exception e) {
-			log.error("Email connection could not be established in " + (System.currentTimeMillis() - startTime) + "ms. Disabling email.\n"
+			log.warn("Email connection could not be established in " + (System.currentTimeMillis() - startTime) + "ms. Disabling email.\n"
 					+ e.getMessage());
 			return false;
 		}

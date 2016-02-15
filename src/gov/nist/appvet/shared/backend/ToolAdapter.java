@@ -131,7 +131,7 @@ public class ToolAdapter implements Runnable {
 		if (reportTemplateURL != null) {
 			log.debug("Report template URL: " + reportTemplateURL);
 		} else {
-			log.warn("Report template URL is null");
+			log.warn("Report template URL for tool '" + toolId + "' is null");
 		}
 		
 		// Report icon (optional
@@ -139,7 +139,7 @@ public class ToolAdapter implements Runnable {
 		if (iconURL != null) {
 			log.debug("Icon URL: " + iconURL);
 		} else {
-			log.warn("Icon URL is null");
+			log.warn("Icon URL for tool '" + toolId + "' is null");
 		}
 		
 		if (authenticationRequired) {

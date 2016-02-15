@@ -370,8 +370,8 @@ public class AppVetServlet extends HttpServlet {
 						 * incomingValue;
 						 */
 					} else {
-						log.warn("Received unknown parameter: " + incomingValue
-								+ " from IP: " + clientIpAddress);
+						//log.warn("Received unknown parameter: " + incomingValue
+						//		+ " from IP: " + clientIpAddress);
 					}
 				} else {
 					// item should now hold the received file.
