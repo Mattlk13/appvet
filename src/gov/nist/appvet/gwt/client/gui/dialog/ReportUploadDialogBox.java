@@ -217,10 +217,10 @@ public class ReportUploadDialogBox extends DialogBox {
 
 				}
 				
-			} else if (tool.getType() == ToolType.TESTTOOL) {
+			} else if (tool.getType() == ToolType.TESTTOOL || tool.getType() == ToolType.REPORT) {
 				permittedToolReports.add(tool);
 
-			}
+			} 
 		}
 		
 		// Set tools in combo box

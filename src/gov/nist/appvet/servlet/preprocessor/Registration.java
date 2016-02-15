@@ -218,8 +218,8 @@ public class Registration {
 				// Email notify
 				if (AppVetProperties.emailEnabled) {
 					UserInfo userInfo = Database.getUserInfo(appInfo.ownerName, null);
-					String subject = "App " + appInfo.appId + " uploaded by " + appInfo.ownerName;
-					String content = "App " + appInfo.appId + " has been uploaded by " + appInfo.ownerName + ".";
+					String subject = "App " + appInfo.appId + " uploaded by '" + appInfo.ownerName + "'";
+					String content = "App " + appInfo.appId + " was uploaded by '" + appInfo.ownerName + "'.";
 					appInfo.log.debug("Emailing: " + subject);
 					if (AppVetProperties.emailEnabled) {
 						Emailer.sendEmail(userInfo.getEmail(), subject, content);

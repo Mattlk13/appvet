@@ -70,7 +70,7 @@ public class Emailer {
 					}
 				}
 
-				generateMailMessage.setSubject("[AppVet] " + subject);
+				generateMailMessage.setSubject(subject);
 				generateMailMessage.setContent(content, "text/html");
 
 				// Step3: Set up transport and send.

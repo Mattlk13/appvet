@@ -232,6 +232,11 @@ public class ToolMgr implements Runnable {
 						//appInfo.log.debug("Total elapsed: "
 						//		+ Logger.formatElapsed(elapsedTime));
 						
+						/* It is not clear when an app is considered to be 
+						 * completed since REPORTs, SUMMARYs, and AUDITs may 
+						 * need to be submitted, so we do not alert user at
+						 * this point that the app has completed.
+						 *
 						// Email notify
 						UserInfo userInfo = Database.getUserInfo(appInfo.ownerName, null);
 						log.debug("Emailing: App " + appInfo.appId + " '" + appInfo.appName + "' has completed processing");
@@ -239,6 +244,7 @@ public class ToolMgr implements Runnable {
 								"App " + appInfo.appId + " '" + appInfo.appName + "' completed", 
 								"App " + appInfo.appId + " '" + appInfo.appName + "' uploaded by " + 
 								appInfo.ownerName + " has completed processing.");
+						*/
 						
 						appInfo.log.debug(MemoryUtil
 								.getFreeHeap("End ToolMgr.run()"));

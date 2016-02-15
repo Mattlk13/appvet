@@ -1193,8 +1193,8 @@ public class AppVetServlet extends HttpServlet {
 			// Email if SUMMARY, REPORT, or AUDIT reports have been uploaded
 			if (tool.toolType == ToolType.AUDIT || tool.toolType == ToolType.SUMMARY || 
 					tool.toolType == ToolType.REPORT){
-				String emailSubject = tool.name + " report for app " + appInfo.appId + " '" + appInfo.appName + "' uploaded";
-				String emailContent = tool.name + " report for app " + appInfo.appId + " '" + appInfo.appName + "' has been uploaded.";
+				String emailSubject = tool.name + " report for app " + appInfo.appId + " '" + appInfo.appName + "' submitted by '" + submitterUserName + "'";
+				String emailContent = tool.name + " report for app " + appInfo.appId + " '" + appInfo.appName + "' was submitted by '" + submitterUserName + "'.";
 				log.debug("Emailing: " + emailSubject);
 				Emailer.sendEmail(userInfo.getEmail(), emailSubject, emailContent);
 			}
