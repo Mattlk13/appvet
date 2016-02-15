@@ -1,0 +1,6 @@
+The following are designated as to-do:
+
+- Remove SYNCHRONOUS/ASYNCHRONOUS since everything is now only asynchronous. 
+  This will entail removing/modifying various classes as well as simplifying
+  the schema for tool adapters (and possibly the database).
+  
