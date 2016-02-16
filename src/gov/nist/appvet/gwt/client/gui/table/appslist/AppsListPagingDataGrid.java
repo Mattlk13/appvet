@@ -41,172 +41,199 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
  * @author steveq@nist.gov
  */
 public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
-	
+
 	// Turn off sorting of columns for 508 Compliance
 	private final boolean SORTING_ON = false;
-	
 	private final DateTimeFormat dateTimeFormat = DateTimeFormat
 			.getFormat("yyyy-MM-dd HH:mm:ss");
 	private String appVetHostUrl = null;
-	private String appVetProxyUrl = null;
+	//private String appVetProxyUrl = null;
 	private static Logger log = Logger.getLogger("AppsListPagingDataGrid");
+
 
 	@Override
 	public void initTableColumns(DataGrid<T> dataGrid,
 			ListHandler<T> sortHandler) {
-		
+
 		// App ID
 		final Column<T, String> appIdColumn = new Column<T, String>(
 				new TextCell()) {
+			
 			@Override
 			public String getValue(T object) {
 				return ((AppInfoGwt) object).appId;
 			}
 		};
+
 		appIdColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(appIdColumn, new Comparator<T>() {
+
 			@Override
 			public int compare(T o1, T o2) {
 				return ((AppInfoGwt) o1).appId
 						.compareTo(((AppInfoGwt) o2).appId);
 			}
 		});
+
 		appIdColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dataGrid.addColumn(appIdColumn, "ID");
 		dataGrid.setColumnWidth(appIdColumn, "43px");
 		dataGrid.setTitle("Apps list");
-		
+
 		// Platform/OS Icon 
 		final SafeHtmlCell osIconCell = new SafeHtmlCell();
 		final Column<T, SafeHtml> osIconColumn = new Column<T, SafeHtml>(
 				osIconCell) {
+
 			@Override
 			public SafeHtml getValue(T object) {
 				final SafeHtmlBuilder sb = new SafeHtmlBuilder();
 				final DeviceOS os = ((AppInfoGwt) object).os;
+
 				if (os == null) {
 					log.warning("OS is null");
 					return sb.toSafeHtml();
 				} else {
 					// log.info("App status in table is: " + os);
 				}
+
 				if (os == DeviceOS.ANDROID) {
-					sb.appendHtmlConstant("<img width=\"10\" src=\"images/android_logo_black.png\"  alt=\"Android\" />");
+					sb.appendHtmlConstant("<img width=\"10\" src=\"images/android_logo_green.png\"  alt=\"Android\" />");
 				} else if (os == DeviceOS.IOS) {
-					sb.appendHtmlConstant("<img width=\"10\" src=\"images/ios_logo_black.png\"  alt=\"iOS\" />");
+					sb.appendHtmlConstant("<img width=\"10\" src=\"images/ios_logo_blue.png\"  alt=\"iOS\" />");
 				}
+
 				return sb.toSafeHtml();
+
 			}
 		};
+
 		osIconColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		osIconColumn.setSortable(false);
 		dataGrid.addColumn(osIconColumn, "OS");
 		dataGrid.setColumnWidth(osIconColumn, "15px");
-		
+
+
 		// App Icon
 		final SafeHtmlCell iconCell = new SafeHtmlCell();
 		final Column<T, SafeHtml> iconColumn = new Column<T, SafeHtml>(iconCell) {
+			
 			@Override
 			public SafeHtml getValue(T object) {
+
 				String defaultLargeAppIcon = null;
 				final DeviceOS os = ((AppInfoGwt) object).os;
+
 				if (os == DeviceOS.ANDROID) {
-					defaultLargeAppIcon = "default_android_large.png";
+					defaultLargeAppIcon = "android-icon-gray.png";
 				} else if (os == DeviceOS.IOS) {
-					defaultLargeAppIcon = "default_ios_large.png";
+					defaultLargeAppIcon = "apple-icon-gray.png";
 				}
+
 				final SafeHtmlBuilder sb = new SafeHtmlBuilder();
 				final String appId = ((AppInfoGwt) object).appId;
 				final AppStatus appStatus = ((AppInfoGwt) object).appStatus;
+				//log.info("Appstatus for " + appId + ": " + appStatus.name());
+				
 				if (appStatus == null) {
 					log.warning("App status is null");
 					return sb.toSafeHtml();
-					
 				} else if (appStatus == AppStatus.REGISTERING ||
-						appStatus == AppStatus.PENDING) {
+						appStatus == AppStatus.PENDING || appStatus == AppStatus.PROCESSING) {
 					iconVersion++; // Forces refresh of icon
-					String URL = null;
-					if (appVetProxyUrl != null && !appVetProxyUrl.isEmpty()) {
-						URL = appVetProxyUrl;
-					} else {
-						URL = appVetHostUrl;
-					}
-					final String iconPath = URL + "/appvet_images/"
-							+ defaultLargeAppIcon + "?v" + iconVersion;
+					final String iconPath = "images/"
+							+ defaultLargeAppIcon;
+					
 					sb.appendHtmlConstant("<img width=\"20\" src=\"" + iconPath
 							+ "\" alt=\"App Icon\" />");
-					} else {
-						iconVersion++;
-						String URL = null;
-						if (appVetProxyUrl != null && !appVetProxyUrl.isEmpty()) {
-							URL = appVetProxyUrl;
-						} else {
-							URL = appVetHostUrl;
-						}
-						final String iconPath = URL + "/appvet_images/"
-								+ appId + ".png?v" + iconVersion;
-						sb.appendHtmlConstant("<img width=\"20\" src=\"" + iconPath
-								+ "\" alt=\"App Icon\" />");
-					}
+					//log.info("Displaying " + iconPath);
+				} else {
+					iconVersion++;
+					String URL = appVetHostUrl;
+					final String iconPath = URL + "/appvet_images/"
+							+ appId + ".png";			
+					
+					sb.appendHtmlConstant("<img width=\"20\" src=\"" + iconPath
+							+ "\" alt=\"App Icon\" />");
+					//log.info("Displaying " + iconPath);
+
+				}
+				
 				return sb.toSafeHtml();
+				
 			}
 		};
+		
 		iconColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		iconColumn.setSortable(SORTING_ON);
 		dataGrid.addColumn(iconColumn, "App");
 		dataGrid.setColumnWidth(iconColumn, "20px");
+
 		
 		// App Name
 		final Column<T, String> appNameColumn = new Column<T, String>(
 				new TextCell()) {
+			
 			@Override
 			public String getValue(T object) {
 				return ((AppInfoGwt) object).appName;
 			}
+			
 		};
+		
 		appNameColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(appNameColumn, new Comparator<T>() {
+			
 			@Override
 			public int compare(T o1, T o2) {
 				return ((AppInfoGwt) o1).appName
 						.compareTo(((AppInfoGwt) o2).appName);
 			}
 		});
+		
 		appNameColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dataGrid.addColumn(appNameColumn, "");
 		dataGrid.setColumnWidth(appNameColumn, "80px");
-		
-		
+
+
 		// App Version
 		final Column<T, String> appVersionColumn = new Column<T, String>(
 				new TextCell()) {
+			
 			@Override
 			public String getValue(T object) {
 				return ((AppInfoGwt) object).versionName;
 			}
+			
 		};
+		
 		appVersionColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(appVersionColumn, new Comparator<T>() {
+			
 			@Override
 			public int compare(T o1, T o2) {
 				return ((AppInfoGwt) o1).versionName
 						.compareTo(((AppInfoGwt) o2).versionName);
 			}
+			
 		});
+		
 		appVersionColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dataGrid.addColumn(appVersionColumn, "Version");
 		dataGrid.setColumnWidth(appVersionColumn, "35px");		
-		
-		
+
+
 		// Status
 		final SafeHtmlCell statusCell = new SafeHtmlCell();
 		final Column<T, SafeHtml> statusColumn = new Column<T, SafeHtml>(
 				statusCell) {
+			
 			@Override
 			public SafeHtml getValue(T object) {
 				final SafeHtmlBuilder sb = new SafeHtmlBuilder();
 				final AppStatus appStatus = ((AppInfoGwt) object).appStatus;
 				String statusHtml = null;
+				
 				if (appStatus == AppStatus.ERROR) {
 					statusHtml = "<div id=\"error\" style='color: black'>ERROR</div>";
 				} else if (appStatus == AppStatus.MODERATE) {
@@ -223,56 +250,71 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 					statusHtml = "<div id=\"error\" style='color: black'>"
 							+ appStatus.name() + "</div>";
 				}
-				
+
 				sb.appendHtmlConstant(statusHtml);
 				return sb.toSafeHtml();
+				
 			}
 		};
+		
 		statusColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		statusColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(statusColumn, new Comparator<T>() {
+			
 			@Override
 			public int compare(T o1, T o2) {
 				return ((AppInfoGwt) o1).appStatus
 						.compareTo(((AppInfoGwt) o2).appStatus);
 			}
+			
 		});
+		
 		dataGrid.addColumn(statusColumn, "Status/Risk");
 		dataGrid.setColumnWidth(statusColumn, "45px");
-		
+
 		// Submitter 
 		final Column<T, String> submitterColumn = new Column<T, String>(
 				new TextCell()) {
+			
 			@Override
 			public String getValue(T object) {
 				return ((AppInfoGwt) object).ownerName;
 			}
+			
 		};
+		
 		submitterColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(submitterColumn, new Comparator<T>() {
+			
 			@Override
 			public int compare(T o1, T o2) {
 				return ((AppInfoGwt) o1).ownerName
 						.compareTo(((AppInfoGwt) o2).ownerName);
 			}
+			
 		});
+		
 		submitterColumn
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dataGrid.addColumn(submitterColumn, "User");
 		dataGrid.setColumnWidth(submitterColumn, "60px");
-		
+
 		// Submit Time
 		final Column<T, String> submitTimeColumn = new Column<T, String>(
 				new TextCell()) {
+			
 			@Override
 			public String getValue(T object) {
 				final AppInfoGwt appInfo = (AppInfoGwt) object;
 				final String dateString = dateTimeFormat.format(appInfo.submitTime);
 				return dateString;
 			}
+			
 		};
+		
 		submitTimeColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(submitTimeColumn, new Comparator<T>() {
+			
 			@Override
 			public int compare(T o1, T o2) {
 				final AppInfoGwt appInfo1 = (AppInfoGwt) o1;
@@ -281,23 +323,30 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 				final String dateString2 = dateTimeFormat.format(appInfo2.submitTime);
 				return dateString1.compareTo(dateString2);
 			}
+			
 		});
+		
 		submitTimeColumn
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dataGrid.addColumn(submitTimeColumn, "Date/Time");
 		dataGrid.setColumnWidth(submitTimeColumn, "75px");
+		
 	}
+
 	
 	/** Set the number of rows shown on each page. */
 	public void setPageSize(int pageSize) {
 		this.dataGrid.setPageSize(pageSize);
 	}
 
+	
 	public void setAppVetHostUrl(String appVetHostUrl) {
 		this.appVetHostUrl = appVetHostUrl;
 	}
+
 	
-	public void setAppVetProxyUrl(String appVetProxyUrl) {
-		this.appVetProxyUrl = appVetProxyUrl;
-	}
+//	public void setAppVetProxyUrl(String appVetProxyUrl) {
+//		this.appVetProxyUrl = appVetProxyUrl;
+//	}
+	
 }

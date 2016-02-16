@@ -160,7 +160,7 @@ public class Database {
 			while (resultSet.next()) {
 				String appId = resultSet.getString(1);
 				AppInfo appInfo = new AppInfo(appId);
-				appInfo.log.warn("Found app in interrupted PROCESSING state. Changing status to ERROR.");
+				appInfo.log.warn("Found app " + appId + " in interrupted PROCESSING state. Changing status to ERROR.");
 				update ("UPDATE apps SET appstatus='" + AppStatus.ERROR.name() + "' "
 				+ "WHERE appId='" + appId + "'");
 			}

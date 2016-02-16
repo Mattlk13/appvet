@@ -271,7 +271,7 @@ public class ToolMgr implements Runnable {
 		try {
 			// Wait for tool adapter thread to shut down.
 			tool.thread.join(TOOL_ADAPTER_SHUTDOWN_TIMEOUT);
-			appInfo.log.info(tool.toolId + " shutting down.");
+			//appInfo.log.info(tool.toolId + " shutting down.");
 		} catch (final InterruptedException e) {
 			appInfo.log.warn(tool.toolId + " shut down after "
 					+ AppVetProperties.APP_PROCESSING_TIMEOUT + "ms timeout");
