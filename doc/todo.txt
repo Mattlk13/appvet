@@ -4,3 +4,7 @@ The following are designated as to-do:
   This will entail removing/modifying various classes as well as simplifying
   the schema for tool adapters (and possibly the database).
   
+  - Remove PROXY_URL
+  
+  
+  

@@ -851,7 +851,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appVetMenuBar.setFocusOnHoverEnabled(true);
 
 		final MenuBar userMenuBar = new MenuBar(true);
-		userMenuBar.setFocusOnHoverEnabled(true);
+		userMenuBar.setFocusOnHoverEnabled(false);
 
 		accountMenuItem = new MenuItem(userInfo.getFirstName(), true,
 				userMenuBar);
@@ -945,7 +945,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appVetMenuBar.addItem(accountMenuItem);
 		accountMenuItem.setHeight("");
 		final MenuBar helpMenuBar = new MenuBar(true);
-		helpMenuBar.setFocusOnHoverEnabled(true);
+		helpMenuBar.setFocusOnHoverEnabled(false);
 
 		final MenuItem helpMenuItem = new MenuItem("Help", true, helpMenuBar);
 		helpMenuBar.setHeight("");
@@ -1308,9 +1308,9 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		submitButton.setSize("80px", "");
 		appsListTable = new AppsListPagingDataGrid<AppInfoGwt>();
+		appsListTable.dataGrid.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
+		appsListTable.dataGrid.setFocus(true);
 		appsListTable.setPageSize(configInfo.getNumRowsAppsList());
-		appsListTable.dataGrid
-				.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 		appsListTable.dataGrid.setStyleName("dataGrid");
 		dockPanel_1.add(appsListTable, DockPanel.CENTER);
 		dockPanel_1.setCellWidth(appsListTable, "100%");
