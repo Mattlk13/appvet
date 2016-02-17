@@ -994,8 +994,8 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		submitButton.setSize("80px", "");
 		appsListTable = new AppsListPagingDataGrid<AppInfoGwt>();
-		appsListTable.dataGrid.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
-		appsListTable.dataGrid.setFocus(true);
+		appsListTable.dataGrid.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
+		appsListTable.dataGrid.setFocus(false);
 		appsListTable.setPageSize(configInfo.getNumRowsAppsList());
 		appsListTable.dataGrid.setStyleName("dataGrid");
 		dockPanel_1.add(appsListTable, DockPanel.CENTER);
