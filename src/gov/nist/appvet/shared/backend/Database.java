@@ -927,6 +927,10 @@ public class Database {
 				+ "'");
 	}
 	
+	public static String getAppStatus(String appid) {
+		return getString("SELECT appstatus FROM apps " + "where appid='" + appid
+				+ "'");
+	}	
 
 	public static String getPackageName(String appid) {
 		return getString("SELECT packagename FROM apps " + "where appid='"

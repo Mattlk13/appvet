@@ -1149,6 +1149,7 @@ public class AppVetServlet extends HttpServlet {
 
 		final boolean reportSaved = FileUtil.saveReportUpload(appInfo.appId,
 				reportName, appInfo.fileItem);
+		
 		if (reportSaved) {
 			// Override reports with final LOW/MODERATE/HIGH risk decision.
 			if (appInfo.toolRisk == null) {

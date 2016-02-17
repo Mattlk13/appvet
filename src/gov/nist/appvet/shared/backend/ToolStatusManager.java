@@ -83,15 +83,24 @@ public class ToolStatusManager {
 			log.error("Unknown operating system encountered. Returning.");
 			return false;
 		}
-		boolean updatedApp = Database.setLastUpdated(appId);
-		if (updatedApp) {
-			log.debug("Set updated flag for app " + appId);
-			return computeAppStatus(os, appId);
+		
+//		if (updatedApp) {
+//			log.debug("Set updated flag for app " + appId);
+//			return computeAppStatus(os, appId);
+//		} else {
+//			log.error("Could not set updated flag for app " + appId);
+//			return false;
+//		}
+		
+		if (computeAppStatus(os, appId)) {
+			return Database.setLastUpdated(appId);
+
 		} else {
-			log.error("Could not set updated flag for app " + appId);
 			return false;
 		}
+
 	}
+	
 
 	/**
 	 * @return true if app status was computed successfully, false otherwise.
