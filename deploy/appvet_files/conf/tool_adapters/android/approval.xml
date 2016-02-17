@@ -21,8 +21,13 @@
     		<appvet:ReportTemplateURL>https://appsec.nist.gov/appvet_images/report_template.pdf</appvet:ReportTemplateURL>	
     -->
     
-		<appvet:IconURL>images/icon-approve.png</appvet:IconURL>
-
+   <!--
+    <appvet:Icon>
+    	<appvet:URL>http://www.example.com/logo.png</appvet:URL>
+    	<appvet:AltText>LogoName</appvet:AltText>
+    </appvet:Icon>	
+    -->
+    
 	</appvet:Description>
 	
 	<appvet:Protocol>

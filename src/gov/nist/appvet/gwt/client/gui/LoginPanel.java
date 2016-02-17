@@ -90,7 +90,7 @@ public class LoginPanel extends DockLayoutPanel {
 		Image orgLogo = new Image("../appvet_images/org_logo.png");
 		orgLogo.setSize("120px", "120px");
 		orgLogo.setAltText("Organizational logo");
-		orgLogo.setTitle("Organizational logo");
+		//orgLogo.setTitle("Organizational logo");
 		orgLogo.setStyleName("nistLoginLogo");
 		horizontalPanel.add(orgLogo);
 		horizontalPanel.setCellHorizontalAlignment(orgLogo,
@@ -109,7 +109,7 @@ public class LoginPanel extends DockLayoutPanel {
 
 		Image image = new Image("images/nist_logo_darkgrey.png");
 		image.setAltText("NIST logo");
-		image.setTitle("NIST logo");
+		//image.setTitle("NIST logo");
 		horizontalPanel_1.add(image);
 		horizontalPanel_1.setCellHorizontalAlignment(image,
 				HasHorizontalAlignment.ALIGN_RIGHT);
@@ -151,7 +151,7 @@ public class LoginPanel extends DockLayoutPanel {
 		verticalPanel.setSize("300px", "90px");
 
 		final Image appVetImage = new Image("images/appvet_logo.png");
-		appVetImage.setTitle("AppVet Mobile App Vetting System");
+		//appVetImage.setTitle("AppVet Mobile App Vetting System");
 		appVetImage.setAltText("AppVet Mobile App Vetting System");
 		appVetImage.setStyleName("loginPanelLogo");
 		verticalPanel.add(appVetImage);
@@ -353,11 +353,11 @@ public class LoginPanel extends DockLayoutPanel {
 				} else {
 					final AppVetPanel appVetPanel = new AppVetPanel(
 							Unit.PX, configInfo, appsList);
-					appVetPanel.setTitle("AppVet panel");
+					//appVetPanel.setTitle("AppVet panel");
 					final RootLayoutPanel rootLayoutPanel = RootLayoutPanel
 
 							.get();
-					rootLayoutPanel.setTitle("Root panel");
+					//rootLayoutPanel.setTitle("Root panel");
 					rootLayoutPanel.clear();
 					rootLayoutPanel.add(appVetPanel);
 				}

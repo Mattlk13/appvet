@@ -250,6 +250,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					}
 					toolInfo.setReportTemplateURL(androidTool.reportTemplateURL);
 					toolInfo.setIconURL(androidTool.iconURL);
+					toolInfo.setIconAltText(androidTool.iconAltText);
 					toolInfo.setReportFileType(androidTool.reportFileType
 							.name());
 					tools.add(toolInfo);
@@ -452,6 +453,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		toolStatusGwt.setToolType(tool.toolType);
 		toolStatusGwt.setRestrictionType(tool.restrictionType);
 		toolStatusGwt.setIconURL(tool.iconURL);
+		toolStatusGwt.setIconAltText(tool.iconAltText);
 		toolStatusGwt.setToolDisplayName(websiteHrefTag);
 		boolean toolCompleted = false;
 		final ToolStatus toolStatus = ToolStatusManager.getToolStatus(os,

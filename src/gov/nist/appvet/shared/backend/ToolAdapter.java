@@ -85,6 +85,7 @@ public class ToolAdapter implements Runnable {
 	public AppInfo appInfo = null;
 	public String reportTemplateURL = null;
 	public String iconURL = null;
+	public String iconAltText = null;
 
 	public ToolAdapter(File configFile) {
 
@@ -135,11 +136,18 @@ public class ToolAdapter implements Runnable {
 		}
 		
 		// Report icon (optional
-		iconURL = xml.getXPathValue("/ToolAdapter/Description/IconURL");
+		iconURL = xml.getXPathValue("/ToolAdapter/Description/Icon/URL");
 		if (iconURL != null) {
 			log.debug("Icon URL: " + iconURL);
 		} else {
-			//log.warn("Icon URL for tool '" + toolId + "' is null");
+			log.warn("Icon URL for tool '" + toolId + "' is null");
+		}
+		
+		iconAltText = xml.getXPathValue("/ToolAdapter/Description/Icon/AltText");
+		if (iconAltText != null) {
+			log.debug("Icon ALT Text: " + iconAltText);
+		} else {
+			log.warn("Icon ALT Text for tool '" + toolId + "' is null");
 		}
 		
 		if (authenticationRequired) {

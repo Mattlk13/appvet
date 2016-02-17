@@ -58,7 +58,7 @@ public class AboutDialogBox extends DialogBox {
 		dialogVPanel.setCellWidth(verticalPanel, "100%");
 		verticalPanel.setWidth("350px");
 		final Image image = new Image("images/appvet_logo.png");
-		image.setTitle("AppVet Mobile App Vetting System");
+		//image.setTitle("AppVet Mobile App Vetting System");
 		image.setAltText("AppVet Mobile App Vetting System");
 		verticalPanel.add(image);
 		verticalPanel.setCellHorizontalAlignment(image,

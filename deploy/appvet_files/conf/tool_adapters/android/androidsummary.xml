@@ -20,9 +20,12 @@ xsi:schemaLocation="http://appvet.github.io/appvet/schemas/ToolAdapter.xsd ">
    <!-- 
     <appvet:ReportTemplateURL>https://appsec.nist.gov/appvet_images/report_template.pdf</appvet:ReportTemplateURL>	
     -->
-    
-   <!-- 
-    <appvet:IconURL>http://cdn.flaticon.com/png/256/47152.png</appvet:IconURL>	
+      
+   <!--
+    <appvet:Icon>
+    	<appvet:URL>http://www.example.com/logo.png</appvet:URL>
+    	<appvet:AltText>LogoName</appvet:AltText>
+    </appvet:Icon>	
     -->
     	
   </appvet:Description>

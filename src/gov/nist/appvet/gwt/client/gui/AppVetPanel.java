@@ -166,321 +166,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		public void onSelectionChange(SelectionChangeEvent event) {
 			final AppInfoGwt selectedApp = appSelectionModel
 					.getSelectedObject();
-
 			displayAppInfo(selectedApp);
-			
-			//TODO
-//			// Show selected app info results
-//			if (selectedApp != null) {
-//				appVetServiceAsync.getToolsResults(selectedApp.os, sessionId,
-//						selectedApp.appId,
-//						new AsyncCallback<List<ToolStatusGwt>>() {
-//
-//							@Override
-//							public void onFailure(Throwable caught) {
-//								showMessageDialog("AppVet Error",
-//										"System error retrieving app info",
-//										true);
-//							}
-//
-//							@Override
-//							public void onSuccess(
-//									List<ToolStatusGwt> toolsResults) {
-//
-//								if ((toolsResults == null)
-//										|| toolsResults.isEmpty()) {
-//									showMessageDialog("AppVet Error: ",
-//											"Could not retrieve app info.",
-//											true);
-//								} else {
-//									String defaultIcon = null;
-//
-//									if (selectedApp.os == DeviceOS.ANDROID) {
-//										defaultIcon = "default_android_large.png";
-//									} else if (selectedApp.os == DeviceOS.IOS) {
-//										defaultIcon = "default_ios_large.png";
-//									}
-//
-//									String appNameHtml = null;
-//									// Set app icon
-//									appInfoIcon.setVisible(true);
-//									appInfoIcon.setAltText("App Icon");
-//
-//									if (selectedApp.appStatus == AppStatus.REGISTERING) {
-//										// log.info("Displaying REGISTERING");
-//										iconVersion++;
-//										String URL = null;
-//										if (PROXY_URL != null
-//												&& !PROXY_URL.isEmpty()) {
-//											URL = PROXY_URL;
-//										} else {
-//											URL = HOST_URL;
-//										}
-//
-//										final String iconPath = URL
-//												+ "/appvet_images/"
-//												+ defaultIcon + "?v"
-//												+ iconVersion;
-//										appInfoIcon.setUrl(iconPath);
-//										appNameHtml = "<div id=\"appNameInfo\">"
-//												+ "Unknown" + "</div>";
-//										appInfoName.setHTML(appNameHtml);
-//										toolResultsHtml
-//												.setHTML("Waiting for data...");
-//										appInfoPackage
-//												.setHTML("<b>Package: </b>N/A");
-//										appInfoVersion
-//												.setHTML("<b>Version: </b>N/A");
-//										return;
-//									} else if (selectedApp.appStatus == AppStatus.PENDING) {
-//										// log.info("Displaying PENDING");
-//										String URL = null;
-//										if (PROXY_URL != null
-//												&& !PROXY_URL.isEmpty()) {
-//											URL = PROXY_URL;
-//										} else {
-//											URL = HOST_URL;
-//										}
-//
-//										final String iconPath = URL
-//												+ "/appvet_images/"
-//												+ defaultIcon;
-//										appInfoIcon.setUrl(iconPath);
-//									} else if (selectedApp.appStatus == AppStatus.PROCESSING) {
-//										// log.info("Displaying PROCESSING");
-//										String URL = null;
-//										if (PROXY_URL != null
-//												&& !PROXY_URL.isEmpty()) {
-//											URL = PROXY_URL;
-//										} else {
-//											URL = HOST_URL;
-//										}
-//
-//										iconVersion++;
-//										final String iconPath = URL
-//												+ "/appvet_images/"
-//												+ selectedApp.appId + ".png?v"
-//												+ iconVersion;
-//										appInfoIcon.setUrl(iconPath);
-//									} else {
-//										// log.info("Displaying OTHER");
-//										String URL = null;
-//										if (PROXY_URL != null
-//												&& !PROXY_URL.isEmpty()) {
-//											URL = PROXY_URL;
-//										} else {
-//											URL = HOST_URL;
-//										}
-//
-//										final String iconPath = URL
-//												+ "/appvet_images/"
-//												+ selectedApp.appId + ".png?v";
-//										appInfoIcon.setUrl(iconPath);
-//									}
-//
-//									String appName = null;
-//									
-//									if (selectedApp.appName == null) {
-//										appName = "Retrieving...";
-//									} else {
-//										appName = selectedApp.appName;
-//									}
-//
-//									/* Set app status */
-//									if ((selectedApp.appStatus == AppStatus.NA)
-//											|| (selectedApp.appStatus == AppStatus.ERROR)
-//											|| (selectedApp.appStatus == AppStatus.HIGH)
-//											|| (selectedApp.appStatus == AppStatus.MODERATE)
-//											|| (selectedApp.appStatus == AppStatus.LOW)) {
-//										appNameHtml = "<div id=\"appNameInfo\">"
-//												+ appName + "</div>";
-//										uploadReportButton.setEnabled(true);
-//										deleteButton.setEnabled(true);
-//										downloadReportsButton.setEnabled(true);
-//										downloadAppButton.setEnabled(true);
-//									} else {
-//										appNameHtml = "<div id=\"appNameInfo\">"
-//												+ appName + "</div>";
-//										downloadReportsButton.setEnabled(false);
-//									}
-//
-//									appInfoName.setHTML(appNameHtml);
-//									if ((selectedApp.packageName == null)
-//											|| selectedApp.packageName
-//													.equals("")) {
-//										appInfoPackage
-//												.setHTML("<b>Package: </b>N/A");
-//									} else {
-//										appInfoPackage
-//												.setHTML("<b>Package: </b>"
-//														+ selectedApp.packageName);
-//									}
-//
-//									if ((selectedApp.versionName == null)
-//											|| selectedApp.versionName
-//													.equals("")) {
-//										appInfoVersion
-//												.setHTML("<b>Version: </b>N/A");
-//									} else {
-//										appInfoVersion
-//												.setHTML("<b>Version: </b>"
-//														+ selectedApp.versionName);
-//									}
-//
-//									/* Get tool results */
-//									final String htmlToolResults = getHtmlToolResults(
-//											selectedApp.appId, toolsResults);
-//									toolResultsHtml.setHTML(htmlToolResults);
-//									logButton.setEnabled(true);
-//								}
-//							}
-//
-//							// Display all reports
-//							public String getHtmlToolResults(String appId,
-//									List<ToolStatusGwt> toolResults) {
-//								/* Get summary report */
-//								String statuses = "<hr><h3 title=\"Overview\" id=\"appInfoSectionHeader\">Overview</h3>\n";
-//								int summaryCount = 0;
-//
-//								for (int i = 0; i < toolResults.size(); i++) {
-//									ToolType analysisType = toolResults.get(i)
-//											.getToolType();
-//
-//									if (analysisType == ToolType.SUMMARY) {
-//										summaryCount++;
-//										statuses += getToolStatusHtmlDisplay(toolResults
-//												.get(i));
-//									}
-//								}
-//
-//								if (summaryCount == 0) {
-//									statuses += getNAStatus();
-//								}
-//
-//								/* Get pre-processing analysis results */
-//								statuses += "<h3 title=\"App Metadata\" id=\"appInfoSectionHeader\">App Metadata</h3>\n";
-//								int preprocessorToolCount = 0;
-//
-//								for (int i = 0; i < toolResults.size(); i++) {
-//									ToolType toolType = toolResults.get(i)
-//											.getToolType();
-//
-//									if (toolType == ToolType.PREPROCESSOR) {
-//										preprocessorToolCount++;
-//										statuses += getPreprocessorStatusHtmlDisplay(toolResults
-//												.get(i));
-//									}
-//								}
-//
-//								if (preprocessorToolCount == 0) {
-//									statuses += getNAStatus();
-//								}
-//
-//								// Get tool and manually-uploaded results.
-//								statuses += "<h3 title=\"Tool Analyses\"  id=\"appInfoSectionHeader\">Tool Analyses</h3>\n";
-//								int analysisToolCount = 0;
-//
-//								for (int i = 0; i < toolResults.size(); i++) {
-//									ToolType toolType = toolResults.get(i)
-//											.getToolType();
-//
-//									if (toolType == ToolType.TESTTOOL
-//											|| toolType == ToolType.REPORT) {
-//										analysisToolCount++;
-//										statuses += getToolStatusHtmlDisplay(toolResults
-//												.get(i));
-//									}
-//								}
-//
-//								if (analysisToolCount == 0) {
-//									statuses += getNAStatus();
-//								}
-//
-//								/* Get audit results */
-//								statuses += "<h3 title=\"Final Organization Determination\" id=\"appInfoSectionHeader\">Final Organization Determination</h3>\n";
-//								int auditCount = 0;
-//
-//								for (int i = 0; i < toolResults.size(); i++) {
-//									ToolType toolType = toolResults.get(i)
-//											.getToolType();
-//
-//									if (toolType == ToolType.AUDIT) {
-//										auditCount++;
-//										statuses += getToolStatusHtmlDisplay(toolResults
-//												.get(i));
-//									}
-//								}
-//
-//								if (auditCount == 0) {
-//									statuses += getNAStatus();
-//								}
-//
-//								return statuses;
-//							}
-//
-//							public String getNAStatus() {
-//								return "<table>\n"
-//										+ "<tr>\n"
-//										+ "<td title=\"NA status\" align=\"left\" style='color: dimgray; size:18; weight: bold'width=\"185\">"
-//										+ "N/A" + "</td>\n" + "</tr>\n"
-//										+ "</table>\n";
-//							}
-//
-//							public String getPreprocessorStatusHtmlDisplay(
-//									ToolStatusGwt toolStatus) {
-//								String status = null;
-//
-//								if (toolStatus.getStatusHtml().indexOf("LOW") > -1) {
-//									status = "<div id=\"tabledim\" style='color: black'>COMPLETED</div>";
-//								} else {
-//									status = toolStatus.getStatusHtml();
-//								}
-//								
-//								String toolIconURL = null;
-//								if (toolStatus.getIconURL() != null) {
-//									// Check for custom icon URL defined in tool adapter config file
-//									toolIconURL = toolStatus.getIconURL();
-//								} else {
-//									// Use default icons
-//									toolIconURL = toolStatus.getToolType().getDefaultIconURL();
-//								}
-//
-//								// To over on table, add 'class=\"hovertable\"
-//								return getToolRowHtml(toolIconURL, toolStatus);
-//							}
-//
-//							public String getToolStatusHtmlDisplay(
-//									ToolStatusGwt toolStatus) {
-//								String toolIconURL = null;
-//								
-//								if (toolStatus.getIconURL() != null) {
-//									toolIconURL = toolStatus.getIconURL();
-//								} else {
-//									toolIconURL = toolStatus.getToolType().getDefaultIconURL();
-//								}
-//								
-//								return getToolRowHtml(toolIconURL, toolStatus);
-//							}
-//							
-//							private String getToolRowHtml(String toolIconURL, ToolStatusGwt toolStatus) {
-//								return "<table>"
-//										+ "<tr>\n"
-//										+ "<td>"
-//										+ "<img class=\"toolimages\" src=\"" + toolIconURL + "\" alt=\"Tool/Report\"> "
-//										+ "</td>\n"
-//										+ "<td title=\"Tool name\" align=\"left\" width=\"200\">"
-//										+ toolStatus.getToolDisplayName()
-//										+ "</td>\n"
-//										+ "<td title=\"Tool status\" align=\"left\" width=\"140\">"
-//										+ toolStatus.getStatusHtml()
-//										+ "</td>\n"
-//										+ "<td title=\"Tool report\" align=\"left\" width=\"45\">"
-//										+ toolStatus.getReport() + "</td>\n"
-//										+ "</tr>\n" + "</table>";
-//							}
-//							
-//						});
-//			}
 		}
 	}
 
@@ -594,9 +280,9 @@ public class AppVetPanel extends DockLayoutPanel {
 		
 		// Go back to AppVet login screen
 		final LoginPanel loginPanel = new LoginPanel(Unit.PX);
-		loginPanel.setTitle("Login panel");
+		//loginPanel.setTitle("Login panel");
 		final RootLayoutPanel rootLayoutPanel = RootLayoutPanel.get();
-		rootLayoutPanel.setTitle("Root panel");
+		//rootLayoutPanel.setTitle("Root panel");
 		rootLayoutPanel.clear();
 		rootLayoutPanel.add(loginPanel);
 		
@@ -757,6 +443,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		northAppVetPanel.setCellWidth(horizontalPanel_5, "100%");
 
 		Image image = new Image("images/appvet_logo.png");
+		image.setAltText("AppVet");
 		horizontalPanel_5.add(image);
 		final HorizontalPanel horizontalPanel_6 = new HorizontalPanel();
 		horizontalPanel_6
@@ -825,7 +512,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		orgLogo.setSize("120px", "120px");
 		String orgLogoAltText = configInfo.getOrgLogoAltText();
 		orgLogo.setAltText(orgLogoAltText);
-		orgLogo.setTitle(orgLogoAltText);
+		//orgLogo.setTitle(orgLogoAltText);
 		horizontalPanel_5.add(orgLogo);
 		horizontalPanel_5.setCellVerticalAlignment(orgLogo,
 				HasVerticalAlignment.ALIGN_BOTTOM);
@@ -927,11 +614,10 @@ public class AppVetPanel extends DockLayoutPanel {
 											pollingTimer.cancel();
 											final LoginPanel loginPanel = new LoginPanel(
 													Unit.PX);
-											loginPanel.setTitle("Login panel");
+											//loginPanel.setTitle("Login panel");
 											final RootLayoutPanel rootLayoutPanel = RootLayoutPanel
 													.get();
-											rootLayoutPanel
-													.setTitle("Root panel");
+											//rootLayoutPanel.setTitle("Root panel");
 											rootLayoutPanel.clear();
 											rootLayoutPanel.add(loginPanel);
 											System.gc();
@@ -991,7 +677,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		statusMessageLabel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		statusMessageLabel.setSize("420px", "18px");
-		statusMessageLabel.setTitle("Status message");
+		//statusMessageLabel.setTitle("Status message");
 		
 		Label lblNewLabel = new Label("");
 		horizontalPanel_3.add(lblNewLabel);
@@ -1150,11 +836,11 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 
 		final HorizontalSplitPanel centerAppVetSplitPanel = new HorizontalSplitPanel();
-		centerAppVetSplitPanel.setTitle("AppVet split pane");
+		//centerAppVetSplitPanel.setTitle("AppVet split pane");
 		centerAppVetSplitPanel.setSplitPosition("65%");
 		centerAppVetSplitPanel.setSize("100%", "");
 		final SimplePanel leftCenterPanel = new SimplePanel();
-		leftCenterPanel.setTitle("AppVet apps list pane");
+		//leftCenterPanel.setTitle("AppVet apps list pane");
 
 		centerAppVetSplitPanel.setLeftWidget(leftCenterPanel);
 		leftCenterPanel.setSize("100%", "");
@@ -1164,7 +850,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		leftCenterPanel.setWidget(dockPanel_1);
 		dockPanel_1.setSize("100%", "");
 		rightCenterPanel = new SimplePanel();
-		rightCenterPanel.setTitle("AppVet app info panel");
+		//rightCenterPanel.setTitle("AppVet app info panel");
 
 		centerAppVetSplitPanel.setRightWidget(rightCenterPanel);
 		rightCenterPanel.setSize("", "");
@@ -1217,7 +903,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsListButtonPanel.setStyleName("appListButtonPanel");
 		appsListButtonPanel.setSize("100%", "");
 		appsLabel = new InlineLabel("Apps");
-		appsLabel.setTitle("Apps");
+		//appsLabel.setTitle("Apps");
 		appsLabel.setText("Apps");
 		appsLabel.setStyleName("AppsLabel");
 		appsListButtonPanel.add(appsLabel);
@@ -1339,7 +1025,7 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		Image nistLogo = new Image("images/nist_logo_darkgrey.png");
 		nistLogo.setAltText("NIST logo");
-		nistLogo.setTitle("NIST logo");
+		//nistLogo.setTitle("NIST logo");
 		horizontalPanel_2.add(nistLogo);
 		horizontalPanel_2.setCellVerticalAlignment(nistLogo,
 				HasVerticalAlignment.ALIGN_BOTTOM);
@@ -1751,11 +1437,14 @@ public class AppVetPanel extends DockLayoutPanel {
 												true);
 									} else {
 										String defaultIcon = null;
-
+										String altText = null;
+										
 										if (selectedApp.os == DeviceOS.ANDROID) {
 											defaultIcon = "android-icon-gray.png";
+											altText = "Android app";
 										} else if (selectedApp.os == DeviceOS.IOS) {
 											defaultIcon = "apple-icon-gray.png";
+											altText = "iOS app";
 										}
 
 										String appNameHtml = null;
@@ -1778,6 +1467,7 @@ public class AppVetPanel extends DockLayoutPanel {
 													+ defaultIcon + "?v"
 													+ iconVersion;
 											appInfoIcon.setUrl(iconPath);
+											appInfoIcon.setAltText(altText);
 											appNameHtml = "<div id=\"appNameInfo\">"
 													+ "Unknown" + "</div>";
 											appInfoName.setHTML(appNameHtml);
@@ -1801,6 +1491,7 @@ public class AppVetPanel extends DockLayoutPanel {
 											final String iconPath = "images/"
 													+ defaultIcon;
 											appInfoIcon.setUrl(iconPath);
+											appInfoIcon.setAltText(altText);
 										} else if (selectedApp.appStatus == AppStatus.PROCESSING) {
 											//log.info("Displaying PROCESSING");
 											String URL = null;
@@ -1815,6 +1506,7 @@ public class AppVetPanel extends DockLayoutPanel {
 											final String iconPath = "images/"
 													+ defaultIcon;
 											appInfoIcon.setUrl(iconPath);
+											appInfoIcon.setAltText(altText);
 										} else {
 											//log.info("Displaying OTHER STATUS: " + selectedApp.appStatus.name());
 											String URL = null;
@@ -1829,6 +1521,7 @@ public class AppVetPanel extends DockLayoutPanel {
 													+ "/appvet_images/"
 													+ selectedApp.appId + ".png";
 											appInfoIcon.setUrl(iconPath);
+											appInfoIcon.setAltText(selectedApp.appName);
 										}
 
 										String appName = null;
@@ -1990,44 +1683,53 @@ public class AppVetPanel extends DockLayoutPanel {
 									}
 									
 									String toolIconURL = null;
+									String toolIconAltText = null;
 									if (toolStatus.getIconURL() != null) {
 										// Check for custom icon URL defined in tool adapter config file
 										toolIconURL = toolStatus.getIconURL();
+										toolIconAltText = toolStatus.getIconAltText();
 									} else {
 										// Use default icons
 										toolIconURL = toolStatus.getToolType().getDefaultIconURL();
+										toolIconAltText = toolStatus.getToolType().getDefaultAltText();
 									}
 
 									// To over on table, add 'class=\"hovertable\"
-									return getToolRowHtml(toolIconURL, toolStatus);
+									return getToolRowHtml(toolIconURL, toolIconAltText, toolStatus);
 								}
 
 								public String getToolStatusHtmlDisplay(
 										ToolStatusGwt toolStatus) {
 									String toolIconURL = null;
+									String toolIconAltText = null;
 									
 									if (toolStatus.getIconURL() != null) {
 										toolIconURL = toolStatus.getIconURL();
+										toolIconAltText = toolStatus.getIconAltText();
 									} else {
 										toolIconURL = toolStatus.getToolType().getDefaultIconURL();
+										toolIconAltText = toolStatus.getToolType().getDefaultAltText();
 									}
 									
-									return getToolRowHtml(toolIconURL, toolStatus);
+									return getToolRowHtml(toolIconURL, toolIconAltText, toolStatus);
 								}
 								
-								private String getToolRowHtml(String toolIconURL, ToolStatusGwt toolStatus) {
+								private String getToolRowHtml(String toolIconURL, String toolIconAltText, ToolStatusGwt toolStatus) {
 									return "<table>"
 											+ "<tr>\n"
 											+ "<td>"
-											+ "<img class=\"toolimages\" src=\"" + toolIconURL + "\" alt=\"Tool/Report\"> "
+											+ "<img class=\"toolimages\" src=\"" + toolIconURL + "\" alt=\"" + toolIconAltText + "\"> "
 											+ "</td>\n"
-											+ "<td title=\"Tool name\" align=\"left\" width=\"200\">"
+											// Removed title="mytitle" from following td
+											+ "<td align=\"left\" width=\"200\">"
 											+ toolStatus.getToolDisplayName()
 											+ "</td>\n"
-											+ "<td title=\"Tool status\" align=\"left\" width=\"140\">"
+											// Removed title="mytitle" from following td
+											+ "<td align=\"left\" width=\"140\">"
 											+ toolStatus.getStatusHtml()
 											+ "</td>\n"
-											+ "<td title=\"Tool report\" align=\"left\" width=\"45\">"
+											// Removed title="mytitle" from following td
+											+ "<td align=\"left\" width=\"45\">"
 											+ toolStatus.getReport() + "</td>\n"
 											+ "</tr>\n" + "</table>";
 								}

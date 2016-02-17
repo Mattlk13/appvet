@@ -133,7 +133,7 @@ public class ReportUploadDialogBox extends DialogBox {
 		verticalPanel.add(hiddenToolRisk);
 
 		final Grid grid = new Grid(5, 2);
-		grid.setTitle("grid");
+		//grid.setTitle("grid");
 		grid.setCellPadding(5);
 		grid.setStyleName("grid");
 		verticalPanel.add(grid);

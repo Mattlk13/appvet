@@ -78,7 +78,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		appIdColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dataGrid.addColumn(appIdColumn, "ID");
 		dataGrid.setColumnWidth(appIdColumn, "43px");
-		dataGrid.setTitle("Apps list");
+		//dataGrid.setTitle("Apps list");
 
 		// Platform/OS Icon 
 		final SafeHtmlCell osIconCell = new SafeHtmlCell();
@@ -123,11 +123,14 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 
 				String defaultLargeAppIcon = null;
 				final DeviceOS os = ((AppInfoGwt) object).os;
-
+				String altText = null;
+				
 				if (os == DeviceOS.ANDROID) {
 					defaultLargeAppIcon = "android-icon-gray.png";
+					altText = "Android app";
 				} else if (os == DeviceOS.IOS) {
 					defaultLargeAppIcon = "apple-icon-gray.png";
+					altText = "iOS app";
 				}
 
 				final SafeHtmlBuilder sb = new SafeHtmlBuilder();
@@ -145,16 +148,19 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 							+ defaultLargeAppIcon;
 					
 					sb.appendHtmlConstant("<img width=\"20\" src=\"" + iconPath
-							+ "\" alt=\"App Icon\" />");
+							+ "\" alt=\"" + altText + "\" />");
 					//log.info("Displaying " + iconPath);
 				} else {
+					
 					iconVersion++;
 					String URL = appVetHostUrl;
 					final String iconPath = URL + "/appvet_images/"
-							+ appId + ".png";			
+							+ appId + ".png";	
 					
+					altText = ((AppInfoGwt) object).appName;
+
 					sb.appendHtmlConstant("<img width=\"20\" src=\"" + iconPath
-							+ "\" alt=\"App Icon\" />");
+							+ "\" alt=\"" + altText + "\" />");
 					//log.info("Displaying " + iconPath);
 
 				}

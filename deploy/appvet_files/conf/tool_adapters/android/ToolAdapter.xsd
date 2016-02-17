@@ -106,7 +106,7 @@
 			<xs:element name="ReportTemplateURL" type="xs:string"
 				maxOccurs="1" minOccurs="0">
 			</xs:element>
-			<xs:element name="IconURL" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="Icon" type="IconType" maxOccurs="1" minOccurs="0"></xs:element>
 			<xs:element name="AuthenticationParameters" type="xs:string"
 				maxOccurs="1" minOccurs="0">
 				<xs:annotation>
@@ -578,7 +578,29 @@ assessment. </xs:documentation>
 			</xs:choice>
 		</xs:sequence>
 	</xs:complexType>
-
+	
+	<xs:complexType name="IconType">
+		<xs:sequence>
+			<xs:element name="URL" type="xs:string" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The URL of the tool icon.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AltText" type="xs:string" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						The ALT text for the tool icon (required for 508 compliance).
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>	
+			
+			
+		</xs:sequence>
+	</xs:complexType>
 
 	<xs:complexType name="SubmitAppType">
 		<xs:choice>

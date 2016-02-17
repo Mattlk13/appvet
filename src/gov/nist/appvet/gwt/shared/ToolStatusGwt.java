@@ -34,7 +34,8 @@ public class ToolStatusGwt implements IsSerializable {
 	private RestrictionType restrictionType = null;
 	private String statusHtml = null;
 	private String report = null;
-	private String toolIconURL = null;
+	private String iconURL = null;
+	private String iconAltText = null;
 
 	public ToolStatusGwt() {
 	}
@@ -88,10 +89,18 @@ public class ToolStatusGwt implements IsSerializable {
 	}
 
 	public String getIconURL() {
-		return toolIconURL;
+		return iconURL;
 	}
 
 	public void setIconURL(String iconURL) {
-		this.toolIconURL = iconURL;
+		this.iconURL = iconURL;
+	}
+
+	public String getIconAltText() {
+		return iconAltText;
+	}
+
+	public void setIconAltText(String toolIconAltText) {
+		this.iconAltText = toolIconAltText;
 	}
 }

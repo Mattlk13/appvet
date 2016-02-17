@@ -201,10 +201,11 @@ public class UserListDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		dockLayoutPanel.setSize("", "380px");
 		usersListTable = new UsersListPagingDataGrid<UserInfo>();
+		usersListTable.dataGrid.setFocus(true);
 		usersListTable.setPageSize(numRowsUsersList);
 		usersListTable.dataGrid.setSize("342px", "342px");
 		usersListTable.dataGrid
-				.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
+				.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
 		usersListTable.dataGrid.setSelectionModel(usersSelectionModel);
 		dockLayoutPanel.add(usersListTable);
 		usersListTable.setWidth("");

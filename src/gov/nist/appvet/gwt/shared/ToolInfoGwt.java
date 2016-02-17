@@ -41,6 +41,7 @@ public class ToolInfoGwt implements IsSerializable {
 	private String restrictionType = null;
 	private String reportTemplateURL = null;
 	private String iconURL = null;
+	private String iconAltText = null;
 
 	public ToolInfoGwt() {
 	}
@@ -124,5 +125,13 @@ public class ToolInfoGwt implements IsSerializable {
 
 	public void setIconURL(String iconURL) {
 		this.iconURL = iconURL;
+	}
+
+	public String getIconAltText() {
+		return iconAltText;
+	}
+
+	public void setIconAltText(String iconAltText) {
+		this.iconAltText = iconAltText;
 	}
 }
