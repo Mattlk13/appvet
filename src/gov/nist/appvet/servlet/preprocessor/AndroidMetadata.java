@@ -465,10 +465,10 @@ public class AndroidMetadata {
 
 	private static void setIcon(AppInfo appInfo, String iconValue) {
 		File iconFile = null;
-		String defaultIcon = "default_android_large.png";
+		String defaultIcon = "android-icon-gray.png";
 		if ((iconValue == null) || iconValue.isEmpty()) {
 			appInfo.log.info("Could not locate app icon. Using default icon.");
-			iconFile = new File(AppVetProperties.APP_IMAGES + "/" + defaultIcon);
+			iconFile = new File("images/" + defaultIcon);
 		} else {
 			// Icon value will have the syntax '@'<directoryName>'/'<iconName>
 			appInfo.log.info("Found icon: " + iconValue);
@@ -483,8 +483,7 @@ public class AndroidMetadata {
 					// Use default icon
 					appInfo.log
 							.warn("No icon file found. Using default icon...");
-					iconFile = new File(AppVetProperties.APP_IMAGES + "/"
-							+ defaultIcon);
+					iconFile = new File("images/" + defaultIcon);
 				} else {
 					appInfo.log.debug("Found icon at: "
 							+ iconFile.getAbsolutePath());

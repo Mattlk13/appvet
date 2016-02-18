@@ -184,12 +184,11 @@ public class IOSMetadata {
 					appInfo.log.debug("Couldnt find icon for app " + appInfo.appId + ". Using default icon.");
 					String appIcon = null;
 					if (appInfo.os == DeviceOS.ANDROID) {
-						appIcon = "default_android_large.png";
+						appIcon = "android-icon-gray.png";
 					} else if (appInfo.os == DeviceOS.IOS) {
-						appIcon = "default_ios_large.png";
+						appIcon = "apple-icon-gray.png";
 					}
-					File sourceIcon = new File(AppVetProperties.APP_IMAGES
-							+ "/" + appIcon);
+					File sourceIcon = new File("images/" + appIcon);
 					if (!sourceIcon.exists()) {
 						appInfo.log.error("Default IOS or Android icon is missing from Tomcat/webapps/appvet_images. Aborting metadata processing.");
 						return false;

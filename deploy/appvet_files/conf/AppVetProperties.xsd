@@ -45,9 +45,6 @@
 					</xs:annotation>
 				</xs:element>
 
-				<xs:element name="UseSSO" type="xs:boolean"
-					maxOccurs="1" minOccurs="1">
-				</xs:element>
 				<xs:element name="OrgLogoAltText" type="xs:string"
 					maxOccurs="1" minOccurs="0">
 				</xs:element>

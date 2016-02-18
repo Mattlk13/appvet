@@ -33,7 +33,7 @@ public class ConfigInfoGwt implements IsSerializable {
 	private UserInfo userInfo = null;
 	private String hostname = null;
 	private String appVetHostUrl = null;
-	private String appvetProxyUrl = null; // Only used if AppVet behind proxy
+	//private String appvetProxyUrl = null; // Only used if AppVet behind proxy
 	private String appVetUrl = null;
 	private String appVetServletUrl = null;
 	private String appVetVersion = null;
@@ -54,9 +54,9 @@ public class ConfigInfoGwt implements IsSerializable {
 		return appVetHostUrl;
 	}
 	
-	public String getAppVetProxyUrl() {
-		return appvetProxyUrl;
-	}
+//	public String getAppVetProxyUrl() {
+//		return appvetProxyUrl;
+//	}
 
 	public String getAppVetServletUrl() {
 		return appVetServletUrl;
@@ -102,9 +102,9 @@ public class ConfigInfoGwt implements IsSerializable {
 		this.appVetHostUrl = appvetHostUrl;
 	}
 	
-	public void setAppVetProxyUrl(String appvetProxyUrl) {
-		this.appvetProxyUrl = appvetProxyUrl;
-	}
+//	public void setAppVetProxyUrl(String appvetProxyUrl) {
+//		this.appvetProxyUrl = appvetProxyUrl;
+//	}
 
 	public void setAppVetServletUrl(String appvetServletUrl) {
 		this.appVetServletUrl = appvetServletUrl;
@@ -154,13 +154,13 @@ public class ConfigInfoGwt implements IsSerializable {
 		this.tools = tools;
 	}
 
-	public String getAppvetProxyUrl() {
-		return appvetProxyUrl;
-	}
-
-	public void setAppvetProxyUrl(String appvetProxyUrl) {
-		this.appvetProxyUrl = appvetProxyUrl;
-	}
+//	public String getAppvetProxyUrl() {
+//		return appvetProxyUrl;
+//	}
+//
+//	public void setAppvetProxyUrl(String appvetProxyUrl) {
+//		this.appvetProxyUrl = appvetProxyUrl;
+//	}
 
 	public String getOrgLogoAltText() {
 		return orgLogoAltText;

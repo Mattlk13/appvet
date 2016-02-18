@@ -23,7 +23,9 @@
 		<ToConsole>true</ToConsole>
 	</Logging>
 
-	<UseSSO>false</UseSSO>
+	<!--  The element UseSSO is no longer used. 
+	      <UseSSO>false</UseSSO>
+	 -->
 
 	<OrgLogoAltText>My org logo ALT text!</OrgLogoAltText>
 	

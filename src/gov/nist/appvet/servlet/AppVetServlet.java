@@ -740,12 +740,12 @@ public class AppVetServlet extends HttpServlet {
 		String appIcon = null;
 		
 		if (appInfo.os == DeviceOS.ANDROID) {
-			appIcon = "default_android_large.png";
+			appIcon = "android-icon-gray.png";
 		} else if (appInfo.os == DeviceOS.IOS) {
-			appIcon = "default_ios_large.png";
+			appIcon = "apple-icon-gray.png";
 		}
 		
-		final String sourceIconPath = AppVetProperties.APP_IMAGES + "/"
+		final String sourceIconPath = "images/"
 				+ appIcon;
 		final String destIconPath = AppVetProperties.APP_IMAGES + "/"
 				+ appInfo.appId + ".png";
