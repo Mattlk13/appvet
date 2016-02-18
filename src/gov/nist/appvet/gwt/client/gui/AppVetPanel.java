@@ -51,7 +51,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
@@ -141,7 +140,6 @@ public class AppVetPanel extends DockLayoutPanel {
 	public final Label statusMessageLabel = new Label("");
 	private String SERVLET_URL = null;
 	private String HOST_URL = null;
-	//private String PROXY_URL = null; // TODO: Remove as it is not used
 	private ArrayList<ToolInfoGwt> tools = null;
 	private InlineLabel appsLabel = null;
 	private int iconVersion = 0;
@@ -151,6 +149,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	private MenuItem accountMenuItem = null;
 	public static boolean timeoutWarningMessage = false;
 
+	
 	class AppListHandler implements SelectionChangeEvent.Handler {
 
 		ConfigInfoGwt configInfo = null;
@@ -170,6 +169,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 	}
 
+	
 	class AppUploadFormHandler implements FormHandler {
 		AppUploadDialogBox appUploadDialog = null;
 		String apkFileName = null;
@@ -193,6 +193,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 	}
 
+	
 	class ReportUploadFormHandler implements FormHandler {
 		ReportUploadDialogBox reportUploadDialogBox = null;
 		String username = null;
@@ -245,6 +246,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 	}
 
+	
 	public static int[] getCenterPosition(
 			com.google.gwt.user.client.ui.UIObject object) {
 		final int windowWidth = Window.getClientWidth();
@@ -257,18 +259,17 @@ public class AppVetPanel extends DockLayoutPanel {
 		return position;
 	}
 
+	
 	public static void killDialogBox(DialogBox dialogBox) {
 		if (dialogBox != null) {
-			//log.log(Level.FINE, "Closing dialog box");
 			dialogBox.hide();
 			dialogBox = null;
-		} else {
-			//log.fine("Can't close dialog box. dialogBox is null");
-		}
+		} 
 	}
 
+	
 	public static void showExpiredSessionMessage() {
-		// Close any dialog boxes
+		// Close any open dialog boxes
 		killDialogBox(appUploadDialogBox);
 		killDialogBox(errorDialogBox);
 		killDialogBox(messageDialogBox);
@@ -298,6 +299,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 	}
 
+	
 	public static void showMessageDialog(String windowTitle, String message,
 			boolean isError) {
 		messageDialogBox = new MessageDialogBox(message, isError);
@@ -312,6 +314,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 	}
 
+	
 	public static void showTimeoutDialog(final long diff) {
 		killDialogBox(messageDialogBox);
 		timeoutWarningMessage = true;
@@ -341,9 +344,11 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 	}
 
+	
 	public static boolean validReportFileName(String selectedToolName,
 			String uploadedReportFileName, ArrayList<ToolInfoGwt> tools) {
 		String selectedToolRequiredFileType = null;
+		
 		for (int i = 0; i < tools.size(); i++) {
 			ToolInfoGwt tool = tools.get(i);
 			String toolName = tool.getName();
@@ -352,10 +357,12 @@ public class AppVetPanel extends DockLayoutPanel {
 				break;
 			}
 		}
+		
 		final String uploadedReportFileNameLowercase = uploadedReportFileName
 				.toLowerCase();
 		final String selectedToolRequiredFileTypeLowercase = selectedToolRequiredFileType
 				.toLowerCase();
+		
 		if (selectedToolRequiredFileTypeLowercase.endsWith("html")) {
 			if (!uploadedReportFileNameLowercase.endsWith("html")) {
 				showMessageDialog("Report Submission Error", selectedToolName
@@ -387,9 +394,11 @@ public class AppVetPanel extends DockLayoutPanel {
 				return false;
 			}
 		}
+		
 		return true;
 	}
 
+	
 	public AppVetPanel(Unit unit, final ConfigInfoGwt configInfo,
 			AppsListGwt initialApps) {
 		super(Unit.PX);
@@ -421,7 +430,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		setStyleName("mainDockPanel");
 		SERVLET_URL = configInfo.getAppVetServletUrl();
 		HOST_URL = configInfo.getAppVetHostUrl();
-		//PROXY_URL = configInfo.getAppvetProxyUrl();
 		appSelectionModel = new SingleSelectionModel<AppInfoGwt>();
 		appSelectionModel.addSelectionChangeHandler(new AppListHandler(this,
 				configInfo));
@@ -1055,15 +1063,6 @@ public class AppVetPanel extends DockLayoutPanel {
 					showMessageDialog("AppVet Error", "No app is selected",
 							true);
 				} else {
-					// Set tools in combo box
-					int osToolCount = 0;
-					for (int i = 0; i < tools.size(); i++) {
-						ToolInfoGwt tool = tools.get(i);
-						if (tool.getOs().equals(selected.os.name())) {
-							osToolCount++;
-						}
-					}
-					
 					reportUploadDialogBox = new ReportUploadDialogBox(
 							userInfo, sessionId, selected.appId,
 							SERVLET_URL, selected.os, tools);
@@ -1242,6 +1241,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		scheduleResize();
 	}
 	
+	
 	public void setAlertMessage(String username, SystemAlertType alertType, String alertMessage) {
 		SystemAlert alert = new SystemAlert();
 		alert.type = alertType;
@@ -1267,6 +1267,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 	}
 	
+	
 	public void clearAlertMessage(String username) {
 		appVetServiceAsync.clearAlertMessage(username, 
 				new AsyncCallback<Boolean>() {
@@ -1288,6 +1289,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 	}
 
+	
 	public void clearLog() {
 		appVetServiceAsync.clearLog(new AsyncCallback<Boolean>() {
 			@Override
@@ -1308,6 +1310,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 	}
 
+	
 	public void deleteApp(final DeviceOS os, final String appid,
 			final String username) {
 		appVetServiceAsync.deleteApp(os, appid, username,
@@ -1451,8 +1454,6 @@ public class AppVetPanel extends DockLayoutPanel {
 								if (selectedApp.appStatus == AppStatus.REGISTERING) {
 									//log.info("Displaying REGISTERING");
 									iconVersion++;
-									String URL = HOST_URL;
-
 									final String iconPath = "images/"
 											+ defaultIcon + "?v"
 											+ iconVersion;
@@ -1470,16 +1471,12 @@ public class AppVetPanel extends DockLayoutPanel {
 									return;
 								} else if (selectedApp.appStatus == AppStatus.PENDING) {
 									//log.info("Displaying PENDING");
-									String URL = HOST_URL;
-
 									final String iconPath = "images/"
 											+ defaultIcon;
 									appInfoIcon.setUrl(iconPath);
 									appInfoIcon.setAltText(altText);
 								} else if (selectedApp.appStatus == AppStatus.PROCESSING) {
 									//log.info("Displaying PROCESSING");
-									String URL = HOST_URL;
-
 									iconVersion++;
 									final String iconPath = "images/"
 											+ defaultIcon;
@@ -1720,6 +1717,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	
 	}
 
+	
 	public void pollServer(String username) {
 		final String user = username;
 		pollingTimer = new Timer() {
@@ -1736,6 +1734,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		pollingTimer.scheduleRepeating(POLLING_INTERVAL);
 	}
 
+	
 	public void resizeComponents() {
 		/**
 		 * The following variable is the main variable to adjust when changing
@@ -1750,26 +1749,17 @@ public class AppVetPanel extends DockLayoutPanel {
 		// First adjust apps list table
 		final int appsListButtonPanelHeight = appsListButtonPanel
 				.getOffsetHeight();
-		// log.info("-------------------------------------");
-		// log.info("appVetPanelHeight: " + appVetPanelHeight);
-		// log.info("NORTH_PANEL_HEIGHT: " + NORTH_PANEL_HEIGHT);
-		// log.info("SOUTH_PANEL_HEIGHT: " + SOUTH_PANEL_HEIGHT);
-		// log.info("appsListButtonPanelHeight: " + appsListButtonPanelHeight);
-		// log.info("MARGIN_HEIGHT: " + MARGIN_HEIGHT);
 
 		final int appsListTableHeight = appVetPanelHeight
 				- (int) NORTH_PANEL_HEIGHT - (int) SOUTH_PANEL_HEIGHT
 				- appsListButtonPanelHeight - MARGIN_HEIGHT;
-		// log.info("appsListTableHeight = " + appsListTableHeight + "px = "
-		// + " - " + (int) NORTH_PANEL_HEIGHT + " - "
-		// + (int) SOUTH_PANEL_HEIGHT + " - " + appsListButtonPanelHeight
-		// + " - " + MARGIN_HEIGHT);
 
 		appsListTable.setSize("100%", appsListTableHeight + "px");
 		appsListTable.dataGrid.redraw();
 
 	}
 
+	
 	// The size of the AppVet panel is 0 until displayed in rootlayoutpanel.
 	public void scheduleResize() {
 		final Timer resizeTimer = new Timer() {
@@ -1780,6 +1770,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		};
 		resizeTimer.schedule(250);
 	}
+	
 
 	public int search() {
 		searchMode = true;
@@ -1812,11 +1803,13 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 	}
 
+	
 	public void setAllApps() {
 		appsLabel.setText("Apps");
 		appsListTable.setDataList(allApps);
 	}
 
+	
 	/**
 	 * Check to make sure that the displayed app status is reflecting the latest
 	 * updated app status. This is needed since a race condition exists where an
@@ -1828,7 +1821,6 @@ public class AppVetPanel extends DockLayoutPanel {
 	 * @param numApps
 	 *            The number of apps, starting from the most recent, to check.
 	 */
-
 	public void refreshLastApp(List<AppInfoGwt> latestApps, int numAppsToCheck) {
 
 		ListDataProvider<AppInfoGwt> appsTableList = appsListTable
@@ -1927,6 +1919,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 	}
 	
+	
 	public void getAlertMessage() {
 		appVetServiceAsync.getAlertMessage(new AsyncCallback<SystemAlert>() {
 			
@@ -1957,6 +1950,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				});
 	}
 	
+	
 	public void updateSessionExpiration() {
 		appVetServiceAsync.updateSessionExpiration(sessionId,
 				sessionExpiration, new AsyncCallback<Date>() {
@@ -1982,6 +1976,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	}
 	
 
+	
 	public static void sessionTimeLeft(Date expirationTime) {
 		Date currentDate = new Date();
 		long diff = expirationTime.getTime() - currentDate.getTime();

@@ -190,7 +190,6 @@ public class ReportUploadDialogBox extends DialogBox {
 		toolNamesComboBox.setSize("231px", "22px");
 		statusLabel = new HTML("");
 		
-		
 		// Add tools to toolNamesComboBox. Note only ADMINS can submit
 		// SUMMARY reports while only ADMINs and all ANALYSTs can submit
 		// final determination reports (AUDITs).
