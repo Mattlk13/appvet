@@ -1406,7 +1406,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				new Date(System.currentTimeMillis() + MAX_SESSION_IDLE_DURATION);
 	}
 	
-	// TODO
+	
 	public synchronized void displayAppInfo(final AppInfoGwt selectedApp) {
 		//log.info("Updating appinfopanel for: " + selectedApp.appId);
 		// Show selected app info results
@@ -1452,12 +1452,6 @@ public class AppVetPanel extends DockLayoutPanel {
 									//log.info("Displaying REGISTERING");
 									iconVersion++;
 									String URL = HOST_URL;
-//									if (PROXY_URL != null
-//											&& !PROXY_URL.isEmpty()) {
-//										URL = PROXY_URL;
-//									} else {
-//										URL = HOST_URL;
-//									}
 
 									final String iconPath = "images/"
 											+ defaultIcon + "?v"
@@ -1477,12 +1471,6 @@ public class AppVetPanel extends DockLayoutPanel {
 								} else if (selectedApp.appStatus == AppStatus.PENDING) {
 									//log.info("Displaying PENDING");
 									String URL = HOST_URL;
-//									if (PROXY_URL != null
-//											&& !PROXY_URL.isEmpty()) {
-//										URL = PROXY_URL;
-//									} else {
-//										URL = HOST_URL;
-//									}
 
 									final String iconPath = "images/"
 											+ defaultIcon;
@@ -1491,7 +1479,6 @@ public class AppVetPanel extends DockLayoutPanel {
 								} else if (selectedApp.appStatus == AppStatus.PROCESSING) {
 									//log.info("Displaying PROCESSING");
 									String URL = HOST_URL;
-
 
 									iconVersion++;
 									final String iconPath = "images/"
@@ -1502,7 +1489,6 @@ public class AppVetPanel extends DockLayoutPanel {
 									//log.info("Displaying OTHER STATUS: " + selectedApp.appStatus.name());
 									String URL = HOST_URL;
 
-
 									final String iconPath = URL
 											+ "/appvet_images/"
 											+ selectedApp.appId + ".png";
@@ -1510,15 +1496,15 @@ public class AppVetPanel extends DockLayoutPanel {
 									appInfoIcon.setAltText(selectedApp.appName);
 								}
 
-								String appName = null;
 								
+								String appName = null;
 								if (selectedApp.appName == null) {
 									appName = "Retrieving...";
 								} else {
 									appName = selectedApp.appName;
 								}
 
-								/* Set app status */
+								// Set app name in right info panel
 								if ((selectedApp.appStatus == AppStatus.NA)
 										|| (selectedApp.appStatus == AppStatus.ERROR)
 										|| (selectedApp.appStatus == AppStatus.HIGH)
@@ -1536,6 +1522,7 @@ public class AppVetPanel extends DockLayoutPanel {
 									downloadReportsButton.setEnabled(false);
 								}
 
+								// Set app package in right info panel
 								appInfoName.setHTML(appNameHtml);
 								if ((selectedApp.packageName == null)
 										|| selectedApp.packageName
@@ -1548,6 +1535,7 @@ public class AppVetPanel extends DockLayoutPanel {
 													+ selectedApp.packageName);
 								}
 
+								// Set version in right info panel
 								if ((selectedApp.versionName == null)
 										|| selectedApp.versionName
 												.equals("")) {
@@ -1559,7 +1547,7 @@ public class AppVetPanel extends DockLayoutPanel {
 													+ selectedApp.versionName);
 								}
 
-								/* Get tool results */
+								// Get tool results
 								final String htmlToolResults = getHtmlToolResults(
 										selectedApp.appId, toolsResults);
 								toolResultsHtml.setHTML(htmlToolResults);
@@ -1570,7 +1558,7 @@ public class AppVetPanel extends DockLayoutPanel {
 						// Display all reports
 						public String getHtmlToolResults(String appId,
 								List<ToolStatusGwt> toolResults) {
-							/* Get summary report */
+							// Get summary report
 							String statuses = "<hr><h3 title=\"Overview\" id=\"appInfoSectionHeader\">Overview</h3>\n";
 							int summaryCount = 0;
 
@@ -1589,7 +1577,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								statuses += getNAStatus();
 							}
 
-							/* Get pre-processing analysis results */
+							// Get pre-processing analysis results 
 							statuses += "<h3 title=\"App Metadata\" id=\"appInfoSectionHeader\">App Metadata</h3>\n";
 							int preprocessorToolCount = 0;
 
@@ -1684,7 +1672,8 @@ public class AppVetPanel extends DockLayoutPanel {
 							}
 
 							// To over on table, add 'class=\"hovertable\"
-							return getToolRowHtml(toolIconURL, toolIconAltText, toolStatus);
+							return getToolRowHtml(toolIconURL, toolIconAltText, 
+									toolStatus.getToolDisplayName(), status, toolStatus.getReport());
 						}
 
 						public String getToolStatusHtmlDisplay(
@@ -1700,10 +1689,12 @@ public class AppVetPanel extends DockLayoutPanel {
 								toolIconAltText = toolStatus.getToolType().getDefaultAltText();
 							}
 							
-							return getToolRowHtml(toolIconURL, toolIconAltText, toolStatus);
+							return getToolRowHtml(toolIconURL, toolIconAltText, toolStatus.getToolDisplayName(),
+									toolStatus.getStatusHtml(), toolStatus.getReport());
 						}
 						
-						private String getToolRowHtml(String toolIconURL, String toolIconAltText, ToolStatusGwt toolStatus) {
+						private String getToolRowHtml(String toolIconURL, String toolIconAltText, 
+								String toolDisplayName, String toolStatus, String toolReport) {
 							return "<table>"
 									+ "<tr>\n"
 									+ "<td>"
@@ -1711,15 +1702,15 @@ public class AppVetPanel extends DockLayoutPanel {
 									+ "</td>\n"
 									// Removed title="mytitle" from following td
 									+ "<td align=\"left\" width=\"200\">"
-									+ toolStatus.getToolDisplayName()
+									+ toolDisplayName
 									+ "</td>\n"
 									// Removed title="mytitle" from following td
 									+ "<td align=\"left\" width=\"140\">"
-									+ toolStatus.getStatusHtml()
+									+ toolStatus
 									+ "</td>\n"
 									// Removed title="mytitle" from following td
 									+ "<td align=\"left\" width=\"45\">"
-									+ toolStatus.getReport() + "</td>\n"
+									+ toolReport + "</td>\n"
 									+ "</tr>\n" + "</table>";
 						}
 						
