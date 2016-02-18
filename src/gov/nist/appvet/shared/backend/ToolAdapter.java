@@ -140,14 +140,14 @@ public class ToolAdapter implements Runnable {
 		if (iconURL != null) {
 			log.debug("Icon URL: " + iconURL);
 		} else {
-			log.warn("Icon URL for tool '" + toolId + "' is null");
+			//log.warn("Icon URL for tool '" + toolId + "' is null");
 		}
 		
 		iconAltText = xml.getXPathValue("/ToolAdapter/Description/Icon/AltText");
 		if (iconAltText != null) {
 			log.debug("Icon ALT Text: " + iconAltText);
 		} else {
-			log.warn("Icon ALT Text for tool '" + toolId + "' is null");
+			//log.warn("Icon ALT Text for tool '" + toolId + "' is null");
 		}
 		
 		if (authenticationRequired) {
