@@ -214,11 +214,9 @@ public class Registration {
 				regReportWriter.close();
 				appInfo.log.info("Registered app " + appInfo.appId);
 				
-				log.info("trace 1 " + appInfo.appId);
 				// Update registration status to LOW (i.e., COMPLETED).
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 						registrationTool.toolId, ToolStatus.LOW);
-				log.info("trace 2 " + appInfo.appId);
 
 				// Email notify
 				if (AppVetProperties.emailEnabled) {

@@ -60,12 +60,10 @@ public class ToolStatusManager {
 
 	public static synchronized boolean setToolStatus(DeviceOS os, String appId,
 			String toolId, ToolStatus toolStatus) {
-		log.info("trace a - " + appId);
 
 		if (toolStatus == ToolStatus.ERROR){
 			log.warn("Setting " + toolId + " to ERROR for " + appId);
 		}
-		log.info("trace b - " + appId);
 
 		if (os == DeviceOS.ANDROID) {
 			if (!Database.update("UPDATE androidtoolstatus SET " + toolId + "='"
@@ -87,15 +85,6 @@ public class ToolStatusManager {
 			log.error("Unknown operating system encountered. Returning.");
 			return false;
 		}
-		
-//		if (updatedApp) {
-//			log.debug("Set updated flag for app " + appId);
-//			return computeAppStatus(os, appId);
-//		} else {
-//			log.error("Could not set updated flag for app " + appId);
-//			return false;
-//		}
-		log.info("trace c - " + appId);
 
 		if (computeAppStatus(os, appId)) {
 			return Database.setLastUpdated(appId);
@@ -111,7 +100,6 @@ public class ToolStatusManager {
 	 * @return true if app status was computed successfully, false otherwise.
 	 */
 	private synchronized static boolean computeAppStatus(DeviceOS os, String appId) {
-		log.info("trace aa - " + appId);
 
 		log.debug("Updating status for app " + appId + "...");
 		
@@ -148,80 +136,62 @@ public class ToolStatusManager {
 		// or ERROR.
 		ToolAdapter registrationTool = ToolAdapter.getByToolId(os,
 				"registration");
-		log.info("trace bb - " + appId);
 
 		if (registrationTool == null) {
-			Log.info("trace cc - " + appId);
-
 			log.error("Registration tool is null");
 			return false;
 		}
-		log.info("trace dd - " + appId);
 
 		ToolStatus registrationStatus = getToolStatus(os, appId,
 				registrationTool.toolId);
 		if (registrationStatus == null) {
-			log.info("trace ee - " + appId);
-
 			log.error("Registration status is null");
 			return false;
 		} 
 		if (registrationStatus == ToolStatus.ERROR) {
-			log.info("trace ff - " + appId);
-
 			AppStatusManager.setAppStatus(appId, AppStatus.ERROR);
 			return true;
 		} else if (registrationStatus == ToolStatus.LOW) {
-			log.info("trace gg - " + appId);
-
+			
 			if (appStatus == AppStatus.REGISTERING) {
-				log.info("trace hh - " + appId);
-
 				AppStatusManager.setAppStatus(appId, AppStatus.PENDING);
 				return true;
 			}
 		}
 		
-		log.info("trace ii - " + appId);
 
 		// App metadata. Note that we only change app status if metadata
 		// ERROR or if metadata LOW while app status is REGISTERING
 		ToolAdapter metadataTool = ToolAdapter.getByToolId(os, "appinfo");
 		if (metadataTool == null) {
-			log.info("trace jj - " + appId);
-
 			log.error("Metadata tool is null");
 			return false;
 		}
+		
 		ToolStatus metadataStatus = getToolStatus(os, appId, metadataTool.toolId);
 		log.info("appinfo status - " + appId + ": " + metadataStatus.name());
+	
 		if (metadataStatus == null) {
-			log.info("trace kk - " + appId);
-
 			log.error("Metadata status is null");
 			return false;
 		}
+		
 		if (metadataStatus == ToolStatus.NA){
 			log.debug("Reg status while metadata null: " + registrationStatus.name());
 			log.debug("App status is: " + Database.getAppStatus(appId));
 			return false; // since no cchange made
 		}
+		
 		if (metadataStatus == ToolStatus.ERROR) {
-			log.info("trace ll - " + appId);
-
 			AppStatusManager.setAppStatus(appId, AppStatus.ERROR);
 			return true;
 		} else if (metadataStatus == ToolStatus.SUBMITTED) {
-			log.info("trace mm - " + appId);
-
 			if (appStatus == AppStatus.PENDING){
 				AppStatusManager.setAppStatus(appId, AppStatus.PROCESSING);
 			}
 			return true;
 		}
 		
-		log.info("trace nn - " + appId);
-
 		int numTools = 0;
 		if (os == DeviceOS.ANDROID) {
 			numTools = AppVetProperties.androidTools.size();
@@ -261,12 +231,9 @@ public class ToolStatusManager {
 				}
 			}
 		}
-		log.info("trace oo - " + appId);
 
 		// Set app status based on TESTTOOL and REPORT statuses
 	    if (numToolSubmitted > 0) {
-			log.info("trace pp - " + appId);
-
 	    	AppStatusManager.setAppStatus(appId, AppStatus.PROCESSING);
 	    } else if (numToolErrors > 0) {
 			AppStatusManager.setAppStatus(appId, AppStatus.ERROR);
@@ -277,8 +244,6 @@ public class ToolStatusManager {
 		} else if (numToolLows > 0) {
 			AppStatusManager.setAppStatus(appId, AppStatus.LOW);	
 		} else {
-			log.info("trace qq - " + appId);
-
 			AppStatusManager.setAppStatus(appId, AppStatus.NA);
 		}
 	    
