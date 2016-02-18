@@ -19,6 +19,8 @@
  */
 package gov.nist.appvet.shared.backend;
 
+import org.eclipse.jetty.util.log.Log;
+
 import gov.nist.appvet.shared.all.AppStatus;
 
 /**
@@ -34,6 +36,8 @@ public class AppStatusManager {
 
 	public synchronized static boolean setAppStatus(String appId,
 			AppStatus appStatus) {
+		log.info("trace 11 - " + appId);
+
 		if (appId == null || appId.isEmpty()) {
 			log.error("App ID is null or empty");
 			return false;
@@ -43,15 +47,22 @@ public class AppStatusManager {
 				return false;
 			}
 		}
+		log.info("trace 22 - " + appId);
+
 		// Only update the status if the new status is different from the
 		// current status (reduces GUI refresh).
 		final String currentAppStatusString = getAppStatusName(appId);
+		log.info("trace 33 - " + appId);
+
 		if (currentAppStatusString == null) {
 			log.error("Current app " + appId + " status string is null");
 			return false;
 		} else {
 			log.debug("Current app " + appId + " status string is: " + currentAppStatusString);
 		}
+		
+		log.info("trace 44 - " + appId);
+
 		final AppStatus currentAppStatus = AppStatus
 				.getStatus(currentAppStatusString);
 		if (currentAppStatus == null) {
@@ -60,23 +71,38 @@ public class AppStatusManager {
 		} else {
 			log.debug("Current app " + appId + " status is " + currentAppStatus.name());
 		}
+		
+		log.info("trace 55 - " + appId);
+
 		if (appStatus != currentAppStatus) {
+			log.debug("appstatus: " + appStatus.name() + ", currentStatus: " + currentAppStatus.name());
+			log.info("trace 66 - " + appId);
+
 			log.debug("New status is different than current status for app " + appId);
 			final String sql = "UPDATE apps SET appstatus='" + appStatus.name()
 					+ "' where appid='" + appId + "'";
+			log.debug("SQL: " + sql);
 			if (Database.update(sql)) {
+				log.info("trace 77 - " + appId);
+
 				if (Database.setLastUpdated(appId)) {
-					log.debug("App " + appId + " update flag set successfully.");
+					log.info("trace 88 - " + appId);
+
+					log.debug("App " + appId + " updated mod time.");
 					return true;
 				} else {
 					log.error("App " + appId + " update flag not set successfully.");
 					return false;
 				}
 			} else {
+				log.info("trace 99 - " + appId);
+
 				log.error("Could not update status for app " + appId);
 				return false;
 			}
 		} else {
+			log.info("trace 100 - " + appId);
+
 			log.debug("New status is the same as current status for app " + appId + ". Not updating status.");
 			return true;
 		}

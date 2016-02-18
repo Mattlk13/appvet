@@ -350,6 +350,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	@Override
 	public List<ToolStatusGwt> getToolsResults(DeviceOS os, String sessionId,
 			String appId) throws IllegalArgumentException {
+		log.info("trace AA - " + appId);
 		return getToolsStatuses(os, sessionId, appId);
 	}
 
@@ -399,11 +400,15 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 
 	public static List<ToolStatusGwt> getToolsStatuses(DeviceOS os,
 			String sessionId, String appId) {
+		log.info("trace BB - " + appId);
+
 		final ArrayList<ToolStatusGwt> toolStatusList = 
 				new ArrayList<ToolStatusGwt>();
 		// Registration status
 		ToolAdapter tool = ToolAdapter.getByToolId(os, "registration");
 		ToolStatusGwt toolStatus = getToolStatusHtml(os, sessionId, appId, tool);
+		log.info("trace CC - " + appId + ": reg status: " + toolStatus);
+
 		if (toolStatus != null) {
 			toolStatusList.add(toolStatus);
 		}

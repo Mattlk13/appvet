@@ -29,6 +29,7 @@ import gov.nist.appvet.shared.backend.AppStatusManager;
 import gov.nist.appvet.shared.backend.AppVetProperties;
 import gov.nist.appvet.shared.backend.Database;
 import gov.nist.appvet.shared.backend.FileUtil;
+import gov.nist.appvet.shared.backend.Logger;
 import gov.nist.appvet.shared.backend.ToolAdapter;
 import gov.nist.appvet.shared.backend.ToolStatus;
 import gov.nist.appvet.shared.backend.ToolStatusManager;
@@ -42,6 +43,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.eclipse.jetty.util.log.Log;
+
 /**
  * This class registers an app with AppVet.
  * 
@@ -50,6 +53,7 @@ import java.util.Date;
 public class Registration {
 
 	private AppInfo appInfo = null;
+	private static final Logger log = AppVetProperties.log;
 
 	
 	public Registration(AppInfo appInfo) {
@@ -87,7 +91,6 @@ public class Registration {
 					final ToolAdapter tool = availableTools.get(i);
 					setInitialToolStatus(appInfo, tool);
 				}		
-				
 				
 				// Add this app to the apps database table
 				connection = Database.getConnection();
@@ -211,9 +214,11 @@ public class Registration {
 				regReportWriter.close();
 				appInfo.log.info("Registered app " + appInfo.appId);
 				
+				log.info("trace 1 " + appInfo.appId);
 				// Update registration status to LOW (i.e., COMPLETED).
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 						registrationTool.toolId, ToolStatus.LOW);
+				log.info("trace 2 " + appInfo.appId);
 
 				// Email notify
 				if (AppVetProperties.emailEnabled) {

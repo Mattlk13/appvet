@@ -53,6 +53,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class AndroidMetadata {
 	
+	
 	private static final DeviceOS OS = DeviceOS.ANDROID;
 
 	public static final String APKTOOL_WINDOWS_COMMAND = "apktool.bat";
