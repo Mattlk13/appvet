@@ -91,13 +91,16 @@ public class IOSMetadata {
 					+ appInfo.getAppFileName();
 			File ipaFile = new File(ipaFilePath);
 			if (ipaFile.exists()) {
-				if (ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-						appinfoTool.toolId, ToolStatus.SUBMITTED)) {
-					appInfo.log.debug("Set " + appinfoTool.toolId + " status for app " + appInfo.appId);
-				} else {
-					appInfo.log.error("Could not set " + appinfoTool.toolId + " status for app " + appInfo.appId);
-					return false;
-				}
+				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+						appinfoTool.toolId, ToolStatus.SUBMITTED);
+				
+//				if (ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+//						appinfoTool.toolId, ToolStatus.SUBMITTED)) {
+//					appInfo.log.debug("Set " + appinfoTool.toolId + " status for app " + appInfo.appId);
+//				} else {
+//					appInfo.log.error("Could not set " + appinfoTool.toolId + " status for app " + appInfo.appId);
+//					return false;
+//				}
 			} else {
 				appInfo.log.error("IPA file for app " + appInfo.appId + " does not exist.");
 				return false;
@@ -336,14 +339,17 @@ public class IOSMetadata {
 				appInfo.log.error("Could not update iOS metadata for app " + appInfo.appId);
 				return false;
 			}
+			
+			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+					appinfoTool.toolId, ToolStatus.LOW);
 
-			if (ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-					appinfoTool.toolId, ToolStatus.LOW)) {
-				appInfo.log.debug("Updated tool status for app " + appInfo.appId);
-			} else {
-				appInfo.log.error("Could not update tool status for app " + appInfo.appId);
-				return false;
-			}
+//			if (ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+//					appinfoTool.toolId, ToolStatus.LOW)) {
+//				appInfo.log.debug("Updated tool status for app " + appInfo.appId);
+//			} else {
+//				appInfo.log.error("Could not update tool status for app " + appInfo.appId);
+//				return false;
+//			}
 			appinfoReport
 					.write("\nStatus:\t\t<font color=\"black\">COMPLETED</font>\n");
 			appInfo.log.debug("End iOS metadata preprocessing for app "

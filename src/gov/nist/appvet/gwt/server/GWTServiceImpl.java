@@ -470,7 +470,8 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			// Status for a tool may be null if it was recently installed
 			// but not run for previously submitted apps. In such cases,
 			// we return an NA status.
-			ToolStatusManager.setToolStatus(os, appId, tool.toolId, ToolStatus.NA);
+			
+			//ToolStatusManager.setToolStatus(os, appId, tool.toolId, ToolStatus.NA);
 			toolCompleted = true;
 			toolStatusGwt
 					.setStatusHtml("<div id=\"tabledim\" style='color: gray'>N/A</div>");
@@ -534,7 +535,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			}
 		} else {
 			toolStatusGwt
-					.setReport("<div id=\"tabledim\" style='color: gray'>Unavailable</div>");
+					.setReport("<div id=\"tabledim\" style='color: gray'>N/A</div>");
 		}
 		return toolStatusGwt;
 	}

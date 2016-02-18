@@ -419,14 +419,18 @@ public class Database {
 					return false;
 				}
 				if (toolStatus == ToolStatus.SUBMITTED) {
-					if (ToolStatusManager.setToolStatus(os, appId, toolId, ToolStatus.ERROR)) {
-						// Write error message to app's log
-						log.warn("Tool " + toolId + " exceeded timeout. Setting tool status to " + ToolStatus.ERROR);
-						appInfo.log.warn("Tool " + toolId + " exceeded timeout. Setting tool status to " + ToolStatus.ERROR);
-					} else {
-						log.error("Could not update " + toolId + " status for app " + appId + " to ERROR.");
-						return false;
-					}
+					ToolStatusManager.setToolStatus(os, appId, toolId, ToolStatus.ERROR);
+					log.warn("Tool " + toolId + " exceeded timeout. Setting tool status to " + ToolStatus.ERROR);
+					appInfo.log.warn("Tool " + toolId + " exceeded timeout. Setting tool status to " + ToolStatus.ERROR);
+
+//					if (ToolStatusManager.setToolStatus(os, appId, toolId, ToolStatus.ERROR)) {
+//						// Write error message to app's log
+//						log.warn("Tool " + toolId + " exceeded timeout. Setting tool status to " + ToolStatus.ERROR);
+//						appInfo.log.warn("Tool " + toolId + " exceeded timeout. Setting tool status to " + ToolStatus.ERROR);
+//					} else {
+//						log.error("Could not update " + toolId + " status for app " + appId + " to ERROR.");
+//						return false;
+//					}
 				}
 			}
 			return true;
@@ -446,14 +450,18 @@ public class Database {
 					return false;
 				}
 				if (toolStatus == ToolStatus.SUBMITTED) {
-					if (ToolStatusManager.setToolStatus(os, appId, toolId, ToolStatus.ERROR)) {
-						// Write error message to app's log
-						log.warn("Tool " + toolId + " exceeded timeout. Setting tool status to " + ToolStatus.ERROR);
-						appInfo.log.warn("Tool " + toolId + " exceeded timeout. Setting tool status to " + ToolStatus.ERROR);
-					} else {
-						log.error("Could not update " + toolId + " status for app " + appId + " to ERROR.");
-						return false;
-					}
+					ToolStatusManager.setToolStatus(os, appId, toolId, ToolStatus.ERROR);
+					log.warn("Tool " + toolId + " exceeded timeout. Setting tool status to " + ToolStatus.ERROR);
+					appInfo.log.warn("Tool " + toolId + " exceeded timeout. Setting tool status to " + ToolStatus.ERROR);
+
+//					if (ToolStatusManager.setToolStatus(os, appId, toolId, ToolStatus.ERROR)) {
+//						// Write error message to app's log
+//						log.warn("Tool " + toolId + " exceeded timeout. Setting tool status to " + ToolStatus.ERROR);
+//						appInfo.log.warn("Tool " + toolId + " exceeded timeout. Setting tool status to " + ToolStatus.ERROR);
+//					} else {
+//						log.error("Could not update " + toolId + " status for app " + appId + " to ERROR.");
+//						return false;
+//					}
 				}
 			}
 			return true;
@@ -1338,14 +1346,24 @@ public class Database {
 	}
 	
 	
-	public synchronized static boolean getAppIsUpdated(String appId) {
-		return getBoolean("SELECT updated FROM apps WHERE appid='" + appId + "'");
+	public static Timestamp getLastUpdatedTime(String appId) {
+		return getTimestamp("SELECT lastupdated FROM apps WHERE appid='" + appId + "'");
 	}
 	
 
-	public synchronized static boolean setLastUpdated(String appId) {
-		//return update("UPDATE apps SET updated='" + boolInt + "' WHERE appid='" + appId + "'");
+	public static boolean setLastUpdatedTime(String appId) {
+		Date lastUpdatedTime = getLastUpdatedTime(appId);
+		log.debug("[SetLastUpdateTime] for "  + appId + " was " + lastUpdatedTime.toString());
+		
+		// To prevent race condition, wait n ms
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return update("UPDATE apps SET lastupdated = NOW() WHERE appid='" + appId + "'");
+
 	}
 	
 

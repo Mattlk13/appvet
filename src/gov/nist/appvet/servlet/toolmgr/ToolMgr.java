@@ -21,11 +21,9 @@ package gov.nist.appvet.servlet.toolmgr;
 
 import gov.nist.appvet.servlet.preprocessor.AndroidMetadata;
 import gov.nist.appvet.servlet.preprocessor.IOSMetadata;
-import gov.nist.appvet.servlet.shared.Emailer;
 import gov.nist.appvet.shared.all.AppStatus;
 import gov.nist.appvet.shared.all.DeviceOS;
 import gov.nist.appvet.shared.all.ToolType;
-import gov.nist.appvet.shared.all.UserInfo;
 import gov.nist.appvet.shared.backend.AppInfo;
 import gov.nist.appvet.shared.backend.AppVetProperties;
 import gov.nist.appvet.shared.backend.Database;
