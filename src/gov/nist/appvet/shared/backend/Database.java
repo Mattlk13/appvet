@@ -1346,18 +1346,18 @@ public class Database {
 	}
 	
 	
-	public static Timestamp getLastUpdatedTime(String appId) {
+	public synchronized static Timestamp getLastUpdatedTime(String appId) {
 		return getTimestamp("SELECT lastupdated FROM apps WHERE appid='" + appId + "'");
 	}
 	
 
-	public static boolean setLastUpdatedTime(String appId) {
+	public synchronized static boolean setLastUpdatedTime(String appId) {
 		Date lastUpdatedTime = getLastUpdatedTime(appId);
 		log.debug("[SetLastUpdateTime] for "  + appId + " was " + lastUpdatedTime.toString());
 		
 		// To prevent race condition, wait n ms
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
