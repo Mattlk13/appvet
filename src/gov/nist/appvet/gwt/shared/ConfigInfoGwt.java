@@ -46,6 +46,7 @@ public class ConfigInfoGwt implements IsSerializable {
 	private String systemMessage = null;
 	private int numRowsAppsList = 0;
 	private int numRowsUsersList = 0;
+	private String documentationURL = null;
 
 	public ConfigInfoGwt() {
 	}
@@ -184,5 +185,13 @@ public class ConfigInfoGwt implements IsSerializable {
 
 	public void setNumRowsUsersList(int numRowsUsersList) {
 		this.numRowsUsersList = numRowsUsersList;
+	}
+
+	public String getDocumentationURL() {
+		return documentationURL;
+	}
+
+	public void setDocumentationURL(String documentationURL) {
+		this.documentationURL = documentationURL;
 	}
 }

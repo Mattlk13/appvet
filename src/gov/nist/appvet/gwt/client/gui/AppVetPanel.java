@@ -148,6 +148,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	private static boolean searchMode = false;
 	private MenuItem accountMenuItem = null;
 	public static boolean timeoutWarningMessage = false;
+	public String documentationURL = null;
 
 	
 	class AppListHandler implements SelectionChangeEvent.Handler {
@@ -434,6 +435,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appSelectionModel.addSelectionChangeHandler(new AppListHandler(this,
 				configInfo));
 		tools = configInfo.getTools();
+		documentationURL = configInfo.getDocumentationURL();
 		final VerticalPanel northAppVetPanel = new VerticalPanel();
 		northAppVetPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
@@ -665,7 +667,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				false, new Command() {
 					@Override
 					public void execute() {
-						Window.open("http://appvet.github.io/appvet", "_blank",
+						Window.open(documentationURL, "_blank",
 								null);
 					}
 				});

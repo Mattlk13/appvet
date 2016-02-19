@@ -91,6 +91,7 @@
 					</xs:annotation>
 				</xs:element>
 				<xs:element name="Display" type="DisplayType"></xs:element>
+				<xs:element name="DocumentationURL" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
 			</xs:sequence>
 
 		</xs:complexType>

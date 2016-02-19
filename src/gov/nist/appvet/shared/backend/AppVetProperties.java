@@ -142,6 +142,9 @@ public class AppVetProperties {
 	/** Display parameters.*/
 	public static int NUM_ROWS_APPS_LIST = 0;
 	public static int NUM_ROWS_USERS_LIST = 0;
+	/* Documentation URL */
+	public static String DOCUMENTATION_URL = null;
+	public static String DEFAULT_DOCUMENTATION_URL = "http://appvet.github.io/appvet/";
 	
 	// Tools
 	public static ArrayList<ToolAdapter> androidTools = null;
@@ -328,6 +331,11 @@ public class AppVetProperties {
 		if (NUM_ROWS_USERS_LIST <= 0) {
 			// Cannot have <=0 rows in admin's users list
 			NUM_ROWS_USERS_LIST = 20;
+		}
+		
+		DOCUMENTATION_URL = xml.getXPathValue("/AppVet/DocumentationURL");
+		if (DOCUMENTATION_URL == null || DOCUMENTATION_URL.isEmpty()) {
+			DOCUMENTATION_URL = DEFAULT_DOCUMENTATION_URL;
 		}
 
 		// Apache logging

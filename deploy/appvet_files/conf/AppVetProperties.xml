@@ -74,4 +74,6 @@
 		<NumRowsUsersList>20</NumRowsUsersList>
 	</Display>
 	
+	<DocumentationURL>http://csrc.nist.gov/projects/appvet/</DocumentationURL>
+	
 </AppVet>
