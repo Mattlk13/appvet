@@ -47,6 +47,7 @@ public class ConfigInfoGwt implements IsSerializable {
 	private int numRowsAppsList = 0;
 	private int numRowsUsersList = 0;
 	private String documentationURL = null;
+	private boolean useSSO = false;
 
 	public ConfigInfoGwt() {
 	}
@@ -193,5 +194,13 @@ public class ConfigInfoGwt implements IsSerializable {
 
 	public void setDocumentationURL(String documentationURL) {
 		this.documentationURL = documentationURL;
+	}
+
+	public boolean getUsesSSO() {
+		return useSSO;
+	}
+
+	public void setUsesSSO(boolean useSSO) {
+		this.useSSO = useSSO;
 	}
 }

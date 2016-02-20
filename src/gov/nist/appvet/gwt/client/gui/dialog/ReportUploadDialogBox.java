@@ -205,12 +205,15 @@ public class ReportUploadDialogBox extends DialogBox {
 		//log.info("tools size: " + tools.size());
 		for (int i = 0; i < tools.size(); i++) {
 			ToolInfoGwt tool = tools.get(i);
+			
 			if (tool.getType() == ToolType.SUMMARY) {
-				if (role == Role.ADMIN){
+				
+				if (role == Role.ADMIN || role == Role.ANALYST || role == Role.ORG_ANALYST || role == Role.DEPT_ANALYST){
 					permittedToolReports.add(tool);
 				}
 				
 			} else if (tool.getType() == ToolType.AUDIT) {
+				
 				if (role == Role.ADMIN || role == Role.ANALYST || role == Role.ORG_ANALYST || role == Role.DEPT_ANALYST) {
 					permittedToolReports.add(tool);
 
@@ -218,7 +221,6 @@ public class ReportUploadDialogBox extends DialogBox {
 				
 			} else if (tool.getType() == ToolType.TESTTOOL || tool.getType() == ToolType.REPORT) {
 				permittedToolReports.add(tool);
-
 			} 
 		}
 		

@@ -57,6 +57,7 @@ public class UserAcctDialogBox extends DialogBox {
 	public TextBox emailTextBox = null;
 	public ToolAuthParamDialogBox toolAuthParamDialogBox = null;
 	private static Logger log = Logger.getLogger("UserAcctDialogBox");
+	public static MessageDialogBox messageDialogBox = null;
 	
 	public UserAcctDialogBox(final ConfigInfoGwt configInfoGwt) {
 		setSize("400px", "406px");
@@ -267,7 +268,9 @@ public class UserAcctDialogBox extends DialogBox {
 				updateButton.setEnabled(true);
 			}
 		});
-		password1TextBox.setEnabled(true);
+		
+
+		
 		password1TextBox.setAlignment(TextAlignment.LEFT);
 		horizontalPanel_6.add(password1TextBox);
 		horizontalPanel_6.setCellHorizontalAlignment(password1TextBox,
@@ -304,13 +307,17 @@ public class UserAcctDialogBox extends DialogBox {
 				updateButton.setEnabled(true);
 			}
 		});
-		password2TextBox.setEnabled(true);
 		password2TextBox.setAlignment(TextAlignment.LEFT);
 		horizontalPanel_7.add(password2TextBox);
 		horizontalPanel_7.setCellHorizontalAlignment(password2TextBox,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_7.setCellWidth(password2TextBox, "50%");
 		password2TextBox.setSize("180px", "20px");
+		
+		
+
+		
+		
 		final HorizontalPanel horizontalPanel = new HorizontalPanel();
 		horizontalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel
@@ -357,6 +364,24 @@ public class UserAcctDialogBox extends DialogBox {
 		horizontalPanel.setCellHorizontalAlignment(updateButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		updateButton.setSize("180px", "18px");
+		
+		
+		// Don't allow password entry if user is using SSO
+		if (!configInfoGwt.getUsesSSO()) {
+			password1TextBox.setEnabled(true);
+			password2TextBox.setEnabled(true);
+			updateButton.setEnabled(true);
+		} else {
+			// SSO is being used
+			password1TextBox.setEnabled(false);
+			password1TextBox.setTitle("Password disabled - SSO in use.");
+			password2TextBox.setEnabled(false);
+			password2TextBox.setTitle("Password disabled - SSO in use.");
+			updateButton.setEnabled(false);
+			updateButton.setTitle("Password disabled - SSO in use.");
+		}
+		
+		
 		HorizontalPanel horizontalPanel_8 = new HorizontalPanel();
 		horizontalPanel_8
 				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
@@ -395,6 +420,28 @@ public class UserAcctDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		dockPanel.setCellHorizontalAlignment(horizontalPanel,
 				HasHorizontalAlignment.ALIGN_CENTER);
+		
+	}
+	
+	public static void showMessageDialog(String windowTitle, String message,
+			boolean isError) {
+		messageDialogBox = new MessageDialogBox(message, isError);
+		messageDialogBox.setText(windowTitle);
+		messageDialogBox.center();
+		messageDialogBox.closeButton.setFocus(true);
+		messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				killDialogBox(messageDialogBox);
+			}
+		});
+	}
+	
+	public static void killDialogBox(DialogBox dialogBox) {
+		if (dialogBox != null) {
+			dialogBox.hide();
+			dialogBox = null;
+		} 
 	}
 
 	public void getToolsAuthentication(final ConfigInfoGwt configInfoGwt) {

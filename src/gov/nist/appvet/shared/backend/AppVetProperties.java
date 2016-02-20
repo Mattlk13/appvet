@@ -30,12 +30,11 @@ import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Properties;
 
 public class AppVetProperties {
 	public static boolean error = false;
 	/** AppVet Github release version number. */
-	public static final String APPVET_VERSION = "2.0.6"; 
+	public static final String APPVET_VERSION = "2.0.7"; 
 	// Logging
 	public static Logger log = null;
 	private static String APPVET_LOG_NAME = "appvet_log.txt";
@@ -51,7 +50,7 @@ public class AppVetProperties {
 	public static String CATALINA_BASE = null; // Tomcat
 	public static String APKTOOL_HOME = null;  // For Android only
 	public static String APPVET_FILES_HOME = null;
-	//public static boolean useSSO = false;
+	public static boolean USE_SSO = false;
 	public static String ORG_LOGO_ALT_TEXT = null;
 	public static String EMAIL_CONNECTION_TIMEOUT = "2000"; // In ms
 
@@ -262,7 +261,8 @@ public class AppVetProperties {
 		APP_PROCESSING_TIMEOUT = new Integer(
 				xml.getXPathValue("/AppVet/ToolServices/Timeout")).intValue();
 		printVal("TOOL_TIMEOUT", APP_PROCESSING_TIMEOUT);
-		//useSSO = new Boolean(xml.getXPathValue("/AppVet/UseSSO")).booleanValue();
+		USE_SSO = new Boolean(xml.getXPathValue("/AppVet/UseSSO")).booleanValue();
+		printVal("USE_SSO", USE_SSO);
 		ORG_LOGO_ALT_TEXT = xml.getXPathValue("/AppVet/OrgLogoAltText");
 		printVal("ORG_LOGO_ALT_TEXT", ORG_LOGO_ALT_TEXT);
 		if (ORG_LOGO_ALT_TEXT == null || ORG_LOGO_ALT_TEXT.isEmpty()) {

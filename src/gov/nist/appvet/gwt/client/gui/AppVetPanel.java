@@ -149,6 +149,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	private MenuItem accountMenuItem = null;
 	public static boolean timeoutWarningMessage = false;
 	public String documentationURL = null;
+	public boolean useSSO = false;
 
 	
 	class AppListHandler implements SelectionChangeEvent.Handler {
@@ -436,6 +437,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				configInfo));
 		tools = configInfo.getTools();
 		documentationURL = configInfo.getDocumentationURL();
+		useSSO = configInfo.getUsesSSO();
 		final VerticalPanel northAppVetPanel = new VerticalPanel();
 		northAppVetPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
