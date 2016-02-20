@@ -26,6 +26,7 @@ import gov.nist.appvet.gwt.client.gui.dialog.AppUploadDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.MessageDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.ReportUploadDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.SetAlertDialogBox;
+import gov.nist.appvet.gwt.client.gui.dialog.ToolAuthParamDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.UserAcctDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.UserListDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.YesNoConfirmDialog;
@@ -564,6 +565,18 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				});
 		userMenuBar.addItem(accountSettingsMenuItem);
+		
+		final MenuItem toolCredentialsMenuItem = new MenuItem(
+				"Tool Credentials", false, new Command() {
+					@Override
+					public void execute() {
+						openToolCredentials(configInfo);
+					}
+				});
+		userMenuBar.addItem(toolCredentialsMenuItem);
+		
+		
+		
 		accountSettingsMenuItem.setHeight("");
 		final MenuItem myAppsMenuItem = new MenuItem("My Apps", false,
 				new Command() {
@@ -1998,25 +2011,41 @@ public class AppVetPanel extends DockLayoutPanel {
 			// Do nothing
 		}
 	}
+	
+	public void openToolCredentials(final ConfigInfoGwt configInfoGwt) {
+		final ToolAuthParamDialogBox toolAuthParamDialogBox = new ToolAuthParamDialogBox(configInfoGwt);
+		toolAuthParamDialogBox.setText("Tool Account Information");
+		toolAuthParamDialogBox.center();
+		
+		toolAuthParamDialogBox.okButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				toolAuthParamDialogBox.hide();
+			}
+		});
+	}
+	
 
 	/** If configuration information for a user is changed by an ADMIN 
 	 * during the time the user is logged in then the change is 
 	 * not visible to the user until the user's next log in.
 	 */
-	public void openUserAccount(final ConfigInfoGwt configInfo) {
-		userAcctDialogBox = new UserAcctDialogBox(configInfo);
+	public void openUserAccount(final ConfigInfoGwt configInfoGwt) {
+		userAcctDialogBox = new UserAcctDialogBox(configInfoGwt);
 		userAcctDialogBox.setText("Account Settings");
 		userAcctDialogBox.center();
 		userAcctDialogBox.password1TextBox.setFocus(true);
-		userAcctDialogBox.okButton.addClickHandler(new ClickHandler() {
-			@Override
+		userAcctDialogBox.cancelButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				killDialogBox(userAcctDialogBox);
 			}
 		});
-		userAcctDialogBox.passwordUpdateButton.addClickHandler(new ClickHandler() {
+		
+		userAcctDialogBox.okButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				//killDialogBox(userAcctDialogBox);
+				
 				final String newLastName = userAcctDialogBox.lastNameTextBox
 						.getText();
 				final String newFirstName = userAcctDialogBox.firstNameTextBox
@@ -2038,12 +2067,13 @@ public class AppVetPanel extends DockLayoutPanel {
 				updatedUserInfo.setOrganization(newOrganization);
 				updatedUserInfo.setDepartment(newDepartment);
 				updatedUserInfo.setEmail(newEmail);
-//				updatedUserInfo.setChangePassword(true);
 				updatedUserInfo.setPasswords(newPassword1, newPassword2);
 				updatedUserInfo.setRole(userInfo.getRole());
-				if (!updatedUserInfo.isValid()) {
+				
+				if (!updatedUserInfo.isValid(false)) {
 					return;
 				}
+				
 				appVetServiceAsync.updateSelf(updatedUserInfo,
 						new AsyncCallback<Boolean>() {
 							@Override
@@ -2071,11 +2101,14 @@ public class AppVetPanel extends DockLayoutPanel {
 											.getDepartment());
 									userInfo.setEmail(updatedUserInfo
 											.getEmail());
-									//updatedUserInfo.setChangePassword(false);
 									updatedUserInfo.setPassword("");
 									userInfo.setRole(updatedUserInfo.getRole());
 								
 									killDialogBox(userAcctDialogBox);
+									showMessageDialog(
+											"Account Information",
+											"Account updated",
+											false);
 								} else {
 									showMessageDialog(
 											"Update Error",
@@ -2085,7 +2118,13 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 							}
 						});
+			
 			}
 		});
+		
+//		userAcctDialogBox.passwordUpdateButton.addClickHandler(new ClickHandler() {
+//			@Override
+//			public void onClick(ClickEvent event) {}
+//		});
 	}
 }

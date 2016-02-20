@@ -231,8 +231,11 @@ public class Database {
 			log.debug("Admin Adding role: " + userInfo.getRole());
 			preparedStatement.setString(7, userInfo.getRole());
 			preparedStatement.executeUpdate();
-			if (userInfo.isChangePassword()) {
-				final String password = userInfo.getPassword();
+			
+			final String password = userInfo.getPassword();
+			final String passwordAgain = userInfo.getPasswordAgain();
+			if (password != null && !password.isEmpty() && passwordAgain != null && passwordAgain.isEmpty() &&
+					password.equals(passwordAgain)) {
 				try {
 					if (setPBKDF2Password(username, password)) {
 						return true;

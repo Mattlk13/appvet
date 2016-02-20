@@ -367,9 +367,19 @@ public class UserListDialogBox extends DialogBox {
 				if (userInfoDialogBox.newUser) {
 					userInfo.setNewUser(true);
 				}
-				if (!userInfo.isValid()) {
-					return;
+				
+				if (newUser) {
+					log.info("newUser");
+					if (!userInfo.isValid(false)) {
+						return;
+					}
+				} else {
+					log.info("EDIT User");
+					if (!userInfo.isValid(true)) {
+						return;
+					}
 				}
+
 				submitUserInfo(userInfo);
 				userInfoDialogBox.hide();
 				userInfoDialogBox = null;
