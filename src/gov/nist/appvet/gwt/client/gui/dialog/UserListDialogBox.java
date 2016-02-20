@@ -105,7 +105,7 @@ public class UserListDialogBox extends DialogBox {
 	public TextBox searchTextBox = null;
 	public PushButton addButton = null;
 
-	public UserListDialogBox(int numRowsUsersList) {
+	public UserListDialogBox(int numRowsUsersList, final boolean useSSO) {
 		super(false, true);
 		setSize("", "450px");
 		setAnimationEnabled(false);
@@ -181,7 +181,7 @@ public class UserListDialogBox extends DialogBox {
 			@Override
 			public void onClick(ClickEvent event) {
 				searchMode = false;
-				getAllUsers(allUsers);
+				setAllUsers(allUsers);
 			}
 		});
 		viewAllButton
@@ -224,7 +224,7 @@ public class UserListDialogBox extends DialogBox {
 		addButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				editUser(true);
+				editUser(true, useSSO);
 			}
 		});
 		addButton.setHTML("Add");
@@ -238,7 +238,7 @@ public class UserListDialogBox extends DialogBox {
 		editButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				editUser(false);
+				editUser(false, useSSO);
 			}
 		});
 		final PushButton pshbtnNewButton = new PushButton("Delete");
@@ -319,26 +319,19 @@ public class UserListDialogBox extends DialogBox {
 	}
 
 	@SuppressWarnings("deprecation")
-	public void editUser(final boolean newUser) {
+	public void editUser(final boolean newUser, final boolean useSSO) {
 
 		if (newUser) {
 			userInfoDialogBox = new UserAcctAdminDialogBox(null,
-					usersListTable, allUsers);
+					usersListTable, allUsers, useSSO);
 			userInfoDialogBox.setText("Add User");
-			userInfoDialogBox.changePasswordCheckBox.setChecked(true);
-			userInfoDialogBox.changePasswordCheckBox.setEnabled(false);
-			userInfoDialogBox.password1TextBox.setEnabled(true);
-			userInfoDialogBox.password2TextBox.setEnabled(true);
 			userInfoDialogBox.lastNameTextBox.setFocus(true);
 		} else {
 			user = usersSelectionModel.getSelectedObject();
 			userInfoDialogBox = new UserAcctAdminDialogBox(user,
-					usersListTable, allUsers);
-			userInfoDialogBox.changePasswordCheckBox.setChecked(false);
-			userInfoDialogBox.password1TextBox.setEnabled(false);
-			userInfoDialogBox.password2TextBox.setEnabled(false);
+					usersListTable, allUsers, useSSO);
+			userInfoDialogBox.setText(user.getFirstName() + " " + user.getLastName());
 			userInfoDialogBox.lastNameTextBox.setFocus(true);
-
 		}
 		userInfoDialogBox.center();
 		userInfoDialogBox.cancelButton.addClickHandler(new ClickHandler() {
@@ -357,8 +350,6 @@ public class UserListDialogBox extends DialogBox {
 						.getValue();
 				final UserInfo userInfo = new UserInfo();
 				userInfo.setUserName(userInfoDialogBox.userIdTextBox.getText());
-				userInfo.setChangePassword(userInfoDialogBox.changePasswordCheckBox
-						.getValue().booleanValue());
 				userInfo.setPasswords(newPassword1, newPassword2);
 				userInfo.setLastName(userInfoDialogBox.lastNameTextBox
 						.getText());
@@ -386,56 +377,7 @@ public class UserListDialogBox extends DialogBox {
 		});
 	}
 
-	public boolean fieldsValid(UserAcctAdminDialogBox userInfoDialogBox) {
-		final String userName = userInfoDialogBox.userIdTextBox.getText();
-		if (!Validate.isValidUserName(userName)) {
-			showMessageDialog("AppVet Error", "Invalid User ID", true);
-			return false;
-		} else if (userInfoDialogBox.newUser) {
-			for (int i = 0; i < allUsers.size(); i++) {
-				final UserInfo userInfo = allUsers.get(i);
-				final String dbUserName = userInfo.getUserName();
-				if (userName.equals(dbUserName)) {
-					showMessageDialog("AppVet Error", "User " + dbUserName
-							+ " already exists.", true);
-					return false;
-				}
-			}
-		}
-		final boolean changePassword = userInfoDialogBox.changePasswordCheckBox
-				.getValue();
-		final String password1 = userInfoDialogBox.password1TextBox.getText();
-		final String password2 = userInfoDialogBox.password2TextBox.getText();
-		if (changePassword) {
-			if (!Validate.isValidPassword(password1)) {
-				showMessageDialog("AppVet Error", "Invalid password", true);
-				return false;
-			} else if (!password1.equals(password2)) {
-				showMessageDialog("AppVet Error", "Passwords do not match",
-						true);
-				return false;
-			}
-		}
-//		if (!Validate.isPrintable(userInfoDialogBox.organizationTextBox
-//				.getText())) {
-//			showMessageDialog("AppVet Error", "Invalid Organization", true);
-//			return false;
-//		}
-//		
-//		if (!Validate.isPrintable(userInfoDialogBox.departmentTextBox
-//				.getText())) {
-//			showMessageDialog("AppVet Error", "Invalid Department", true);
-//			return false;
-//		}
-		
-		if (!Validate.isValidEmail(userInfoDialogBox.emailTextBox.getText())) {
-			showMessageDialog("AppVet Error", "Invalid Email", true);
-			return false;
-		}
-		return true;
-	}
-
-	public void getAllUsers(List<UserInfo> allUsers) {
+	public void setAllUsers(List<UserInfo> allUsers) {
 		final UserInfo currentlySelectedUser = usersSelectionModel
 				.getSelectedObject();
 		int currentlySelectedIndex = 0;
@@ -465,7 +407,7 @@ public class UserListDialogBox extends DialogBox {
 					showMessageDialog("AppVet Error", "No users available",
 							true);
 				} else if ((usersList != null) && (usersList.size() > 0)) {
-					getAllUsers(usersList);
+					setAllUsers(usersList);
 				}
 			}
 		});
@@ -522,7 +464,7 @@ public class UserListDialogBox extends DialogBox {
 							showMessageDialog("Update Status",
 									"User added or updated successfully", false);
 							allUsers = result;
-							getAllUsers(allUsers);
+							setAllUsers(allUsers);
 						}
 					}
 				});

@@ -825,7 +825,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				new Command() {
 					@Override
 					public void execute() {
-						usersDialogBox = new UserListDialogBox(configInfo.getNumRowsUsersList());
+						usersDialogBox = new UserListDialogBox(configInfo.getNumRowsUsersList(), useSSO);
 						usersDialogBox.setText("Users");
 						usersDialogBox.center();
 						usersDialogBox.doneButton.setFocus(true);
@@ -1649,8 +1649,8 @@ public class AppVetPanel extends DockLayoutPanel {
 
 						public String getPreprocessorStatusHtmlDisplay(
 								ToolStatusGwt toolStatus) {
-							log.info("Tool : " + toolStatus.getToolDisplayName() + ", status: " 
-									+ toolStatus.getStatusHtml());
+//							log.info("Tool : " + toolStatus.getToolDisplayName() + ", status: " 
+//									+ toolStatus.getStatusHtml());
 							
 							String status = null;
 
@@ -1999,7 +1999,10 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 	}
 
-
+	/** If configuration information for a user is changed by an ADMIN 
+	 * during the time the user is logged in then the change is 
+	 * not visible to the user until the user's next log in.
+	 */
 	public void openUserAccount(final ConfigInfoGwt configInfo) {
 		userAcctDialogBox = new UserAcctDialogBox(configInfo);
 		userAcctDialogBox.setText("Account Settings");
@@ -2011,7 +2014,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				killDialogBox(userAcctDialogBox);
 			}
 		});
-		userAcctDialogBox.updateButton.addClickHandler(new ClickHandler() {
+		userAcctDialogBox.passwordUpdateButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				final String newLastName = userAcctDialogBox.lastNameTextBox
@@ -2035,7 +2038,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				updatedUserInfo.setOrganization(newOrganization);
 				updatedUserInfo.setDepartment(newDepartment);
 				updatedUserInfo.setEmail(newEmail);
-				updatedUserInfo.setChangePassword(true);
+//				updatedUserInfo.setChangePassword(true);
 				updatedUserInfo.setPasswords(newPassword1, newPassword2);
 				updatedUserInfo.setRole(userInfo.getRole());
 				if (!updatedUserInfo.isValid()) {
@@ -2068,7 +2071,7 @@ public class AppVetPanel extends DockLayoutPanel {
 											.getDepartment());
 									userInfo.setEmail(updatedUserInfo
 											.getEmail());
-									updatedUserInfo.setChangePassword(false);
+									//updatedUserInfo.setChangePassword(false);
 									updatedUserInfo.setPassword("");
 									userInfo.setRole(updatedUserInfo.getRole());
 								

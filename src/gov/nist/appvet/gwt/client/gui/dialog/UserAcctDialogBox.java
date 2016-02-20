@@ -45,7 +45,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class UserAcctDialogBox extends DialogBox {
 	public UserInfo userInfoGwt = null;
 	public PushButton okButton = null;
-	public PushButton updateButton = null;
+	public PushButton passwordUpdateButton = null;
 	public TextBox lastNameTextBox = null;
 	public TextBox firstNameTextBox = null;
 	public TextBox userIdTextBox = null;
@@ -238,9 +238,9 @@ public class UserAcctDialogBox extends DialogBox {
 		horizontalPanel_5.setCellWidth(emailTextBox, "50%");
 		emailTextBox.setText(userInfoGwt.getEmail());
 		emailTextBox.setSize("180px", "20px");
-		final Label lblNewLabel_2 = new Label("Change Password");
-		lblNewLabel_2.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		lblNewLabel_2.setWidth("340px");
+		final Label passwordLabel1 = new Label("Change Password");
+		passwordLabel1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		passwordLabel1.setWidth("340px");
 		final HorizontalPanel horizontalPanel_6 = new HorizontalPanel();
 		horizontalPanel_6
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
@@ -251,25 +251,23 @@ public class UserAcctDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel.setCellHorizontalAlignment(horizontalPanel_6,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		final Label lblNewLabel_3 = new Label("New Password: ");
-		horizontalPanel_6.add(lblNewLabel_3);
-		lblNewLabel_3.setWidth("170px");
-		horizontalPanel_6.setCellVerticalAlignment(lblNewLabel_3,
+		final Label passwordLabel3 = new Label("New Password: ");
+		horizontalPanel_6.add(passwordLabel3);
+		passwordLabel3.setWidth("170px");
+		horizontalPanel_6.setCellVerticalAlignment(passwordLabel3,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_6.setCellHorizontalAlignment(lblNewLabel_3,
+		horizontalPanel_6.setCellHorizontalAlignment(passwordLabel3,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_6.setCellWidth(lblNewLabel_3, "50%");
-		lblNewLabel_3.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		horizontalPanel_6.setCellWidth(passwordLabel3, "50%");
+		passwordLabel3.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		password1TextBox = new PasswordTextBox();
 		password1TextBox.setTitle("Type new password");
 		password1TextBox.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				updateButton.setEnabled(true);
+				passwordUpdateButton.setEnabled(true);
 			}
 		});
-		
-
 		
 		password1TextBox.setAlignment(TextAlignment.LEFT);
 		horizontalPanel_6.add(password1TextBox);
@@ -289,22 +287,22 @@ public class UserAcctDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.setCellVerticalAlignment(horizontalPanel_7,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		final Label lblNewLabel_4 = new Label("New Password (again): ");
-		horizontalPanel_7.add(lblNewLabel_4);
-		horizontalPanel_7.setCellHorizontalAlignment(lblNewLabel_4,
+		final Label passwordLabel2 = new Label("New Password (again): ");
+		horizontalPanel_7.add(passwordLabel2);
+		horizontalPanel_7.setCellHorizontalAlignment(passwordLabel2,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		lblNewLabel_4.setWidth("170px");
-		horizontalPanel_7.setCellWidth(lblNewLabel_4, "50%");
-		horizontalPanel_7.setCellVerticalAlignment(lblNewLabel_4,
+		passwordLabel2.setWidth("170px");
+		horizontalPanel_7.setCellWidth(passwordLabel2, "50%");
+		horizontalPanel_7.setCellVerticalAlignment(passwordLabel2,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		lblNewLabel_4.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		passwordLabel2.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		password2TextBox = new PasswordTextBox();
 		password2TextBox.setTitle("Type new password again");
 
 		password2TextBox.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				updateButton.setEnabled(true);
+				passwordUpdateButton.setEnabled(true);
 			}
 		});
 		password2TextBox.setAlignment(TextAlignment.LEFT);
@@ -352,33 +350,42 @@ public class UserAcctDialogBox extends DialogBox {
 		label.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		horizontalPanel_9.add(label);
 		label.setWidth("170px");
-		updateButton = new PushButton("Update Password");
-		horizontalPanel_9.add(updateButton);
-		horizontalPanel_9.setCellVerticalAlignment(updateButton,
+		passwordUpdateButton = new PushButton("Update Password");
+		horizontalPanel_9.add(passwordUpdateButton);
+		horizontalPanel_9.setCellVerticalAlignment(passwordUpdateButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_9.setCellHorizontalAlignment(updateButton,
+		horizontalPanel_9.setCellHorizontalAlignment(passwordUpdateButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		updateButton.setEnabled(false);
-		horizontalPanel.setCellVerticalAlignment(updateButton,
+		passwordUpdateButton.setEnabled(false);
+		horizontalPanel.setCellVerticalAlignment(passwordUpdateButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel.setCellHorizontalAlignment(updateButton,
+		horizontalPanel.setCellHorizontalAlignment(passwordUpdateButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		updateButton.setSize("180px", "18px");
+		passwordUpdateButton.setSize("180px", "18px");
 		
 		
 		// Don't allow password entry if user is using SSO
 		if (!configInfoGwt.getUsesSSO()) {
+			passwordLabel1.setVisible(true);
+			password1TextBox.setVisible(true);
 			password1TextBox.setEnabled(true);
+			passwordLabel2.setVisible(true);
+			password2TextBox.setVisible(true);
 			password2TextBox.setEnabled(true);
-			updateButton.setEnabled(true);
+			passwordLabel3.setVisible(true);
+			passwordUpdateButton.setEnabled(true);
+			passwordUpdateButton.setVisible(true);
 		} else {
 			// SSO is being used
+			passwordLabel1.setVisible(false);
+			password1TextBox.setVisible(false);
 			password1TextBox.setEnabled(false);
-			password1TextBox.setTitle("Password disabled - SSO in use.");
+			passwordLabel2.setVisible(false);
 			password2TextBox.setEnabled(false);
-			password2TextBox.setTitle("Password disabled - SSO in use.");
-			updateButton.setEnabled(false);
-			updateButton.setTitle("Password disabled - SSO in use.");
+			password2TextBox.setVisible(false);
+			passwordLabel3.setVisible(false);
+			passwordUpdateButton.setEnabled(false);
+			passwordUpdateButton.setVisible(false);
 		}
 		
 		

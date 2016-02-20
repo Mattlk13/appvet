@@ -107,9 +107,9 @@ public class UserInfo implements IsSerializable {
 		return newUser;
 	}
 
-	public void setChangePassword(boolean changePassword) {
-		this.changePassword = changePassword;
-	}
+//	public void setChangePassword(boolean changePassword) {
+//		this.changePassword = changePassword;
+//	}
 
 	public void setEmail(String email) {
 		this.email = email;
@@ -150,6 +150,14 @@ public class UserInfo implements IsSerializable {
 	public void setPasswords(String password, String passwordAgain) {
 		this.password = password;
 		this.passwordAgain = passwordAgain;
+		
+		if (password != null && !password.isEmpty() 
+				&& passwordAgain != null && !passwordAgain.isEmpty() 
+				&& password.equals(passwordAgain)) {
+			this.changePassword = true;
+		} else {
+			this.changePassword = false;
+		}
 	}
 
 	public void setRole(String role) {
@@ -218,6 +226,13 @@ public class UserInfo implements IsSerializable {
 					"Invalid organization", true);
 			return false;
 		}
+		if (!Validate.isPrintable(department)) {
+			AppVetPanel.showMessageDialog("Account Setting Error",
+					"Invalid department", true);
+			return false;
+		}
+		
+		
 		if (!Validate.isValidEmail(email)) {
 			AppVetPanel.showMessageDialog("Account Setting Error",
 					"Invalid email", true);

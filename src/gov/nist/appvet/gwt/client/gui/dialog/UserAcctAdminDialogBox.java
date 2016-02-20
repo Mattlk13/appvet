@@ -45,18 +45,13 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.PushButton;
-import com.google.gwt.user.client.ui.SimpleCheckBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.SuggestBox;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 
 /**
  * @author steveq@nist.gov
@@ -81,7 +76,6 @@ public class UserAcctAdminDialogBox extends DialogBox {
 	public List<OrgDepts> orgDeptsList = null;
 	public boolean newUser = false;
 	public UsersListPagingDataGrid<UserInfo> usersListTable = null;
-	public SimpleCheckBox changePasswordCheckBox = null;
 	public Label passwordAgainLabel = null;
 	private final DateTimeFormat dateTimeFormat = DateTimeFormat
 			.getFormat("yyyy-MM-dd HH:mm:ss");
@@ -92,7 +86,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 	@SuppressWarnings("deprecation")
 	public UserAcctAdminDialogBox(UserInfo userInfo,
 			UsersListPagingDataGrid<UserInfo> usersListTable,
-			List<UserInfo> allUsers) {
+			List<UserInfo> allUsers, boolean useSSO) {
 		
 		// Get orgs and depts now
 		getOrgDeptList();
@@ -105,7 +99,6 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		if (userInfo == null) {
 			newUser = true;
 		}
-		changePasswordCheckBox = new SimpleCheckBox();
 
 		if (newUser) {
 			passwordAgainLabel = new Label("Password (again): ");
@@ -137,13 +130,6 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		horizontalPanel_1.setCellWidth(lblNewLabel, "50%");
 		lblNewLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		lastNameTextBox = new TextBox();
-		lastNameTextBox.addChangeHandler(new ChangeHandler() {
-			public void onChange(ChangeEvent arg0) {
-				if (allFieldsFilled()) {
-					okButton.setEnabled(true);
-				}
-			}
-		});
 		lastNameTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		lastNameTextBox.setAlignment(TextAlignment.LEFT);
 		horizontalPanel_1.add(lastNameTextBox);
@@ -169,13 +155,6 @@ public class UserAcctAdminDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		lblNewLabel_1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		firstNameTextBox = new TextBox();
-		firstNameTextBox.addChangeHandler(new ChangeHandler() {
-			public void onChange(ChangeEvent arg0) {
-				if (allFieldsFilled()) {
-					okButton.setEnabled(true);
-				}
-			}
-		});
 		firstNameTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		firstNameTextBox.setAlignment(TextAlignment.LEFT);
 		horizontalPanel_2.add(firstNameTextBox);
@@ -201,13 +180,6 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		horizontalPanel_3.setCellWidth(lblUserId, "50%");
 		lblUserId.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		userIdTextBox = new TextBox();
-		userIdTextBox.addChangeHandler(new ChangeHandler() {
-			public void onChange(ChangeEvent arg0) {
-				if (allFieldsFilled()) {
-					okButton.setEnabled(true);
-				}
-			}
-		});
 		userIdTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		userIdTextBox.setAlignment(TextAlignment.LEFT);
 		horizontalPanel_3.add(userIdTextBox);
@@ -309,13 +281,6 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		horizontalPanel_7.setCellWidth(lblEmail, "50%");
 		lblEmail.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		emailTextBox = new TextBox();
-		emailTextBox.addChangeHandler(new ChangeHandler() {
-			public void onChange(ChangeEvent arg0) {
-				if (allFieldsFilled()) {
-					okButton.setEnabled(true);
-				}
-			}
-		});
 		emailTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		emailTextBox.setAlignment(TextAlignment.LEFT);
 		horizontalPanel_7.add(emailTextBox);
@@ -341,13 +306,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		horizontalPanel_8.setCellWidth(lblRole, "50%");
 		lblRole.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		roleComboBox = new ListBox();
-		roleComboBox.addChangeHandler(new ChangeHandler() {
-			public void onChange(ChangeEvent arg0) {
-				if (allFieldsFilled()) {
-					okButton.setEnabled(true);
-				}
-			}
-		});
+
 		horizontalPanel_8.add(roleComboBox);
 		horizontalPanel_8.setCellWidth(roleComboBox, "50%");
 		horizontalPanel_8.setCellVerticalAlignment(roleComboBox,
@@ -369,42 +328,20 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		horizontalPanel_13
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_13.setWidth("366px");
-		changePasswordCheckBox.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if (changePasswordCheckBox.isChecked()) {
-					password1TextBox.setEnabled(true);
-					password2TextBox.setEnabled(true);
-				} else {
-					password1TextBox.setText(null);
-					password1TextBox.setEnabled(false);
-					password2TextBox.setText(null);
-					password2TextBox.setEnabled(false);
-				}
-			}
-		});
-		horizontalPanel_13.add(changePasswordCheckBox);
-		horizontalPanel_13.setCellVerticalAlignment(changePasswordCheckBox,
+
+		final Label passwordLabel1 = new Label("Change Password: ");
+		passwordLabel1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		horizontalPanel_13.add(passwordLabel1);
+		horizontalPanel_13.setCellVerticalAlignment(passwordLabel1,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		final Label lblNewLabel_2 = new Label("Change Password");
-		lblNewLabel_2.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		horizontalPanel_13.add(lblNewLabel_2);
-		horizontalPanel_13.setCellVerticalAlignment(lblNewLabel_2,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		lblNewLabel_2.setWidth("150px");
+		passwordLabel1.setWidth("170px");
 		password1TextBox = new PasswordTextBox();
 		horizontalPanel_13.add(password1TextBox);
-		password1TextBox.addChangeHandler(new ChangeHandler() {
-			public void onChange(ChangeEvent arg0) {
-				if (allFieldsFilled()) {
-					okButton.setEnabled(true);
-				}
-			}
-		});
-		password1TextBox.setEnabled(false);
+
 		password1TextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		password1TextBox.setAlignment(TextAlignment.LEFT);
 		password1TextBox.setSize("180px", "");
+
 		final HorizontalPanel horizontalPanel_4 = new HorizontalPanel();
 		verticalPanel_1.add(horizontalPanel_4);
 		horizontalPanel_4.setWidth("170px");
@@ -412,32 +349,18 @@ public class UserAcctAdminDialogBox extends DialogBox {
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_4
 				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		//horizontalPanel_4.add(passwordLabel);
-		//passwordLabel.setWidth("170px");
-		//horizontalPanel_4.setCellWidth(passwordLabel, "50%");
-		//horizontalPanel_4.setCellVerticalAlignment(passwordLabel,
-		//		HasVerticalAlignment.ALIGN_MIDDLE);
-		//horizontalPanel_4.setCellHorizontalAlignment(passwordLabel,
-		//		HasHorizontalAlignment.ALIGN_CENTER);
 		
-		Label lblNewLabel_3 = new Label("Password (again)");
-		lblNewLabel_3.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		horizontalPanel_4.add(lblNewLabel_3);
-		lblNewLabel_3.setWidth("170px");
+		Label passwordLabel3 = new Label("Password (again): ");
+		passwordLabel3.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		horizontalPanel_4.add(passwordLabel3);
+		passwordLabel3.setWidth("170px");
 		password2TextBox = new PasswordTextBox();
 		horizontalPanel_4.add(password2TextBox);
-		password2TextBox.addChangeHandler(new ChangeHandler() {
-			public void onChange(ChangeEvent arg0) {
-				if (allFieldsFilled()) {
-					okButton.setEnabled(true);
-				}
-			}
-		});
-		password2TextBox.setEnabled(false);
+
 		password2TextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		password2TextBox.setAlignment(TextAlignment.LEFT);
 		password2TextBox.setSize("180px", "");
-		//passwordLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+
 		passwordAgainLabel.setWidth("170px");
 		passwordAgainLabel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
@@ -517,7 +440,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		cancelButton.setSize("70px", "18px");
 		okButton = new PushButton("Submit");
-		okButton.setEnabled(false);
+		okButton.setEnabled(true);
 		horizontalPanel.add(okButton);
 		horizontalPanel.setCellHorizontalAlignment(okButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
@@ -564,6 +487,26 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		dockPanel.setCellHorizontalAlignment(horizontalPanel,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		dockPanel.add(simplePanel, DockPanel.CENTER);
+		
+		// TODO
+		if (useSSO) {
+			// SSO is used so disable password fields
+			password1TextBox.setEnabled(false);
+			password1TextBox.setVisible(false);
+			password2TextBox.setEnabled(false);
+			password2TextBox.setVisible(false);
+			passwordAgainLabel.setVisible(false);
+			passwordLabel1.setVisible(false);
+			passwordLabel3.setVisible(false);
+		} else {
+			password1TextBox.setEnabled(true);
+			password1TextBox.setVisible(true);
+			password2TextBox.setEnabled(true);
+			password2TextBox.setVisible(true);
+			passwordAgainLabel.setVisible(true);
+			passwordLabel1.setVisible(true);
+			passwordLabel3.setVisible(true);
+		}
 	}
 	
 	
