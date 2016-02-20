@@ -51,13 +51,31 @@ public class AppVet implements EntryPoint {
 	private static Logger log = Logger.getLogger("AppVet");
 	private final GWTServiceAsync appVetService = GWT.create(GWTService.class);
 	private static MessageDialogBox messageDialogBox = null;
-
+	
+	// SSO parameters
+	String username = null;
+	String password = null;
+	
 	@Override
 	public void onModuleLoad() {
 		
 		Window.addWindowClosingHandler(new Window.ClosingHandler() {
 		    public void onWindowClosing(Window.ClosingEvent closingEvent) {
-		        closingEvent.setMessage("AppVet is a dynamic web application and should not be refreshed.");
+		    	log.info("Trying to relog back in");
+				if (username == null || password == null) {
+					// Send to AppVet GUI
+					final LoginPanel loginPanel = new LoginPanel(Unit.PX);
+					// loginPanel.setTitle("Login panel");
+					final RootLayoutPanel rootPanel = RootLayoutPanel.get();
+					// rootPanel.setTitle("Root panel");
+					rootPanel.add(loginPanel);
+				} else if (username != null && password != null) {
+					// Login attempt via SSO
+					// log.info("AppVet GWT got: name=" + username);
+					// Authenticate SSO username and password
+					authenticateSSO(username, password);
+				}
+		        //closingEvent.setMessage("AppVet is a dynamic web application and should not be refreshed.");
 		    }
 		});
 
@@ -86,8 +104,8 @@ public class AppVet implements EntryPoint {
 
 		// If SSO is used, these parameters should not be null. If one or
 		// both parameters are null, send to AppVet GUI.
-		String username = Window.Location.getParameter("ssou");
-		String password = Window.Location.getParameter("ssop");
+		username = Window.Location.getParameter("ssou");
+		password = Window.Location.getParameter("ssop");
 
 		if (username == null || password == null) {
 			// Send to AppVet GUI
