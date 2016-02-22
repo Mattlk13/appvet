@@ -215,7 +215,7 @@ public class LoginPanel extends DockLayoutPanel {
 						.getNativeEvent().getKeyCode();
 				
 				if (enterPressed) {
-					getUserInput();
+					doLogin();
 				}
 			}
 
@@ -234,7 +234,7 @@ public class LoginPanel extends DockLayoutPanel {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				getUserInput();
+				doLogin();
 			}
 
 		});
@@ -244,48 +244,9 @@ public class LoginPanel extends DockLayoutPanel {
 		loginButton.setSize("78px", "");
 
 	}
-
 	
-	public void authenticate(final String username, final String password) {
-		appVetService.authenticate(username, password, false, 
-				new AsyncCallback<ConfigInfoGwt>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				StackTraceElement[] trace = caught.getStackTrace();
-				String stackTraceStr = null;
-				for (int i = 0; i < trace.length; i++) {
-					StackTraceElement element = trace[i];
-					stackTraceStr += element.toString() + "\n";
-				}
-
-				log.severe("STACK TRACE LOG: " + stackTraceStr);
-				showMessageDialog("AppVet Error",
-						"Authentication system error - See console", true);
-
-				return;
-			}
-
-			@Override
-			public void onSuccess(final ConfigInfoGwt result) {
-
-				if (result == null) {
-					showMessageDialog("AppVet Login Error",
-							"Unknown username or password", true);
-					return;
-				} else {
-					loginStatusLabel.setText("Retrieving data...");
-					// checkConfigInfo(result);
-					startAppVet(result);
-				}
-
-			}
-
-		});
-	}
-
 	
-	public void getUserInput() {
+	public void doLogin() {
 		loginButton.setEnabled(false);
 		final String userName = userNameTextBox.getText();
 		final String password = passwordTextBox.getText();
@@ -301,28 +262,37 @@ public class LoginPanel extends DockLayoutPanel {
 	}
 
 	
-	private void showMessageDialog(String windowTitle, String message,
-			boolean isError) {
-		messageDialogBox = new MessageDialogBox(message, isError);
-		messageDialogBox.setText(windowTitle);
-		messageDialogBox.center();
-		messageDialogBox.closeButton.setFocus(true);
-		messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
+	public void authenticate(final String username, final String password) {
+		
+		appVetService.authenticateNonSSO(username, password, 
+				new AsyncCallback<ConfigInfoGwt>() {
 
 			@Override
-			public void onClick(ClickEvent event) {
-				userNameTextBox.setText("");
-				passwordTextBox.setText("");
-				messageDialogBox.hide();
-				messageDialogBox = null;
-				loginStatusLabel.setText("");
-				loginButton.setEnabled(true);
+			public void onFailure(Throwable caught) {
+				showMessageDialog("AppVet Error",
+						"Authentication system error", true);
+				return;
 			}
+
+			@Override
+			public void onSuccess(final ConfigInfoGwt result) {
+
+				if (result == null) {
+					showMessageDialog("AppVet Login Error",
+							"Unknown username or password", true);
+					return;
+				} else {
+					loginStatusLabel.setText("Retrieving data...");
+					displayAppVet(result);
+				}
+
+			}
+
 		});
 	}
-
 	
-	public void startAppVet(final ConfigInfoGwt configInfo) {
+	
+	public void displayAppVet(final ConfigInfoGwt configInfo) {
 		final String userName = configInfo.getUserInfo().getUserName();
 
 		if ((userName == null) || userName.isEmpty()) {
@@ -348,7 +318,7 @@ public class LoginPanel extends DockLayoutPanel {
 			public void onSuccess(AppsListGwt appsList) {
 				if (appsList == null) {
 					showMessageDialog("AppVet Error",
-							"No apps are available", true);
+							"Apps list could not be retrieved", true);
 					return;
 				} else {
 					final AppVetPanel appVetPanel = new AppVetPanel(
@@ -366,4 +336,28 @@ public class LoginPanel extends DockLayoutPanel {
 
 		});
 	}
+
+	
+	private void showMessageDialog(String windowTitle, String message,
+			boolean isError) {
+		messageDialogBox = new MessageDialogBox(message, isError);
+		messageDialogBox.setText(windowTitle);
+		messageDialogBox.center();
+		messageDialogBox.closeButton.setFocus(true);
+		messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				userNameTextBox.setText("");
+				passwordTextBox.setText("");
+				messageDialogBox.hide();
+				messageDialogBox = null;
+				loginStatusLabel.setText("");
+				loginButton.setEnabled(true);
+			}
+		});
+	}
+
+	
+
 }

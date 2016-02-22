@@ -45,6 +45,7 @@
 					</xs:annotation>
 				</xs:element>
 
+				<xs:element name="SSO" type="SSOType" maxOccurs="1" minOccurs="1"></xs:element>
 				<xs:element name="OrgLogoAltText" type="xs:string"
 					maxOccurs="1" minOccurs="0">
 				</xs:element>
@@ -91,11 +92,77 @@
 					</xs:annotation>
 				</xs:element>
 				<xs:element name="Display" type="DisplayType"></xs:element>
-				<xs:element name="DocumentationURL" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+				<xs:element name="DocumentationURL" type="xs:string"
+					maxOccurs="1" minOccurs="0">
+				</xs:element>
 			</xs:sequence>
 
 		</xs:complexType>
 	</xs:element>
+	
+	<xs:complexType name="SSOType">
+		<xs:sequence>
+			<xs:element name="Active" type="xs:boolean" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						To login and add users manually, set Active=false. If Active==false,
+             all other SSO elements will be ignored by AppVet.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="UnauthorizedURL" type="xs:anyURI" maxOccurs="1" minOccurs="1"></xs:element>
+			<xs:element name="UserParams" type="UserParamsType"
+				maxOccurs="1" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="UserParamsType">
+		<xs:sequence>
+			<xs:element name="UserNameParamName" type="xs:string"
+				maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						The name of the HTTP header containing the SSO
+						username parameter name.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PasswordParamName" type="xs:string"
+				maxOccurs="1" minOccurs="0">
+			</xs:element>
+			<xs:element name="LastNameParamName" type="xs:string"
+				maxOccurs="1" minOccurs="0">
+			</xs:element>
+			<xs:element name="FirstNameParamName" type="xs:string"
+				maxOccurs="1" minOccurs="0">
+			</xs:element>
+			<xs:element name="OrganizationParamName" type="xs:string"
+				maxOccurs="1" minOccurs="0">
+			</xs:element>
+			<xs:element name="DepartmentParamName" type="xs:string"
+				maxOccurs="1" minOccurs="0">
+			</xs:element>
+			<xs:element name="EmailParamName" type="xs:string"
+				maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						The name of the HTTP header containing the SSO
+						email parameter name. This is the only parameter
+						that is required to achieve SSO for AppVet. In cases
+						where UserNameParamName is not available, the
+						user's email is used as the username.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PhoneParamName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
 
 	<xs:complexType name="LoggingType">
 		<xs:sequence>

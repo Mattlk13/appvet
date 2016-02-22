@@ -46,7 +46,6 @@ public class UserAcctDialogBox extends DialogBox {
 	public UserInfo userInfoGwt = null;
 	public PushButton okButton = null;
 	public PushButton cancelButton = null;
-	//public PushButton passwordUpdateButton = null;
 	public TextBox lastNameTextBox = null;
 	public TextBox firstNameTextBox = null;
 	public TextBox userIdTextBox = null;
@@ -56,7 +55,6 @@ public class UserAcctDialogBox extends DialogBox {
 	public TextBox organizationTextBox = null;
 	public TextBox departmentTextBox = null;
 	public TextBox emailTextBox = null;
-	//public ToolAuthParamDialogBox toolAuthParamDialogBox = null;
 	private static Logger log = Logger.getLogger("UserAcctDialogBox");
 	public static MessageDialogBox messageDialogBox = null;
 	
@@ -263,12 +261,6 @@ public class UserAcctDialogBox extends DialogBox {
 		passwordLabel3.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		password1TextBox = new PasswordTextBox();
 		password1TextBox.setTitle("Type new password");
-//		password1TextBox.addClickHandler(new ClickHandler() {
-//			@Override
-//			public void onClick(ClickEvent event) {
-//				passwordUpdateButton.setEnabled(true);
-//			}
-//		});
 		
 		password1TextBox.setAlignment(TextAlignment.LEFT);
 		horizontalPanel_6.add(password1TextBox);
@@ -300,12 +292,6 @@ public class UserAcctDialogBox extends DialogBox {
 		password2TextBox = new PasswordTextBox();
 		password2TextBox.setTitle("Type new password again");
 
-//		password2TextBox.addClickHandler(new ClickHandler() {
-//			@Override
-//			public void onClick(ClickEvent event) {
-//				passwordUpdateButton.setEnabled(true);
-//			}
-//		});
 		password2TextBox.setAlignment(TextAlignment.LEFT);
 		horizontalPanel_7.add(password2TextBox);
 		horizontalPanel_7.setCellHorizontalAlignment(password2TextBox,
@@ -351,22 +337,10 @@ public class UserAcctDialogBox extends DialogBox {
 		label.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		horizontalPanel_9.add(label);
 		label.setWidth("170px");
-//		passwordUpdateButton = new PushButton("Update Password");
-//		horizontalPanel_9.add(passwordUpdateButton);
-//		horizontalPanel_9.setCellVerticalAlignment(passwordUpdateButton,
-//				HasVerticalAlignment.ALIGN_MIDDLE);
-//		horizontalPanel_9.setCellHorizontalAlignment(passwordUpdateButton,
-//				HasHorizontalAlignment.ALIGN_CENTER);
-//		passwordUpdateButton.setEnabled(false);
-//		horizontalPanel.setCellVerticalAlignment(passwordUpdateButton,
-//				HasVerticalAlignment.ALIGN_MIDDLE);
-//		horizontalPanel.setCellHorizontalAlignment(passwordUpdateButton,
-//				HasHorizontalAlignment.ALIGN_CENTER);
-//		passwordUpdateButton.setSize("180px", "18px");
 		
 		
 		// Don't allow password entry if user is using SSO
-		if (!configInfoGwt.getUsesSSO()) {
+		if (!configInfoGwt.getSSOActive()) {
 			passwordLabel1.setVisible(true);
 			password1TextBox.setVisible(true);
 			password1TextBox.setEnabled(true);
@@ -374,8 +348,6 @@ public class UserAcctDialogBox extends DialogBox {
 			password2TextBox.setVisible(true);
 			password2TextBox.setEnabled(true);
 			passwordLabel3.setVisible(true);
-//			passwordUpdateButton.setEnabled(true);
-//			passwordUpdateButton.setVisible(true);
 		} else {
 			// SSO is being used
 			passwordLabel1.setVisible(false);
@@ -385,8 +357,6 @@ public class UserAcctDialogBox extends DialogBox {
 			password2TextBox.setEnabled(false);
 			password2TextBox.setVisible(false);
 			passwordLabel3.setVisible(false);
-//			passwordUpdateButton.setEnabled(false);
-//			passwordUpdateButton.setVisible(false);
 		}
 		
 		
@@ -398,26 +368,7 @@ public class UserAcctDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.setCellVerticalAlignment(horizontalPanel_8,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-//		Label toolAuthenticationLabel = new Label("Tool Authentication:");
-//		toolAuthenticationLabel
-//				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-//		horizontalPanel_8.add(toolAuthenticationLabel);
-//		horizontalPanel_8.setCellHorizontalAlignment(toolAuthenticationLabel,
-//				HasHorizontalAlignment.ALIGN_CENTER);
-//		toolAuthenticationLabel.setWidth("170px");
-//		PushButton toolAuthenticationButton = new PushButton("Edit Credentials");
-//		toolAuthenticationButton.setHTML("Edit Credentials");
-//		toolAuthenticationButton.addClickHandler(new ClickHandler() {
-//			public void onClick(ClickEvent arg0) {
-//				getToolsAuthentication(configInfoGwt);
-//			}
-//		});
-//		horizontalPanel_8.add(toolAuthenticationButton);
-//		horizontalPanel_8.setCellHorizontalAlignment(toolAuthenticationButton,
-//				HasHorizontalAlignment.ALIGN_CENTER);
-//		toolAuthenticationButton.setWidth("180px");
-//		horizontalPanel_8.setCellVerticalAlignment(toolAuthenticationButton,
-//				HasVerticalAlignment.ALIGN_MIDDLE);
+
 		final DockPanel dockPanel = new DockPanel();
 		dockPanel.setStyleName("gwt-DialogBox");
 		setWidget(dockPanel);

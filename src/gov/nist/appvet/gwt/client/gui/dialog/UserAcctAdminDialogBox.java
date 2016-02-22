@@ -329,12 +329,18 @@ public class UserAcctAdminDialogBox extends DialogBox {
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_13.setWidth("366px");
 
-		final Label passwordLabel1 = new Label("Change Password: ");
-		passwordLabel1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		horizontalPanel_13.add(passwordLabel1);
-		horizontalPanel_13.setCellVerticalAlignment(passwordLabel1,
+		Label passwordLabel = null;
+		if (newUser) {
+			passwordLabel = new Label("Set Password: ");
+		} else {
+			passwordLabel = new Label("Change Password: ");
+		}
+		
+		passwordLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		horizontalPanel_13.add(passwordLabel);
+		horizontalPanel_13.setCellVerticalAlignment(passwordLabel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		passwordLabel1.setWidth("170px");
+		passwordLabel.setWidth("170px");
 		password1TextBox = new PasswordTextBox();
 		horizontalPanel_13.add(password1TextBox);
 
@@ -496,7 +502,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 			password2TextBox.setEnabled(false);
 			password2TextBox.setVisible(false);
 			passwordAgainLabel.setVisible(false);
-			passwordLabel1.setVisible(false);
+			passwordLabel.setVisible(false);
 			passwordLabel3.setVisible(false);
 		} else {
 			password1TextBox.setEnabled(true);
@@ -504,7 +510,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 			password2TextBox.setEnabled(true);
 			password2TextBox.setVisible(true);
 			passwordAgainLabel.setVisible(true);
-			passwordLabel1.setVisible(true);
+			passwordLabel.setVisible(true);
 			passwordLabel3.setVisible(true);
 		}
 	}

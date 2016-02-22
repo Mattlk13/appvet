@@ -211,27 +211,33 @@ public class UserInfo implements IsSerializable {
 		return false;
 	}
 
+	
 	public boolean isValid(boolean ignoreBlankPassword) {
+		
 		if (!Validate.isValidUserName(userName)) {
 			AppVetPanel.showMessageDialog("Account Setting Error",
 					"Invalid username", true);
 			return false;
 		}
+		
 		if (!Validate.isAlpha(lastName)) {
 			AppVetPanel.showMessageDialog("Account Setting Error",
 					"Invalid last name", true);
 			return false;
 		}
+		
 		if (!Validate.isAlpha(firstName)) {
 			AppVetPanel.showMessageDialog("Account Setting Error",
 					"Invalid first name", true);
 			return false;
 		}
+		
 		if (!Validate.isPrintable(organization)) {
 			AppVetPanel.showMessageDialog("Account Setting Error",
 					"Invalid organization", true);
 			return false;
 		}
+		
 		if (!Validate.isPrintable(department)) {
 			AppVetPanel.showMessageDialog("Account Setting Error",
 					"Invalid department", true);
@@ -271,7 +277,6 @@ public class UserInfo implements IsSerializable {
 				return false;
 			}	
 		}
-
 		
 		if (!Validate.isValidRole(role)) {
 			AppVetPanel.showMessageDialog("Account Setting Error",
@@ -280,6 +285,7 @@ public class UserInfo implements IsSerializable {
 		}
 		return true;
 	}
+	
 
 	public ArrayList<UserToolCredentials> getToolCredentials() {
 		return toolCredentials;

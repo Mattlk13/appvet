@@ -103,6 +103,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
 public class AppVetPanel extends DockLayoutPanel {
 
 	// See appvet.gwt.xml
+	private static int NUM_APPS_SHOW_REFRESH_WARNING = 0;
 	private static Logger log = Logger.getLogger("AppVetPanel");
 	private SingleSelectionModel<AppInfoGwt> appSelectionModel = null;
 	private static long MAX_SESSION_IDLE_DURATION = 0;
@@ -128,6 +129,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	private String sessionId = null;
 	private static Date sessionExpiration = null;
 	private static Timer pollingTimer = null;
+	private static Timer warningTimer = null;
 	private HorizontalPanel appsListButtonPanel = null;
 	private SimplePanel rightCenterPanel = null;
 	private static AppUploadDialogBox appUploadDialogBox = null;
@@ -150,7 +152,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	private MenuItem accountMenuItem = null;
 	public static boolean timeoutWarningMessage = false;
 	public String documentationURL = null;
-	public boolean useSSO = false;
+	public boolean ssoActive = false;
 
 	
 	class AppListHandler implements SelectionChangeEvent.Handler {
@@ -438,7 +440,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				configInfo));
 		tools = configInfo.getTools();
 		documentationURL = configInfo.getDocumentationURL();
-		useSSO = configInfo.getUsesSSO();
+		ssoActive = configInfo.getSSOActive();
 		final VerticalPanel northAppVetPanel = new VerticalPanel();
 		northAppVetPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
@@ -838,7 +840,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				new Command() {
 					@Override
 					public void execute() {
-						usersDialogBox = new UserListDialogBox(configInfo.getNumRowsUsersList(), useSSO);
+						usersDialogBox = new UserListDialogBox(configInfo.getNumRowsUsersList(), ssoActive);
 						usersDialogBox.setText("Users");
 						usersDialogBox.center();
 						usersDialogBox.doneButton.setFocus(true);
@@ -1254,8 +1256,16 @@ public class AppVetPanel extends DockLayoutPanel {
 			downloadReportsButton.setEnabled(false);
 			downloadAppButton.setEnabled(false);
 		}
+		
 		pollServer(userName);
 		scheduleResize();
+		
+		// Note that SSO users can manually refresh the page but non-SSO users will 
+		// return to AppVet login page upon a manual refresh of the page.
+		if (!ssoActive) {
+			showDontRefreshWarning();
+		}
+
 	}
 	
 	
@@ -1750,6 +1760,20 @@ public class AppVetPanel extends DockLayoutPanel {
 		};
 		pollingTimer.scheduleRepeating(POLLING_INTERVAL);
 	}
+	
+	
+	public void showDontRefreshWarning() {
+		warningTimer = new Timer() {
+			@Override
+			public void run() {
+				if (allApps.size() <= NUM_APPS_SHOW_REFRESH_WARNING) {
+					showMessageDialog("AppVet Info", "AppVet is a dynamic web application that automatically updates "
+							+ " in real-time. Do not refresh or reload this page while using AppVet.", true);
+				}
+			}
+		};
+		warningTimer.schedule(1000);
+	}
 
 	
 	public void resizeComponents() {
@@ -2070,8 +2094,12 @@ public class AppVetPanel extends DockLayoutPanel {
 				updatedUserInfo.setPasswords(newPassword1, newPassword2);
 				updatedUserInfo.setRole(userInfo.getRole());
 				
-				if (!updatedUserInfo.isValid(false)) {
-					return;
+				if (ssoActive) {
+					if (!updatedUserInfo.isValid(true))
+						return;
+				} else {
+					if (!updatedUserInfo.isValid(false))
+						return;
 				}
 				
 				appVetServiceAsync.updateSelf(updatedUserInfo,
@@ -2106,8 +2134,8 @@ public class AppVetPanel extends DockLayoutPanel {
 								
 									killDialogBox(userAcctDialogBox);
 									showMessageDialog(
-											"Account Information",
-											"Account updated",
+											"Account Update",
+											"Password updated",
 											false);
 								} else {
 									showMessageDialog(
@@ -2122,9 +2150,5 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		});
 		
-//		userAcctDialogBox.passwordUpdateButton.addClickHandler(new ClickHandler() {
-//			@Override
-//			public void onClick(ClickEvent event) {}
-//		});
 	}
 }

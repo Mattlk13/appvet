@@ -51,8 +51,11 @@ public interface GWTService extends RemoteService {
 	
 	List<UserInfo> adminSetUser(UserInfo userInfo)
 			throws IllegalArgumentException;
+	
+	ConfigInfoGwt handleServletRequest()
+			throws IllegalArgumentException;
 
-	ConfigInfoGwt authenticate(String username, String password, boolean sso)
+	ConfigInfoGwt authenticateNonSSO(String username, String password)
 			throws IllegalArgumentException;
 	
 	Boolean clearLog()

@@ -53,8 +53,12 @@ public interface GWTServiceAsync {
 	void adminSetUser(UserInfo userInfo,
 			AsyncCallback<List<UserInfo>> callback)
 			throws IllegalArgumentException;
+	
+	void handleServletRequest(
+			AsyncCallback<ConfigInfoGwt> callback)
+			throws IllegalArgumentException;		
 
-	void authenticate(String username, String password, boolean sso, 
+	void authenticateNonSSO(String username, String password, 
 			AsyncCallback<ConfigInfoGwt> callback)
 			throws IllegalArgumentException;
 	

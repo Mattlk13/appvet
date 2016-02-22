@@ -130,14 +130,14 @@ public class Database {
 	
 
 	public static boolean appExists(String appid) {
-		return exists("SELECT * FROM apps " + "where appid='" + appid + "'");
+		return exists("SELECT * FROM apps " + "WHERE appid='" + appid + "'");
 	}
 	
 
 	
 
 	public static boolean deleteUser(String username) {
-		return update("DELETE FROM users " + "where username='" + username
+		return update("DELETE FROM users " + "WHERE username='" + username
 				+ "'");
 	}
 	
@@ -153,7 +153,7 @@ public class Database {
 		String sql = null;
 		try {
 			connection = getConnection();
-			sql = "SELECT * FROM apps where appstatus='" + AppStatus.PROCESSING.name() + "'";
+			sql = "SELECT * FROM apps WHERE appstatus='" + AppStatus.PROCESSING.name() + "'";
 			//arrayList = new ArrayList<UserInfoGwt>();
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
@@ -319,7 +319,7 @@ public class Database {
 		UserInfo userInfo = null;
 		String sql = null;
 		try {
-			sql = "SELECT * FROM users where username='" + username + "'";
+			sql = "SELECT * FROM users WHERE username='" + username + "'";
 			connection = getConnection();
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
@@ -530,7 +530,7 @@ public class Database {
 
 	public static ArrayList<UserToolCredentials> getUserToolCredentials(
 			String username) {
-		String sql = "Select toolsAuth FROM users where username='" + username
+		String sql = "Select toolsAuth FROM users WHERE username='" + username
 				+ "'";
 		String credentialsString = Database.getString(sql);
 		if (credentialsString == null) {
@@ -875,7 +875,7 @@ public class Database {
 			connection = getConnection();
 			statement = connection.createStatement();
 			// Check if an app is PROCESSING
-			String sql = "SELECT appid FROM apps " + "where appstatus='"
+			String sql = "SELECT appid FROM apps " + "WHERE appstatus='"
 					+ AppStatus.PROCESSING.name() + "' ORDER BY "
 					+ "submittime ASC";
 			resultSet = statement.executeQuery(sql);
@@ -913,7 +913,7 @@ public class Database {
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
-		final String sql = "SELECT appid FROM apps " + "where appstatus='"
+		final String sql = "SELECT appid FROM apps " + "WHERE appstatus='"
 				+ appStatus.name() + "' ORDER BY " + "submittime ASC";
 		try {
 			connection = getConnection();
@@ -934,35 +934,35 @@ public class Database {
 	
 
 	public static String getAppName(String appid) {
-		return getString("SELECT appname FROM apps " + "where appid='" + appid
+		return getString("SELECT appname FROM apps " + "WHERE appid='" + appid
 				+ "'");
 	}
 	
 	public static String getAppStatus(String appid) {
-		return getString("SELECT appstatus FROM apps " + "where appid='" + appid
+		return getString("SELECT appstatus FROM apps " + "WHERE appid='" + appid
 				+ "'");
 	}	
 
 	public static String getPackageName(String appid) {
-		return getString("SELECT packagename FROM apps " + "where appid='"
+		return getString("SELECT packagename FROM apps " + "WHERE appid='"
 				+ appid + "'");
 	}
 	
 
 	public static String getVersionCode(String appid) {
-		return getString("SELECT versioncode FROM apps " + "where appid='"
+		return getString("SELECT versioncode FROM apps " + "WHERE appid='"
 				+ appid + "'");
 	}
 	
 
 	public static String getVersionName(String appid) {
-		return getString("SELECT versionname FROM apps " + "where appid='"
+		return getString("SELECT versionname FROM apps " + "WHERE appid='"
 				+ appid + "'");
 	}
 	
 
 	public static DeviceOS getAppOS(String appid) {
-		String appOSStr = getString("SELECT os FROM apps " + "where appid='"
+		String appOSStr = getString("SELECT os FROM apps " + "WHERE appid='"
 				+ appid + "'");
 		if (appOSStr == null) {
 			return null;
@@ -973,7 +973,7 @@ public class Database {
 	
 
 	public static String getClientIPAddress(String appid) {
-		return getString("SELECT clienthost FROM apps " + "where appid='"
+		return getString("SELECT clienthost FROM apps " + "WHERE appid='"
 				+ appid + "'");
 	}
 	
@@ -1034,12 +1034,12 @@ public class Database {
 				break;
 			case TOOL_PROVIDER: 
 				// Tool provider can only view apps submitted by them (for testing)
-				sql = "SELECT * FROM apps where username='" + username + 
+				sql = "SELECT * FROM apps WHERE username='" + username + 
 					"' ORDER BY submittime DESC";
 				break; 
 			case USER: 
 				// Users can only see apps they have submitted
-				sql = "SELECT * FROM apps where username='" + username + 
+				sql = "SELECT * FROM apps WHERE username='" + username + 
 					"' ORDER BY submittime DESC";
 				break;
 			default: 
@@ -1111,28 +1111,28 @@ public class Database {
 			switch (userRole) {
 			case ADMIN: 
 				// Admin can view all apps
-				sql = "SELECT * FROM apps where lastupdated > '" + lastClientUpdate + "'";
+				sql = "SELECT * FROM apps WHERE lastupdated > '" + lastClientUpdate + "'";
 				break;
 			case ANALYST: 
 				// Analyst can view all apps
-				sql = "SELECT * FROM apps where lastupdated > '" + lastClientUpdate + "'";
+				sql = "SELECT * FROM apps WHERE lastupdated > '" + lastClientUpdate + "'";
 				break;
 			case ORG_ANALYST: 
 				// Filtered below for just organization's apps
-				sql = "SELECT * FROM apps where lastupdated > '" + lastClientUpdate + "'";
+				sql = "SELECT * FROM apps WHERE lastupdated > '" + lastClientUpdate + "'";
 				break;
 			case DEPT_ANALYST:
 				// Filtered below for just department's apps for an org
-				sql = "SELECT * FROM apps where lastupdated > '" + lastClientUpdate + "'";
+				sql = "SELECT * FROM apps WHERE lastupdated > '" + lastClientUpdate + "'";
 				break;
 			case TOOL_PROVIDER:
 				// Tool provider can only view apps submitted by them (for testing)
-				sql = "SELECT * FROM apps where username = '" + username + 
+				sql = "SELECT * FROM apps WHERE username = '" + username + 
 					"' and lastupdated > '" + lastClientUpdate + "'";
 				break; 
 			case USER: 
 				// Users can only see apps they have submitted
-				sql = "SELECT * FROM apps where username = '" + username + 
+				sql = "SELECT * FROM apps WHERE username = '" + username + 
 					"' and lastupdated > '" + lastClientUpdate + "'";
 				break;
 			default: 
@@ -1228,31 +1228,31 @@ public class Database {
 	
 
 	public static String getAppFileName(String appid) {
-		return getString("SELECT filename FROM apps " + "where appid='" + appid
+		return getString("SELECT filename FROM apps " + "WHERE appid='" + appid
 				+ "'");
 	}
 	
 
 	public static String getOwner(String appid) {
-		return getString("SELECT username FROM apps " + "where appid='" + appid
+		return getString("SELECT username FROM apps WHERE appid='" + appid
 				+ "'");
 	}
 	
 
 	public static String getOs(String appid) {
-		return getString("SELECT os FROM apps " + "where appid='" + appid + "'");
+		return getString("SELECT os FROM apps WHERE appid='" + appid + "'");
 	}
 	
 
-	protected static String getPasswordHash(String username) {
-		return getString("SELECT password FROM users " + "where username='"
+	public static String getPasswordHash(String username) {
+		return getString("SELECT password FROM users WHERE username='"
 				+ username + "'");
 	}
 	
 
 	public static Role getRole(String username) {
 		String roleString = getString("SELECT role FROM users "
-				+ "where username='" + username + "'");
+				+ "WHERE username='" + username + "'");
 		final Role userRole = Role.getRole(roleString);
 		roleString = null;
 		if (userRole == null) {
@@ -1263,13 +1263,13 @@ public class Database {
 	
 
 	public static String getOrganization(String username) {
-		return getString("SELECT org FROM users " + "where username='"
+		return getString("SELECT org FROM users " + "WHERE username='"
 				+ username + "'");
 	}
 	
 	
 	public static String getDepartment(String username) {
-		return getString("SELECT dept FROM users " + "where username='"
+		return getString("SELECT dept FROM users " + "WHERE username='"
 				+ username + "'");
 	}
 	
@@ -1278,7 +1278,7 @@ public class Database {
 
 	public static String getSessionUser(String sessionId) {
 		final String cmd = "SELECT username FROM sessions "
-				+ "where sessionId='" + sessionId + "'";
+				+ "WHERE sessionId='" + sessionId + "'";
 		return getString(cmd);
 	}
 	
@@ -1288,7 +1288,7 @@ public class Database {
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
-		String sql = "SELECT submittime FROM apps " + "where appid='" + appid
+		String sql = "SELECT submittime FROM apps " + "WHERE appid='" + appid
 				+ "'";
 		try {
 			connection = getConnection();
@@ -1446,15 +1446,15 @@ public class Database {
 	// started. A better but more complex approach is to
 	// update the app's status to "DELETED" and update users' display.
 	public static boolean deleteApp(DeviceOS os, String appid) {
-		final boolean appDeleted = update("DELETE FROM apps " + "where appid='"
+		final boolean appDeleted = update("DELETE FROM apps " + "WHERE appid='"
 				+ appid + "'");
 		boolean statusDeleted = false;
 		if (os == DeviceOS.ANDROID) {
 			statusDeleted = update("DELETE FROM androidtoolstatus "
-					+ "where appid='" + appid + "'");
+					+ "WHERE appid='" + appid + "'");
 		} else {
 			statusDeleted = update("DELETE FROM iostoolstatus "
-					+ "where appid='" + appid + "'");
+					+ "WHERE appid='" + appid + "'");
 		}
 		if (appDeleted && statusDeleted) {
 			return true;
@@ -1577,7 +1577,7 @@ public class Database {
 		}
 		
 		String sql = "SELECT expiretime FROM sessions "
-				+ "where (clientaddress='" + clientIpAddress + "') "
+				+ "WHERE (clientaddress='" + clientIpAddress + "') "
 				+ "AND sessionid='" + sessionId + "'";
 		//log.debug("Getting session expiration using: " + sql);
 		return getTimestamp(sql);
@@ -1591,6 +1591,16 @@ public class Database {
 				+ sessionExpiration + "' WHERE (clientaddress='"
 				+ clientIpAddress + "' OR clientaddress='127.0.0.1') "
 				+ "AND sessionid='" + sessionId + "'");
+	}
+	
+	public static boolean userExists(String username) {
+		String sql = "SELECT * FROM users " + "WHERE username='" + username
+				+ "'";
+		if (exists(sql)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 

@@ -23,6 +23,7 @@ import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -91,21 +92,25 @@ public class Authenticate {
 		return binary;
 	}
 
+	
 	/** Authenticate with username and password. */
 	public static boolean isAuthenticated(String username, String password) {
+		
 		if (username == null) {
-			log.warn("AUTH error: username is null");
+			log.debug("Username is null for authentication");
 			return false;
 		} else if (password == null) {
-			log.warn("AUTH error: password is null");
+			log.debug("Password is null for authentication");
 			return false;
 		}
+		
 		try {
 			final String storedPasswordHash = Database
 					.getPasswordHash(username);
 			if (storedPasswordHash == null || storedPasswordHash.isEmpty()) {
-				log.warn("AUTH error: storedPasswordHash is null or empty");
+				log.debug("Stored password hash is null or empty");
 			}
+			
 			return validatePassword(password, storedPasswordHash);
 		} catch (final NoSuchAlgorithmException e) {
 			log.error(e.toString());
@@ -115,6 +120,7 @@ public class Authenticate {
 		return false;
 	}
 
+	
 	/**
 	 * Tests the basic functionality of the Authenticate class
 	 * 
@@ -232,6 +238,7 @@ public class Authenticate {
 		 * iteration count, and hash length.
 		 */
 		final byte[] testHash = pbkdf2(password, salt, iterations, hash.length);
+		
 		/*
 		 * Compare the hashes in constant time. The password is correct if both
 		 * hashes match.

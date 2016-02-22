@@ -33,7 +33,6 @@ public class ConfigInfoGwt implements IsSerializable {
 	private UserInfo userInfo = null;
 	private String hostname = null;
 	private String appVetHostUrl = null;
-	//private String appvetProxyUrl = null; // Only used if AppVet behind proxy
 	private String appVetUrl = null;
 	private String appVetServletUrl = null;
 	private String appVetVersion = null;
@@ -47,18 +46,16 @@ public class ConfigInfoGwt implements IsSerializable {
 	private int numRowsAppsList = 0;
 	private int numRowsUsersList = 0;
 	private String documentationURL = null;
-	private boolean useSSO = false;
+	private boolean ssoActive = false;
+	private String ssoUnauthorizedURL = null;
 
 	public ConfigInfoGwt() {
 	}
 
+	
 	public String getAppVetHostUrl() {
 		return appVetHostUrl;
 	}
-	
-//	public String getAppVetProxyUrl() {
-//		return appvetProxyUrl;
-//	}
 
 	public String getAppVetServletUrl() {
 		return appVetServletUrl;
@@ -103,10 +100,6 @@ public class ConfigInfoGwt implements IsSerializable {
 	public void setAppVetHostUrl(String appvetHostUrl) {
 		this.appVetHostUrl = appvetHostUrl;
 	}
-	
-//	public void setAppVetProxyUrl(String appvetProxyUrl) {
-//		this.appvetProxyUrl = appvetProxyUrl;
-//	}
 
 	public void setAppVetServletUrl(String appvetServletUrl) {
 		this.appVetServletUrl = appvetServletUrl;
@@ -156,14 +149,6 @@ public class ConfigInfoGwt implements IsSerializable {
 		this.tools = tools;
 	}
 
-//	public String getAppvetProxyUrl() {
-//		return appvetProxyUrl;
-//	}
-//
-//	public void setAppvetProxyUrl(String appvetProxyUrl) {
-//		this.appvetProxyUrl = appvetProxyUrl;
-//	}
-
 	public String getOrgLogoAltText() {
 		return orgLogoAltText;
 	}
@@ -196,11 +181,21 @@ public class ConfigInfoGwt implements IsSerializable {
 		this.documentationURL = documentationURL;
 	}
 
-	public boolean getUsesSSO() {
-		return useSSO;
+	public boolean getSSOActive() {
+		return ssoActive;
 	}
 
-	public void setUsesSSO(boolean useSSO) {
-		this.useSSO = useSSO;
+	public void setSSOActive(boolean useSSO) {
+		this.ssoActive = useSSO;
+	}
+
+
+	public String getUnauthorizedURL() {
+		return ssoUnauthorizedURL;
+	}
+
+
+	public void setUnauthorizedURL(String unauthorizedURL) {
+		this.ssoUnauthorizedURL = unauthorizedURL;
 	}
 }

@@ -23,9 +23,18 @@
 		<ToConsole>true</ToConsole>
 	</Logging>
 
-	<!--  The element UseSSO is no longer used. 
-	      <UseSSO>false</UseSSO>
-	 -->
+	<SSO>
+        <!-- To login and add users manually, set Active=false. If Active==false,
+             all other SSO elements will be ignored by AppVet.-->
+  		<Active>true</Active>
+		<UnauthorizedURL>unauthorized.html</UnauthorizedURL>
+		<UserParams>
+  		<!-- Set the authentication parameters used by the organization. Only
+  		EmailParamName is required and is used as the username if UserNameParamName is
+  		not available. -->
+			<EmailParamName>CAS_Email-Address</EmailParamName>
+		</UserParams>
+	</SSO>
 
 	<OrgLogoAltText>My org logo ALT text!</OrgLogoAltText>
 	

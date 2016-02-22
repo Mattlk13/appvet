@@ -65,7 +65,7 @@ public class UserListDialogBox extends DialogBox {
 
 		@Override
 		public void onSelectionChange(SelectionChangeEvent event) {
-			user = usersSelectionModel.getSelectedObject();
+			selectedUser = usersSelectionModel.getSelectedObject();
 		}
 	}
 
@@ -100,7 +100,7 @@ public class UserListDialogBox extends DialogBox {
 	public List<UserInfo> allUsers = null;
 	public SingleSelectionModel<UserInfo> usersSelectionModel = null;
 	public UsersListPagingDataGrid<UserInfo> usersListTable = null;
-	public UserInfo user = null;
+	public UserInfo selectedUser = null;
 	public boolean searchMode = true;
 	public TextBox searchTextBox = null;
 	public PushButton addButton = null;
@@ -267,7 +267,7 @@ public class UserListDialogBox extends DialogBox {
 							public void onClick(ClickEvent event) {
 								killDialogBox(deleteConfirmDialogBox);
 								if (selected != null) {
-									deleteUser(user.getUserName());
+									deleteUser(selectedUser.getUserName());
 								}
 							}
 						});
@@ -319,18 +319,18 @@ public class UserListDialogBox extends DialogBox {
 	}
 
 	@SuppressWarnings("deprecation")
-	public void editUser(final boolean newUser, final boolean useSSO) {
+	public void editUser(final boolean newUser, final boolean ssoActive) {
 
 		if (newUser) {
 			userInfoDialogBox = new UserAcctAdminDialogBox(null,
-					usersListTable, allUsers, useSSO);
+					usersListTable, allUsers, ssoActive);
 			userInfoDialogBox.setText("Add User");
 			userInfoDialogBox.lastNameTextBox.setFocus(true);
 		} else {
-			user = usersSelectionModel.getSelectedObject();
-			userInfoDialogBox = new UserAcctAdminDialogBox(user,
-					usersListTable, allUsers, useSSO);
-			userInfoDialogBox.setText(user.getFirstName() + " " + user.getLastName());
+			selectedUser = usersSelectionModel.getSelectedObject();
+			userInfoDialogBox = new UserAcctAdminDialogBox(selectedUser,
+					usersListTable, allUsers, ssoActive);
+			userInfoDialogBox.setText(selectedUser.getFirstName() + " " + selectedUser.getLastName());
 			userInfoDialogBox.lastNameTextBox.setFocus(true);
 		}
 		userInfoDialogBox.center();
@@ -344,10 +344,11 @@ public class UserListDialogBox extends DialogBox {
 		userInfoDialogBox.okButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				
 				final String newPassword1 = userInfoDialogBox.password1TextBox
 						.getValue();
 				final String newPassword2 = userInfoDialogBox.password2TextBox
-						.getValue();
+						.getValue();				
 				final UserInfo userInfo = new UserInfo();
 				userInfo.setUserName(userInfoDialogBox.userIdTextBox.getText());
 				userInfo.setPasswords(newPassword1, newPassword2);
@@ -364,28 +365,85 @@ public class UserListDialogBox extends DialogBox {
 						.getSelectedIndex();
 				userInfo.setRole(userInfoDialogBox.roleComboBox
 						.getValue(selectedRoleIndex));
+				
 				if (userInfoDialogBox.newUser) {
 					userInfo.setNewUser(true);
 				}
 				
-				if (newUser) {
-					log.info("newUser");
+				if (newUser && !ssoActive) {
+					log.info("newUser && !ssoActive");
 					if (!userInfo.isValid(false)) {
 						return;
 					}
 				} else {
-					log.info("EDIT User");
+					log.info("newUser && ssoActive");
 					if (!userInfo.isValid(true)) {
 						return;
 					}
 				}
-
-				submitUserInfo(userInfo);
-				userInfoDialogBox.hide();
-				userInfoDialogBox = null;
+					
+				if (!newUser) {
+					// Make sure a change was made. If not, don't update database.
+					boolean selectedUserChanged = false;
+					
+					if (newPassword1 != null && !newPassword1.isEmpty()) {
+						selectedUserChanged = true;
+					}
+					
+					if (newPassword2 != null && !newPassword2.isEmpty()) {
+						selectedUserChanged = true;
+					}
+					
+					if (!selectedUser.getUserName().equals(userInfoDialogBox.userIdTextBox.getText())) {
+						selectedUserChanged = true;
+					}					
+					
+					if (!selectedUser.getLastName().equals(userInfoDialogBox.lastNameTextBox.getText())) {
+						selectedUserChanged = true;
+					}
+					
+					if (!selectedUser.getFirstName().equals(userInfoDialogBox.firstNameTextBox.getText())) {
+						selectedUserChanged = true;
+					}
+					
+					if (!selectedUser.getOrganization().equals(userInfoDialogBox.orgSuggestBox.getText())) {
+						selectedUserChanged = true;
+					}					
+					
+					if (!selectedUser.getDepartment().equals(userInfoDialogBox.deptSuggestBox.getText())) {
+						selectedUserChanged = true;
+					}				
+					
+					if (!selectedUser.getEmail().equals(userInfoDialogBox.emailTextBox.getText())) {
+						selectedUserChanged = true;
+					}	
+					
+					if (!selectedUser.getRole().equals(userInfoDialogBox.roleComboBox
+							.getValue(selectedRoleIndex))) {
+						selectedUserChanged = true;
+					}
+					
+					if (!selectedUser.getEmail().equals(userInfoDialogBox.emailTextBox.getText())) {
+						selectedUserChanged = true;
+					}	
+					
+					if (!selectedUserChanged) {
+						showMessageDialog("AppVet Error", "No information changed. Cancelling update.",
+								true);
+					} else {
+						submitUserInfo(newUser, userInfo);
+						userInfoDialogBox.hide();
+						userInfoDialogBox = null;
+					}
+				} else {
+					submitUserInfo(newUser, userInfo);
+					userInfoDialogBox.hide();
+					userInfoDialogBox = null;
+				}
 			}
 		});
 	}
+	
 
 	public void setAllUsers(List<UserInfo> allUsers) {
 		final UserInfo currentlySelectedUser = usersSelectionModel
@@ -455,7 +513,7 @@ public class UserListDialogBox extends DialogBox {
 		}
 	}
 
-	public void submitUserInfo(UserInfo userInfo) {
+	public void submitUserInfo(final boolean newUser, final UserInfo userInfo) {
 		appVetServiceAsync.adminSetUser(userInfo,
 				new AsyncCallback<List<UserInfo>>() {
 			
@@ -471,8 +529,14 @@ public class UserListDialogBox extends DialogBox {
 							showMessageDialog("Update Error",
 									"Error adding or updating user", true);
 						} else {
-							showMessageDialog("Update Status",
-									"User added or updated successfully", false);
+							if (newUser) {
+								showMessageDialog("Update Status",
+										"User '" + userInfo.getUserName() + "' added successfully", false);
+							} else {
+								showMessageDialog("Update Status",
+										"User '" + userInfo.getUserName() + "' updated successfully", false);
+							}
+
 							allUsers = result;
 							setAllUsers(allUsers);
 						}

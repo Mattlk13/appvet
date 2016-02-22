@@ -29,17 +29,10 @@ import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Event.NativePreviewEvent;
-import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.ClosingEvent;
-import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
@@ -51,122 +44,74 @@ public class AppVet implements EntryPoint {
 	private static Logger log = Logger.getLogger("AppVet");
 	private final GWTServiceAsync appVetService = GWT.create(GWTService.class);
 	private static MessageDialogBox messageDialogBox = null;
-	
-	// SSO parameters
-	String username = null;
-	String password = null;
+
 	
 	@Override
 	public void onModuleLoad() {
-		
-		Window.addWindowClosingHandler(new Window.ClosingHandler() {
-		    public void onWindowClosing(Window.ClosingEvent closingEvent) {
-		    	log.info("Trying to relog back in");
-				if (username == null || password == null) {
-					// Send to AppVet GUI
-					final LoginPanel loginPanel = new LoginPanel(Unit.PX);
-					// loginPanel.setTitle("Login panel");
-					final RootLayoutPanel rootPanel = RootLayoutPanel.get();
-					// rootPanel.setTitle("Root panel");
-					rootPanel.add(loginPanel);
-				} else if (username != null && password != null) {
-					// Login attempt via SSO
-					// log.info("AppVet GWT got: name=" + username);
-					// Authenticate SSO username and password
-					authenticateSSO(username, password);
-				}
-		        //closingEvent.setMessage("AppVet is a dynamic web application and should not be refreshed.");
-		    }
-		});
-
-/*		// disable refresh button
-		Event.addNativePreviewHandler(new NativePreviewHandler() {
-
-			@Override
-			public void onPreviewNativeEvent(NativePreviewEvent event) {
-				switch (event.getTypeInt()) {
-				case Event.ONKEYDOWN:
-					NativeEvent nEvent = event.getNativeEvent();
-					if (nEvent.getCtrlKey() && nEvent.getKeyCode() == 'R') {
-						log.info("Key code R seen");
-						nEvent.preventDefault();
-					}
-
-					if (nEvent.getKeyCode() == 116) {
-						log.info("Key code 116 seen");
-						nEvent.preventDefault();
-					}
-					break;
-				}
-			}
-
-		});*/
-
-		// If SSO is used, these parameters should not be null. If one or
-		// both parameters are null, send to AppVet GUI.
-		username = Window.Location.getParameter("ssou");
-		password = Window.Location.getParameter("ssop");
-
-		if (username == null || password == null) {
-			// Send to AppVet GUI
-			final LoginPanel loginPanel = new LoginPanel(Unit.PX);
-			// loginPanel.setTitle("Login panel");
-			final RootLayoutPanel rootPanel = RootLayoutPanel.get();
-			// rootPanel.setTitle("Root panel");
-			rootPanel.add(loginPanel);
-		} else if (username != null && password != null) {
-			// Login attempt via SSO
-			// log.info("AppVet GWT got: name=" + username);
-			// Authenticate SSO username and password
-			authenticateSSO(username, password);
-		}
+		handleServletRequest();
 	}
-
-	public void authenticateSSO(final String username, final String password) {
-		appVetService.authenticate(username, password, true,
+	
+	
+	public void handleServletRequest() {
+		
+		appVetService.handleServletRequest( 
 				new AsyncCallback<ConfigInfoGwt>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						showMessageDialog("AppVet Error",
-								"Authentication system error", true);
-						return;
-					}
+			@Override
+			public void onFailure(Throwable caught) {
+				showMessageDialog("AppVet Error",
+						"Authentication error", true);
+				return;
+			}
 
-					@Override
-					public void onSuccess(final ConfigInfoGwt result) {
+			@Override
+			public void onSuccess(final ConfigInfoGwt appvetConfig) {
 
-						if (result == null) {
-							showMessageDialog("AppVet Login Error",
-									"Unknown username or password", true);
-							return;
+				if (appvetConfig == null) {
+					showMessageDialog("AppVet Login Error",
+							"Unknown username or password", true);
+					return;
+				} else {
+					if (appvetConfig.getSSOActive()) {
+						if (appvetConfig.getUnauthorizedURL() != null) {
+							// An authentication error occured so redirect
+							Window.Location.assign(appvetConfig.getUnauthorizedURL()); 
 						} else {
-							// checkConfigInfo(result);
-							startAppVet(result);
+							// Display user's AppVet account
+							displayAppVet(appvetConfig);
 						}
-
+					} else {
+						// Display AppVet login page
+						displayLogin();
 					}
+				}
 
-				});
+			}
 
+		});
+		
 	}
-
-	public void startAppVet(final ConfigInfoGwt configInfo) {
-		final String userName = configInfo.getUserInfo().getUserName();
-
-		if ((userName == null) || userName.isEmpty()) {
-			log.warning("Error retrieving apps list: "
-					+ "username is null or empty");
-			return;
-		}
-
-		appVetService.getAllApps(userName, new AsyncCallback<AppsListGwt>() {
+	
+	
+	public void displayLogin() {
+		// Display main AppVet login page
+		final LoginPanel loginPanel = new LoginPanel(Unit.PX);
+		// loginPanel.setTitle("Login panel");
+		final RootLayoutPanel rootPanel = RootLayoutPanel.get();
+		// rootPanel.setTitle("Root panel");
+		rootPanel.add(loginPanel);
+	}
+	
+	
+	public void displayAppVet(final ConfigInfoGwt configInfoGwt) {
+		String username = configInfoGwt.getUserInfo().getUserName();
+		appVetService.getAllApps(username, new AsyncCallback<AppsListGwt>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
 				caught.printStackTrace();
-				showMessageDialog("AppVet Error", "Apps list retrieval error: "
-						+ caught.getMessage(), true);
+				showMessageDialog("AppVet Error", 
+						"Error retrieving apps list", true);
 				return;
 			}
 
@@ -178,8 +123,9 @@ public class AppVet implements EntryPoint {
 							true);
 					return;
 				} else {
+
 					final AppVetPanel appVetPanel = new AppVetPanel(Unit.PX,
-							configInfo, appsList);
+							configInfoGwt, appsList);
 					// appVetPanel.setTitle("AppVet Panel");
 					final RootLayoutPanel rootLayoutPanel = RootLayoutPanel
 							.get();
@@ -191,8 +137,9 @@ public class AppVet implements EntryPoint {
 			}
 
 		});
-
+		
 	}
+	
 
 	private void showMessageDialog(String windowTitle, String message,
 			boolean isError) {

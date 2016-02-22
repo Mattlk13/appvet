@@ -50,13 +50,15 @@ public class AppVetProperties {
 	public static String CATALINA_BASE = null; // Tomcat
 	public static String APKTOOL_HOME = null;  // For Android only
 	public static String APPVET_FILES_HOME = null;
-	public static boolean USE_SSO = false;
+	public static boolean SSO_ACTIVE = false;
+	public static String SSO_UNAUTHORIZED_URL = null;
+	public static String SSO_USERNAME_PARAMNAME = null;
+	public static String SSO_EMAIL_PARAMNAME = null;
 	public static String ORG_LOGO_ALT_TEXT = null;
 	public static String EMAIL_CONNECTION_TIMEOUT = "2000"; // In ms
 
 	static {
 		//System.out.println("*** Starting AppVet v" + APPVET_VERSION + " ***");
-
 		JAVA_HOME = System.getenv("JAVA_HOME");
 		if (JAVA_HOME == null || JAVA_HOME.isEmpty()) {
 			System.err.println("The JAVA_HOME environment variable is null!");
@@ -261,8 +263,18 @@ public class AppVetProperties {
 		APP_PROCESSING_TIMEOUT = new Integer(
 				xml.getXPathValue("/AppVet/ToolServices/Timeout")).intValue();
 		printVal("TOOL_TIMEOUT", APP_PROCESSING_TIMEOUT);
-		USE_SSO = new Boolean(xml.getXPathValue("/AppVet/UseSSO")).booleanValue();
-		printVal("USE_SSO", USE_SSO);
+		
+		// SSO parameters
+		SSO_ACTIVE = new Boolean(xml.getXPathValue("/AppVet/SSO/Active")).booleanValue();
+		printVal("SSO_ACTIVE", SSO_ACTIVE);
+		SSO_UNAUTHORIZED_URL = xml.getXPathValue("/AppVet/SSO/UnauthorizedURL");
+		printVal("SSO_UNAUTHORIZED_URL", SSO_UNAUTHORIZED_URL);
+		SSO_USERNAME_PARAMNAME = xml.getXPathValue("/AppVet/SSO/UserParams/UserNameParamName");
+		printVal("SSO_USERNAME_PARAMNAME", SSO_USERNAME_PARAMNAME);
+		SSO_EMAIL_PARAMNAME = xml.getXPathValue("/AppVet/SSO/UserParams/EmailParamName");
+		printVal("SSO_EMAIL_PARAMNAME", SSO_EMAIL_PARAMNAME);
+
+		// Organizational logo ALT text
 		ORG_LOGO_ALT_TEXT = xml.getXPathValue("/AppVet/OrgLogoAltText");
 		printVal("ORG_LOGO_ALT_TEXT", ORG_LOGO_ALT_TEXT);
 		if (ORG_LOGO_ALT_TEXT == null || ORG_LOGO_ALT_TEXT.isEmpty()) {

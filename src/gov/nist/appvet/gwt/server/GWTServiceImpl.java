@@ -50,21 +50,122 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-
 
 /**
  * @author steveq@nist.gov
  */
 public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
+
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = AppVetProperties.log;
-	static {
-//		log.debug("*** Starting GWT Service " + AppVetProperties.APPVET_VERSION
-//				+ " on " + AppVetProperties.URL);
+	
+
+	public ConfigInfoGwt handleServletRequest() {
+		// Get the servlet request for this GWT service
+		HttpServletRequest request = getThreadLocalRequest();
+		
+		// Check if AppVet Single-Sign On (SSO) is active or not.
+		if (!AppVetProperties.SSO_ACTIVE) {
+			// SSO is not active. Returning null to GWT client will send 
+			// user to main login page.
+			ConfigInfoGwt configInfo = new ConfigInfoGwt();
+			configInfo.setSSOActive(false);
+			return configInfo;
+		} else {
+			// SSO is active. Note that SSO should only be used in a 
+			// secured environment where the user has already authenticated
+			// into the system because AppVet SSO does not support user password
+			// authentication. Password authentication is only supported for
+			// non-SSO Appvet.
+			String ssoUnauthorizedURL = AppVetProperties.SSO_UNAUTHORIZED_URL;
+
+			// Check for incoming HTTP parameters for AppVet Single-Sign On
+			// (SSO)
+			String ssoUsername = getSSOUserName(request);
+			if (ssoUsername == null) {
+				log.debug("User 'null' not authenticated for SSO. Directing to "
+						+ ssoUnauthorizedURL);
+				// Return SSOActive=true to GWT client so it can allow the
+				// redirect.
+				ConfigInfoGwt configInfo = new ConfigInfoGwt();
+				configInfo.setSSOActive(true);
+				configInfo.setUnauthorizedURL(ssoUnauthorizedURL);
+				return configInfo;
+			}
+
+			// Check if ssoUsername exists in database
+			if (!Database.userExists(ssoUsername)) {
+				log.debug("User " + ssoUsername
+						+ " not authenticated for SSO. Directing to "
+						+ ssoUnauthorizedURL);
+				// Return SSOActive=true to GWT client so it can allow the
+				// redirect.
+				ConfigInfoGwt configInfo = new ConfigInfoGwt();
+				configInfo.setSSOActive(true);
+				configInfo.setUnauthorizedURL(ssoUnauthorizedURL);
+				return configInfo;
+			}
+
+			log.debug("User " + ssoUsername + " authenticated for SSO.");
+
+			// Generate session
+			String clientIpAddress = request.getRemoteAddr();
+			if (clientIpAddress.equals("0:0:0:0:0:0:0:1")) {
+				clientIpAddress = "127.0.0.1";
+			}
+
+			if (Database.updateClientHost(ssoUsername, clientIpAddress)) {
+				log.debug("Updated client IP '" + clientIpAddress
+						+ "' for user '" + ssoUsername + "' updated.");
+			} else {
+				log.warn("Updated client IP '" + clientIpAddress
+						+ "' for user '" + ssoUsername
+						+ "' could not be updated.");
+				return null;
+			}
+			if (Database.updateUserLogonTime(ssoUsername)) {
+				log.debug("Updated logon time for user '" + ssoUsername + "'.");
+			} else {
+				log.debug("Could not update logon time for user '"
+						+ ssoUsername + "'.");
+				return null;
+			}
+
+			// Clear all expired sessions
+			Database.clearExpiredSessions();
+
+			// Update current session
+			Date newSessionTimeout = new Date(System.currentTimeMillis()
+					+ AppVetProperties.MAX_SESSION_IDLE_DURATION);
+			String sessionId = Database.createNewSession(ssoUsername,
+					clientIpAddress);
+			return getConfigInfo(ssoUsername, sessionId, newSessionTimeout);
+		}
+
 	}
+	
+
+	private String getSSOUserName(HttpServletRequest request) {
+		// Get SSO username.
+		if (AppVetProperties.SSO_USERNAME_PARAMNAME != null) {
+			return request
+					.getHeader(AppVetProperties.SSO_USERNAME_PARAMNAME);
+		} else {
+			// Use email for SSO username
+			if (AppVetProperties.SSO_EMAIL_PARAMNAME != null) {
+				return request
+						.getHeader(AppVetProperties.SSO_EMAIL_PARAMNAME);
+			} else {
+				log.error("SSO username (and email) is null");
+				return null;
+			}
+		}
+	}
+	
 
 	@Override
 	public Boolean setAlertMessage(String username, SystemAlert alert) {
@@ -74,7 +175,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			return new Boolean(false);
 		}
 	}
-	
+
 	@Override
 	public Boolean clearAlertMessage(String username) {
 		if (Database.update("DELETE FROM alerts")) {
@@ -83,13 +184,12 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			return new Boolean(false);
 		}
 	}
-	
+
 	@Override
 	public SystemAlert getAlertMessage() {
 		return Database.getAlertMessage();
 	}
-	
-	
+
 	@Override
 	public List<UserInfo> adminSetUser(UserInfo userInfo)
 			throws IllegalArgumentException {
@@ -109,96 +209,95 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		return getUsersList();
 	}
 
+
+	/** This method is used only with the main AppVet login page. It is not
+	 * used for AppVet SSO which uses the organization's secured environment
+	 * to provide user authentication.
+	 */
 	@Override
-	public ConfigInfoGwt authenticate(String username, String password, boolean sso)
+	public ConfigInfoGwt authenticateNonSSO(String username, String password) 
 			throws IllegalArgumentException {
-		log.debug("*** AUTH username: " + username);
-		log.debug("*** AUTH password: " + password);
-		log.debug("*** SSO On: " + sso);
-		
+
 		String sql = "SELECT * FROM users " + "where username='" + username
 				+ "'";
-		log.debug("Checking if user exists: " + sql);
+		
 		if (!Database.exists(sql)) {
-			log.warn("User '" + username + "' does not exists in db.");
-			
-			// Check if user is the AppVet default admin defined in
-			// AppVetProperties.xml
+			log.debug("User '" + username + "' does not exists in db.");
+
+			// Check if user is the AppVet default Admin defined in
+			// AppVetProperties.xml. This user will always be able to access
+			// AppVet, even if its database info has been corrupted.
 			if (username.equals(AppVetProperties.ADMIN_USERNAME)
 					&& password.equals(AppVetProperties.ADMIN_PASSWORD)) {
-				log.debug("Adding user-defined default admin '" + username + "'");
+				log.debug("Adding user-defined default admin '" + username
+						+ "'");
 				if (Database.adminAddNewUser(username, password, "AppVet",
-						"appvet@example.com", Role.ADMIN.name(), "Administrator",
-						"AppVet")) {
+						"appvet@example.com", Role.ADMIN.name(),
+						"Administrator", "AppVet")) {
 					log.debug("Added new admin user '" + username + "'");
 				} else {
 					log.debug("Could not add new admin user '" + username + "'");
 					return null;
 				}
 			} else {
-				log.debug("User '" + username + "' does not exist in database.");
+				log.debug("User '" + username + "' does not exist in database. Cannot authenticate.");
 				return null;
 			}
-		} else {
-			log.debug("User '" + username + "' exists in database.");
 		}
 		
+		log.debug("User '" + username + "' exists in database.");
+
 		if (Authenticate.isAuthenticated(username, password)) {
-			
+
 			log.debug("User '" + username + "' authenticated");
-			
+
 			String clientIpAddress = getThreadLocalRequest().getRemoteAddr();
 			if (clientIpAddress.equals("0:0:0:0:0:0:0:1")) {
 				clientIpAddress = "127.0.0.1";
 			}
+			
 			if (Database.updateClientHost(username, clientIpAddress)) {
-				log.debug("Updated client IP '" + clientIpAddress + "' for user '" + username + "' updated.");
+				log.debug("Updated client IP '" + clientIpAddress
+						+ "' for user '" + username + "' updated.");
 			} else {
-				log.warn("Updated client IP '" + clientIpAddress + "' for user '" + username + "' could not be updated.");
-				return null;
-			}
-			if (Database.updateUserLogonTime(username)) {
-				log.debug("Updated logon time for user '" + username + "'.");
-			} else {
-				log.debug("Could not update logon time for user '" + username + "'.");
+				log.warn("Updated client IP '" + clientIpAddress
+						+ "' for user '" + username + "' could not be updated.");
 				return null;
 			}
 			
+			if (Database.updateUserLogonTime(username)) {
+				log.debug("Updated logon time for user '" + username + "'.");
+			} else {
+				log.debug("Could not update logon time for user '" + username
+						+ "'.");
+				return null;
+			}
+
 			log.debug(username + " logged into GWT from: " + clientIpAddress);
 
 			// Clear all expired sessions
 			Database.clearExpiredSessions();
-			
+
 			final String sessionId = Database.createNewSession(username,
 					clientIpAddress);
 			final Date sessionExpiration = Database.getSessionExpiration(
 					sessionId, clientIpAddress);
-			
+
 			if (sessionExpiration == null) {
 				// Session already expired
-				log.warn("Session expiration for " + sessionId + " could not be retrieved.");
+				log.warn("Session expiration for " + sessionId
+						+ " could not be retrieved.");
 				return null;
 			}
-			
-			// If SSO login, randomly change current password so it cannot 
-			// be copied by another user and used as a query parameter to 
-			// directly access AppVet.
-			if (sso) {
-				log.warn("SSO is turned on - randomly change password for security");
-				UUID newPassword = UUID.randomUUID();
-				Database.setPBKDF2Password(username, newPassword.toString());
-			} else {
-				log.debug("SSO is turned off");
-			}
+
 			return getConfigInfo(username, sessionId, sessionExpiration);
 		} else {
 			log.debug("Could not authenticate user: " + username);
 			return null;
 		}
 	}
-	
-	public Boolean clearLog()
-			throws IllegalArgumentException {
+
+	public Boolean clearLog() throws IllegalArgumentException {
 		String appVetLogPath = AppVetProperties.APPVET_LOG_PATH;
 		log.debug("AppVet log path to clear: " + appVetLogPath);
 		PrintWriter pw;
@@ -214,7 +313,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 
 	private static ConfigInfoGwt getConfigInfo(String username,
 			String sessionId, Date sessionExpiration) {
-		
+
 		final ConfigInfoGwt configInfo = new ConfigInfoGwt();
 		configInfo.setAppVetHostUrl(AppVetProperties.HOST_URL);
 		configInfo.setAppVetUrl(AppVetProperties.URL);
@@ -229,7 +328,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		configInfo.setNumRowsAppsList(AppVetProperties.NUM_ROWS_APPS_LIST);
 		configInfo.setNumRowsUsersList(AppVetProperties.NUM_ROWS_USERS_LIST);
 		configInfo.setDocumentationURL(AppVetProperties.DOCUMENTATION_URL);
-		configInfo.setUsesSSO(AppVetProperties.USE_SSO);
+		configInfo.setSSOActive(AppVetProperties.SSO_ACTIVE);
 		final ArrayList<ToolInfoGwt> tools = new ArrayList<ToolInfoGwt>();
 		// Get Android tools
 		final ArrayList<ToolAdapter> androidTools = AppVetProperties.androidTools;
@@ -242,10 +341,12 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					toolInfo.setOs(DeviceOS.ANDROID.name());
 					toolInfo.setName(androidTool.name);
 					toolInfo.setId(androidTool.toolId);
-					log.debug("Checking restriction for : " + androidTool.toolId);
+					log.debug("Checking restriction for : "
+							+ androidTool.toolId);
 					toolInfo.setType(androidTool.toolType);
-					toolInfo.setRestrictionType(androidTool.restrictionType.name());
-					
+					toolInfo.setRestrictionType(androidTool.restrictionType
+							.name());
+
 					toolInfo.setAuthenticationRequired(androidTool.authenticationRequired);
 					if (toolInfo.requiresAuthentication()) {
 						toolInfo.setAuthenticationParameterNames(androidTool.authenticationParams);
@@ -357,8 +458,8 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	}
 
 	@Override
-	public AppsListGwt getUpdatedApps(Date lastClientUpdate,
-			String username) throws IllegalArgumentException {
+	public AppsListGwt getUpdatedApps(Date lastClientUpdate, String username)
+			throws IllegalArgumentException {
 		return Database.getUpdatedApps(username, lastClientUpdate);
 	}
 
@@ -385,7 +486,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	public Date updateSessionExpiration(String sessionId, Date newSessionTimeout)
 			throws IllegalArgumentException {
 		final String clientIpAddress = getThreadLocalRequest().getRemoteAddr();
-		
+
 		// First check if session has already expired
 		if (!Database.sessionIsGood(sessionId, clientIpAddress)) {
 			return null;
@@ -403,8 +504,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	public static List<ToolStatusGwt> getToolsStatuses(DeviceOS os,
 			String sessionId, String appId) {
 
-		final ArrayList<ToolStatusGwt> toolStatusList = 
-				new ArrayList<ToolStatusGwt>();
+		final ArrayList<ToolStatusGwt> toolStatusList = new ArrayList<ToolStatusGwt>();
 		// Registration status
 		ToolAdapter tool = ToolAdapter.getByToolId(os, "registration");
 		ToolStatusGwt toolStatus = getToolStatusHtml(os, sessionId, appId, tool);
@@ -463,8 +563,8 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		final ToolStatus toolStatus = ToolStatusManager.getToolStatus(os,
 				appId, tool.toolId);
 		if (toolStatus == null) {
-			//log.warn(appId + ", " + tool.toolId + "-status: null!");
-			
+			// log.warn(appId + ", " + tool.toolId + "-status: null!");
+
 		}
 		// ---------------------- Compute Tool Status
 		// ---------------------------
@@ -479,12 +579,12 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			toolCompleted = true;
 			toolStatusGwt
 					.setStatusHtml("<div id=\"tabledim\" style='color: gray'>N/A</div>");
-			
+
 		} else if (toolStatus == ToolStatus.AVAILABLE) {
 			toolCompleted = true;
 			toolStatusGwt
-					.setStatusHtml("<div id=\"tabledim\" style='color: black'>AVAILABLE</div>");	
-			
+					.setStatusHtml("<div id=\"tabledim\" style='color: black'>AVAILABLE</div>");
+
 		} else if (toolStatus == ToolStatus.HIGH) {
 			toolCompleted = true;
 			toolStatusGwt
@@ -530,8 +630,8 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 						+ AppVetServletCommand.GET_TOOL_REPORT.name() + "&"
 						+ AppVetParameter.APPID.value + "=" + appId + "&"
 						+ AppVetParameter.SESSIONID.value + "=" + sessionId
-						+ "&" + AppVetParameter.TOOLID.value + "=" + tool.toolId
-						+ "\" target=\"_blank\">Report</a>");
+						+ "&" + AppVetParameter.TOOLID.value + "="
+						+ tool.toolId + "\" target=\"_blank\">Report</a>");
 			}
 		} else {
 			toolStatusGwt
@@ -555,28 +655,28 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		return true;
 	}
 
-	
-	/** This method gets the organizations and departments for users. Note
-	 * that this method is inefficient and should  be optimized.
+	/**
+	 * This method gets the organizations and departments for users. Note that
+	 * this method is inefficient and should be optimized.
 	 */
 	@Override
 	public List<OrgDepts> getOrgDeptsList() throws IllegalArgumentException {
-		
-		Hashtable<String, List<String>> orgDeptHashtable = 
-				new Hashtable<String, List<String>>();
+
+		Hashtable<String, List<String>> orgDeptHashtable = new Hashtable<String, List<String>>();
 		List<UserInfo> users = Database.getUsers(null);
-		
+
 		for (int i = 0; i < users.size(); i++) {
-			UserInfo user = users.get(i);	
-			//log.debug("Adding org/dept for user: " + user.getUserName());
+			UserInfo user = users.get(i);
+			// log.debug("Adding org/dept for user: " + user.getUserName());
 			String userOrg = user.getOrganization();
 			String userDept = user.getDepartment();
 			if (!orgDeptHashtable.containsKey(userOrg)) {
-				//log.debug("Adding new org " + userOrg);
+				// log.debug("Adding new org " + userOrg);
 				// Add this org to the hashtable
 				List<String> deptList = new ArrayList<String>();
 				deptList.add(userDept);
-				//log.debug("Adding new dept " + userDept + " for new org " + userOrg);
+				// log.debug("Adding new dept " + userDept + " for new org " +
+				// userOrg);
 				orgDeptHashtable.put(userOrg, deptList);
 			} else {
 				// Org is already in hashtable so check if dept is in its list
@@ -584,18 +684,19 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 				if (!exists(userDept, deptList)) {
 					// Add it to the list
 					deptList.add(userDept);
-					//log.debug("Adding new dept " + userDept + " to existing org " + userOrg);
+					// log.debug("Adding new dept " + userDept +
+					// " to existing org " + userOrg);
 				}
 			}
 		}
-		
+
 		List<OrgDepts> orgDeptsList = new ArrayList<OrgDepts>();
 		Set<String> keys = orgDeptHashtable.keySet();
-		for (String key: keys) {
+		for (String key : keys) {
 			List<String> deptList = orgDeptHashtable.get(key);
-			//log.debug("key: " + key);
+			// log.debug("key: " + key);
 			for (int i = 0; i < deptList.size(); i++) {
-				//log.debug("depts: " + deptList.get(i));
+				// log.debug("depts: " + deptList.get(i));
 			}
 			OrgDepts orgDepts = new OrgDepts();
 			orgDepts.orgName = key;
@@ -605,7 +706,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 
 		return orgDeptsList;
 	}
-	
+
 	public boolean exists(String item, List<String> list) {
 		for (int i = 0; i < list.size(); i++) {
 			if (item.equals(list.get(i))) {
