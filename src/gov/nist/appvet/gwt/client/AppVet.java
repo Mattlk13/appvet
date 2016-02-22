@@ -81,7 +81,7 @@ public class AppVet implements EntryPoint {
 							displayAppVet(appvetConfig);
 						}
 					} else {
-						// Display AppVet login page
+						// SSO is not active so display AppVet login page
 						displayLogin();
 					}
 				}
@@ -104,6 +104,7 @@ public class AppVet implements EntryPoint {
 	
 	
 	public void displayAppVet(final ConfigInfoGwt configInfoGwt) {
+		
 		String username = configInfoGwt.getUserInfo().getUserName();
 		appVetService.getAllApps(username, new AsyncCallback<AppsListGwt>() {
 
@@ -123,7 +124,6 @@ public class AppVet implements EntryPoint {
 							true);
 					return;
 				} else {
-
 					final AppVetPanel appVetPanel = new AppVetPanel(Unit.PX,
 							configInfoGwt, appsList);
 					// appVetPanel.setTitle("AppVet Panel");

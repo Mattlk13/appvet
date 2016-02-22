@@ -264,6 +264,8 @@ public class LoginPanel extends DockLayoutPanel {
 	
 	public void authenticate(final String username, final String password) {
 		
+		loginStatusLabel.setText("Retrieving data...");
+
 		appVetService.authenticateNonSSO(username, password, 
 				new AsyncCallback<ConfigInfoGwt>() {
 
@@ -275,15 +277,15 @@ public class LoginPanel extends DockLayoutPanel {
 			}
 
 			@Override
-			public void onSuccess(final ConfigInfoGwt result) {
+			public void onSuccess(final ConfigInfoGwt configInfo) {
 
-				if (result == null) {
+				if (configInfo == null) {
 					showMessageDialog("AppVet Login Error",
 							"Unknown username or password", true);
 					return;
 				} else {
-					loginStatusLabel.setText("Retrieving data...");
-					displayAppVet(result);
+					//loginStatusLabel.setText("Retrieving data...");
+					displayAppVet(configInfo);
 				}
 
 			}
@@ -324,9 +326,8 @@ public class LoginPanel extends DockLayoutPanel {
 					final AppVetPanel appVetPanel = new AppVetPanel(
 							Unit.PX, configInfo, appsList);
 					//appVetPanel.setTitle("AppVet panel");
-					final RootLayoutPanel rootLayoutPanel = RootLayoutPanel
-
-							.get();
+					final RootLayoutPanel rootLayoutPanel = 
+							RootLayoutPanel.get();
 					//rootLayoutPanel.setTitle("Root panel");
 					rootLayoutPanel.clear();
 					rootLayoutPanel.add(appVetPanel);

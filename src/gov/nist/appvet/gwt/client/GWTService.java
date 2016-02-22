@@ -40,54 +40,50 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("greet")
 public interface GWTService extends RemoteService {
-	
-	Boolean setAlertMessage(String username, SystemAlert alert)
-			throws IllegalArgumentException;
-	
-	Boolean clearAlertMessage(String username) 
-			throws IllegalArgumentException;
 
-	SystemAlert getAlertMessage() throws IllegalArgumentException;
-	
-	List<UserInfo> adminSetUser(UserInfo userInfo)
-			throws IllegalArgumentException;
-	
-	ConfigInfoGwt handleServletRequest()
-			throws IllegalArgumentException;
+	ConfigInfoGwt handleServletRequest() throws IllegalArgumentException;
+
+	AppsListGwt getAllApps(String username) throws IllegalArgumentException;
 
 	ConfigInfoGwt authenticateNonSSO(String username, String password)
 			throws IllegalArgumentException;
-	
-	Boolean clearLog()
+
+	List<ToolStatusGwt> getToolsResults(DeviceOS os, String sessionId,
+			String appId) throws IllegalArgumentException;
+
+	Boolean updateSelf(UserInfo userInfo) throws IllegalArgumentException;
+
+	Date updateSessionExpiration(String sessionId, Date sessionExpiration)
 			throws IllegalArgumentException;
+
+	Boolean updateUserToolCredentials(String username,
+			ArrayList<UserToolCredentials> credentialsList)
+			throws IllegalArgumentException;
+
+	Boolean setAlertMessage(String username, SystemAlert alert)
+			throws IllegalArgumentException;
+
+	Boolean clearAlertMessage(String username) throws IllegalArgumentException;
+
+	SystemAlert getAlertMessage() throws IllegalArgumentException;
+
+	List<UserInfo> adminSetUser(UserInfo userInfo)
+			throws IllegalArgumentException;
+
+	Boolean clearLog() throws IllegalArgumentException;
 
 	Boolean deleteApp(DeviceOS os, String appId, String username)
 			throws IllegalArgumentException;
 
 	Boolean deleteUser(String username) throws IllegalArgumentException;
 
-	AppsListGwt getAllApps(String username)
-			throws IllegalArgumentException;
-
-	List<ToolStatusGwt> getToolsResults(DeviceOS os, String sessionId,
-			String appId) throws IllegalArgumentException;
-
 	AppsListGwt getUpdatedApps(Date lastClientUpdate, String username)
 			throws IllegalArgumentException;
 
 	List<UserInfo> getUsersList() throws IllegalArgumentException;
-	
+
 	List<OrgDepts> getOrgDeptsList() throws IllegalArgumentException;
 
 	Boolean removeSession(String sessionId) throws IllegalArgumentException;
-
-	Date updateSessionExpiration(String sessionId, Date sessionExpiration)
-			throws IllegalArgumentException;
-
-	Boolean updateSelf(UserInfo userInfo) throws IllegalArgumentException;
-
-	Boolean updateUserToolCredentials(String username,
-			ArrayList<UserToolCredentials> credentialsList)
-			throws IllegalArgumentException;
 
 }

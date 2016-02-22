@@ -62,21 +62,20 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = AppVetProperties.log;
-	
 
 	public ConfigInfoGwt handleServletRequest() {
 		// Get the servlet request for this GWT service
 		HttpServletRequest request = getThreadLocalRequest();
-		
+
 		// Check if AppVet Single-Sign On (SSO) is active or not.
 		if (!AppVetProperties.SSO_ACTIVE) {
-			// SSO is not active. Returning null to GWT client will send 
+			// SSO is not active. Returning null to GWT client will send
 			// user to main login page.
 			ConfigInfoGwt configInfo = new ConfigInfoGwt();
 			configInfo.setSSOActive(false);
 			return configInfo;
 		} else {
-			// SSO is active. Note that SSO should only be used in a 
+			// SSO is active. Note that SSO should only be used in a
 			// secured environment where the user has already authenticated
 			// into the system because AppVet SSO does not support user password
 			// authentication. Password authentication is only supported for
@@ -147,25 +146,21 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		}
 
 	}
-	
 
 	private String getSSOUserName(HttpServletRequest request) {
 		// Get SSO username.
 		if (AppVetProperties.SSO_USERNAME_PARAMNAME != null) {
-			return request
-					.getHeader(AppVetProperties.SSO_USERNAME_PARAMNAME);
+			return request.getHeader(AppVetProperties.SSO_USERNAME_PARAMNAME);
 		} else {
 			// Use email for SSO username
 			if (AppVetProperties.SSO_EMAIL_PARAMNAME != null) {
-				return request
-						.getHeader(AppVetProperties.SSO_EMAIL_PARAMNAME);
+				return request.getHeader(AppVetProperties.SSO_EMAIL_PARAMNAME);
 			} else {
 				log.error("SSO username (and email) is null");
 				return null;
 			}
 		}
 	}
-	
 
 	@Override
 	public Boolean setAlertMessage(String username, SystemAlert alert) {
@@ -209,18 +204,18 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		return getUsersList();
 	}
 
-
-	/** This method is used only with the main AppVet login page. It is not
-	 * used for AppVet SSO which uses the organization's secured environment
-	 * to provide user authentication.
+	/**
+	 * This method is used only with the main AppVet login page. It is not used
+	 * for AppVet SSO which uses the organization's secured environment to
+	 * provide user authentication.
 	 */
 	@Override
-	public ConfigInfoGwt authenticateNonSSO(String username, String password) 
+	public ConfigInfoGwt authenticateNonSSO(String username, String password)
 			throws IllegalArgumentException {
 
 		String sql = "SELECT * FROM users " + "where username='" + username
 				+ "'";
-		
+
 		if (!Database.exists(sql)) {
 			log.debug("User '" + username + "' does not exists in db.");
 
@@ -240,11 +235,12 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					return null;
 				}
 			} else {
-				log.debug("User '" + username + "' does not exist in database. Cannot authenticate.");
+				log.debug("User '" + username
+						+ "' does not exist in database. Cannot authenticate.");
 				return null;
 			}
 		}
-		
+
 		log.debug("User '" + username + "' exists in database.");
 
 		if (Authenticate.isAuthenticated(username, password)) {
@@ -255,7 +251,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			if (clientIpAddress.equals("0:0:0:0:0:0:0:1")) {
 				clientIpAddress = "127.0.0.1";
 			}
-			
+
 			if (Database.updateClientHost(username, clientIpAddress)) {
 				log.debug("Updated client IP '" + clientIpAddress
 						+ "' for user '" + username + "' updated.");
@@ -264,7 +260,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 						+ "' for user '" + username + "' could not be updated.");
 				return null;
 			}
-			
+
 			if (Database.updateUserLogonTime(username)) {
 				log.debug("Updated logon time for user '" + username + "'.");
 			} else {

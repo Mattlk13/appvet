@@ -94,7 +94,6 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		setWidth("386px");
 		this.usersListTable = usersListTable;
 		this.allUsers = allUsers;
-		this.orgDeptsList = orgDeptsList;
 		
 		if (userInfo == null) {
 			newUser = true;

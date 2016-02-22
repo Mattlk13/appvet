@@ -154,13 +154,12 @@ public class AppVetPanel extends DockLayoutPanel {
 	public String documentationURL = null;
 	public boolean ssoActive = false;
 	public static String ssoLogoutURL = null;
-	
+
 	class AppListHandler implements SelectionChangeEvent.Handler {
 
 		ConfigInfoGwt configInfo = null;
 		AppVetPanel appVetPanel = null;
 
-		
 		public AppListHandler(AppVetPanel appVetPanel, ConfigInfoGwt configInfo) {
 			this.appVetPanel = appVetPanel;
 			this.configInfo = configInfo;
@@ -174,7 +173,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 	}
 
-	
 	class AppUploadFormHandler implements FormHandler {
 		AppUploadDialogBox appUploadDialog = null;
 		String apkFileName = null;
@@ -198,7 +196,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 	}
 
-	
 	class ReportUploadFormHandler implements FormHandler {
 		ReportUploadDialogBox reportUploadDialogBox = null;
 		String username = null;
@@ -251,7 +248,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 	}
 
-	
 	public static int[] getCenterPosition(
 			com.google.gwt.user.client.ui.UIObject object) {
 		final int windowWidth = Window.getClientWidth();
@@ -264,15 +260,13 @@ public class AppVetPanel extends DockLayoutPanel {
 		return position;
 	}
 
-	
 	public static void killDialogBox(DialogBox dialogBox) {
 		if (dialogBox != null) {
 			dialogBox.hide();
 			dialogBox = null;
-		} 
+		}
 	}
-	
-	
+
 	public static void logoutSSO() {
 		// Cancel poller
 		pollingTimer.cancel();
@@ -286,17 +280,16 @@ public class AppVetPanel extends DockLayoutPanel {
 		killDialogBox(deleteConfirmDialogBox);
 		killDialogBox(reportUploadDialogBox);
 		killDialogBox(userAcctDialogBox);
-		
+
 		// Redirect to the SSO logout URL
-		Window.Location.assign(ssoLogoutURL); 
+		Window.Location.assign(ssoLogoutURL);
 		System.gc();
 	}
 
-	
 	public static void logoutNonSSO() {
 		// Cancel poller
 		pollingTimer.cancel();
-		
+
 		// Close any open dialog boxes
 		killDialogBox(appUploadDialogBox);
 		killDialogBox(errorDialogBox);
@@ -306,15 +299,15 @@ public class AppVetPanel extends DockLayoutPanel {
 		killDialogBox(deleteConfirmDialogBox);
 		killDialogBox(reportUploadDialogBox);
 		killDialogBox(userAcctDialogBox);
-		
+
 		// Go back to AppVet login screen
 		final LoginPanel loginPanel = new LoginPanel(Unit.PX);
-		//loginPanel.setTitle("Login panel");
+		// loginPanel.setTitle("Login panel");
 		final RootLayoutPanel rootLayoutPanel = RootLayoutPanel.get();
-		//rootLayoutPanel.setTitle("Root panel");
+		// rootLayoutPanel.setTitle("Root panel");
 		rootLayoutPanel.clear();
 		rootLayoutPanel.add(loginPanel);
-		
+
 		// Show expired session dialog box
 		AppVetPanel.showMessageDialog("AppVet Session",
 				"AppVet session has expired", true);
@@ -328,7 +321,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		System.gc();
 	}
 
-	
 	public static void showMessageDialog(String windowTitle, String message,
 			boolean isError) {
 		messageDialogBox = new MessageDialogBox(message, isError);
@@ -343,7 +335,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 	}
 
-	
 	public void showTimeoutDialog(final long diff) {
 		killDialogBox(messageDialogBox);
 		timeoutWarningMessage = true;
@@ -354,23 +345,22 @@ public class AppVetPanel extends DockLayoutPanel {
 		messageDialogBox.center();
 		messageDialogBox.closeButton.setFocus(true);
 		messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
-				
+
 				if (diff <= 0) {
 					// Didn't click within the 60s alert period, so expire
-					//pollingTimer.cancel();
+					// pollingTimer.cancel();
 					removeSession();
-//					if (ssoActive) {
-//						logoutSSO();
-//					} else {
-//						logoutNonSSO();
-//					}
+					// if (ssoActive) {
+					// logoutSSO();
+					// } else {
+					// logoutNonSSO();
+					// }
 				} else {
-					sessionExpiration = 
-							new Date(System.currentTimeMillis() + 
-									MAX_SESSION_IDLE_DURATION);
+					sessionExpiration = new Date(System.currentTimeMillis()
+							+ MAX_SESSION_IDLE_DURATION);
 					killDialogBox(messageDialogBox);
 					timeoutWarningMessage = false;
 				}
@@ -378,11 +368,10 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 	}
 
-	
 	public static boolean validReportFileName(String selectedToolName,
 			String uploadedReportFileName, ArrayList<ToolInfoGwt> tools) {
 		String selectedToolRequiredFileType = null;
-		
+
 		for (int i = 0; i < tools.size(); i++) {
 			ToolInfoGwt tool = tools.get(i);
 			String toolName = tool.getName();
@@ -391,12 +380,12 @@ public class AppVetPanel extends DockLayoutPanel {
 				break;
 			}
 		}
-		
+
 		final String uploadedReportFileNameLowercase = uploadedReportFileName
 				.toLowerCase();
 		final String selectedToolRequiredFileTypeLowercase = selectedToolRequiredFileType
 				.toLowerCase();
-		
+
 		if (selectedToolRequiredFileTypeLowercase.endsWith("html")) {
 			if (!uploadedReportFileNameLowercase.endsWith("html")) {
 				showMessageDialog("Report Submission Error", selectedToolName
@@ -428,11 +417,10 @@ public class AppVetPanel extends DockLayoutPanel {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 
-	
 	public AppVetPanel(Unit unit, final ConfigInfoGwt configInfo,
 			AppsListGwt initialApps) {
 		super(Unit.PX);
@@ -454,7 +442,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		userName = userInfo.getUserName();
 		allApps = initialApps.apps;
 		lastAppsListUpdate = initialApps.appsLastChecked;
-		
+
 		sinkEvents(Event.ONCLICK);
 		sessionId = configInfo.getSessionId();
 		sessionExpiration = configInfo.getSessionExpiration();
@@ -557,7 +545,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		orgLogo.setSize("120px", "120px");
 		String orgLogoAltText = configInfo.getOrgLogoAltText();
 		orgLogo.setAltText(orgLogoAltText);
-		//orgLogo.setTitle(orgLogoAltText);
+		// orgLogo.setTitle(orgLogoAltText);
 		horizontalPanel_5.add(orgLogo);
 		horizontalPanel_5.setCellVerticalAlignment(orgLogo,
 				HasVerticalAlignment.ALIGN_BOTTOM);
@@ -597,7 +585,7 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				});
 		userMenuBar.addItem(accountSettingsMenuItem);
-		
+
 		final MenuItem toolCredentialsMenuItem = new MenuItem(
 				"Tool Credentials", false, new Command() {
 					@Override
@@ -606,7 +594,7 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				});
 		userMenuBar.addItem(toolCredentialsMenuItem);
-		
+
 		accountSettingsMenuItem.setHeight("");
 		final MenuItem myAppsMenuItem = new MenuItem("My Apps", false,
 				new Command() {
@@ -662,8 +650,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				false, new Command() {
 					@Override
 					public void execute() {
-						Window.open(documentationURL, "_blank",
-								null);
+						Window.open(documentationURL, "_blank", null);
 					}
 				});
 		helpMenuBar.addItem(documentationMenuItem);
@@ -682,8 +669,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		statusMessageLabel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		statusMessageLabel.setSize("420px", "18px");
-		//statusMessageLabel.setTitle("Status message");
-		
+		// statusMessageLabel.setTitle("Status message");
+
 		Label lblNewLabel = new Label("");
 		horizontalPanel_3.add(lblNewLabel);
 		horizontalPanel_3.setCellWidth(lblNewLabel, "25%");
@@ -752,11 +739,11 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				});
 		logMenubar.addItem(downloadAppVetLogMenuItem);
-		
+
 		// Alert menu
 		final MenuBar alertMenubar = new MenuBar(true);
 		alertMenubar.setFocusOnHoverEnabled(true);
-		
+
 		final MenuItem setAlertMenuItem = new MenuItem("Set", false,
 				new Command() {
 					@Override
@@ -779,27 +766,34 @@ public class AppVetPanel extends DockLayoutPanel {
 									public void onClick(ClickEvent event) {
 										killDialogBox(setAlertDialogBox);
 										SystemAlertType alertType = null;
-										if (setAlertDialogBox.alertNormalRadioButton.isChecked())
+										if (setAlertDialogBox.alertNormalRadioButton
+												.isChecked())
 											alertType = SystemAlertType.NORMAL;
-										else if (setAlertDialogBox.alertWarningRadioButton.isChecked())
+										else if (setAlertDialogBox.alertWarningRadioButton
+												.isChecked())
 											alertType = SystemAlertType.WARNING;
-										else if (setAlertDialogBox.alertCriticalRadioButton.isChecked())
+										else if (setAlertDialogBox.alertCriticalRadioButton
+												.isChecked())
 											alertType = SystemAlertType.CRITICAL;
-										
-										String alertMessage = setAlertDialogBox.alertTextArea.getText();
-										if (alertMessage == null || alertMessage.isEmpty()) {
-											showMessageDialog("AppVet Error",
+
+										String alertMessage = setAlertDialogBox.alertTextArea
+												.getText();
+										if (alertMessage == null
+												|| alertMessage.isEmpty()) {
+											showMessageDialog(
+													"AppVet Error",
 													"Alert message cannot be empty.",
 													true);
 										}
-										
-										setAlertMessage(userInfo.getUserName(), alertType, alertMessage);
+
+										setAlertMessage(userInfo.getUserName(),
+												alertType, alertMessage);
 									}
 								});
 					}
 				});
 		alertMenubar.addItem(setAlertMenuItem);
-		
+
 		final MenuItem clearAlertMessageMenuItem = new MenuItem("Clear", false,
 				new Command() {
 					@Override
@@ -808,7 +802,6 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				});
 		alertMenubar.addItem(clearAlertMessageMenuItem);
-		
 
 		// Admin menubar
 		final MenuItem adminMenuItem = new MenuItem("Admin", true, adminMenuBar);
@@ -818,7 +811,8 @@ public class AppVetPanel extends DockLayoutPanel {
 				new Command() {
 					@Override
 					public void execute() {
-						usersDialogBox = new UserListDialogBox(configInfo.getNumRowsUsersList(), ssoActive);
+						usersDialogBox = new UserListDialogBox(configInfo
+								.getNumRowsUsersList(), ssoActive);
 						usersDialogBox.setText("Users");
 						usersDialogBox.center();
 						usersDialogBox.doneButton.setFocus(true);
@@ -832,20 +826,19 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				});
 		adminMenuBar.addItem(usersMenuItem);
-		
+
 		adminMenuBar.addItem("Alerts", alertMenubar);
-		
-		
+
 		if (userInfo.getRole().equals(Role.ADMIN.name())) {
 			appVetMenuBar.addItem(adminMenuItem);
 		}
 
 		final HorizontalSplitPanel centerAppVetSplitPanel = new HorizontalSplitPanel();
-		//centerAppVetSplitPanel.setTitle("AppVet split pane");
+		// centerAppVetSplitPanel.setTitle("AppVet split pane");
 		centerAppVetSplitPanel.setSplitPosition("65%");
 		centerAppVetSplitPanel.setSize("100%", "");
 		final SimplePanel leftCenterPanel = new SimplePanel();
-		//leftCenterPanel.setTitle("AppVet apps list pane");
+		// leftCenterPanel.setTitle("AppVet apps list pane");
 
 		centerAppVetSplitPanel.setLeftWidget(leftCenterPanel);
 		leftCenterPanel.setSize("100%", "");
@@ -855,7 +848,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		leftCenterPanel.setWidget(dockPanel_1);
 		dockPanel_1.setSize("100%", "");
 		rightCenterPanel = new SimplePanel();
-		//rightCenterPanel.setTitle("AppVet app info panel");
+		// rightCenterPanel.setTitle("AppVet app info panel");
 
 		centerAppVetSplitPanel.setRightWidget(rightCenterPanel);
 		rightCenterPanel.setSize("", "");
@@ -908,7 +901,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsListButtonPanel.setStyleName("appListButtonPanel");
 		appsListButtonPanel.setSize("100%", "");
 		appsLabel = new InlineLabel("Apps");
-		//appsLabel.setTitle("Apps");
+		// appsLabel.setTitle("Apps");
 		appsLabel.setText("Apps");
 		appsLabel.setStyleName("AppsLabel");
 		appsListButtonPanel.add(appsLabel);
@@ -999,7 +992,8 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		submitButton.setSize("80px", "");
 		appsListTable = new AppsListPagingDataGrid<AppInfoGwt>();
-		appsListTable.dataGrid.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
+		appsListTable.dataGrid
+				.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 		appsListTable.dataGrid.setFocus(false);
 		appsListTable.setPageSize(configInfo.getNumRowsAppsList());
 		appsListTable.dataGrid.setStyleName("dataGrid");
@@ -1010,7 +1004,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		dockPanel_1.setCellVerticalAlignment(appsListTable,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appsListTable.setAppVetHostUrl(HOST_URL);
-		//appsListTable.setAppVetProxyUrl(PROXY_URL);
+		// appsListTable.setAppVetProxyUrl(PROXY_URL);
 		appsListTable.dataGrid.setSize("100%", "");
 		appsListTable.setDataList(initialApps.apps);
 		appsListTable.setSize("100%", "");
@@ -1030,17 +1024,17 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		Image nistLogo = new Image("images/nist_logo_darkgrey.png");
 		nistLogo.setAltText("NIST logo");
-		//nistLogo.setTitle("NIST logo");
+		// nistLogo.setTitle("NIST logo");
 		horizontalPanel_2.add(nistLogo);
 		horizontalPanel_2.setCellVerticalAlignment(nistLogo,
 				HasVerticalAlignment.ALIGN_BOTTOM);
 		horizontalPanel_2.setCellHorizontalAlignment(nistLogo,
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		nistLogo.setSize("50px", "13px");
-		
+
 		HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
 		appInfoVerticalPanel.add(horizontalPanel_1);
-		
+
 		Label label = new Label("");
 		horizontalPanel_1.add(label);
 		label.setSize("0", "0");
@@ -1060,9 +1054,9 @@ public class AppVetPanel extends DockLayoutPanel {
 					showMessageDialog("AppVet Error", "No app is selected",
 							true);
 				} else {
-					reportUploadDialogBox = new ReportUploadDialogBox(
-							userInfo, sessionId, selected.appId,
-							SERVLET_URL, selected.os, tools);
+					reportUploadDialogBox = new ReportUploadDialogBox(userInfo,
+							sessionId, selected.appId, SERVLET_URL,
+							selected.os, tools);
 					reportUploadDialogBox.setText("Upload Report for "
 							+ selected.appName);
 					reportUploadDialogBox.center();
@@ -1078,8 +1072,7 @@ public class AppVetPanel extends DockLayoutPanel {
 							});
 					reportUploadDialogBox.uploadReportForm
 							.addFormHandler(new ReportUploadFormHandler(
-									reportUploadDialogBox, userName,
-									selected));
+									reportUploadDialogBox, userName, selected));
 
 				}
 			}
@@ -1126,8 +1119,7 @@ public class AppVetPanel extends DockLayoutPanel {
 
 				deleteConfirmDialogBox = new YesNoConfirmDialog(
 						"<p align=\"center\">\r\nAre you sure you want to delete app #"
-								+ selected.appId
-								+ "?\r\n</p>");
+								+ selected.appId + "?\r\n</p>");
 				deleteConfirmDialogBox.setText("Confirm Delete");
 				deleteConfirmDialogBox.center();
 				deleteConfirmDialogBox.cancelButton.setFocus(true);
@@ -1176,7 +1168,7 @@ public class AppVetPanel extends DockLayoutPanel {
 							+ "&" + AppVetParameter.APPID.value + "=" + appId
 							+ "&" + AppVetParameter.SESSIONID.value + "="
 							+ sessionId;
-					//TODO
+					// TODO
 					Window.open(url, "_self", "");
 				}
 			}
@@ -1188,37 +1180,37 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsListButtonPanel.setCellHorizontalAlignment(downloadReportsButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		downloadReportsButton.setSize("80px", "");
-		
-				downloadAppButton = new PushButton("Download App");
-				horizontalPanel_1.add(downloadAppButton);
-				downloadAppButton
-						.setHTML("<img width=\"80px\" src=\"images/download-app-up.png\" alt=\"Download App\" />");
-				downloadAppButton.setTitle("Download App");
-				downloadAppButton.setSize("80px", "");
-				downloadAppButton.addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						final AppInfoGwt selected = appSelectionModel
-								.getSelectedObject();
-						if (selected == null) {
-							showMessageDialog("AppVet Error", "No app is selected",
-									true);
-						} else {
-							final String appId = selected.appId;
-							final String dateString = "?nocache" + new Date().getTime();
-							final String url = SERVLET_URL + dateString + "&"
-									+ AppVetParameter.COMMAND.value + "="
-									+ AppVetServletCommand.DOWNLOAD_APP.name() + "&"
-									+ AppVetParameter.APPID.value + "=" + appId + "&"
-									+ AppVetParameter.SESSIONID.value + "=" + sessionId;
-							//TODO
-							Window.open(url, "_self", "");
-						}
-					}
-				});
+
+		downloadAppButton = new PushButton("Download App");
+		horizontalPanel_1.add(downloadAppButton);
+		downloadAppButton
+				.setHTML("<img width=\"80px\" src=\"images/download-app-up.png\" alt=\"Download App\" />");
+		downloadAppButton.setTitle("Download App");
+		downloadAppButton.setSize("80px", "");
+		downloadAppButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				final AppInfoGwt selected = appSelectionModel
+						.getSelectedObject();
+				if (selected == null) {
+					showMessageDialog("AppVet Error", "No app is selected",
+							true);
+				} else {
+					final String appId = selected.appId;
+					final String dateString = "?nocache" + new Date().getTime();
+					final String url = SERVLET_URL + dateString + "&"
+							+ AppVetParameter.COMMAND.value + "="
+							+ AppVetServletCommand.DOWNLOAD_APP.name() + "&"
+							+ AppVetParameter.APPID.value + "=" + appId + "&"
+							+ AppVetParameter.SESSIONID.value + "=" + sessionId;
+					// TODO
+					Window.open(url, "_self", "");
+				}
+			}
+		});
 		logButton.setVisible(true);
-		
-				uploadReportButton.setVisible(true);
+
+		uploadReportButton.setVisible(true);
 		toolResultsHtml = new HTML("", true);
 		appInfoVerticalPanel.add(toolResultsHtml);
 		appInfoVerticalPanel.setCellWidth(toolResultsHtml, "100%");
@@ -1236,22 +1228,22 @@ public class AppVetPanel extends DockLayoutPanel {
 			downloadReportsButton.setEnabled(false);
 			downloadAppButton.setEnabled(false);
 		}
-		
+
 		pollServer(userName);
 		scheduleResize();
-		
-		// Note that SSO users can manually refresh the page but non-SSO users will 
+
+		// Note that SSO users can manually refresh the page but non-SSO users
+		// will
 		// return to AppVet login page upon a manual refresh of the page.
 		if (!ssoActive) {
 			showDontRefreshWarning();
 		}
 
 	}
-	
-	
+
 	// TODO
 	public void removeSession() {
-		
+
 		// First stop polling the server for data
 		pollingTimer.cancel();
 
@@ -1259,17 +1251,13 @@ public class AppVetPanel extends DockLayoutPanel {
 				new AsyncCallback<Boolean>() {
 					@Override
 					public void onFailure(Throwable caught) {
-						AppVetPanel.showMessageDialog(
-								"AppVet Error",
-								"App list retrieval error",
-								true);
-						errorDialogBox.closeButton
-								.setFocus(true);
+						AppVetPanel.showMessageDialog("AppVet Error",
+								"App list retrieval error", true);
+						errorDialogBox.closeButton.setFocus(true);
 						errorDialogBox.closeButton
 								.addClickHandler(new ClickHandler() {
 									@Override
-									public void onClick(
-											ClickEvent event) {
+									public void onClick(ClickEvent event) {
 										killDialogBox(errorDialogBox);
 									}
 								});
@@ -1278,17 +1266,13 @@ public class AppVetPanel extends DockLayoutPanel {
 					@Override
 					public void onSuccess(Boolean result) {
 						if (result == false) {
-							AppVetPanel.showMessageDialog(
-									"AppVet Error",
-									"Could not remove session",
-									true);
-							errorDialogBox.closeButton
-									.setFocus(true);
+							AppVetPanel.showMessageDialog("AppVet Error",
+									"Could not remove session", true);
+							errorDialogBox.closeButton.setFocus(true);
 							errorDialogBox.closeButton
 									.addClickHandler(new ClickHandler() {
 										@Override
-										public void onClick(
-												ClickEvent event) {
+										public void onClick(ClickEvent event) {
 											killDialogBox(errorDialogBox);
 										}
 									});
@@ -1303,56 +1287,54 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				});
 	}
-	
-	
-	public void setAlertMessage(String username, SystemAlertType alertType, String alertMessage) {
+
+	public void setAlertMessage(String username, SystemAlertType alertType,
+			String alertMessage) {
 		SystemAlert alert = new SystemAlert();
 		alert.type = alertType;
 		alert.message = alertMessage;
-		
-		appVetServiceAsync.setAlertMessage(username, alert, 
-				new AsyncCallback<Boolean>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				showMessageDialog("AppVet Error",
-						"Could not set alert message", true);
-			}
 
-			@Override
-			public void onSuccess(Boolean setAlert) {
-				if (!setAlert) {
-					showMessageDialog("AppVet Error",
-							"Could not set alert message", true);
-				} else {
-					//log.info("Alert message set");
-				}
-			}
-		});
+		appVetServiceAsync.setAlertMessage(username, alert,
+				new AsyncCallback<Boolean>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						showMessageDialog("AppVet Error",
+								"Could not set alert message", true);
+					}
+
+					@Override
+					public void onSuccess(Boolean setAlert) {
+						if (!setAlert) {
+							showMessageDialog("AppVet Error",
+									"Could not set alert message", true);
+						} else {
+							// log.info("Alert message set");
+						}
+					}
+				});
 	}
-	
-	
+
 	public void clearAlertMessage(String username) {
-		appVetServiceAsync.clearAlertMessage(username, 
+		appVetServiceAsync.clearAlertMessage(username,
 				new AsyncCallback<Boolean>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				showMessageDialog("AppVet Error",
-						"Could not clear alert message", true);
-			}
+					@Override
+					public void onFailure(Throwable caught) {
+						showMessageDialog("AppVet Error",
+								"Could not clear alert message", true);
+					}
 
-			@Override
-			public void onSuccess(Boolean setAlert) {
-				if (!setAlert) {
-					showMessageDialog("AppVet Error",
-							"Could not clear alert message", true);
-				} else {
-					//log.info("Alert message cleared");
-				}
-			}
-		});
+					@Override
+					public void onSuccess(Boolean setAlert) {
+						if (!setAlert) {
+							showMessageDialog("AppVet Error",
+									"Could not clear alert message", true);
+						} else {
+							// log.info("Alert message cleared");
+						}
+					}
+				});
 	}
 
-	
 	public void clearLog() {
 		appVetServiceAsync.clearLog(new AsyncCallback<Boolean>() {
 			@Override
@@ -1373,7 +1355,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 	}
 
-	
 	public void deleteApp(final DeviceOS os, final String appid,
 			final String username) {
 		appVetServiceAsync.deleteApp(os, appid, username,
@@ -1443,8 +1424,8 @@ public class AppVetPanel extends DockLayoutPanel {
 				new AsyncCallback<AppsListGwt>() {
 					@Override
 					public void onFailure(Throwable caught) {
-//						log.severe("Error retrieving updated apps. Server might be down: "
-//								+ caught.toString());
+						// log.severe("Error retrieving updated apps. Server might be down: "
+						// + caught.toString());
 						pollingTimer.cancel();
 					}
 
@@ -1454,7 +1435,8 @@ public class AppVetPanel extends DockLayoutPanel {
 							showMessageDialog("AppVet Database Error",
 									"Could not retrieve updated apps", true);
 						} else {
-							//log.info("Update time: " + updatedAppsList.appsLastChecked.toString());
+							// log.info("Update time: " +
+							// updatedAppsList.appsLastChecked.toString());
 							lastAppsListUpdate = updatedAppsList.appsLastChecked;
 							if (updatedAppsList.apps.size() > 0) {
 								setUpdatedApps(updatedAppsList.apps);
@@ -1463,18 +1445,15 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				});
 	}
-	
-	
 
 	@Override
 	public void onBrowserEvent(Event event) {
-		sessionExpiration = 
-				new Date(System.currentTimeMillis() + MAX_SESSION_IDLE_DURATION);
+		sessionExpiration = new Date(System.currentTimeMillis()
+				+ MAX_SESSION_IDLE_DURATION);
 	}
-	
-	
+
 	public synchronized void displayAppInfo(final AppInfoGwt selectedApp) {
-		//log.info("Updating appinfopanel for: " + selectedApp.appId);
+		// log.info("Updating appinfopanel for: " + selectedApp.appId);
 		// Show selected app info results
 		if (selectedApp != null) {
 			appVetServiceAsync.getToolsResults(selectedApp.os, sessionId,
@@ -1484,23 +1463,20 @@ public class AppVetPanel extends DockLayoutPanel {
 						@Override
 						public void onFailure(Throwable caught) {
 							showMessageDialog("AppVet Error",
-									"System error retrieving app info",
-									true);
+									"System error retrieving app info", true);
 						}
 
 						@Override
-						public void onSuccess(
-								List<ToolStatusGwt> toolsResults) {
+						public void onSuccess(List<ToolStatusGwt> toolsResults) {
 
 							if ((toolsResults == null)
 									|| toolsResults.isEmpty()) {
 								showMessageDialog("AppVet Error: ",
-										"Could not retrieve app info.",
-										true);
+										"Could not retrieve app info.", true);
 							} else {
 								String defaultIcon = null;
 								String altText = null;
-								
+
 								if (selectedApp.os == DeviceOS.ANDROID) {
 									defaultIcon = "android-icon-gray.png";
 									altText = "Android app";
@@ -1515,11 +1491,10 @@ public class AppVetPanel extends DockLayoutPanel {
 
 								// Set app icon in right app info panel
 								if (selectedApp.appStatus == AppStatus.REGISTERING) {
-									//log.info("Displaying REGISTERING");
+									// log.info("Displaying REGISTERING");
 									iconVersion++;
 									final String iconPath = "images/"
-											+ defaultIcon + "?v"
-											+ iconVersion;
+											+ defaultIcon + "?v" + iconVersion;
 									appInfoIcon.setUrl(iconPath);
 									appInfoIcon.setAltText(altText);
 									appNameHtml = "<div id=\"appNameInfo\">"
@@ -1533,20 +1508,21 @@ public class AppVetPanel extends DockLayoutPanel {
 											.setHTML("<b>Version: </b>N/A");
 									return;
 								} else if (selectedApp.appStatus == AppStatus.PENDING) {
-									//log.info("Displaying PENDING");
+									// log.info("Displaying PENDING");
 									final String iconPath = "images/"
 											+ defaultIcon;
 									appInfoIcon.setUrl(iconPath);
 									appInfoIcon.setAltText(altText);
 								} else if (selectedApp.appStatus == AppStatus.PROCESSING) {
-									//log.info("Displaying PROCESSING");
+									// log.info("Displaying PROCESSING");
 									iconVersion++;
 									final String iconPath = "images/"
 											+ defaultIcon;
 									appInfoIcon.setUrl(iconPath);
 									appInfoIcon.setAltText(altText);
 								} else {
-									//log.info("Displaying OTHER STATUS: " + selectedApp.appStatus.name());
+									// log.info("Displaying OTHER STATUS: " +
+									// selectedApp.appStatus.name());
 									String URL = HOST_URL;
 
 									final String iconPath = URL
@@ -1556,7 +1532,6 @@ public class AppVetPanel extends DockLayoutPanel {
 									appInfoIcon.setAltText(selectedApp.appName);
 								}
 
-								
 								String appName = null;
 								if (selectedApp.appName == null) {
 									appName = "Retrieving...";
@@ -1585,26 +1560,22 @@ public class AppVetPanel extends DockLayoutPanel {
 								// Set app package in right info panel
 								appInfoName.setHTML(appNameHtml);
 								if ((selectedApp.packageName == null)
-										|| selectedApp.packageName
-												.equals("")) {
+										|| selectedApp.packageName.equals("")) {
 									appInfoPackage
 											.setHTML("<b>Package: </b>N/A");
 								} else {
-									appInfoPackage
-											.setHTML("<b>Package: </b>"
-													+ selectedApp.packageName);
+									appInfoPackage.setHTML("<b>Package: </b>"
+											+ selectedApp.packageName);
 								}
 
 								// Set version in right info panel
 								if ((selectedApp.versionName == null)
-										|| selectedApp.versionName
-												.equals("")) {
+										|| selectedApp.versionName.equals("")) {
 									appInfoVersion
 											.setHTML("<b>Version: </b>N/A");
 								} else {
-									appInfoVersion
-											.setHTML("<b>Version: </b>"
-													+ selectedApp.versionName);
+									appInfoVersion.setHTML("<b>Version: </b>"
+											+ selectedApp.versionName);
 								}
 
 								// Get tool results
@@ -1637,7 +1608,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								statuses += getNAStatus();
 							}
 
-							// Get pre-processing analysis results 
+							// Get pre-processing analysis results
 							statuses += "<h3 title=\"App Metadata\" id=\"appInfoSectionHeader\">App Metadata</h3>\n";
 							int preprocessorToolCount = 0;
 
@@ -1708,9 +1679,10 @@ public class AppVetPanel extends DockLayoutPanel {
 
 						public String getPreprocessorStatusHtmlDisplay(
 								ToolStatusGwt toolStatus) {
-//							log.info("Tool : " + toolStatus.getToolDisplayName() + ", status: " 
-//									+ toolStatus.getStatusHtml());
-							
+							// log.info("Tool : " +
+							// toolStatus.getToolDisplayName() + ", status: "
+							// + toolStatus.getStatusHtml());
+
 							String status = null;
 
 							if (toolStatus.getStatusHtml().indexOf("LOW") > -1) {
@@ -1718,47 +1690,59 @@ public class AppVetPanel extends DockLayoutPanel {
 							} else {
 								status = toolStatus.getStatusHtml();
 							}
-							
+
 							String toolIconURL = null;
 							String toolIconAltText = null;
 							if (toolStatus.getIconURL() != null) {
-								// Check for custom icon URL defined in tool adapter config file
+								// Check for custom icon URL defined in tool
+								// adapter config file
 								toolIconURL = toolStatus.getIconURL();
 								toolIconAltText = toolStatus.getIconAltText();
 							} else {
 								// Use default icons
-								toolIconURL = toolStatus.getToolType().getDefaultIconURL();
-								toolIconAltText = toolStatus.getToolType().getDefaultAltText();
+								toolIconURL = toolStatus.getToolType()
+										.getDefaultIconURL();
+								toolIconAltText = toolStatus.getToolType()
+										.getDefaultAltText();
 							}
 
 							// To over on table, add 'class=\"hovertable\"
-							return getToolRowHtml(toolIconURL, toolIconAltText, 
-									toolStatus.getToolDisplayName(), status, toolStatus.getReport());
+							return getToolRowHtml(toolIconURL, toolIconAltText,
+									toolStatus.getToolDisplayName(), status,
+									toolStatus.getReport());
 						}
 
 						public String getToolStatusHtmlDisplay(
 								ToolStatusGwt toolStatus) {
 							String toolIconURL = null;
 							String toolIconAltText = null;
-							
+
 							if (toolStatus.getIconURL() != null) {
 								toolIconURL = toolStatus.getIconURL();
 								toolIconAltText = toolStatus.getIconAltText();
 							} else {
-								toolIconURL = toolStatus.getToolType().getDefaultIconURL();
-								toolIconAltText = toolStatus.getToolType().getDefaultAltText();
+								toolIconURL = toolStatus.getToolType()
+										.getDefaultIconURL();
+								toolIconAltText = toolStatus.getToolType()
+										.getDefaultAltText();
 							}
-							
-							return getToolRowHtml(toolIconURL, toolIconAltText, toolStatus.getToolDisplayName(),
-									toolStatus.getStatusHtml(), toolStatus.getReport());
+
+							return getToolRowHtml(toolIconURL, toolIconAltText,
+									toolStatus.getToolDisplayName(),
+									toolStatus.getStatusHtml(),
+									toolStatus.getReport());
 						}
-						
-						private String getToolRowHtml(String toolIconURL, String toolIconAltText, 
-								String toolDisplayName, String toolStatus, String toolReport) {
-							return "<table>"
-									+ "<tr>\n"
+
+						private String getToolRowHtml(String toolIconURL,
+								String toolIconAltText, String toolDisplayName,
+								String toolStatus, String toolReport) {
+							return "<table>" + "<tr>\n"
 									+ "<td>"
-									+ "<img class=\"toolimages\" src=\"" + toolIconURL + "\" alt=\"" + toolIconAltText + "\"> "
+									+ "<img class=\"toolimages\" src=\""
+									+ toolIconURL
+									+ "\" alt=\""
+									+ toolIconAltText
+									+ "\"> "
 									+ "</td>\n"
 									// Removed title="mytitle" from following td
 									+ "<td align=\"left\" width=\"200\">"
@@ -1770,25 +1754,26 @@ public class AppVetPanel extends DockLayoutPanel {
 									+ "</td>\n"
 									// Removed title="mytitle" from following td
 									+ "<td align=\"left\" width=\"45\">"
-									+ toolReport + "</td>\n"
-									+ "</tr>\n" + "</table>";
+									+ toolReport + "</td>\n" + "</tr>\n"
+									+ "</table>";
 						}
-						
+
 					});
 		}
-		//log.info("Done updating appinfopanel for: " + selectedApp.appId);
-	
+		// log.info("Done updating appinfopanel for: " + selectedApp.appId);
+
 	}
 
-	
 	public void pollServer(String username) {
 		final String user = username;
 		pollingTimer = new Timer() {
 			@Override
 			public void run() {
-				// The following methods hit the database. To increase performance,
+				// The following methods hit the database. To increase
+				// performance,
 				// it might be good to combine the functionality of these three
-				// methods into a single method call to the server (and database).
+				// methods into a single method call to the server (and
+				// database).
 				updateSessionExpiration();
 				getUpdatedApps(user);
 				getAlertMessage();
@@ -1796,22 +1781,23 @@ public class AppVetPanel extends DockLayoutPanel {
 		};
 		pollingTimer.scheduleRepeating(POLLING_INTERVAL);
 	}
-	
-	
+
 	public void showDontRefreshWarning() {
 		warningTimer = new Timer() {
 			@Override
 			public void run() {
 				if (allApps.size() <= NUM_APPS_SHOW_REFRESH_WARNING) {
-					showMessageDialog("AppVet Info", "AppVet is a dynamic web application that automatically updates "
-							+ " in real-time. Do not refresh or reload this page while using AppVet.", true);
+					showMessageDialog(
+							"AppVet Info",
+							"AppVet is a dynamic web application that automatically updates "
+									+ " in real-time. Do not refresh or reload this page while using AppVet.",
+							true);
 				}
 			}
 		};
 		warningTimer.schedule(1000);
 	}
 
-	
 	public void resizeComponents() {
 		/**
 		 * The following variable is the main variable to adjust when changing
@@ -1833,10 +1819,8 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		appsListTable.setSize("100%", appsListTableHeight + "px");
 		appsListTable.dataGrid.redraw();
-
 	}
 
-	
 	// The size of the AppVet panel is 0 until displayed in rootlayoutpanel.
 	public void scheduleResize() {
 		final Timer resizeTimer = new Timer() {
@@ -1847,7 +1831,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		};
 		resizeTimer.schedule(250);
 	}
-	
 
 	public int search() {
 		searchMode = true;
@@ -1880,13 +1863,11 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 	}
 
-	
 	public void setAllApps() {
 		appsLabel.setText("Apps");
 		appsListTable.setDataList(allApps);
 	}
 
-	
 	/**
 	 * Check to make sure that the displayed app status is reflecting the latest
 	 * updated app status. This is needed since a race condition exists where an
@@ -1898,49 +1879,49 @@ public class AppVetPanel extends DockLayoutPanel {
 	 * @param numApps
 	 *            The number of apps, starting from the most recent, to check.
 	 */
-	public void refreshLastApp(List<AppInfoGwt> latestApps, int numAppsToCheck) {
-
-		ListDataProvider<AppInfoGwt> appsTableList = appsListTable
-				.getDataProvider();
-		Set<HasData<AppInfoGwt>> displayedApps = appsTableList
-				.getDataDisplays();
-		Iterator<HasData<AppInfoGwt>> displayedAppsIterator = displayedApps
-				.iterator();
-
-		int numApps = 0;
-
-		if (numAppsToCheck > latestApps.size()) {
-			numApps = latestApps.size();
-		}
-
-		for (int i = 0; i < numApps; i++) {
-			AppInfoGwt app = latestApps.get(i);
-			AppStatus actualAppStatus = app.appStatus;
-
-			// Check this app against the app status that is displayed
-			while (displayedAppsIterator.hasNext()) {
-				HasData<AppInfoGwt> displayedApp = displayedAppsIterator.next();
-				Iterable<AppInfoGwt> displayedAppItems = displayedApp
-						.getVisibleItems();
-				for (AppInfoGwt displayedAppItem : displayedAppItems) { // Match
-																		// on
-																		// app
-																		// ID
-					if (displayedAppItem.appId.equals(app.appId)) {
-						AppStatus displayedAppStatus = displayedAppItem.appStatus;
-						if (displayedAppStatus != actualAppStatus) {
-							appsListTable.set(0, app);
-
-						}
-					}
-				}
-			}
-		}
-	}
-
+	// public void refreshLastApp(List<AppInfoGwt> latestApps, int
+	// numAppsToCheck) {
+	//
+	// ListDataProvider<AppInfoGwt> appsTableList = appsListTable
+	// .getDataProvider();
+	// Set<HasData<AppInfoGwt>> displayedApps = appsTableList
+	// .getDataDisplays();
+	// Iterator<HasData<AppInfoGwt>> displayedAppsIterator = displayedApps
+	// .iterator();
+	//
+	// int numApps = 0;
+	//
+	// if (numAppsToCheck > latestApps.size()) {
+	// numApps = latestApps.size();
+	// }
+	//
+	// for (int i = 0; i < numApps; i++) {
+	// AppInfoGwt app = latestApps.get(i);
+	// AppStatus actualAppStatus = app.appStatus;
+	//
+	// // Check this app against the app status that is displayed
+	// while (displayedAppsIterator.hasNext()) {
+	// HasData<AppInfoGwt> displayedApp = displayedAppsIterator.next();
+	// Iterable<AppInfoGwt> displayedAppItems = displayedApp
+	// .getVisibleItems();
+	// for (AppInfoGwt displayedAppItem : displayedAppItems) { // Match
+	// // on
+	// // app
+	// // ID
+	// if (displayedAppItem.appId.equals(app.appId)) {
+	// AppStatus displayedAppStatus = displayedAppItem.appStatus;
+	// if (displayedAppStatus != actualAppStatus) {
+	// appsListTable.set(0, app);
+	//
+	// }
+	// }
+	// }
+	// }
+	// }
+	// }
 
 	public void setUpdatedApps(List<AppInfoGwt> updatedAppsList) {
-		
+
 		for (int i = 0; i < updatedAppsList.size(); i++) {
 			final AppInfoGwt updatedAppInfo = updatedAppsList.get(i);
 			int matchIndex = -1;
@@ -1965,21 +1946,21 @@ public class AppVetPanel extends DockLayoutPanel {
 				}
 			}
 		}
-		
+
 		final AppInfoGwt currentlySelectedApp = appSelectionModel
 				.getSelectedObject();
-		
+
 		if (currentlySelectedApp == null) {
 			return;
 		}
-		
+
 		final int currentlySelectedIndex = getAppsListIndex(
 				currentlySelectedApp, allApps);
-		
+
 		if (currentlySelectedIndex < 0) {
 			return;
 		}
-		
+
 		if (!searchMode) {
 			if (allApps.size() > 0) {
 				appSelectionModel.setSelected(
@@ -1995,43 +1976,42 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		}
 	}
-	
-	
+
 	public void getAlertMessage() {
+
 		appVetServiceAsync.getAlertMessage(new AsyncCallback<SystemAlert>() {
-			
-					@Override
-					public void onFailure(Throwable caught) {
-						log.severe("Could not update session: "
-								+ caught.getMessage());
+
+			@Override
+			public void onFailure(Throwable caught) {
+				log.severe("Could not update session: " + caught.getMessage());
+			}
+
+			@Override
+			public void onSuccess(SystemAlert systemAlert) {
+				if (systemAlert != null) {
+					// log.info("system alert is not null. Setting message: " +
+					// systemAlert.message);
+					if (systemAlert.type == SystemAlertType.NORMAL) {
+						statusMessageLabel.setStyleName("statusOk");
+					} else if (systemAlert.type == SystemAlertType.WARNING) {
+						statusMessageLabel.setStyleName("statusWarning");
+					} else if (systemAlert.type == SystemAlertType.CRITICAL) {
+						statusMessageLabel.setStyleName("statusError");
 					}
 
-					@Override
-					public void onSuccess(SystemAlert systemAlert) {
-						if (systemAlert != null) {
-							//log.info("system alert is not null. Setting message: " + systemAlert.message);
-							if (systemAlert.type == SystemAlertType.NORMAL) {
-								statusMessageLabel.setStyleName("statusOk");
-							} else if (systemAlert.type == SystemAlertType.WARNING) {
-								statusMessageLabel.setStyleName("statusWarning");
-							} else if (systemAlert.type == SystemAlertType.CRITICAL) {
-								statusMessageLabel.setStyleName("statusError");
-							}
-							
-							statusMessageLabel.setText(systemAlert.message);
-						} else {
-							//log.info("system alert is null. Setting message to ''");
-							statusMessageLabel.setText("");
-						}
-					}
-				});
+					statusMessageLabel.setText(systemAlert.message);
+				} else {
+					// log.info("system alert is null. Setting message to ''");
+					statusMessageLabel.setText("");
+				}
+			}
+		});
 	}
-	
-	
+
 	public void updateSessionExpiration() {
 		appVetServiceAsync.updateSessionExpiration(sessionId,
 				sessionExpiration, new AsyncCallback<Date>() {
-			
+
 					@Override
 					public void onFailure(Throwable caught) {
 						log.severe("Could not update session: "
@@ -2043,36 +2023,34 @@ public class AppVetPanel extends DockLayoutPanel {
 						if (expirationTime == null) {
 							log.severe("Error updating session expiration. Session probably expired.");
 							// Session has expired
-							//pollingTimer.cancel();
+							// pollingTimer.cancel();
 							removeSession();
-//							if (ssoActive) {
-//								logoutSSO();
-//							} else {
-//								logoutNonSSO();
-//							}
+							// if (ssoActive) {
+							// logoutSSO();
+							// } else {
+							// logoutNonSSO();
+							// }
 						} else {
 							sessionTimeLeft(expirationTime);
 						}
 					}
 				});
 	}
-	
 
-	
 	public void sessionTimeLeft(Date expirationTime) {
 		Date currentDate = new Date();
 		long diff = expirationTime.getTime() - currentDate.getTime();
-		//log.info("diff: " + diff);
+		// log.info("diff: " + diff);
 		if (diff <= 0) {
 			// Session has expired
-			//pollingTimer.cancel();
+			// pollingTimer.cancel();
 			removeSession();
-//			if (ssoActive) {
-//				logoutSSO();
-//			} else {
-//				logoutNonSSO();
-//			}
-		} else if (diff <= 60000 && timeoutWarningMessage == false){
+			// if (ssoActive) {
+			// logoutSSO();
+			// } else {
+			// logoutNonSSO();
+			// }
+		} else if (diff <= 60000 && timeoutWarningMessage == false) {
 			// 60 seconds left before timeout, alert user
 			showTimeoutDialog(diff);
 		} else if (diff <= 6000 && timeoutWarningMessage == true) {
@@ -2081,12 +2059,13 @@ public class AppVetPanel extends DockLayoutPanel {
 			// Do nothing
 		}
 	}
-	
+
 	public void openToolCredentials(final ConfigInfoGwt configInfoGwt) {
-		final ToolAuthParamDialogBox toolAuthParamDialogBox = new ToolAuthParamDialogBox(configInfoGwt);
+		final ToolAuthParamDialogBox toolAuthParamDialogBox = new ToolAuthParamDialogBox(
+				configInfoGwt);
 		toolAuthParamDialogBox.setText("Tool Account Information");
 		toolAuthParamDialogBox.center();
-		
+
 		toolAuthParamDialogBox.okButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -2094,11 +2073,11 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		});
 	}
-	
 
-	/** If configuration information for a user is changed by an ADMIN 
-	 * during the time the user is logged in then the change is 
-	 * not visible to the user until the user's next log in.
+	/**
+	 * If configuration information for a user is changed by an ADMIN during the
+	 * time the user is logged in then the change is not visible to the user
+	 * until the user's next log in.
 	 */
 	public void openUserAccount(final ConfigInfoGwt configInfoGwt) {
 		userAcctDialogBox = new UserAcctDialogBox(configInfoGwt, ssoActive);
@@ -2106,15 +2085,16 @@ public class AppVetPanel extends DockLayoutPanel {
 		userAcctDialogBox.center();
 		userAcctDialogBox.password1TextBox.setFocus(true);
 		userAcctDialogBox.cancelButton.addClickHandler(new ClickHandler() {
+			
 			public void onClick(ClickEvent event) {
 				killDialogBox(userAcctDialogBox);
 			}
 		});
 		userAcctDialogBox.okButton.addClickHandler(new ClickHandler() {
+			
 			@Override
 			public void onClick(ClickEvent event) {
-				//killDialogBox(userAcctDialogBox);
-				
+				// killDialogBox(userAcctDialogBox);
 				final String newLastName = userAcctDialogBox.lastNameTextBox
 						.getText();
 				final String newFirstName = userAcctDialogBox.firstNameTextBox
@@ -2138,7 +2118,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				updatedUserInfo.setEmail(newEmail);
 				updatedUserInfo.setPasswords(newPassword1, newPassword2);
 				updatedUserInfo.setRole(userInfo.getRole());
-				
+
 				if (ssoActive) {
 					if (!updatedUserInfo.isValid(true))
 						return;
@@ -2146,7 +2126,7 @@ public class AppVetPanel extends DockLayoutPanel {
 					if (!updatedUserInfo.isValid(false))
 						return;
 				}
-				
+
 				appVetServiceAsync.updateSelf(updatedUserInfo,
 						new AsyncCallback<Boolean>() {
 							@Override
@@ -2176,10 +2156,9 @@ public class AppVetPanel extends DockLayoutPanel {
 											.getEmail());
 									updatedUserInfo.setPassword("");
 									userInfo.setRole(updatedUserInfo.getRole());
-								
+
 									killDialogBox(userAcctDialogBox);
-									showMessageDialog(
-											"Account Update",
+									showMessageDialog("Account Update",
 											"Password updated successfully.",
 											false);
 								} else {
@@ -2191,9 +2170,9 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 							}
 						});
-			
+
 			}
 		});
-		
+
 	}
 }
