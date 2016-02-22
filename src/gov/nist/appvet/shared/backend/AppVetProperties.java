@@ -52,6 +52,7 @@ public class AppVetProperties {
 	public static String APPVET_FILES_HOME = null;
 	public static boolean SSO_ACTIVE = false;
 	public static String SSO_UNAUTHORIZED_URL = null;
+	public static String SSO_LOGOUT_URL = null;
 	public static String SSO_USERNAME_PARAMNAME = null;
 	public static String SSO_EMAIL_PARAMNAME = null;
 	public static String ORG_LOGO_ALT_TEXT = null;
@@ -269,6 +270,8 @@ public class AppVetProperties {
 		printVal("SSO_ACTIVE", SSO_ACTIVE);
 		SSO_UNAUTHORIZED_URL = xml.getXPathValue("/AppVet/SSO/UnauthorizedURL");
 		printVal("SSO_UNAUTHORIZED_URL", SSO_UNAUTHORIZED_URL);
+		SSO_LOGOUT_URL = xml.getXPathValue("/AppVet/SSO/LogoutURL");
+		printVal("SSO_LOGOUT_URL", SSO_LOGOUT_URL);
 		SSO_USERNAME_PARAMNAME = xml.getXPathValue("/AppVet/SSO/UserParams/UserNameParamName");
 		printVal("SSO_USERNAME_PARAMNAME", SSO_USERNAME_PARAMNAME);
 		SSO_EMAIL_PARAMNAME = xml.getXPathValue("/AppVet/SSO/UserParams/EmailParamName");

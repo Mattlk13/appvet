@@ -58,7 +58,7 @@ public class UserAcctDialogBox extends DialogBox {
 	private static Logger log = Logger.getLogger("UserAcctDialogBox");
 	public static MessageDialogBox messageDialogBox = null;
 	
-	public UserAcctDialogBox(final ConfigInfoGwt configInfoGwt) {
+	public UserAcctDialogBox(final ConfigInfoGwt configInfoGwt, final boolean ssoActive) {
 		setSize("400px", "406px");
 		this.userInfoGwt = configInfoGwt.getUserInfo();
 		final VerticalPanel verticalPanel = new VerticalPanel();
@@ -308,6 +308,7 @@ public class UserAcctDialogBox extends DialogBox {
 		cancelButton = new PushButton("Cancel");
 		horizontalPanel.add(cancelButton);
 		cancelButton.setSize("70px", "18px");
+		
 		okButton = new PushButton("Ok");
 		okButton.setHTML("Ok");
 		horizontalPanel.add(okButton);
@@ -316,6 +317,12 @@ public class UserAcctDialogBox extends DialogBox {
 		horizontalPanel.setCellVerticalAlignment(okButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		okButton.setSize("70px", "18px");
+		
+		if (ssoActive) {
+			okButton.setEnabled(false);
+			okButton.setVisible(false);
+		}
+
 		verticalPanel.setCellVerticalAlignment(horizontalPanel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel.setCellHorizontalAlignment(horizontalPanel,

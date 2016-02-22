@@ -48,6 +48,8 @@ public class ConfigInfoGwt implements IsSerializable {
 	private String documentationURL = null;
 	private boolean ssoActive = false;
 	private String ssoUnauthorizedURL = null;
+	private String ssoLogoutURL = null;
+	
 
 	public ConfigInfoGwt() {
 	}
@@ -197,5 +199,15 @@ public class ConfigInfoGwt implements IsSerializable {
 
 	public void setUnauthorizedURL(String unauthorizedURL) {
 		this.ssoUnauthorizedURL = unauthorizedURL;
+	}
+
+
+	public String getSsoLogoutURL() {
+		return ssoLogoutURL;
+	}
+
+
+	public void setSSOLogoutURL(String ssoLogoutURL) {
+		this.ssoLogoutURL = ssoLogoutURL;
 	}
 }

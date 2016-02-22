@@ -31,7 +31,7 @@ public class Validate {
 	public static final int PASSWORD_MAX_LENGTH = 254;
 
 	public static boolean isPrintable(String s) {
-		if (s == null) {
+		if (s == null || s.isEmpty()) {
 			return false;
 		}
 		for (int i = 0; i < s.length(); i++) {
@@ -47,32 +47,53 @@ public class Validate {
 	}
 
 	public static boolean isAlpha(String s) {
+		if (s == null || s.isEmpty()) {
+			return false;
+		}
 		return s.matches("[a-zA-Z]+");
 	}
 
 	public static boolean isNumeric(String s) {
+		if (s == null || s.isEmpty()) {
+			return false;
+		}
 		return s.matches("[0-9]+");
 	}
 
 	public static boolean isAlphaNumeric(String s) {
+		if (s == null || s.isEmpty()) {
+			return false;
+		}
 		return s.matches("^[a-zA-Z0-9]*$");
 	}
 
 	public static boolean hasWhiteSpace(String s) {
+		if (s == null || s.isEmpty()) {
+			return false;
+		}
 		return s.matches(".*\\s+.*");
 	}
 
-	public static boolean isDate(String str) {
+	public static boolean isDate(String s) {
+		if (s == null || s.isEmpty()) {
+			return false;
+		}
 		// Match format YYYY-MM-DD
-		return str.matches("\\d{4}-\\d{2}-\\d{2}");
+		return s.matches("\\d{4}-\\d{2}-\\d{2}");
 	}
 
-	public static boolean isTime(String str) {
+	public static boolean isTime(String s) {
+		if (s == null || s.isEmpty()) {
+			return false;
+		}
 		// Match format HH:MM:SSZ
-		return str.matches("\\d{2}:\\d{2}:\\d{2}Z");
+		return s.matches("\\d{2}:\\d{2}:\\d{2}Z");
 	}
 
 	public static boolean isValidUserName(String userName) {
+		if (userName == null || userName.isEmpty()) {
+			return false;
+		}
 		return userName != null && !userName.isEmpty()
 				//&& isAlphaNumeric(userName)
 				&& userName.length() <= USERNAME_MAX_LENGTH
@@ -80,6 +101,9 @@ public class Validate {
 	}
 
 	public static boolean isValidPassword(String password) {
+		if (password == null || password.isEmpty()) {
+			return false;
+		}
 		return password != null && !password.isEmpty()
 				&& !hasWhiteSpace(password) && isPrintable(password)
 				&& (password.length() <= PASSWORD_MAX_LENGTH)
@@ -87,25 +111,40 @@ public class Validate {
 	}
 
 	public static boolean isValidEmail(String email) {
+		if (email == null || email.isEmpty()) {
+			return false;
+		}
 		return email
 				.matches("[A-Za-z0-9._%+-][A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{3}");
 	}
 
 	public static boolean isUrl(String s) {
+		if (s == null || s.isEmpty()) {
+			return false;
+		}
 		return s.matches("([a-zA-Z0-9\\-_\\.!\\~\\*'\\(\\);/\\?:\\@\\&=\\+$,]|(%[a-fA-F0-9]{2}))*");
 	}
 
 	public static boolean isLegalFileName(String fileName) {
+		if (fileName == null || fileName.isEmpty()) {
+			return false;
+		}
 		return isPrintable(fileName) && !hasWhiteSpace(fileName);
 	}
 
 	public static boolean hasValidAppFileExtension(String fileName) {
+		if (fileName == null || fileName.isEmpty()) {
+			return false;
+		}
 		final String fileNameUpperCase = fileName.toUpperCase();
 		return fileNameUpperCase.endsWith(".APK")
 				|| fileNameUpperCase.endsWith(".IPA");
 	}
 
 	public static boolean hasValidReportFileExtension(String fileName) {
+		if (fileName == null || fileName.isEmpty()) {
+			return false;
+		}
 		final String fileNameUpperCase = fileName.toUpperCase();
 		return fileNameUpperCase.endsWith(".PDF")
 				|| fileNameUpperCase.endsWith(".JSON")
@@ -116,10 +155,16 @@ public class Validate {
 	}
 
 	public static boolean isLegalSearchString(String str) {
+		if (str == null || str.isEmpty()) {
+			return false;
+		}
 		return isPrintable(str) && !hasWhiteSpace(str);
 	}
 
 	public static boolean isValidRole(String roleName) {
+		if (roleName == null || roleName.isEmpty()) {
+			return false;
+		}
 		Role role = Role.getRole(roleName);
 		if (role != null)
 			return true;
@@ -128,6 +173,9 @@ public class Validate {
 	}
 	
 	public static boolean hasValidOs(String appOS) {
+		if (appOS == null || appOS.isEmpty()) {
+			return false;
+		}
 		String os = appOS.toUpperCase();
 		if (os.equals(DeviceOS.ANDROID.name()) || 
 				os.equals(DeviceOS.IOS.name())) {

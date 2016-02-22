@@ -329,6 +329,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		configInfo.setNumRowsUsersList(AppVetProperties.NUM_ROWS_USERS_LIST);
 		configInfo.setDocumentationURL(AppVetProperties.DOCUMENTATION_URL);
 		configInfo.setSSOActive(AppVetProperties.SSO_ACTIVE);
+		configInfo.setSSOLogoutURL(AppVetProperties.SSO_LOGOUT_URL);
 		final ArrayList<ToolInfoGwt> tools = new ArrayList<ToolInfoGwt>();
 		// Get Android tools
 		final ArrayList<ToolAdapter> androidTools = AppVetProperties.androidTools;

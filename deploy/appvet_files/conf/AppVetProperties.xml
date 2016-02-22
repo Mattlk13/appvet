@@ -28,6 +28,7 @@
              all other SSO elements will be ignored by AppVet.-->
   		<Active>true</Active>
 		<UnauthorizedURL>unauthorized.html</UnauthorizedURL>
+		<LogoutURL>logout.html</LogoutURL>
 		<UserParams>
   		<!-- Set the authentication parameters used by the organization. Only
   		EmailParamName is required and is used as the username if UserNameParamName is

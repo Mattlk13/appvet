@@ -106,17 +106,20 @@
 				minOccurs="1">
 				<xs:annotation>
 					<xs:documentation>
-						To login and add users manually, set Active=false. If Active==false,
-             all other SSO elements will be ignored by AppVet.
+						To login and add users manually, set
+						Active=false. If Active==false, all other SSO
+						elements will be ignored by AppVet.
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="UnauthorizedURL" type="xs:anyURI" maxOccurs="1" minOccurs="1"></xs:element>
+			<xs:element name="UnauthorizedURL" type="xs:anyURI"
+				maxOccurs="1" minOccurs="1">
+			</xs:element>
+			<xs:element name="LogoutURL" type="xs:anyURI" maxOccurs="1" minOccurs="1"></xs:element>
 			<xs:element name="UserParams" type="UserParamsType"
 				maxOccurs="1" minOccurs="1">
 				<xs:annotation>
-					<xs:documentation>
-					</xs:documentation>
+					<xs:documentation></xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>

@@ -153,7 +153,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	public static boolean timeoutWarningMessage = false;
 	public String documentationURL = null;
 	public boolean ssoActive = false;
-
+	public static String ssoLogoutURL = null;
 	
 	class AppListHandler implements SelectionChangeEvent.Handler {
 
@@ -271,9 +271,32 @@ public class AppVetPanel extends DockLayoutPanel {
 			dialogBox = null;
 		} 
 	}
+	
+	
+	public static void logoutSSO() {
+		// Cancel poller
+		pollingTimer.cancel();
+
+		// Close any open dialog boxes
+		killDialogBox(appUploadDialogBox);
+		killDialogBox(errorDialogBox);
+		killDialogBox(messageDialogBox);
+		killDialogBox(aboutDialogBox);
+		killDialogBox(usersDialogBox);
+		killDialogBox(deleteConfirmDialogBox);
+		killDialogBox(reportUploadDialogBox);
+		killDialogBox(userAcctDialogBox);
+		
+		// Redirect to the SSO logout URL
+		Window.Location.assign(ssoLogoutURL); 
+		System.gc();
+	}
 
 	
-	public static void showExpiredSessionMessage() {
+	public static void logoutNonSSO() {
+		// Cancel poller
+		pollingTimer.cancel();
+		
 		// Close any open dialog boxes
 		killDialogBox(appUploadDialogBox);
 		killDialogBox(errorDialogBox);
@@ -302,6 +325,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				killDialogBox(messageDialogBox);
 			}
 		});
+		System.gc();
 	}
 
 	
@@ -320,7 +344,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	}
 
 	
-	public static void showTimeoutDialog(final long diff) {
+	public void showTimeoutDialog(final long diff) {
 		killDialogBox(messageDialogBox);
 		timeoutWarningMessage = true;
 		messageDialogBox = new MessageDialogBox(
@@ -336,8 +360,13 @@ public class AppVetPanel extends DockLayoutPanel {
 				
 				if (diff <= 0) {
 					// Didn't click within the 60s alert period, so expire
-					pollingTimer.cancel();
-					showExpiredSessionMessage();
+					//pollingTimer.cancel();
+					removeSession();
+//					if (ssoActive) {
+//						logoutSSO();
+//					} else {
+//						logoutNonSSO();
+//					}
 				} else {
 					sessionExpiration = 
 							new Date(System.currentTimeMillis() + 
@@ -441,6 +470,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		tools = configInfo.getTools();
 		documentationURL = configInfo.getDocumentationURL();
 		ssoActive = configInfo.getSSOActive();
+		ssoLogoutURL = configInfo.getSsoLogoutURL();
 		final VerticalPanel northAppVetPanel = new VerticalPanel();
 		northAppVetPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
@@ -577,8 +607,6 @@ public class AppVetPanel extends DockLayoutPanel {
 				});
 		userMenuBar.addItem(toolCredentialsMenuItem);
 		
-		
-		
 		accountSettingsMenuItem.setHeight("");
 		final MenuItem myAppsMenuItem = new MenuItem("My Apps", false,
 				new Command() {
@@ -600,57 +628,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				new Command() {
 					@Override
 					public void execute() {
-						appVetServiceAsync.removeSession(sessionId,
-								new AsyncCallback<Boolean>() {
-									@Override
-									public void onFailure(Throwable caught) {
-										AppVetPanel.showMessageDialog(
-												"AppVet Error",
-												"App list retrieval error",
-												true);
-										errorDialogBox.closeButton
-												.setFocus(true);
-										errorDialogBox.closeButton
-												.addClickHandler(new ClickHandler() {
-													@Override
-													public void onClick(
-															ClickEvent event) {
-														killDialogBox(errorDialogBox);
-													}
-												});
-									}
-
-									@Override
-									public void onSuccess(Boolean result) {
-										if (result == false) {
-											AppVetPanel.showMessageDialog(
-													"AppVet Error",
-													"Could not remove session",
-													true);
-											errorDialogBox.closeButton
-													.setFocus(true);
-											errorDialogBox.closeButton
-													.addClickHandler(new ClickHandler() {
-														@Override
-														public void onClick(
-																ClickEvent event) {
-															killDialogBox(errorDialogBox);
-														}
-													});
-										} else {
-											pollingTimer.cancel();
-											final LoginPanel loginPanel = new LoginPanel(
-													Unit.PX);
-											//loginPanel.setTitle("Login panel");
-											final RootLayoutPanel rootLayoutPanel = RootLayoutPanel
-													.get();
-											//rootLayoutPanel.setTitle("Root panel");
-											rootLayoutPanel.clear();
-											rootLayoutPanel.add(loginPanel);
-											System.gc();
-										}
-									}
-								});
+						removeSession();
 					}
 				});
 		userMenuBar.addItem(logoutMenuItem);
@@ -1198,6 +1176,7 @@ public class AppVetPanel extends DockLayoutPanel {
 							+ "&" + AppVetParameter.APPID.value + "=" + appId
 							+ "&" + AppVetParameter.SESSIONID.value + "="
 							+ sessionId;
+					//TODO
 					Window.open(url, "_self", "");
 				}
 			}
@@ -1232,6 +1211,7 @@ public class AppVetPanel extends DockLayoutPanel {
 									+ AppVetServletCommand.DOWNLOAD_APP.name() + "&"
 									+ AppVetParameter.APPID.value + "=" + appId + "&"
 									+ AppVetParameter.SESSIONID.value + "=" + sessionId;
+							//TODO
 							Window.open(url, "_self", "");
 						}
 					}
@@ -1266,6 +1246,62 @@ public class AppVetPanel extends DockLayoutPanel {
 			showDontRefreshWarning();
 		}
 
+	}
+	
+	
+	// TODO
+	public void removeSession() {
+		
+		// First stop polling the server for data
+		pollingTimer.cancel();
+
+		appVetServiceAsync.removeSession(sessionId,
+				new AsyncCallback<Boolean>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						AppVetPanel.showMessageDialog(
+								"AppVet Error",
+								"App list retrieval error",
+								true);
+						errorDialogBox.closeButton
+								.setFocus(true);
+						errorDialogBox.closeButton
+								.addClickHandler(new ClickHandler() {
+									@Override
+									public void onClick(
+											ClickEvent event) {
+										killDialogBox(errorDialogBox);
+									}
+								});
+					}
+
+					@Override
+					public void onSuccess(Boolean result) {
+						if (result == false) {
+							AppVetPanel.showMessageDialog(
+									"AppVet Error",
+									"Could not remove session",
+									true);
+							errorDialogBox.closeButton
+									.setFocus(true);
+							errorDialogBox.closeButton
+									.addClickHandler(new ClickHandler() {
+										@Override
+										public void onClick(
+												ClickEvent event) {
+											killDialogBox(errorDialogBox);
+										}
+									});
+						} else {
+							if (ssoActive) {
+								logoutSSO();
+							} else {
+								logoutNonSSO();
+							}
+
+						}
+					}
+				});
 	}
 	
 	
@@ -2007,8 +2043,13 @@ public class AppVetPanel extends DockLayoutPanel {
 						if (expirationTime == null) {
 							log.severe("Error updating session expiration. Session probably expired.");
 							// Session has expired
-							pollingTimer.cancel();
-							showExpiredSessionMessage();
+							//pollingTimer.cancel();
+							removeSession();
+//							if (ssoActive) {
+//								logoutSSO();
+//							} else {
+//								logoutNonSSO();
+//							}
 						} else {
 							sessionTimeLeft(expirationTime);
 						}
@@ -2018,14 +2059,19 @@ public class AppVetPanel extends DockLayoutPanel {
 	
 
 	
-	public static void sessionTimeLeft(Date expirationTime) {
+	public void sessionTimeLeft(Date expirationTime) {
 		Date currentDate = new Date();
 		long diff = expirationTime.getTime() - currentDate.getTime();
 		//log.info("diff: " + diff);
 		if (diff <= 0) {
 			// Session has expired
-			pollingTimer.cancel();
-			showExpiredSessionMessage();
+			//pollingTimer.cancel();
+			removeSession();
+//			if (ssoActive) {
+//				logoutSSO();
+//			} else {
+//				logoutNonSSO();
+//			}
 		} else if (diff <= 60000 && timeoutWarningMessage == false){
 			// 60 seconds left before timeout, alert user
 			showTimeoutDialog(diff);
@@ -2055,7 +2101,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	 * not visible to the user until the user's next log in.
 	 */
 	public void openUserAccount(final ConfigInfoGwt configInfoGwt) {
-		userAcctDialogBox = new UserAcctDialogBox(configInfoGwt);
+		userAcctDialogBox = new UserAcctDialogBox(configInfoGwt, ssoActive);
 		userAcctDialogBox.setText("Account Settings");
 		userAcctDialogBox.center();
 		userAcctDialogBox.password1TextBox.setFocus(true);
@@ -2064,7 +2110,6 @@ public class AppVetPanel extends DockLayoutPanel {
 				killDialogBox(userAcctDialogBox);
 			}
 		});
-		
 		userAcctDialogBox.okButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -2135,7 +2180,7 @@ public class AppVetPanel extends DockLayoutPanel {
 									killDialogBox(userAcctDialogBox);
 									showMessageDialog(
 											"Account Update",
-											"Password updated",
+											"Password updated successfully.",
 											false);
 								} else {
 									showMessageDialog(
