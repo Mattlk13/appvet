@@ -176,7 +176,7 @@ public class Database {
 	
 
 	public static boolean adminAddNewUser(String username, String password,
-			String org, String email, String role, String lastName,
+			String org, String dept, String email, String role, String lastName,
 			String firstName) {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -184,15 +184,16 @@ public class Database {
 			connection = getConnection();
 			preparedStatement = connection
 					.prepareStatement("REPLACE INTO users (username, password, "
-							+ "org, email, role, lastName, firstName) "
-							+ "values (?, ?, ?, ?, ?, ?, ?)");
+							+ "org, dept, email, role, lastName, firstName) "
+							+ "values (?, ?, ?, ?, ?, ?, ?, ?)");
 			preparedStatement.setString(1, username);
 			preparedStatement.setString(2, getPBKDF2Password(password));
 			preparedStatement.setString(3, org);
-			preparedStatement.setString(4, email);
-			preparedStatement.setString(5, role);
-			preparedStatement.setString(6, lastName);
-			preparedStatement.setString(7, firstName);
+			preparedStatement.setString(4, dept);
+			preparedStatement.setString(5, email);
+			preparedStatement.setString(6, role);
+			preparedStatement.setString(7, lastName);
+			preparedStatement.setString(8, firstName);
 			preparedStatement.executeUpdate();
 			return true;
 		} catch (final SQLException e) {
