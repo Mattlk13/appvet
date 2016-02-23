@@ -512,6 +512,8 @@ public class UserAcctAdminDialogBox extends DialogBox {
 			passwordLabel.setVisible(true);
 			passwordLabel3.setVisible(true);
 		}
+		
+
 	}
 	
 	

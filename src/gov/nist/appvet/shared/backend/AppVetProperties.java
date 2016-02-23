@@ -24,12 +24,14 @@ package gov.nist.appvet.shared.backend;
  */
 import gov.nist.appvet.servlet.shared.Emailer;
 import gov.nist.appvet.shared.all.DeviceOS;
+import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.Validate;
 
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+
 
 public class AppVetProperties {
 	public static boolean error = false;
@@ -57,6 +59,16 @@ public class AppVetProperties {
 	public static String SSO_EMAIL_PARAMNAME = null;
 	public static String ORG_LOGO_ALT_TEXT = null;
 	public static String EMAIL_CONNECTION_TIMEOUT = "2000"; // In ms
+	// Default admin username and password defined in AppVetProperties.xml file.
+	// Admin username and password
+	public static String DEFAULT_ADMIN_USERNAME = null;
+	public static String DEFAULT_ADMIN_PASSWORD = null;
+	public static final String DEFAULT_ADMIN_FIRSTNAME = "AppVet";
+	public static final String DEFAULT_ADMIN_LASTNAME = "Administrator";
+	public static final String DEFAULT_ADMIN_ORG = "AppVetOrg";
+	public static final String DEFAULT_ADMIN_DEPT = "AppVetDept";
+	public static final String DEFAULT_ADMIN_EMAIL = "appvet@appvet.org";
+	public static final Role DEFAULT_ADMIN_ROLE = Role.ADMIN;
 
 	static {
 		//System.out.println("*** Starting AppVet v" + APPVET_VERSION + " ***");
@@ -86,9 +98,7 @@ public class AppVetProperties {
 			System.err.println("The APPVET_FILES_HOME environment variable is null!");
 		}
 	}
-	// Admin username and password
-	public static String ADMIN_USERNAME = null;
-	public static String ADMIN_PASSWORD = null;
+
 	// Paths
 	private static String CONFIG_FILE_PATH = null;
 	public static String APPS_ROOT = null;
@@ -292,12 +302,12 @@ public class AppVetProperties {
 				xml.getXPathValue("/AppVet/Sessions/GetUpdatesDelay"))
 				.intValue();
 		printVal("GET_UPDATES_DELAY", GET_UPDATES_DELAY);
-		ADMIN_USERNAME = xml.getXPathValue("/AppVet/Admin/Username");
-		if (ADMIN_USERNAME == null || ADMIN_USERNAME.isEmpty()) {
+		DEFAULT_ADMIN_USERNAME = xml.getXPathValue("/AppVet/Admin/Username");
+		if (DEFAULT_ADMIN_USERNAME == null || DEFAULT_ADMIN_USERNAME.isEmpty()) {
 			System.err.println("Default admin username is null or empty");
 		}
-		ADMIN_PASSWORD = xml.getXPathValue("/AppVet/Admin/Password");
-		if (ADMIN_PASSWORD == null || ADMIN_PASSWORD.isEmpty()) {
+		DEFAULT_ADMIN_PASSWORD = xml.getXPathValue("/AppVet/Admin/Password");
+		if (DEFAULT_ADMIN_PASSWORD == null || DEFAULT_ADMIN_PASSWORD.isEmpty()) {
 			System.err.println("Default admin password is null or empty");
 		}
 		HOST = xml.getXPathValue("/AppVet/Host/Hostname");

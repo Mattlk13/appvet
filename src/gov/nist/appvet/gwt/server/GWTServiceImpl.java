@@ -222,13 +222,19 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			// Check if user is the AppVet default Admin defined in
 			// AppVetProperties.xml. This user will always be able to access
 			// AppVet, even if its database info has been corrupted.
-			if (username.equals(AppVetProperties.ADMIN_USERNAME)
-					&& password.equals(AppVetProperties.ADMIN_PASSWORD)) {
+			if (username.equals(AppVetProperties.DEFAULT_ADMIN_USERNAME)
+					&& password.equals(AppVetProperties.DEFAULT_ADMIN_PASSWORD)) {
 				log.debug("Adding user-defined default admin '" + username
 						+ "'");
-				if (Database.adminAddNewUser(username, password, "AppVetOrg", "AppVetDept", 
-						"appvet@example.com", Role.ADMIN.name(),
-						"Administrator", "AppVet")) {
+				String org = AppVetProperties.DEFAULT_ADMIN_ORG;
+				String dept = AppVetProperties.DEFAULT_ADMIN_DEPT;
+				String email = AppVetProperties.DEFAULT_ADMIN_EMAIL;
+				String role = AppVetProperties.DEFAULT_ADMIN_ROLE.name();
+				String lastName = AppVetProperties.DEFAULT_ADMIN_LASTNAME;
+				String firstName = AppVetProperties.DEFAULT_ADMIN_FIRSTNAME;
+				
+				if (Database.adminAddNewUser(username, password, org, dept, 
+						email, role, lastName, firstName)) {
 					log.debug("Added new admin user '" + username + "'");
 				} else {
 					log.debug("Could not add new admin user '" + username + "'");

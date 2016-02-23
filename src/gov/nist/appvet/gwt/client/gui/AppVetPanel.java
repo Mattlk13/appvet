@@ -2080,6 +2080,13 @@ public class AppVetPanel extends DockLayoutPanel {
 	 * until the user's next log in.
 	 */
 	public void openUserAccount(final ConfigInfoGwt configInfoGwt) {
+		
+		if (configInfoGwt.getUserInfo().isDefaultAdmin()) {
+			showMessageDialog("Account Info", "Cannot change info for "
+					+ "default AppVet administrator", false);
+			return;
+		}
+		
 		userAcctDialogBox = new UserAcctDialogBox(configInfoGwt, ssoActive);
 		userAcctDialogBox.setText("Account Settings");
 		userAcctDialogBox.center();

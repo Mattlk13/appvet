@@ -386,7 +386,6 @@ public class UserAcctDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		dockPanel.setCellHorizontalAlignment(horizontalPanel,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		
 	}
 	
 	public static void showMessageDialog(String windowTitle, String message,

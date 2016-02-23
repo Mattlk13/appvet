@@ -47,6 +47,7 @@ public class UserInfo implements IsSerializable {
 	private String role = null;
 	private ArrayList<UserToolCredentials> toolCredentials = null;
 	private static Logger log = Logger.getLogger("UserInfo");
+	private boolean defaultAdmin = false;
 
 	
 	// private String toolsCredentials = null;
@@ -294,5 +295,13 @@ public class UserInfo implements IsSerializable {
 	public void setToolCredentials(
 			ArrayList<UserToolCredentials> toolCredentials) {
 		this.toolCredentials = toolCredentials;
+	}
+
+	public boolean isDefaultAdmin() {
+		return defaultAdmin;
+	}
+
+	public void setDefaultAdmin(boolean defaultAdmin) {
+		this.defaultAdmin = defaultAdmin;
 	}
 }

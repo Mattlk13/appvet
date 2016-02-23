@@ -337,6 +337,13 @@ public class Database {
 			userInfo.setLastLogon(resultSet.getTimestamp(9));
 			userInfo.setFromHost(getNonNullAttributeValue(resultSet.getString(10)));
 			
+			// Check if default admin
+			if (userInfo.getFirstName().equals(AppVetProperties.DEFAULT_ADMIN_FIRSTNAME) &&
+					userInfo.getLastName().equals(AppVetProperties.DEFAULT_ADMIN_LASTNAME)) {
+				userInfo.setDefaultAdmin(true);
+			}
+			
+			// Set tool authentication
 			if (tools != null && tools.size() != 0) {
 				String toolCredentialsStr = resultSet.getString(11);
 				
@@ -736,6 +743,13 @@ public class Database {
 				userInfo.setRole(getNonNullAttributeValue(resultSet.getString(8)));
 				userInfo.setLastLogon(resultSet.getTimestamp(9));
 				userInfo.setFromHost(getNonNullAttributeValue(resultSet.getString(10)));
+				
+				// Check if default admin
+				if (userInfo.getFirstName().equals(AppVetProperties.DEFAULT_ADMIN_FIRSTNAME) &&
+						userInfo.getLastName().equals(AppVetProperties.DEFAULT_ADMIN_LASTNAME)) {
+					userInfo.setDefaultAdmin(true);
+				}
+				
 				arrayList.add(userInfo);
 			}
 		} catch (final SQLException e) {
