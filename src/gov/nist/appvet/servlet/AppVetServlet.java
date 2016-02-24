@@ -1120,30 +1120,72 @@ public class AppVetServlet extends HttpServlet {
 		
 		Role submitterRole = Database.getRole(submitterUserName);
 		
+//		if (tool.toolType == ToolType.SUMMARY) {
+//			// Only ADMINs can update SUMMARY reports
+//			if (submitterRole != Role.ADMIN) {
+//				appInfo.log.error("Submitter " + submitterUserName + " not authorized to submit " + tool.toolType.name() + " reports");
+//				return;
+//			}
+//		} else if (tool.toolType == ToolType.AUDIT){
+//			// Only ADMINs, ANALYSTs, and ORG/DEPT ANALYSTs can update AUDIT and SUMMARY reports.
+//			if (submitterRole != Role.ADMIN && submitterRole != Role.ANALYST &&
+//					submitterRole != Role.ORG_ANALYST && submitterRole != Role.DEPT_ANALYST) {
+//				appInfo.log.error("Submitter " + submitterUserName + " not authorized to submit " + tool.toolType.name() + " reports");
+//				return;
+//			}
+//		} 
+		
+		/*
+		 * This should match the policies defined in ReportUploadDialogBox!
+		 */
 		if (tool.toolType == ToolType.SUMMARY) {
-			// Only ADMINs can update SUMMARY reports
-			if (submitterRole != Role.ADMIN) {
+			
+			/* Specific use-case for CW */
+			if (tool.toolId.equals("androidsummary") || tool.toolId.equals("iossummary")) {
+				
+				if (submitterRole == Role.ADMIN){
+					// CW summary -- only admins
+					
+				} else {
+					appInfo.log.error("Submitter " + submitterUserName + " not authorized to submit " + tool.toolType.name() + " reports");
+					return;
+				}
+				
+			} else if (tool.toolId.equals("golive")) {
+				
+				if (submitterRole == Role.ADMIN || submitterRole == Role.ANALYST || submitterRole == Role.ORG_ANALYST || submitterRole == Role.DEPT_ANALYST){
+					// Go Live -- only admins and analysts
+
+				} else {
+					appInfo.log.error("Submitter " + submitterUserName + " not authorized to submit " + tool.toolType.name() + " reports");
+					return;
+					
+				}
+			} else if (tool.toolId.equals("approval")) {
+				// Third-party approval -- all users permitted
+			}
+			
+			
+		} else if (tool.toolType == ToolType.AUDIT) {
+			if (submitterRole == Role.ADMIN || submitterRole == Role.ANALYST || submitterRole == Role.ORG_ANALYST || submitterRole == Role.DEPT_ANALYST) {
+				// Final determination -- only admins and analysts
+
+			} else {
 				appInfo.log.error("Submitter " + submitterUserName + " not authorized to submit " + tool.toolType.name() + " reports");
 				return;
 			}
-		} else if (tool.toolType == ToolType.AUDIT){
-			// Only ADMINs, ANALYSTs, and ORG/DEPT ANALYSTs can update AUDIT and SUMMARY reports.
-			if (submitterRole != Role.ADMIN && submitterRole != Role.ANALYST &&
-					submitterRole != Role.ORG_ANALYST && submitterRole != Role.DEPT_ANALYST) {
-				appInfo.log.error("Submitter " + submitterUserName + " not authorized to submit " + tool.toolType.name() + " reports");
-				return;
-			}
+			
+		} else if (tool.toolType == ToolType.TESTTOOL || tool.toolType == ToolType.REPORT) {
+			// All users permitted
 		} 
+		
 
 		String reportName = null;
 		if (appInfo.toolId == null) {
 			appInfo.log.error("appInfo.reportType is null");
 			return;
 		}
-		if (tool == null) {
-			appInfo.log.error("adapter is null");
-			return;
-		}
+
 		reportName = tool.reportName;
 
 		final boolean reportSaved = FileUtil.saveReportUpload(appInfo.appId,

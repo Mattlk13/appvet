@@ -206,20 +206,40 @@ public class ReportUploadDialogBox extends DialogBox {
 		for (int i = 0; i < tools.size(); i++) {
 			ToolInfoGwt tool = tools.get(i);
 			
+			/*
+			 * This should match the policies defined in ReportUploadDialogBox!
+			 */
+			
 			if (tool.getType() == ToolType.SUMMARY) {
 				
-				if (role == Role.ADMIN || role == Role.ANALYST || role == Role.ORG_ANALYST || role == Role.DEPT_ANALYST){
+				/* Specific use-case for CW */
+				if (tool.getId().equals("androidsummary") || tool.getId().equals("iossummary")) {
+					
+					if (role == Role.ADMIN){
+						// CW summary -- only admins
+						permittedToolReports.add(tool);
+						
+					}
+				} else if (tool.getId().equals("golive")) {
+					// Go Live -- only admins and analysts
+					if (role == Role.ADMIN || role == Role.ANALYST || role == Role.ORG_ANALYST || role == Role.DEPT_ANALYST){
+						permittedToolReports.add(tool);
+						
+					}
+				} else if (tool.getId().equals("approval")) {
+					// Third-party approval -- all users permitted
 					permittedToolReports.add(tool);
 				}
 				
-			} else if (tool.getType() == ToolType.AUDIT) {
 				
+			} else if (tool.getType() == ToolType.AUDIT) {
+				// Final determination -- only admins and analysts
 				if (role == Role.ADMIN || role == Role.ANALYST || role == Role.ORG_ANALYST || role == Role.DEPT_ANALYST) {
 					permittedToolReports.add(tool);
-
 				}
 				
 			} else if (tool.getType() == ToolType.TESTTOOL || tool.getType() == ToolType.REPORT) {
+				// All users permitted
 				permittedToolReports.add(tool);
 			} 
 		}
