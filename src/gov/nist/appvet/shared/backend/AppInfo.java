@@ -46,6 +46,8 @@ public class AppInfo extends AppInfoGwt {
 	 */
 	public FileItem fileItem = null;
 	
+	public String iconSrcPath = null;
+	
 	/*---------------------- For Tool Reports/Risks Only ---------------------*/
 	/**
 	 * Tool ID for an uploaded report file. Used only for submitting tool
