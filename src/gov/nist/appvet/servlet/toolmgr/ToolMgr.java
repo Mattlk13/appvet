@@ -150,9 +150,11 @@ public class ToolMgr implements Runnable {
 					
 					// Get app metadata.
 					if (!getAppMetaData(appInfo) && !AppVetProperties.KEEP_APPS) {
-						// If we can't get metadata info for the app, this is an
+						
+						// TODO: If we can't get metadata info for the app, this is an
 						// error and we should set an error this app and remove
 						// all related files unless KEEP_APPS is true.
+						
 						removeAppFiles(appInfo);
 					} else {
 						// Get all available tools

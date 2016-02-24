@@ -1515,7 +1515,13 @@ public class AppVetPanel extends DockLayoutPanel {
 									appInfoIcon.setAltText(altText);
 								} else if (selectedApp.appStatus == AppStatus.PROCESSING) {
 									// log.info("Displaying PROCESSING");
-									iconVersion++;
+									final String iconPath = "images/"
+											+ defaultIcon;
+									appInfoIcon.setUrl(iconPath);
+									appInfoIcon.setAltText(altText);
+								} else if (selectedApp.appStatus == AppStatus.ERROR &&
+										selectedApp.appName.equals("Unknown")) {
+									// log.info("Displaying PROCESSING");
 									final String iconPath = "images/"
 											+ defaultIcon;
 									appInfoIcon.setUrl(iconPath);

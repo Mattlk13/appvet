@@ -52,10 +52,12 @@ public class FileUtil {
 	public static boolean copyFile(String sourceFilePath,
 			String destFilePath) {
 		if (sourceFilePath == null || destFilePath == null) {
+			log.error("sourceFilePath is null or empty");
 			return false;
 		}
 		File sourceFile = new File(sourceFilePath);
 		if (!sourceFile.exists()) {
+			log.error("sourceFilePath doesn't exist");
 			return false;
 		}
 		File destFile = new File(destFilePath);
@@ -63,7 +65,7 @@ public class FileUtil {
 			Files.copy(sourceFile.toPath(), destFile.toPath(),
 					StandardCopyOption.REPLACE_EXISTING);
 		} catch (final IOException e) {
-			log.error(e.toString());
+			log.error("File copy exception: " + e.toString());
 			return false;
 		} finally {
 			sourceFile = null;
