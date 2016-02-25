@@ -54,6 +54,37 @@ public class Database {
 	
 	private static final Logger log = AppVetProperties.log;
 	
+	/***************************************/
+	 
+	/** Fortify security recommendation to resolve SQL query injections. 
+	 * query must be of the form "SELECT * FROM items WHERE thing1=? AND thing2=? 
+	 * This is impractical for AppVet.*/
+	public static String selectString(String query, String item1, String item2) {
+		// Add alert message
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			connection = getConnection();
+			preparedStatement = connection
+					.prepareStatement(query);
+			preparedStatement.setString(1, item1);
+			preparedStatement.setString(2, item2);
+			preparedStatement.executeUpdate();
+            ResultSet rs = preparedStatement.executeQuery();
+   			while (rs.next()) {
+				// Return first (and should be only) alert message
+				return rs.getString(1);
+			}
+		} catch (final SQLException e) {
+			log.error(e.toString());
+		} finally {
+			cleanUpPreparedStatement(preparedStatement);
+			cleanUpConnection(connection);
+		}
+		return null;
+	}
+	/***************************************/
+
 	
 	public static boolean setAlertMessage(String username, SystemAlert alert) {
 		// Clear existing message
@@ -360,8 +391,6 @@ public class Database {
 				userInfo.setToolCredentials(toolCredentialsList);
 				
 			}
-
-
 			return userInfo;
 		} catch (final Exception e) {
 			log.error(e.toString());

@@ -127,20 +127,20 @@ public class Authenticate {
 	 * @param args
 	 *            ignored
 	 */
-	public static void main(String[] args) {
-		try {
-			// Test
-			final String username = "xxx";
-			final String password = "yyy";
-			if (Database.setPBKDF2Password(username, password)) {
-				log.debug("Changed password for " + username);
-			} else {
-				log.error("Could not change password for " + username);
-			}
-		} catch (final Exception e) {
-			log.error(e.toString());
-		}
-	}
+//	public static void main(String[] args) {
+//		try {
+//			// Test
+//			final String username = "xxx";
+//			final String password = "yyy";
+//			if (Database.setPBKDF2Password(username, password)) {
+//				log.debug("Changed password for " + username);
+//			} else {
+//				log.error("Could not change password for " + username);
+//			}
+//		} catch (final Exception e) {
+//			log.error(e.toString());
+//		}
+//	}
 
 	/**
 	 * Computes the PBKDF2 hash of a password.

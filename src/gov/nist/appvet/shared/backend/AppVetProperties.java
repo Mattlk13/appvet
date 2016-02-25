@@ -237,7 +237,7 @@ public class AppVetProperties {
 					if (SMTP_AUTH) {
 						// SMTP server requires authentication so get password
 						SENDER_EMAIL_PASSWORD = xml.getXPathValue("/AppVet/Email/SenderEmailPassword");
-						printVal("SENDER_EMAIL_PASSWORD", SENDER_EMAIL_PASSWORD);
+						//printVal("SENDER_EMAIL_PASSWORD", SENDER_EMAIL_PASSWORD);
 						
 						if (SENDER_EMAIL_PASSWORD == null) {
 							emailEnabled = false;

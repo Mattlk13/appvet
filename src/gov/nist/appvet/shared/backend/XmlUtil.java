@@ -56,6 +56,12 @@ public class XmlUtil {
 				}
 			}
 			docBuilderFactory = DocumentBuilderFactory.newInstance();
+			// Fortify Security Recommendation for Entity Expansion Injection
+			docBuilderFactory.setFeature("http://javax.xml.XMLConstants/feature/secure-processing", true);
+			// Fortify Security Recommendation for External Entity Injection
+			docBuilderFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+			docBuilderFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+			
 			docBuilder = docBuilderFactory.newDocumentBuilder();
 			document = docBuilder.parse(xmlFile);
 		} catch (final Exception e) {

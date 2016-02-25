@@ -60,7 +60,7 @@ public class ToolMgr implements Runnable {
 			// Remove zip directory (i.e., decompressed app file)
 			if (zipFile.exists()) {
 				// This directory will only exist if an IPA file was uploaded.
-				FileUtil.deleteFile(zipPath);
+				FileUtil.deleteFile(zipPath, appInfo.appId);
 				appInfo.log.debug("Removed " + appInfo.appName + " project.");
 			} else {
 				appInfo.log.error("App file does not exist at: " + zipPath);
@@ -81,7 +81,7 @@ public class ToolMgr implements Runnable {
 		final String appFilePath = appInfo.getAppFilePath();
 		final File appFile = new File(appFilePath);
 		if (appFile.exists()) {
-			FileUtil.deleteFile(appFilePath);
+			FileUtil.deleteFile(appFilePath, appInfo.appId);
 			appInfo.log.debug("Removed " + appInfo.appName + " app file.");
 		}
 		appInfo.log.close();

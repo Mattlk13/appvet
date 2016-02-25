@@ -168,7 +168,6 @@ public class AppVetServlet extends HttpServlet {
 		log.debug("Incoming GET message:\n" + "sessionId: " + sessionId + "\n"
 				+ "clientIpAddress: " + clientIpAddress + "\n"
 				+ "requesterUserName: " + requesterUserName + "\n"
-				+ "requesterPassword: " + requesterPassword + "\n"
 				+ "commandStr: " + commandStr + "\n" + "appId: " + appId + "\n"
 				+ "toolId: " + toolId);
 		try {
@@ -381,7 +380,6 @@ public class AppVetServlet extends HttpServlet {
 			log.debug("Incoming POST message:\n" + "sessionId: " + sessionId
 					+ "\n" + "clientIpAddress: " + clientIpAddress + "\n"
 					+ "requesterUserName: " + requesterUserName + "\n"
-					+ "requesterPassword: " + requesterPassword + "\n"
 					+ "commandStr: " + commandStr + "\n" + "appId: " + appId
 					+ "\n" + "toolId: " + toolId + "\ntoolRisk: " + toolRisk);
 
@@ -736,19 +734,19 @@ public class AppVetServlet extends HttpServlet {
 		
 		appInfo.clientHost = addr.getCanonicalHostName();
 		// Set temporary icon until icon is extracted from app.
-		String appIcon = null;
-		
-		if (appInfo.os == DeviceOS.ANDROID) {
-			appIcon = "android-icon-gray.png";
-		} else if (appInfo.os == DeviceOS.IOS) {
-			appIcon = "apple-icon-gray.png";
-		}
-		
-		final String sourceIconPath = "images/"
-				+ appIcon;
-		final String destIconPath = AppVetProperties.APP_IMAGES + "/"
-				+ appInfo.appId + ".png";
-		FileUtil.copyFile(sourceIconPath, destIconPath);
+//		String appIcon = null;
+//		
+//		if (appInfo.os == DeviceOS.ANDROID) {
+//			appIcon = "android-icon-gray.png";
+//		} else if (appInfo.os == DeviceOS.IOS) {
+//			appIcon = "apple-icon-gray.png";
+//		}
+//		
+//		final String sourceIconPath = AppVetProperties.URL + "/images/"
+//				+ appIcon;
+//		final String destIconPath = AppVetProperties.APP_IMAGES + "/"
+//				+ appInfo.appId + ".png";
+//		FileUtil.copyFile(sourceIconPath, destIconPath);
 		return appInfo;
 	}
 
@@ -782,7 +780,7 @@ public class AppVetServlet extends HttpServlet {
 				returnFile(response, file);
 				file = null;
 				// Remove zipped file on the local machine.
-				FileUtil.deleteFile(destinationZipPath);
+				FileUtil.deleteFile(destinationZipPath, appid);
 			} catch (final Exception e) {
 				log.error(e.toString());
 			}

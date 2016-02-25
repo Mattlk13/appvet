@@ -91,18 +91,24 @@ public class FileUtil {
 		}
 	}
 
-	public static boolean deleteFile(String sourceFilePath) {
-		File file = new File(sourceFilePath);
-		try {
-			if (file.exists()) {
-				return file.delete();
-			} else {
-				log.error("Cannot find file '" + sourceFilePath + "' to delete");
-				return false;
-			}
-		} finally {
-			file = null;
+	public static boolean deleteFile(String sourceFilePath, String appId) {
+		boolean goodPath = sourceFilePath.contains(appId);
+		if (goodPath) {
+			File file = new File(sourceFilePath);
+			try {
+				if (file.exists()) {
+					return file.delete();
+				} else {
+					log.error("Cannot find file '" + sourceFilePath + "' to delete");
+					return false;
+				}
+			} finally {
+				file = null;
+			}	
+		} else {
+			return false;
 		}
+
 	}
 
 	/**

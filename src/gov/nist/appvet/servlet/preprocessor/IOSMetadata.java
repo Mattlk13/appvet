@@ -110,7 +110,7 @@ public class IOSMetadata {
 
 			// Get icon
 			if (appInfo.iconSrcPath == null) {
-				appInfo.iconSrcPath = "images/apple-icon-gray.png";
+				appInfo.iconSrcPath = AppVetProperties.URL + "/images/apple-icon-gray.png";
 			}
 
 			String iconDestPath = AppVetProperties.APP_IMAGES + "/"
