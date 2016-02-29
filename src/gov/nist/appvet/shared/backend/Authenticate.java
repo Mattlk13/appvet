@@ -23,7 +23,6 @@ import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -95,7 +94,6 @@ public class Authenticate {
 	
 	/** Authenticate with username and password. */
 	public static boolean isAuthenticated(String username, String password) {
-		
 		if (username == null) {
 			log.debug("Username is null for authentication");
 			return false;
@@ -103,14 +101,12 @@ public class Authenticate {
 			log.debug("Password is null for authentication");
 			return false;
 		}
-		
 		try {
 			final String storedPasswordHash = Database
 					.getPasswordHash(username);
 			if (storedPasswordHash == null || storedPasswordHash.isEmpty()) {
 				log.debug("Stored password hash is null or empty");
 			}
-			
 			return validatePassword(password, storedPasswordHash);
 		} catch (final NoSuchAlgorithmException e) {
 			log.error(e.toString());

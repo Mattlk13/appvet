@@ -43,8 +43,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.eclipse.jetty.util.log.Log;
-
 /**
  * This class registers an app with AppVet.
  * 
@@ -55,29 +53,23 @@ public class Registration {
 	private AppInfo appInfo = null;
 	private static final Logger log = AppVetProperties.log;
 
-	
 	public Registration(AppInfo appInfo) {
 		this.appInfo = appInfo;
 	}
-	
 
 	public boolean registerApp() {
-		appInfo.log.debug("Registering app " + appInfo.appId);
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-		ToolAdapter registrationTool = ToolAdapter.getByToolId(
-				appInfo.os, "registration");
+		ToolAdapter registrationTool = ToolAdapter.getByToolId(appInfo.os,
+				"registration");
 		final String registrationReportPath = appInfo.getReportsPath() + "/"
 				+ registrationTool.reportName;
 		BufferedWriter regReportWriter = null;
-		
-		try {			
+		try {
 			regReportWriter = new BufferedWriter(new FileWriter(
 					registrationReportPath));
 			AppStatus appStatus = AppStatusManager.getAppStatus(appInfo.appId);
-			
 			if (appStatus == null) {
-				
 				// Add this app to the tools database table
 				ArrayList<ToolAdapter> availableTools = null;
 				if (appInfo.os == DeviceOS.ANDROID) {
@@ -85,23 +77,20 @@ public class Registration {
 				} else if (appInfo.os == DeviceOS.IOS) {
 					availableTools = AppVetProperties.iosTools;
 				}
-
-				// Set default initial status (NA) for each tool
+				// Set default initial status to NA for each tool
 				for (int i = 0; i < availableTools.size(); i++) {
 					final ToolAdapter tool = availableTools.get(i);
 					setInitialToolStatus(appInfo, tool);
-				}		
-				
+				}
 				// Add this app to the apps database table
 				connection = Database.getConnection();
 				preparedStatement = connection
 						.prepareStatement("REPLACE INTO apps (appid, lastupdated, appname, "
-						+ "packagename, versioncode, versionname, filename, "
-						+ "submittime, appstatus, "
-						+ "username, clienthost, os"
-						+ ") "
-						+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-				
+								+ "packagename, versioncode, versionname, filename, "
+								+ "submittime, appstatus, "
+								+ "username, clienthost, os"
+								+ ") "
+								+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 				// Set app ID.
 				preparedStatement.setString(1, appInfo.appId);
 				// Set last updated to now
@@ -113,16 +102,16 @@ public class Registration {
 					appInfo.appName = "Received";
 				}
 				preparedStatement.setString(3, appInfo.appName);
-				// Set package name. If file submission, package name will be 
+				// Set package name. If file submission, package name will be
 				// null at this point.*/
 				preparedStatement.setString(4, appInfo.packageName);
 				// Set version code.
 				preparedStatement.setString(5, null);
-				// Set version name. If file submission, version name will be 
+				// Set version name. If file submission, version name will be
 				// null at this point.
 				preparedStatement.setString(6, appInfo.versionName);
 				// Set file name (note that filename uses underscores to
-				// replace spaces. If app metdata submission, filename will 
+				// replace spaces. If app metdata submission, filename will
 				// be null.
 				preparedStatement.setString(7, appInfo.getAppFileName());
 				final java.sql.Timestamp timeStamp = new java.sql.Timestamp(
@@ -151,14 +140,13 @@ public class Registration {
 							.prepareStatement("REPLACE INTO iostoolstatus "
 									+ "(appid) values (?)");
 				}
-
 				preparedStatement.setString(1, appInfo.appId);
 				preparedStatement.executeUpdate();
 				preparedStatement.close();
 
 				// Close DB connection
 				connection.close();
-				
+
 				// Create registration report
 				regReportWriter.write("<HTML>\n");
 				regReportWriter.write("<head>\n");
@@ -169,39 +157,42 @@ public class Registration {
 				regReportWriter.write("<title>Registration Report</title>\n");
 				regReportWriter.write("</head>\n");
 				regReportWriter.write("<body>\n");
-				String appVetImagesUrl = AppVetProperties.URL
+				String appVetImagesUrl = AppVetProperties.APPVET_URL
 						+ "/images/appvet_logo.png";
-				regReportWriter.write("<img border=\"0\" width=\"192px\" src=\""
-						+ appVetImagesUrl + "\" alt=\"AppVet Mobile App Vetting System\" />");
+				regReportWriter
+						.write("<img border=\"0\" width=\"192px\" src=\""
+								+ appVetImagesUrl
+								+ "\" alt=\"AppVet Mobile App Vetting System\" />");
 				regReportWriter.write("<HR>\n");
 				regReportWriter.write("<h3>Registration Report</h3>\n");
 				regReportWriter.write("<pre>\n");
 				final Date date = new Date();
 				final SimpleDateFormat format = new SimpleDateFormat(
 						"yyyy-MM-dd' 'HH:mm:ss.SSSZ");
-				final String currentDate = format.format(date);				
-				
+				final String currentDate = format.format(date);
+
 				if (appInfo.getAppFileName() != null) {
-					
-					regReportWriter.write("File: \t\t" + 
-							appInfo.getAppFileName() + "\n");
-					
+
+					regReportWriter.write("File: \t\t"
+							+ appInfo.getAppFileName() + "\n");
+
 					if (!FileUtil.saveFileUpload(appInfo)) {
 						regReportWriter.write("<font color=\"red\">"
 								+ ErrorMessage.ERROR_SAVING_UPLOADED_FILE
 										.getDescription() + "</font>");
-						appInfo.log.error(ErrorMessage.ERROR_SAVING_UPLOADED_FILE
-								.getDescription());
-						ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-								registrationTool.toolId, ToolStatus.ERROR);
+						appInfo.log
+								.error(ErrorMessage.ERROR_SAVING_UPLOADED_FILE
+										.getDescription());
+						ToolStatusManager.setToolStatus(appInfo.os,
+								appInfo.appId, registrationTool.toolId,
+								ToolStatus.ERROR);
 						return false;
 					}
-					
-					appInfo.log.debug("Saved app: " + 
-							appInfo.getAppFileName());
-					
+
+					appInfo.log.debug("Saved app: " + appInfo.getAppFileName());
+
 				}
-				
+
 				regReportWriter.write("Date: \t\t" + currentDate + "\n\n");
 				regReportWriter.write("App ID: \t" + appInfo.appId + "\n");
 				regReportWriter.write("Submitter: \t" + appInfo.ownerName
@@ -213,23 +204,27 @@ public class Registration {
 				regReportWriter.write("</HTML>\n");
 				regReportWriter.close();
 				appInfo.log.info("Registered app " + appInfo.appId);
-				
+
 				// Update registration status to LOW (i.e., COMPLETED).
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 						registrationTool.toolId, ToolStatus.LOW);
 
 				// Email notify
 				if (AppVetProperties.emailEnabled) {
-					UserInfo userInfo = Database.getUserInfo(appInfo.ownerName, null);
-					String subject = "App " + appInfo.appId + " uploaded by '" + appInfo.ownerName + "'";
-					String content = "App " + appInfo.appId + " was uploaded by '" + appInfo.ownerName + "'.";
+					UserInfo userInfo = Database.getUserInfo(appInfo.ownerName,
+							null);
+					String subject = "App " + appInfo.appId + " uploaded by '"
+							+ appInfo.ownerName + "'";
+					String content = "App " + appInfo.appId
+							+ " was uploaded by '" + appInfo.ownerName + "'.";
 					appInfo.log.debug("Emailing: " + subject);
 					if (AppVetProperties.emailEnabled) {
 						Emailer.sendEmail(userInfo.getEmail(), subject, content);
 					}
 				}
-				
-				appInfo.log.debug("App " + appInfo.appId + " has been uploaded by " + appInfo.ownerName);
+
+				appInfo.log.debug("App " + appInfo.appId
+						+ " has been uploaded by " + appInfo.ownerName);
 				return true;
 			} else {
 				// Update registration status to ERROR.
@@ -244,26 +239,18 @@ public class Registration {
 				regReportWriter.close();
 				return false;
 			}
-			
 		} catch (final Exception e) {
-			
 			appInfo.log.error(e.toString());
 			return false;
-			
 		} finally {
-			
 			registrationTool = null;
-			//registrationReportPath = null;
 			Database.cleanUpBufferedWriter(regReportWriter);
 			Database.cleanUpPreparedStatement(preparedStatement);
 			Database.cleanUpConnection(connection);
-			
 		}
 	}
 
-	private static void setInitialToolStatus(AppInfo appInfo,
-			ToolAdapter tool) {
-		
+	private static void setInitialToolStatus(AppInfo appInfo, ToolAdapter tool) {
 		String sql = null;
 		if (appInfo.os == DeviceOS.ANDROID) {
 			sql = "UPDATE androidtoolstatus SET " + tool.toolId + "='NA' "
@@ -272,10 +259,9 @@ public class Registration {
 			sql = "UPDATE iostoolstatus SET " + tool.toolId + "='NA' "
 					+ "WHERE appid='" + appInfo.appId + "'";
 		}
-
 		if (!Database.update(sql)) {
 			appInfo.log.error("Failed to update tool start status");
 		}
-		
+
 	}
 }

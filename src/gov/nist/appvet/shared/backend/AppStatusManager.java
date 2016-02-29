@@ -57,64 +57,34 @@ public class AppStatusManager {
 
 	public synchronized static boolean setAppStatus(String appId,
 			AppStatus appStatus) {
-
-		if (appId == null || appId.isEmpty()) {
-			log.error("App ID is null or empty");
-			return false;
-		} else {
-			if (appStatus == null) {
-				log.error("App status is null");
-				return false;
-			}
-		}
-
 		// Only update the status if the new status is different from the
 		// current status (reduces GUI refresh).
 		final String currentAppStatusString = getAppStatusName(appId);
-
 		if (currentAppStatusString == null) {
-			log.error("Current app " + appId + " status string is null");
 			return false;
-		} else {
-			log.debug("Current app " + appId + " status string is: " + currentAppStatusString);
 		}
-		
-
 		final AppStatus currentAppStatus = AppStatus
 				.getStatus(currentAppStatusString);
 		if (currentAppStatus == null) {
-			log.error("Current app " + appId + " status is null");
 			return false;
-		} else {
-			log.debug("Current app " + appId + " status is " + currentAppStatus.name());
 		}
 		
-		log.debug("For " + appId + ": appstatus: " + appStatus.name() + ", currentStatus: " + currentAppStatus.name());
-
 		if (appStatus != currentAppStatus) {
-
-			log.debug("New status is different than current status for app " + appId);
+			// Update app status
 			final String sql = "UPDATE apps SET appstatus='" + appStatus.name()
 					+ "' where appid='" + appId + "'";
 			log.debug("SQL: " + sql);
 			if (Database.update(sql)) {
-
+				// Set last-updated time due to app status change
 				if (Database.setLastUpdatedTime(appId)) {
-
-					log.debug("App " + appId + " updated mod time.");
 					return true;
 				} else {
-					log.error("App " + appId + " update flag not set successfully.");
 					return false;
 				}
 			} else {
-
-				log.error("Could not update status for app " + appId);
 				return false;
 			}
 		} else {
-
-			log.debug("New status is the same as current status for app " + appId + ". Not updating status.");
 			return true;
 		}
 	}

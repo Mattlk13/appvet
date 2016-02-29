@@ -104,8 +104,11 @@ public class AppVetProperties {
 	public static String APPS_ROOT = null;
 	public static String CONF_ROOT = null;
 	public static String TOOLS_CONF_ROOT = null;
-	public static String APP_IMAGES = null;
+	public static String APP_IMAGES_PATH = null;
 	public static String TEMP_ROOT = null;
+	// Default icon image paths used to copy icons (not URLs to access directly)
+	public static final String DEFAULT_ANDROID_ICON_PATH = CATALINA_HOME + "/webapps/appvet/images/android-icon-gray.png";
+	public static final String DEFAULT_IOS_ICON_PATH = CATALINA_HOME + "/webapps/appvet/images/apple-icon-gray.png";
 	// Database properties
 	public static String DB_URL = null;
 	public static String DB_USERNAME = null;
@@ -119,6 +122,7 @@ public class AppVetProperties {
 	public static String SENDER_EMAIL = null;
 	public static String SENDER_NAME = null;
 	public static String SENDER_EMAIL_PASSWORD = null;
+	
 	
 	/** Timeout in milliseconds until a URL connection is established. */
 	public static int CONNECTION_TIMEOUT = 0;
@@ -147,7 +151,9 @@ public class AppVetProperties {
 	/** HTTP address of host */
 	public static String HOST_URL = null;
 	/** HTTP address of host /appvet directory */
-	public static String URL = null;
+	public static String APPVET_URL = null;
+	/** HTTP address of host /appvet_images directory */
+	public static String APPVET_APP_IMAGES_URL = null;
 	/** HTTP address of host /appvet/AppVetServlet directory */
 	public static String SERVLET_URL = null;
 	public static boolean KEEP_APPS = false;
@@ -204,8 +210,8 @@ public class AppVetProperties {
 		printVal("CONF_ROOT", CONF_ROOT);
 		TOOLS_CONF_ROOT = CONF_ROOT + "/tool_adapters";
 		printVal("TOOLS_CONF_ROOT", TOOLS_CONF_ROOT);
-		APP_IMAGES = CATALINA_HOME + "/webapps/appvet_images";
-		printVal("APP_IMAGES", APP_IMAGES);
+		APP_IMAGES_PATH = CATALINA_HOME + "/webapps/appvet_images";
+		printVal("APP_IMAGES_PATH", APP_IMAGES_PATH);
 		
 		// Database properties
 		DB_URL = xml.getXPathValue("/AppVet/Database/URL");
@@ -213,7 +219,6 @@ public class AppVetProperties {
 		DB_USERNAME = xml.getXPathValue("/AppVet/Database/UserName");
 		printVal("DB_USERNAME", DB_USERNAME);
 		DB_PASSWORD = xml.getXPathValue("/AppVet/Database/Password");
-		printVal("DB_PASSWORD", DB_PASSWORD);
 		
 		// Email notification properties
 		SMTP_HOST = xml.getXPathValue("/AppVet/Email/SMTPHost");
@@ -336,9 +341,11 @@ public class AppVetProperties {
 			HOST_URL = "http://" + HOST + ":" + PORT;
 		}
 		printVal("HOST_URL", HOST_URL);
-		URL = HOST_URL + "/appvet";
-		printVal("URL", URL);
-		SERVLET_URL = URL + "/AppVetServlet";
+		APPVET_URL = HOST_URL + "/appvet";
+		printVal("APPVET_URL", APPVET_URL);
+		APPVET_APP_IMAGES_URL = HOST_URL + "/appvet_images";
+		printVal("APPVET_APP_IMAGES_URL", APPVET_APP_IMAGES_URL);
+		SERVLET_URL = APPVET_URL + "/AppVetServlet";
 		printVal("SERVLET_URL", SERVLET_URL);
 		
 		KEEP_APPS = new Boolean(xml.getXPathValue("/AppVet/Apps/KeepApps"))

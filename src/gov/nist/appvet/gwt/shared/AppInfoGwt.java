@@ -27,10 +27,6 @@ import java.util.Date;
 
 
 /**
- * This class defines the core metadata of an app. This class is extended by
- * AppInfoGwt, for defining app metadata that may be used by GWT clients, and by
- * AppInfo, for defining app metadata used by all other components.
- * 
  * @author steveq@nist.gov
  */
 public class AppInfoGwt implements Serializable {
@@ -47,6 +43,8 @@ public class AppInfoGwt implements Serializable {
 	public String appName = null;
 	/** The package of bundle name of the app. */
 	public String packageName = null;
+	/** If icon is set for this app, iconPath will contain the icon URL */
+	public String iconURL = null;
 	/**
 	 * The filename of the app. Note that whitespace in filenames are replaced
 	 * with underscore. Further note that apps submitted as metadata only (name,
@@ -74,6 +72,11 @@ public class AppInfoGwt implements Serializable {
 	public String clientHost = null;
 	/** The icon name (default or actual) */
 	//public String iconFileName = null;
+	/** Min SDK (Note: this variable is not stored in the DB. Only used for
+	 * printing value for reports.
+	 */
+	public String minSDK = null;
+	public String targetSDK = null;
 
 	/** Empty constructor. */
 	public AppInfoGwt() {

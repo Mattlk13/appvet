@@ -379,12 +379,11 @@ public class UserListDialogBox extends DialogBox {
 				}
 
 				if (newUser && !ssoActive) {
-					log.info("newUser && !ssoActive");
+					//log.info("newUser && !ssoActive");
 					if (!userInfo.isValid(false)) {
 						return;
 					}
 				} else {
-					log.info("newUser && ssoActive");
 					if (!userInfo.isValid(true)) {
 						return;
 					}

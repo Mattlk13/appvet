@@ -107,6 +107,9 @@ public class ToolAdapter implements Runnable {
 		String toolValue = xml
 				.getXPathValue("/ToolAdapter/Description/Category");
 		toolType = ToolType.getAnalysisType(toolValue);
+		
+		log.debug("Loading tool adapter " + toolId + " '" + name + "' of type: " + toolType.name());
+
 
 		String osStr = xml.getXPathValue("/ToolAdapter/Description/OS");
 		os = DeviceOS.getOS(osStr);
@@ -176,10 +179,13 @@ public class ToolAdapter implements Runnable {
 		// Report configuration
 		final String reportFileTypeString = xml
 				.getXPathValue("/ToolAdapter/Description/ReportFile");
+		log.debug("Report file type string: " + reportFileTypeString);
 		checkNullString(configFileName, "reportFileTypeString",
 				reportFileTypeString);
 		reportFileType = ReportFileType.getFileType(reportFileTypeString);
+		log.debug("Report file: " + reportFileType.name());
 		reportName = generateReportName();
+		log.debug("Report name: " + reportName);
 
 		// Protocol config
 		for (Protocol p : Protocol.values()) {
@@ -235,27 +241,21 @@ public class ToolAdapter implements Runnable {
 	}
 
 	public static boolean isValidToolId(String toolId) {
-
 		for (int i = 0; i < AppVetProperties.androidTools.size(); i++) {
 			final ToolAdapter adapter = AppVetProperties.androidTools.get(i);
-
 			if (adapter.toolId.equals(toolId)) {
 				return true;
 			}
-
 		}
 
 		for (int i = 0; i < AppVetProperties.iosTools.size(); i++) {
 			final ToolAdapter adapter = AppVetProperties.iosTools.get(i);
-
 			if (adapter.toolId.equals(toolId)) {
 				return true;
 			}
-
 		}
 
 		return false;
-
 	}
 
 	public static ToolAdapter getByToolId(DeviceOS os, String toolId) {
@@ -274,7 +274,7 @@ public class ToolAdapter implements Runnable {
 			for (int i = 0; i < AppVetProperties.androidTools.size(); i++) {
 				final ToolAdapter adapter = AppVetProperties.androidTools.get(i);
 				if (adapter.toolId.equals(toolId)) {
-					log.debug("Found Android tool adapter for " + toolId);
+					//log.debug("Found Android tool adapter for " + toolId);
 					return adapter;
 				}
 			}
@@ -287,7 +287,7 @@ public class ToolAdapter implements Runnable {
 			for (int i = 0; i < AppVetProperties.iosTools.size(); i++) {
 				final ToolAdapter adapter = AppVetProperties.iosTools.get(i);
 				if (adapter.toolId.equals(toolId)) {
-					log.debug("Found iOS tool adapter for " + toolId);
+					//log.debug("Found iOS tool adapter for " + toolId);
 					return adapter;
 				}
 			}
@@ -407,12 +407,10 @@ public class ToolAdapter implements Runnable {
 
 	
 	public void checkNullString(String fileName, String parameter, String value) {
-		
 		if ((value == null) || value.isEmpty()) {
 			log.error("Required parameter '" + parameter + "' in file "
 					+ fileName + " is null or empty.");
 		}
-		
 	}
 
 	
@@ -521,6 +519,7 @@ public class ToolAdapter implements Runnable {
 
 	public String generateReportName() {
 		final String reportSuffix = "_security_report";
+		log.debug("Switching on report file type: " + reportFileType);
 		switch (reportFileType) {
 		case TXT:
 			return toolId + reportSuffix + "." + ReportFileType.TXT.value;

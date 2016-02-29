@@ -33,8 +33,11 @@ public class FileUtil {
 	private static final Logger log = AppVetProperties.log;
 
 	public static boolean copyFile(File sourceFile, File destFile) {
-		if (sourceFile == null || !sourceFile.exists() || destFile == null) {
-			log.error("Cannot copy to null or non-existent source or dest file");
+		if (sourceFile == null || !sourceFile.exists()) {
+			log.error("Cannot copy from null or non-existent source file");
+			return false;
+		} else if (destFile == null) {
+			log.error("Cannot copy to null or non-existent destination file");
 			return false;
 		}
 		try {
@@ -113,9 +116,6 @@ public class FileUtil {
 
 	/**
 	 * Remove the prepended path of the file name.
-	 * 
-	 * @param filePath
-	 * @return
 	 */
 	public static String getNormalizedFileName(String filePath) {
 		final int forwardSlashIndex = filePath.lastIndexOf("/");
@@ -166,14 +166,13 @@ public class FileUtil {
 			outputFilePath = reportsPath + "/" + reportName;
 			file = new File(outputFilePath);
 			if (file.exists()) {
-				if (file.delete()) {
-					log.debug("Deleted file at " + outputFilePath);
-				} else {
+				// Delete existing report
+				if (!file.delete()) {
 					log.error("Could not delete existing file at " + outputFilePath);
 				}
 			}
 			fileItem.write(file);
-			log.debug("Wrote report " + outputFilePath);
+			log.debug("Wrote report file: " + outputFilePath);
 			return true;
 		} catch (final Exception e) {
 			log.error("Could not write report to " + outputFilePath + "\n" + e.toString());

@@ -46,35 +46,27 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 	private final boolean SORTING_ON = false;
 	private final DateTimeFormat dateTimeFormat = DateTimeFormat
 			.getFormat("yyyy-MM-dd HH:mm:ss");
-	private String appVetHostUrl = null;
-	//private String appVetProxyUrl = null;
 	private static Logger log = Logger.getLogger("AppsListPagingDataGrid");
-
 
 	@Override
 	public void initTableColumns(DataGrid<T> dataGrid,
 			ListHandler<T> sortHandler) {
-
 		// App ID
 		final Column<T, String> appIdColumn = new Column<T, String>(
 				new TextCell()) {
-			
 			@Override
 			public String getValue(T object) {
 				return ((AppInfoGwt) object).appId;
 			}
 		};
-
 		appIdColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(appIdColumn, new Comparator<T>() {
-
 			@Override
 			public int compare(T o1, T o2) {
 				return ((AppInfoGwt) o1).appId
 						.compareTo(((AppInfoGwt) o2).appId);
 			}
 		});
-
 		appIdColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dataGrid.addColumn(appIdColumn, "ID");
 		dataGrid.setColumnWidth(appIdColumn, "43px");
@@ -84,27 +76,20 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		final SafeHtmlCell osIconCell = new SafeHtmlCell();
 		final Column<T, SafeHtml> osIconColumn = new Column<T, SafeHtml>(
 				osIconCell) {
-
 			@Override
 			public SafeHtml getValue(T object) {
 				final SafeHtmlBuilder sb = new SafeHtmlBuilder();
 				final DeviceOS os = ((AppInfoGwt) object).os;
-
 				if (os == null) {
 					log.warning("OS is null");
 					return sb.toSafeHtml();
-				} else {
-					// log.info("App status in table is: " + os);
 				}
-
 				if (os == DeviceOS.ANDROID) {
 					sb.appendHtmlConstant("<img width=\"10\" src=\"images/android_logo_green.png\"  alt=\"Android\" />");
 				} else if (os == DeviceOS.IOS) {
 					sb.appendHtmlConstant("<img width=\"10\" src=\"images/ios_logo_blue.png\"  alt=\"iOS\" />");
 				}
-
 				return sb.toSafeHtml();
-
 			}
 		};
 
@@ -113,60 +98,32 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		dataGrid.addColumn(osIconColumn, "OS");
 		dataGrid.setColumnWidth(osIconColumn, "15px");
 
-
 		// App Icon
 		final SafeHtmlCell iconCell = new SafeHtmlCell();
 		final Column<T, SafeHtml> iconColumn = new Column<T, SafeHtml>(iconCell) {
-			
 			@Override
 			public SafeHtml getValue(T object) {
-
-				String defaultLargeAppIcon = null;
+				final String selectedIconURL = ((AppInfoGwt) object).iconURL;
 				final DeviceOS os = ((AppInfoGwt) object).os;
+				String iconURL = null;
 				String altText = null;
-				
-				if (os == DeviceOS.ANDROID) {
-					defaultLargeAppIcon = "android-icon-gray.png";
-					altText = "Android app";
-				} else if (os == DeviceOS.IOS) {
-					defaultLargeAppIcon = "apple-icon-gray.png";
-					altText = "iOS app";
-				}
-
-				final SafeHtmlBuilder sb = new SafeHtmlBuilder();
-				final String appId = ((AppInfoGwt) object).appId;
-				final AppStatus appStatus = ((AppInfoGwt) object).appStatus;
-				//log.info("Appstatus for " + appId + ": " + appStatus.name());
-				
-				if (appStatus == null) {
-					log.warning("App status is null");
-					return sb.toSafeHtml();
-				} else if (appStatus == AppStatus.REGISTERING ||
-						appStatus == AppStatus.PENDING || appStatus == AppStatus.PROCESSING) {
-					iconVersion++; // Forces refresh of icon
-					final String iconPath = "images/"
-							+ defaultLargeAppIcon;
-					
-					sb.appendHtmlConstant("<img width=\"20\" src=\"" + iconPath
-							+ "\" alt=\"" + altText + "\" />");
-					//log.info("Displaying " + iconPath);
+				//log.info("selectedIconURL: " + selectedIconURL);
+				if (selectedIconURL == null) {
+					if (os == DeviceOS.ANDROID) {
+						iconURL = "images/android-icon-gray.png";
+						altText = "Android app";
+					} else if (os == DeviceOS.IOS) {
+						iconURL = "images/apple-icon-gray.png";
+						altText = "iOS app";
+					}
 				} else {
-					
-					iconVersion++;
-					String URL = appVetHostUrl;
-					final String iconPath = URL + "/appvet_images/"
-							+ appId + ".png";	
-					
+					iconURL = selectedIconURL;
 					altText = ((AppInfoGwt) object).appName;
-
-					sb.appendHtmlConstant("<img width=\"20\" src=\"" + iconPath
-							+ "\" alt=\"" + altText + "\" />");
-					//log.info("Displaying " + iconPath);
-
 				}
-				
+				final SafeHtmlBuilder sb = new SafeHtmlBuilder();
+				sb.appendHtmlConstant("<img width=\"20\" src=\"" + iconURL
+						+ "\" alt=\"" + altText + "\" />");
 				return sb.toSafeHtml();
-				
 			}
 		};
 		
@@ -174,22 +131,18 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		iconColumn.setSortable(SORTING_ON);
 		dataGrid.addColumn(iconColumn, "App");
 		dataGrid.setColumnWidth(iconColumn, "20px");
-
 		
 		// App Name
 		final Column<T, String> appNameColumn = new Column<T, String>(
 				new TextCell()) {
-			
 			@Override
 			public String getValue(T object) {
 				return ((AppInfoGwt) object).appName;
 			}
-			
 		};
 		
 		appNameColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(appNameColumn, new Comparator<T>() {
-			
 			@Override
 			public int compare(T o1, T o2) {
 				return ((AppInfoGwt) o1).appName
@@ -201,39 +154,32 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		dataGrid.addColumn(appNameColumn, "");
 		dataGrid.setColumnWidth(appNameColumn, "80px");
 
-
 		// App Version
 		final Column<T, String> appVersionColumn = new Column<T, String>(
 				new TextCell()) {
-			
 			@Override
 			public String getValue(T object) {
 				return ((AppInfoGwt) object).versionName;
 			}
-			
 		};
 		
 		appVersionColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(appVersionColumn, new Comparator<T>() {
-			
 			@Override
 			public int compare(T o1, T o2) {
 				return ((AppInfoGwt) o1).versionName
 						.compareTo(((AppInfoGwt) o2).versionName);
 			}
-			
 		});
 		
 		appVersionColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dataGrid.addColumn(appVersionColumn, "Version");
 		dataGrid.setColumnWidth(appVersionColumn, "35px");		
 
-
 		// Status
 		final SafeHtmlCell statusCell = new SafeHtmlCell();
 		final Column<T, SafeHtml> statusColumn = new Column<T, SafeHtml>(
 				statusCell) {
-			
 			@Override
 			public SafeHtml getValue(T object) {
 				final SafeHtmlBuilder sb = new SafeHtmlBuilder();
@@ -256,23 +202,19 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 					statusHtml = "<div id=\"error\" style='color: black'>"
 							+ appStatus.name() + "</div>";
 				}
-
 				sb.appendHtmlConstant(statusHtml);
 				return sb.toSafeHtml();
-				
 			}
 		};
 		
 		statusColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		statusColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(statusColumn, new Comparator<T>() {
-			
 			@Override
 			public int compare(T o1, T o2) {
 				return ((AppInfoGwt) o1).appStatus
 						.compareTo(((AppInfoGwt) o2).appStatus);
 			}
-			
 		});
 		
 		dataGrid.addColumn(statusColumn, "Status/Risk");
@@ -281,23 +223,19 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		// Submitter 
 		final Column<T, String> submitterColumn = new Column<T, String>(
 				new TextCell()) {
-			
 			@Override
 			public String getValue(T object) {
 				return ((AppInfoGwt) object).ownerName;
 			}
-			
 		};
 		
 		submitterColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(submitterColumn, new Comparator<T>() {
-			
 			@Override
 			public int compare(T o1, T o2) {
 				return ((AppInfoGwt) o1).ownerName
 						.compareTo(((AppInfoGwt) o2).ownerName);
 			}
-			
 		});
 		
 		submitterColumn
@@ -308,19 +246,15 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		// Submit Time
 		final Column<T, String> submitTimeColumn = new Column<T, String>(
 				new TextCell()) {
-			
 			@Override
 			public String getValue(T object) {
 				final AppInfoGwt appInfo = (AppInfoGwt) object;
 				final String dateString = dateTimeFormat.format(appInfo.submitTime);
 				return dateString;
 			}
-			
 		};
-		
 		submitTimeColumn.setSortable(SORTING_ON);
 		sortHandler.setComparator(submitTimeColumn, new Comparator<T>() {
-			
 			@Override
 			public int compare(T o1, T o2) {
 				final AppInfoGwt appInfo1 = (AppInfoGwt) o1;
@@ -329,14 +263,12 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 				final String dateString2 = dateTimeFormat.format(appInfo2.submitTime);
 				return dateString1.compareTo(dateString2);
 			}
-			
 		});
 		
 		submitTimeColumn
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dataGrid.addColumn(submitTimeColumn, "Date/Time");
 		dataGrid.setColumnWidth(submitTimeColumn, "75px");
-		
 	}
 
 	
@@ -344,15 +276,5 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 	public void setPageSize(int pageSize) {
 		this.dataGrid.setPageSize(pageSize);
 	}
-
-	
-	public void setAppVetHostUrl(String appVetHostUrl) {
-		this.appVetHostUrl = appVetHostUrl;
-	}
-
-	
-//	public void setAppVetProxyUrl(String appVetProxyUrl) {
-//		this.appVetProxyUrl = appVetProxyUrl;
-//	}
 	
 }

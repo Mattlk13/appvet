@@ -45,70 +45,7 @@ public class ToolMgr implements Runnable {
 	private static final long TOOL_ADAPTER_SHUTDOWN_TIMEOUT = 10000;
 
 	public ToolMgr() {
-//		log.info("*** Starting AppVet Tool Manager "
-//				+ AppVetProperties.APPVET_VERSION + " on "
-//				+ AppVetProperties.URL);
 	}
-
-	public void removeAppFiles(AppInfo appInfo) {
-		appInfo.log.info("Removing app files from: " + appInfo.getIdPath());
-		if (appInfo.os == DeviceOS.IOS) {
-			// Newly received iOS apps use "Receiving...zip" as the expanded
-			// name.
-			String zipPath = appInfo.getIdPath() + "/Receiving....zip";
-			final File zipFile = new File(zipPath);
-			// Remove zip directory (i.e., decompressed app file)
-			if (zipFile.exists()) {
-				// This directory will only exist if an IPA file was uploaded.
-				FileUtil.deleteFile(zipPath, appInfo.appId);
-				appInfo.log.debug("Removed " + appInfo.appName + " project.");
-			} else {
-				appInfo.log.error("App file does not exist at: " + zipPath);
-			}
-		} else {
-			String projectPath = appInfo.getProjectPath();
-			appInfo.log.info("Project Path: " + projectPath);
-			final File projectDirectory = new File(projectPath);
-			// Remove project directory (i.e., decompressed app file)
-			if (projectDirectory.exists()) {
-				// This directory will only exist if an APK file was uploaded.
-				FileUtil.deleteDirectory(projectDirectory);
-				appInfo.log.debug("Removed " + appInfo.appName
-						+ " project directory.");
-			}
-		}
-		// Remove app file
-		final String appFilePath = appInfo.getAppFilePath();
-		final File appFile = new File(appFilePath);
-		if (appFile.exists()) {
-			FileUtil.deleteFile(appFilePath, appInfo.appId);
-			appInfo.log.debug("Removed " + appInfo.appName + " app file.");
-		}
-		appInfo.log.close();
-		System.gc();
-	}
-
-	private boolean getAppMetaData(AppInfo appInfo) {
-		if (appInfo.os == DeviceOS.ANDROID) {
-			if (appInfo.getAppFileName() != null) {
-				return AndroidMetadata.getFromFile(appInfo);
-			} else {
-				appInfo.log.error("No file provided to acquire metadata.");
-				return false;
-			}
-		} else if (appInfo.os == DeviceOS.IOS) {
-			if (appInfo.getAppFileName() != null) {
-				return IOSMetadata.getFromFile(appInfo);
-			} else {
-				appInfo.log.error("No file provided to acquire metadata.");
-				return false;
-			}
-		} else {
-			appInfo.log.error("Unknown OS");
-			return false;
-		}
-	}
-
 	
 	@Override
 	public void run() {
@@ -116,17 +53,14 @@ public class ToolMgr implements Runnable {
 		Date currentAppTimeout = null;
 		
 		for (;;) {
-			
-			delay(AppVetProperties.TOOL_MGR_POLLING_INTERVAL); // Wait to see if another app is processing
+			// See AppVetProperties.xml (/AppVet/ToolServices/PollingInterval)
+			delay(AppVetProperties.TOOL_MGR_POLLING_INTERVAL);
 			// Get the currently processing app ID
 			String currentProcessingAppId = Database.getCurrentProcessingAppId();
 			if (currentProcessingAppId != null) {
-				// An app already has a status of PROCESSING so no other apps
-				// will be processed. 
-				
-				// Check if current app has exceeded processing timeout
+				// An app is currently PROCESSING. Check if current app
+				// has exceeded timeout.
 				Date currentTime = new Date(System.currentTimeMillis());
-				//log.debug("Current time: " + currentTime.toString() + ", Timeout: " + currentAppTimeout.toString());
 				if (currentTime.after(currentAppTimeout)) {
 					// Timeout occurred waiting for one or more reports to be received
 					// Get app info to set the status of these tools to ERROR
@@ -134,28 +68,22 @@ public class ToolMgr implements Runnable {
 					Database.killProcessingTools(currentProcessingAppId, DeviceOS.getOS(appOS));
 				}				
 			} else {
-				
 				// Get the next PENDING app
 				final String appid = Database.getNextApp(AppStatus.PENDING);
 				if (appid != null) {
-
-					// Set timeout for this app
+					// Set timeout for this app. See AppVetProperties.xml
+					// (/AppVet/ToolServices/Timeout).
 					currentAppTimeout = new Date(System.currentTimeMillis() + 
 							AppVetProperties.APP_PROCESSING_TIMEOUT);
-					
+					// Get app info
 					AppInfo appInfo = new AppInfo(appid);
-					appInfo.log.info("App " + appid + " processing.");
+					appInfo.log.debug("App " + appid + " processing.");
 					final long startTime = new Date().getTime();
 					appInfo.log.debug(MemoryUtil.getFreeHeap("ToolMgr.run()"));
-					
 					// Get app metadata.
-					if (!getAppMetaData(appInfo) && !AppVetProperties.KEEP_APPS) {
-						
-						// TODO: If we can't get metadata info for the app, this is an
-						// error and we should set an error this app and remove
-						// all related files unless KEEP_APPS is true.
-						
-						removeAppFiles(appInfo);
+					if (!getAppMetaData(appInfo)) {
+						log.error("Could not retrieve metadata for app " + appid);
+						cleanUpFiles(appInfo);
 					} else {
 						// Get all available tools
 						ArrayList<ToolAdapter> availableTools = null;
@@ -249,9 +177,8 @@ public class ToolMgr implements Runnable {
 						appInfo.log.debug(MemoryUtil
 								.getFreeHeap("End ToolMgr.run()"));
 						availableTools = null;
-						if (!AppVetProperties.KEEP_APPS) {
-							removeAppFiles(appInfo);
-						}
+						
+						cleanUpFiles(appInfo);
 
 					}
 				}
@@ -277,6 +204,57 @@ public class ToolMgr implements Runnable {
 					+ AppVetProperties.APP_PROCESSING_TIMEOUT + "ms timeout");
 			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId, tool.toolId,
 					ToolStatus.ERROR);
+		}
+	}
+	
+	public void cleanUpFiles(AppInfo appInfo) {
+		if (!AppVetProperties.KEEP_APPS) {
+			// Remove app file
+			final String appFilePath = appInfo.getAppFilePath();
+			final File appFile = new File(appFilePath);
+			if (appFile.exists()) {
+				FileUtil.deleteFile(appFilePath, appInfo.appId);
+				appInfo.log.debug("Removed " + appInfo.appName + " app file.");
+			}
+		}
+		// Remove expanded (unzipped) app project directory		
+		if (appInfo.os == DeviceOS.IOS) {
+			// Remove zip file
+			String zipPath = appInfo.getIdPath() + "/Received.zip";
+			final File zipFile = new File(zipPath);
+			if (zipFile.exists()) {
+				FileUtil.deleteFile(zipPath, appInfo.appId);
+				appInfo.log.debug("Removed " + zipPath);
+			}
+			// Remove expanded zip directory
+			String expandedZipPath = appInfo.getIdPath() + "/Received";
+			final File expandedZipFile = new File(expandedZipPath);
+			if (expandedZipFile.exists()) {
+				FileUtil.deleteDirectory(expandedZipFile);
+				appInfo.log.debug("Removed " + expandedZipPath);
+			}
+		} else {
+			// Removed expanded apk directory
+			String projectPath = appInfo.getProjectPath();
+			appInfo.log.debug("Project Path: " + projectPath);
+			final File projectDirectory = new File(projectPath);
+			if (projectDirectory.exists()) {
+				FileUtil.deleteDirectory(projectDirectory);
+				appInfo.log.debug("Removed " + projectPath);
+			}
+		}
+		appInfo.log.close();
+		System.gc();
+	}
+	
+	private boolean getAppMetaData(AppInfo appInfo) {
+		if (appInfo.os == DeviceOS.ANDROID) {
+			return AndroidMetadata.getMetadata(appInfo);
+		} else if (appInfo.os == DeviceOS.IOS) {
+			return IOSMetadata.getMetadata(appInfo);
+		} else {
+			appInfo.log.error("Unknown OS when getting app metadata");
+			return false;
 		}
 	}
 }

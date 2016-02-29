@@ -64,36 +64,22 @@ public class ToolStatusManager {
 	
 	public static synchronized void setToolStatus(DeviceOS os, String appId,
 			String toolId, ToolStatus toolStatus) {
-
-//		if (toolStatus == ToolStatus.ERROR){
-//			log.warn("Setting " + toolId + " to ERROR for " + appId);
-//		}
-
 		String dbTableName = null;
-		
 		if (os == DeviceOS.ANDROID) {
 			dbTableName = "androidtoolstatus";			
 		} else if (os == DeviceOS.IOS) {
 			dbTableName = "iostoolstatus";			
-		} else {
-			log.error("Unknown operating system encountered. Returning.");
-			return;
 		}
-		
+		// Update tool status
 		if (!Database.update("UPDATE " + dbTableName + " SET " + toolId + "='"
 				+ toolStatus.name() + "' where appid='" + appId + "'")) {
 			log.error("Could not update " + toolId + " (" + os.name() + " to " + toolStatus.name());
 			return;
 		} 
-		
-		// Update change to tool status
-		log.debug("[App " + appId + "] Updated " + toolId + " (" + os.name() + ") to " + toolStatus.name());
+		// Set last-updated time due to tool status change
 		Database.setLastUpdatedTime(appId);
-		
-	
 		// Set app status due to possible change in tool status
 		computeAppStatus(os, appId);
-
 	}
 	
 
@@ -101,34 +87,27 @@ public class ToolStatusManager {
 	 * For more information on the app status lifecycle, see AppStateManager.java.
 	 * @return true if app status was computed successfully, false otherwise.
 	 */
-	private synchronized static void computeAppStatus(DeviceOS os, String appId) {
-
-		log.debug("Updating status for app " + appId + "...");
-		
+	private synchronized static void computeAppStatus(DeviceOS os, String appId) {		
 		// Get current app status
 		final AppStatus appStatus = AppStatusManager.getAppStatus(appId);
-		log.debug("Current app status for app " + appId + ": " + appStatus.name());
 		
 		// If audit report exists, use it to override the app's status. Note 
 		// that an audit can only have a status of LOW, MODERATE, or HIGH.
 		ToolAdapter auditTool = ToolAdapter.getByToolId(os, "audit");
 		if (auditTool == null) {
-			log.debug("Audit tool not found for app " + appId);
+			// Audit tool is not being used. Continue.
 		} else {
 			ToolStatus auditStatus = getToolStatus(os, appId, auditTool.toolId);
 			if (auditStatus == null || auditStatus == ToolStatus.NA) {
-				log.debug("Audit tool exists but status is not available");
+				// Audit tool exists but status is not available
 			} else if (auditStatus != null && auditStatus != ToolStatus.NA){
 				if (auditStatus == ToolStatus.LOW) {
-					log.debug("Setting " + appId + " to LOW");
 					AppStatusManager.setAppStatus(appId, AppStatus.LOW);
 					return;
 				} else if (auditStatus == ToolStatus.MODERATE) {
-					log.debug("Setting " + appId + " to MODERATE");
 					AppStatusManager.setAppStatus(appId, AppStatus.MODERATE);
 					return;
 				} else if (auditStatus == ToolStatus.HIGH) {
-					log.debug("Setting " + appId + " to HIGH");
 					AppStatusManager.setAppStatus(appId, AppStatus.HIGH);
 					return;
 				}
@@ -141,57 +120,44 @@ public class ToolStatusManager {
 		// or ERROR.
 		ToolAdapter registrationTool = ToolAdapter.getByToolId(os,
 				"registration");
-
 		if (registrationTool == null) {
-			log.error("Registration tool is null");
 			return;
 		}
-
+		
 		ToolStatus registrationStatus = getToolStatus(os, appId,
 				registrationTool.toolId);
 		if (registrationStatus == null) {
-			log.error("Registration status is null");
 			return;
 		} 
+		
 		if (registrationStatus == ToolStatus.ERROR) {
-			log.debug("Setting " + appId + " to ERROR");
 			AppStatusManager.setAppStatus(appId, AppStatus.ERROR);
 			return;
 		} else if (registrationStatus == ToolStatus.LOW) {
-			
 			if (appStatus == AppStatus.REGISTERING) {
-				log.debug("Setting " + appId + " to PENDING");
 				AppStatusManager.setAppStatus(appId, AppStatus.PENDING);
 				return;
 			}
 		}
-		
 
-		// App metadata. Note that we only change app status if metadata
-		// ERROR or if metadata LOW while app status is REGISTERING
+		// App metadata. Note that we only change app status if metadata is
+		// ERROR or if metadata LOW (COMPLETED) while app status is REGISTERING
 		ToolAdapter metadataTool = ToolAdapter.getByToolId(os, "appinfo");
 		if (metadataTool == null) {
-			log.debug("Metadata tool is null");
 			return;
 		}
 		
-		ToolStatus metadataStatus = getToolStatus(os, appId, metadataTool.toolId);
-		//log.info("appinfo status - " + appId + ": " + metadataStatus.name());
-	
+		ToolStatus metadataStatus = getToolStatus(os, appId, metadataTool.toolId);	
 		if (metadataStatus == null) {
-			log.error("Metadata status is null");
 			return;
 		} else if (metadataStatus == ToolStatus.NA){
-			log.debug("Reg status while metadata null: " + registrationStatus.name());
-			log.debug("App status is: " + Database.getAppStatus(appId));
-			return; // since no change made to default value
+			return; // since no change made to default tool status value
 		} else if (metadataStatus == ToolStatus.ERROR) {
-			log.debug("Setting " + appId + " to ERROR");
 			AppStatusManager.setAppStatus(appId, AppStatus.ERROR);
 			return;
 		} else if (metadataStatus == ToolStatus.SUBMITTED) {
+			// When metadata is in SUBMITTED state, app goes into PROCESSING state
 			if (appStatus == AppStatus.PENDING){
-				log.debug("Setting " + appId + " to PROCESSING");
 				AppStatusManager.setAppStatus(appId, AppStatus.PROCESSING);
 			}
 			return;
@@ -239,22 +205,19 @@ public class ToolStatusManager {
 
 		// Set app status based on TESTTOOL and REPORT statuses
 	    if (numToolSubmitted > 0) {
-			log.debug("Setting " + appId + " to PROCESSING");
 	    	AppStatusManager.setAppStatus(appId, AppStatus.PROCESSING);
 	    } else if (numToolErrors > 0) {
-			log.debug("Setting " + appId + " to ERROR");
 			AppStatusManager.setAppStatus(appId, AppStatus.ERROR);
 		} else if (numToolHighs > 0) {
-			log.debug("Setting " + appId + " to HIGH");
 			AppStatusManager.setAppStatus(appId, AppStatus.HIGH);
 		} else if (numToolModerates > 0) {
-			log.debug("Setting " + appId + " to MODERATE");
 			AppStatusManager.setAppStatus(appId, AppStatus.MODERATE);
 		} else if (numToolLows > 0) {
-			log.debug("Setting " + appId + " to LOW");
 			AppStatusManager.setAppStatus(appId, AppStatus.LOW);	
 		} else {
-			log.debug("Setting " + appId + " to N/A");
+			// Note that if no TESTTOOL has started (SUBMITTED), the 
+			// app status may change temporarily to NA state until
+			// the status of a tool changes.
 			AppStatusManager.setAppStatus(appId, AppStatus.NA);
 		}
 	    

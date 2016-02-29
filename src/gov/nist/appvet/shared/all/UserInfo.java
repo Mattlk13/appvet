@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Logger;
 
-import org.eclipse.jetty.util.log.Log;
-
 import gov.nist.appvet.gwt.client.gui.AppVetPanel;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -252,7 +250,6 @@ public class UserInfo implements IsSerializable {
 		}
 		
 		if (!ignoreBlankPassword) {
-			log.info("ignoreBlankPassword = false");
 			if (password != null && !password.isEmpty() &&
 					passwordAgain != null && !passwordAgain.isEmpty()) {
 				if (!Validate.isValidPassword(password)) {
@@ -271,7 +268,6 @@ public class UserInfo implements IsSerializable {
 				return false;
 			}
 		} else {
-			log.info("ignoreBlankPassword = true");
 			if (!password.equals(passwordAgain)) {
 				AppVetPanel.showMessageDialog("Account Setting Error",
 						"Passwords do not match", true);

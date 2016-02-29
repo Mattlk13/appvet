@@ -46,8 +46,8 @@ public class AppInfo extends AppInfoGwt {
 	 */
 	public FileItem fileItem = null;
 	
-	public String iconSrcPath = null;
-	
+	public String iconFilePath = null;
+		
 	/*---------------------- For Tool Reports/Risks Only ---------------------*/
 	/**
 	 * Tool ID for an uploaded report file. Used only for submitting tool
@@ -87,7 +87,7 @@ public class AppInfo extends AppInfoGwt {
 						+ reportsDir);
 				return;
 			}
-			final File imagesDir = new File(AppVetProperties.APP_IMAGES);
+			final File imagesDir = new File(AppVetProperties.APP_IMAGES_PATH);
 			if (!imagesDir.exists()) {
 				if (!imagesDir.mkdirs()) {
 					appvetLog.error("Could not create images directory "
