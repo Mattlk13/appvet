@@ -64,10 +64,11 @@ public class Registration {
 				"registration");
 		final String registrationReportPath = appInfo.getReportsPath() + "/"
 				+ registrationTool.reportName;
-		BufferedWriter regReportWriter = null;
+		FileWriter fileWriter = null;
+		BufferedWriter bufferedWriter = null;
 		try {
-			regReportWriter = new BufferedWriter(new FileWriter(
-					registrationReportPath));
+			fileWriter = new FileWriter(registrationReportPath);
+			bufferedWriter = new BufferedWriter(fileWriter);
 			AppStatus appStatus = AppStatusManager.getAppStatus(appInfo.appId);
 			if (appStatus == null) {
 				// Add this app to the tools database table
@@ -76,6 +77,8 @@ public class Registration {
 					availableTools = AppVetProperties.androidTools;
 				} else if (appInfo.os == DeviceOS.IOS) {
 					availableTools = AppVetProperties.iosTools;
+				} else {
+					availableTools = new ArrayList<ToolAdapter>();
 				}
 				// Set default initial status to NA for each tool
 				for (int i = 0; i < availableTools.size(); i++) {
@@ -148,24 +151,24 @@ public class Registration {
 				connection.close();
 
 				// Create registration report
-				regReportWriter.write("<HTML>\n");
-				regReportWriter.write("<head>\n");
-				regReportWriter.write("<style type=\"text/css\">\n");
-				regReportWriter.write("h3 {font-family:arial;}\n");
-				regReportWriter.write("p {font-family:arial;}\n");
-				regReportWriter.write("</style>\n");
-				regReportWriter.write("<title>Registration Report</title>\n");
-				regReportWriter.write("</head>\n");
-				regReportWriter.write("<body>\n");
+				bufferedWriter.write("<HTML>\n");
+				bufferedWriter.write("<head>\n");
+				bufferedWriter.write("<style type=\"text/css\">\n");
+				bufferedWriter.write("h3 {font-family:arial;}\n");
+				bufferedWriter.write("p {font-family:arial;}\n");
+				bufferedWriter.write("</style>\n");
+				bufferedWriter.write("<title>Registration Report</title>\n");
+				bufferedWriter.write("</head>\n");
+				bufferedWriter.write("<body>\n");
 				String appVetImagesUrl = AppVetProperties.APPVET_URL
 						+ "/images/appvet_logo.png";
-				regReportWriter
+				bufferedWriter
 						.write("<img border=\"0\" width=\"192px\" src=\""
 								+ appVetImagesUrl
 								+ "\" alt=\"AppVet Mobile App Vetting System\" />");
-				regReportWriter.write("<HR>\n");
-				regReportWriter.write("<h3>Registration Report</h3>\n");
-				regReportWriter.write("<pre>\n");
+				bufferedWriter.write("<HR>\n");
+				bufferedWriter.write("<h3>Registration Report</h3>\n");
+				bufferedWriter.write("<pre>\n");
 				final Date date = new Date();
 				final SimpleDateFormat format = new SimpleDateFormat(
 						"yyyy-MM-dd' 'HH:mm:ss.SSSZ");
@@ -173,11 +176,11 @@ public class Registration {
 
 				if (appInfo.getAppFileName() != null) {
 
-					regReportWriter.write("File: \t\t"
+					bufferedWriter.write("File: \t\t"
 							+ appInfo.getAppFileName() + "\n");
 
 					if (!FileUtil.saveFileUpload(appInfo)) {
-						regReportWriter.write("<font color=\"red\">"
+						bufferedWriter.write("<font color=\"red\">"
 								+ ErrorMessage.ERROR_SAVING_UPLOADED_FILE
 										.getDescription() + "</font>");
 						appInfo.log
@@ -193,16 +196,16 @@ public class Registration {
 
 				}
 
-				regReportWriter.write("Date: \t\t" + currentDate + "\n\n");
-				regReportWriter.write("App ID: \t" + appInfo.appId + "\n");
-				regReportWriter.write("Submitter: \t" + appInfo.ownerName
+				bufferedWriter.write("Date: \t\t" + currentDate + "\n\n");
+				bufferedWriter.write("App ID: \t" + appInfo.appId + "\n");
+				bufferedWriter.write("Submitter: \t" + appInfo.ownerName
 						+ "\n\n");
-				regReportWriter
+				bufferedWriter
 						.write("Status:\t\t<font color=\"black\">COMPLETED</font>\n");
-				regReportWriter.write("</pre>\n");
-				regReportWriter.write("</body>\n");
-				regReportWriter.write("</HTML>\n");
-				regReportWriter.close();
+				bufferedWriter.write("</pre>\n");
+				bufferedWriter.write("</body>\n");
+				bufferedWriter.write("</HTML>\n");
+				bufferedWriter.close();
 				appInfo.log.info("Registered app " + appInfo.appId);
 
 				// Update registration status to LOW (i.e., COMPLETED).
@@ -222,7 +225,6 @@ public class Registration {
 						Emailer.sendEmail(userInfo.getEmail(), subject, content);
 					}
 				}
-
 				appInfo.log.debug("App " + appInfo.appId
 						+ " has been uploaded by " + appInfo.ownerName);
 				return true;
@@ -232,11 +234,12 @@ public class Registration {
 						registrationTool.toolId, ToolStatus.ERROR);
 				appInfo.log.error(ErrorMessage.ERROR_APP_ALREADY_REGISTERED
 						.getDescription());
-				regReportWriter.write("<font color=\"red\">"
+				bufferedWriter.write("<font color=\"red\">"
 						+ ErrorMessage.ERROR_APP_ALREADY_REGISTERED
 								.getDescription() + "</font>");
 				// Close writer.
-				regReportWriter.close();
+				bufferedWriter.close();
+				fileWriter.close();
 				return false;
 			}
 		} catch (final Exception e) {
@@ -244,7 +247,8 @@ public class Registration {
 			return false;
 		} finally {
 			registrationTool = null;
-			Database.cleanUpBufferedWriter(regReportWriter);
+			bufferedWriter = null;
+			fileWriter = null;
 			Database.cleanUpPreparedStatement(preparedStatement);
 			Database.cleanUpConnection(connection);
 		}

@@ -359,6 +359,8 @@ public class AppVetPanel extends DockLayoutPanel {
 			if (selectedToolName.equals(toolName) && toolOs.equals(appOs.name())) {
 				selectedToolRequiredFileType = tool.getReportFileType();
 				break;
+			} else {
+				selectedToolRequiredFileType = "";
 			}
 		}
 

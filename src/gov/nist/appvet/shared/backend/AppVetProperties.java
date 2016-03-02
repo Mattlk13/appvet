@@ -407,7 +407,8 @@ public class AppVetProperties {
 		} else if (os == DeviceOS.IOS) {
 			folder = new File(TOOLS_CONF_ROOT + "/ios");
 		} else {
-			log.error("Unknown OS found");
+			log.error("Unknown OS found. Could not set up tools");
+			return;
 		}
 		File[] listOfFiles = folder.listFiles();
 		for (final File toolConfigFile : listOfFiles) {

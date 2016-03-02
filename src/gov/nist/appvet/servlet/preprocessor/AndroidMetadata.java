@@ -105,7 +105,14 @@ public class AndroidMetadata {
 	public static void updateDbMetadata(AppInfo appInfo) {
 		if (appInfo.appName == null || appInfo.appName.isEmpty() || 
 				appInfo.appName.equals("Received")) {
-			appInfo.appName = "N/A";
+			// Name has not been found or set. If app project name is 
+			// available, use that
+			String appProjectName = appInfo.getAppProjectName();
+			if (appProjectName != null && !appProjectName.isEmpty()) {
+				appInfo.appName = appProjectName;
+			} else {
+				appInfo.appName = "N/A";
+			}
 		}
 		if (appInfo.packageName == null || appInfo.packageName.isEmpty()) {
 			appInfo.packageName = "N/A";
@@ -128,64 +135,71 @@ public class AndroidMetadata {
 		final String reportsPath = appInfo.getReportsPath();
 		final String appInfoReportPath = reportsPath + "/"
 				+ appinfoTool.reportName;
-		BufferedWriter appInfoReport = null;
+		BufferedWriter bufferedWriter = null;
+		FileWriter fileWriter = null;
 		try {
-			appInfoReport = new BufferedWriter(
-					new FileWriter(appInfoReportPath));
-			appInfoReport.write("<HTML>\n");
-			appInfoReport.write("<head>\n");
-			appInfoReport.write("<style type=\"text/css\">\n");
-			appInfoReport.write("h3 {font-family:arial;}\n");
-			appInfoReport.write("p {font-family:arial;}\n");
-			appInfoReport.write("</style>\n");
-			appInfoReport.write("<title>Android Manifest Report</title>\n");
-			appInfoReport.write("</head>\n");
-			appInfoReport.write("<body>\n");
+			fileWriter = new FileWriter(appInfoReportPath);
+			bufferedWriter = new BufferedWriter(fileWriter);
+			bufferedWriter.write("<HTML>\n");
+			bufferedWriter.write("<head>\n");
+			bufferedWriter.write("<style type=\"text/css\">\n");
+			bufferedWriter.write("h3 {font-family:arial;}\n");
+			bufferedWriter.write("p {font-family:arial;}\n");
+			bufferedWriter.write("</style>\n");
+			bufferedWriter.write("<title>Android Manifest Report</title>\n");
+			bufferedWriter.write("</head>\n");
+			bufferedWriter.write("<body>\n");
 			String appVetImagesUrl = AppVetProperties.APPVET_URL
 					+ "/images/appvet_logo.png";
-			appInfoReport.write("<img border=\"0\" width=\"192px\" src=\""
+			bufferedWriter.write("<img border=\"0\" width=\"192px\" src=\""
 					+ appVetImagesUrl + "\" alt=\"AppVet Mobile App Vetting System\" />");
-			appInfoReport.write("<HR>\n");
-			appInfoReport.write("<h3>AndroidMetadata Pre-Processing Report"
+			bufferedWriter.write("<HR>\n");
+			bufferedWriter.write("<h3>AndroidMetadata Pre-Processing Report"
 					+ "</h3>\n");
-			appInfoReport.write("<pre>\n");
+			bufferedWriter.write("<pre>\n");
 			final Date date = new Date();
 			final SimpleDateFormat format = new SimpleDateFormat(
 					"yyyy-MM-dd' 'HH:mm:ss.SSSZ");
 			final String currentDate = format.format(date);
-			appInfoReport.write("App ID: \t" + appInfo.appId + "\n");
-			appInfoReport.write("File: \t\t" + appInfo.getAppFileName() + "\n");
-			appInfoReport.write("Date: \t\t" + currentDate + "\n\n");
+			bufferedWriter.write("App ID: \t" + appInfo.appId + "\n");
+			bufferedWriter.write("File: \t\t" + appInfo.getAppFileName() + "\n");
+			bufferedWriter.write("Date: \t\t" + currentDate + "\n\n");
 			
 			if (errorMessage != null && !errorMessage.isEmpty()) {
 				// Write error
-				appInfoReport.write(errorMessage);
+				bufferedWriter.write(errorMessage);
 			} else {
-				appInfoReport.write("Package: \t" + appInfo.packageName + "\n");
-				appInfoReport.write("Version name: \t" + appInfo.versionName + "\n");
-				appInfoReport.write("Version code: \t" + appInfo.versionCode + "\n");
+				bufferedWriter.write("Package: \t" + appInfo.packageName + "\n");
+				bufferedWriter.write("Version name: \t" + appInfo.versionName + "\n");
+				bufferedWriter.write("Version code: \t" + appInfo.versionCode + "\n");
 				if (appInfo.minSDK == null || appInfo.minSDK.isEmpty()) {
-					appInfoReport.write("Min SDK: \tN/A\n");
+					bufferedWriter.write("Min SDK: \tN/A\n");
 				} else {
-					appInfoReport.write("Min SDK: \t" + appInfo.minSDK + "\n");
+					bufferedWriter.write("Min SDK: \t" + appInfo.minSDK + "\n");
 				}
 				if (appInfo.targetSDK == null || appInfo.targetSDK.isEmpty()) {
-					appInfoReport.write("Target SDK: \tN/A\n");
+					bufferedWriter.write("Target SDK: \tN/A\n");
 				} else {
-					appInfoReport.write("Target SDK: \t" + appInfo.targetSDK + "\n");
+					bufferedWriter.write("Target SDK: \t" + appInfo.targetSDK + "\n");
 				}
-				appInfoReport
+				bufferedWriter
 				.write("\nStatus:\t\t<font color=\"black\">COMPLETED</font>\n");
 			}
 			
-			appInfoReport.write("</pre>\n");
-			appInfoReport.write("</body>\n");
-			appInfoReport.write("</HTML>\n");
-			appInfoReport.close();
+			bufferedWriter.write("</pre>\n");
+			bufferedWriter.write("</body>\n");
+			bufferedWriter.write("</HTML>\n");
+			bufferedWriter.close();
+			fileWriter.close();
 		} catch (Exception e) {
 			appInfo.log.error(e.toString());
 		} finally {
-			
+			if (bufferedWriter != null) {
+				bufferedWriter = null;
+			}
+			if (fileWriter != null) {
+				fileWriter = null;
+			}
 		}
 	}
 
@@ -281,7 +295,7 @@ public class AndroidMetadata {
 			e.printStackTrace();
 			return false;
 		} finally {
-			if (outputHandler.isAlive()) {
+			if (outputHandler != null && outputHandler.isAlive()) {
 				try {
 					outputHandler.inputStream.close();
 				} catch (IOException e) {
@@ -386,10 +400,11 @@ public class AndroidMetadata {
 		String appName = stringsXml
 				.getXPathValue("/resources/string[@name='app_name']");
 		if (appName == null || appName.isEmpty()) {
-			appInfo.log.error("Could not retrieve app name from path '/resources/string[@name='app_name']' in Android strings file. APK file may be corrupted.");
-			writeReport(appInfo, "\n<font color=\"red\">"
-					+ "ERROR: Could not retrieve app name from path '/resources/string[@name='app_name']' in Android strings file. APK file may be corrupted.</font>");					
-			return false;
+			appInfo.log.warn("Could not retrieve app name from path '/resources/string[@name='app_name']' in Android strings file. Using app project name.");
+			String appProjectName = appInfo.getAppProjectName();
+			if (appProjectName != null && !appProjectName.isEmpty()) {
+				appInfo.appName = appProjectName;
+			}
 		} else {
 			appInfo.appName = appName.trim();
 		}
@@ -397,9 +412,11 @@ public class AndroidMetadata {
 		File apkToolYmlFile = new File(appInfo.getProjectPath() + "/apktool.yml");
 		if (apkToolYmlFile.exists()) {
 			String line;
+			InputStream fis = null;
+			InputStreamReader isr = null;
 			try {
-				InputStream fis = new FileInputStream(apkToolYmlFile);
-				InputStreamReader isr = new InputStreamReader(fis,
+				fis = new FileInputStream(apkToolYmlFile);
+				isr = new InputStreamReader(fis,
 						Charset.forName("UTF-8"));
 				BufferedReader bufferedReader = new BufferedReader(isr);
 				while ((line = bufferedReader.readLine()) != null) {
@@ -435,6 +452,8 @@ public class AndroidMetadata {
 					}
 				}
 				bufferedReader.close();
+				isr.close();
+				fis.close();
 				return true;
 			} catch (FileNotFoundException e) {
 				appInfo.log.error(e.toString());
@@ -446,6 +465,9 @@ public class AndroidMetadata {
 				writeReport(appInfo, "\n<font color=\"red\">"
 						+ "ERROR: Could not apktool.yml file. Cannot extract remaining metadata. APK file may be corrupted.</font>");					
 				return false;
+			} finally {
+				isr = null;
+				fis = null;
 			}
 		} else {
 			appInfo.log.error("Could not find file 'apktool.yml' file to extract app version, minSDK, or targetSDK. APK file may be corrupted.");

@@ -386,9 +386,9 @@ assessment. </xs:documentation>
 			<xs:element name="AuthenticationRequired" type="xs:boolean"
 				maxOccurs="1" minOccurs="1">
 			</xs:element>
-			<xs:element name="AuthenticationParameter" type="ParameterType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+			<xs:element name="AuthenticationParameter" type="ParameterType" maxOccurs="20" minOccurs="0"></xs:element>
 			<xs:element name="Parameter" type="ParameterType"
-				minOccurs="1" maxOccurs="unbounded">
+				minOccurs="1" maxOccurs="20">
 				<xs:annotation>
 					<xs:documentation>
 						The FormParameter element defines the HTML form
@@ -528,7 +528,7 @@ assessment. </xs:documentation>
 			</xs:element>
 			<xs:element name="PayloadType" type="xs:string" maxOccurs="1"
 				minOccurs="0"></xs:element>
-			<xs:element name="StatusCode" type="xs:string" maxOccurs="unbounded"
+			<xs:element name="StatusCode" type="xs:string" maxOccurs="20"
 				minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>

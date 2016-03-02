@@ -458,6 +458,14 @@ public class AppVetServlet extends HttpServlet {
 				}
 
 				// Verify report file attachment
+				if (fileItem == null) {
+					log.error("File item is null. Aborting.");
+					log.error("File attachment is missing.");
+					sendHttpResponse(response,
+							HttpServletResponse.SC_BAD_REQUEST,
+							ErrorMessage.MISSING_FILE.getDescription(), true);
+					return;
+				}
 				if (!Validate.hasValidReportFileExtension(fileItem
 						.getName())) {
 					sendHttpResponse(response,
@@ -647,6 +655,7 @@ public class AppVetServlet extends HttpServlet {
 			}
 			// Set app file and project name.
 			appInfo.setAppFileAndProjectName(newAppFileName, appInfo.os);
+			log.debug("Got project name: " + appInfo.getAppProjectName());
 		} else if (appPackageName != null && appVersion != null && os != null) {
 			// App metadata was submitted.
 			appInfo.packageName = appPackageName;
@@ -875,34 +884,25 @@ public class AppVetServlet extends HttpServlet {
 
 	/** Return a file to the client. */
 	public boolean returnFile(HttpServletResponse response, File file) {
+		FileInputStream fis = null;
+		OutputStream os = null;
 		try {
-			FileInputStream fis = new FileInputStream(file);
-			byte[] bytes = null;
-			OutputStream os = null;
-			try {
-				int read = 0;
-				bytes = new byte[1024];
-				os = response.getOutputStream();
-				while ((read = fis.read(bytes)) != -1) {
-					os.write(bytes, 0, read);
-				}
-				fis.close();
-				return true;
-			} finally {
-				if (os != null) {
-					os.flush();
-					os.close();
-					os = null;
-				}
-				bytes = null;
-				if (fis != null) {
-					fis.close();
-					fis = null;
-				}
+			fis = new FileInputStream(file);
+			int read = 0;
+			byte[] bytes = new byte[1024];
+			os = response.getOutputStream();
+			while ((read = fis.read(bytes)) != -1) {
+				os.write(bytes, 0, read);
 			}
+			os.close();
+			fis.close();
+			return true;
 		} catch (final IOException e) {
 			log.error(e.toString());
 			return false;
+		} finally {
+			os = null;
+			fis = null;
 		}
 	}
 

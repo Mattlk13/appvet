@@ -87,9 +87,11 @@ class ConvertHandler extends Thread {
         String szFullPath = pngFile.getAbsolutePath();
         // End was originally "-new.png"
         String newFileName =szFullPath.substring( 0, szFullPath.lastIndexOf( File.separator)+1 ) + pngFile.getName().substring(0, pngFile.getName().lastIndexOf("."))+".png";
-
+        DataInputStream file = null;
+        FileInputStream fis = null;
         try{
-            DataInputStream file = new DataInputStream( new FileInputStream(pngFile) );
+        	fis = new FileInputStream(pngFile);
+            file = new DataInputStream(fis);
             FileOutputStream output = null;
             byte[] nPNGHeader = new byte[8];
             file.read( nPNGHeader );
@@ -112,6 +114,7 @@ class ConvertHandler extends Thread {
                 while(!trunk.getName().equalsIgnoreCase( "IEND"));
             }
             file.close();
+            fis.close();
 
             if( getTrunk( "CgBI" )!=null ) {
                 String szInfo = "Dir:"+pngFile.getAbsolutePath() + "--->" +newFileName;
@@ -155,7 +158,7 @@ class ConvertHandler extends Thread {
                 nResult = inStream.inflateEnd();
 
                 if (inStream.total_out > nMaxInflateBuffer) {
-                    System.out.println( "PNGCONV_ERR_INFLATED_OVER" );
+                    //System.out.println( "PNGCONV_ERR_INFLATED_OVER" );
                 }
 
                 // Switch the color
@@ -218,6 +221,9 @@ class ConvertHandler extends Thread {
             }
         }catch(IOException e) {
             System.out.println("Error --" + e.toString());
+        } finally {
+        	file = null;
+        	fis = null;
         }
 
         try {

@@ -374,7 +374,7 @@ public class UserListDialogBox extends DialogBox {
 				userInfo.setRole(userInfoDialogBox.roleComboBox
 						.getValue(selectedRoleIndex));
 
-				if (userInfoDialogBox.newUser) {
+				if (newUser) {
 					userInfo.setNewUser(true);
 				}
 

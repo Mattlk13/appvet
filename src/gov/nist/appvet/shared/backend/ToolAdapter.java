@@ -607,6 +607,8 @@ public class ToolAdapter implements Runnable {
 			Request appVetRequest = transaction.request;
 			Response toolResponse = transaction.response;
 
+			File fileOut = null;
+			FileOutputStream fileOutputStream = null;
 			try {
 				Date startDate = new Date();
 				final long startTime = startDate.getTime();
@@ -665,8 +667,8 @@ public class ToolAdapter implements Runnable {
 					final InputStream inputStream = responseEntity.getContent();
 					final String reportPath = appInfo.getReportsPath() + "/"
 							+ generateReportName();
-					File fileOut = new File(reportPath);
-					FileOutputStream fileOutputStream = new FileOutputStream(
+					fileOut = new File(reportPath);
+					fileOutputStream = new FileOutputStream(
 							fileOut, false);
 					int c;
 					while ((c = inputStream.read()) != -1) {
@@ -675,8 +677,7 @@ public class ToolAdapter implements Runnable {
 					fileOutputStream.flush();
 					inputStream.close();
 					fileOutputStream.close();
-					fileOutputStream = null;
-					fileOut = null;
+
 
 					String appvetRiskHeaderName = toolResponse.appVetRiskHeaderName;
 					log.debug("appvetRiskHeaderName: " + appvetRiskHeaderName);
@@ -738,6 +739,9 @@ public class ToolAdapter implements Runnable {
 				appInfo.log.error(e.toString());
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 						this.toolId, ToolStatus.ERROR);
+			} finally {
+				fileOutputStream = null;
+				fileOut = null;
 			}
 		}
 	}

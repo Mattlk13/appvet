@@ -481,6 +481,8 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			tools = AppVetProperties.androidTools;
 		} else if (os == DeviceOS.IOS) {
 			tools = AppVetProperties.iosTools;
+		} else {
+			tools = new ArrayList<ToolAdapter>();
 		}
 		// Tool and manual report uploaded statuses
 		for (int i = 0; i < tools.size(); i++) {

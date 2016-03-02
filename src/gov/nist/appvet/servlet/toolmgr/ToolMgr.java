@@ -91,6 +91,8 @@ public class ToolMgr implements Runnable {
 							availableTools = AppVetProperties.androidTools;
 						} else if (appInfo.os == DeviceOS.IOS) {
 							availableTools = AppVetProperties.iosTools;
+						} else {
+							availableTools = new ArrayList<ToolAdapter>();
 						}
 						appInfo.log.debug("availableTools.size: "
 								+ availableTools.size());

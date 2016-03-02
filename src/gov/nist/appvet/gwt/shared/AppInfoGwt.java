@@ -87,11 +87,12 @@ public class AppInfoGwt implements Serializable {
 		this.appFileName = appFileName;
 		String extension = null;
 		if (os == DeviceOS.ANDROID) {
-			extension = ".APK";
+			extension = ".apk";
 		} else if (os == DeviceOS.IOS) {
-			extension = ".IPA";
+			extension = ".ipa";
 		}
-		int extensionIndex = appFileName.toUpperCase().indexOf(extension);
+		String lowercaseAppFileName = appFileName.toLowerCase();
+		int extensionIndex = lowercaseAppFileName.indexOf(extension);
 		this.appProjectName = appFileName.substring(0, extensionIndex);
 	}
 

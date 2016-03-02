@@ -106,7 +106,16 @@ public class IOSMetadata {
 	public static void updateDbMetadata(AppInfo appInfo) {
 		if (appInfo.appName == null || appInfo.appName.isEmpty() || 
 				appInfo.appName.equals("Received")) {
-			appInfo.appName = "N/A";
+			// Name has not been found or set. If app project name is 
+			// available, use that
+			String appProjectName = appInfo.getAppProjectName();
+			if (appProjectName != null && !appProjectName.isEmpty()) {
+				appInfo.appName = appProjectName;
+			} else {
+				appInfo.appName = "N/A";
+			}
+		} else {
+			log.debug("Got here instaed");
 		}
 		if (appInfo.packageName == null || appInfo.packageName.isEmpty()) {
 			appInfo.packageName = "N/A";
@@ -129,54 +138,57 @@ public class IOSMetadata {
 		final String reportsPath = appInfo.getReportsPath();
 		final String appInfoReportPath = reportsPath + "/"
 				+ appinfoTool.reportName;
-		BufferedWriter appInfoReport = null;
+		BufferedWriter bufferedWriter = null;
+		FileWriter fileWriter = null;
 		try {
-			appInfoReport = new BufferedWriter(
-					new FileWriter(appInfoReportPath));
-			appInfoReport.write("<HTML>\n");
-			appInfoReport.write("<head>\n");
-			appInfoReport.write("<style type=\"text/css\">\n");
-			appInfoReport.write("h3 {font-family:arial;}\n");
-			appInfoReport.write("p {font-family:arial;}\n");
-			appInfoReport.write("</style>\n");
-			appInfoReport.write("<title>iOS Metadata Report</title>\n");
-			appInfoReport.write("</head>\n");
-			appInfoReport.write("<body>\n");
+			fileWriter = new FileWriter(appInfoReportPath);
+			bufferedWriter = new BufferedWriter(fileWriter);
+			bufferedWriter.write("<HTML>\n");
+			bufferedWriter.write("<head>\n");
+			bufferedWriter.write("<style type=\"text/css\">\n");
+			bufferedWriter.write("h3 {font-family:arial;}\n");
+			bufferedWriter.write("p {font-family:arial;}\n");
+			bufferedWriter.write("</style>\n");
+			bufferedWriter.write("<title>iOS Metadata Report</title>\n");
+			bufferedWriter.write("</head>\n");
+			bufferedWriter.write("<body>\n");
 			String appVetImagesUrl = AppVetProperties.APPVET_URL
 					+ "/images/appvet_logo.png";
-			appInfoReport.write("<img border=\"0\" width=\"192px\" src=\""
+			bufferedWriter.write("<img border=\"0\" width=\"192px\" src=\""
 					+ appVetImagesUrl + "\" alt=\"AppVet Mobile App Vetting System\" />");
-			appInfoReport.write("<HR>\n");
-			appInfoReport.write("<h3>iOS Metadata Report"
+			bufferedWriter.write("<HR>\n");
+			bufferedWriter.write("<h3>iOS Metadata Report"
 					+ "</h3>\n");
-			appInfoReport.write("<pre>\n");
+			bufferedWriter.write("<pre>\n");
 			final Date date = new Date();
 			final SimpleDateFormat format = new SimpleDateFormat(
 					"yyyy-MM-dd' 'HH:mm:ss.SSSZ");
 			final String currentDate = format.format(date);
-			appInfoReport.write("App ID: \t" + appInfo.appId + "\n");
-			appInfoReport.write("File: \t\t" + appInfo.getAppFileName() + "\n");
-			appInfoReport.write("Date: \t\t" + currentDate + "\n\n");
+			bufferedWriter.write("App ID: \t" + appInfo.appId + "\n");
+			bufferedWriter.write("File: \t\t" + appInfo.getAppFileName() + "\n");
+			bufferedWriter.write("Date: \t\t" + currentDate + "\n\n");
 
 			if (errorMessage != null && !errorMessage.isEmpty()) {
 				// Write error
-				appInfoReport.write(errorMessage);
+				bufferedWriter.write(errorMessage);
 			} else {
-				appInfoReport.write("Package: \t" + appInfo.packageName + "\n");
-				appInfoReport.write("Version name: \t" + appInfo.versionName + "\n");
-				appInfoReport.write("Version code: \t" + appInfo.versionCode + "\n");
-				appInfoReport
+				bufferedWriter.write("Package: \t" + appInfo.packageName + "\n");
+				bufferedWriter.write("Version name: \t" + appInfo.versionName + "\n");
+				bufferedWriter.write("Version code: \t" + appInfo.versionCode + "\n");
+				bufferedWriter
 				.write("\nStatus:\t\t<font color=\"black\">COMPLETED</font>\n");
 			}
 
-			appInfoReport.write("</pre>\n");
-			appInfoReport.write("</body>\n");
-			appInfoReport.write("</HTML>\n");
-			appInfoReport.close();
+			bufferedWriter.write("</pre>\n");
+			bufferedWriter.write("</body>\n");
+			bufferedWriter.write("</HTML>\n");
+			bufferedWriter.close();
+			fileWriter.close();
 		} catch (Exception e) {
 			appInfo.log.error(e.toString());
 		} finally {
-
+			bufferedWriter = null;
+			fileWriter = null;
 		}
 	}
 
@@ -281,7 +293,7 @@ public class IOSMetadata {
 			String[] keys = d.allKeys();
 
 			if (keys.length <= 0) {
-				System.out.println("NO KEYS FOUND in " + destPlistPath);
+				log.debug("NO KEYS FOUND in " + destPlistPath);
 				return;
 			}
 

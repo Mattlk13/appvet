@@ -47,21 +47,24 @@ public class Zip {
 		return zipIt(zipFilePath);
 	}
 
-	public static void main(String[] args) {
-		Zip appZip = new Zip();
-		appZip.generateFileList(new File(SOURCE_FOLDER));
-		appZip.zipIt(OUTPUT_ZIP_FILE);
-	}
+//	public static void main(String[] args) {
+//		Zip appZip = new Zip();
+//		appZip.generateFileList(new File(SOURCE_FOLDER));
+//		appZip.zipIt(OUTPUT_ZIP_FILE);
+//	}
 
 	public boolean zipIt(String zipFile) {
 		byte[] buffer = new byte[1024];
+		FileOutputStream fos = null;
+		ZipOutputStream zos = null;
+		FileInputStream in = null;
 		try {
-			FileOutputStream fos = new FileOutputStream(zipFile);
-			ZipOutputStream zos = new ZipOutputStream(fos);
+			fos = new FileOutputStream(zipFile);
+			zos = new ZipOutputStream(fos);
 			for (String file : this.fileList) {
 				ZipEntry ze = new ZipEntry(file);
 				zos.putNextEntry(ze);
-				FileInputStream in = new FileInputStream(SOURCE_FOLDER
+				in = new FileInputStream(SOURCE_FOLDER
 						+ File.separator + file);
 				int len;
 				while ((len = in.read(buffer)) > 0) {
@@ -71,10 +74,15 @@ public class Zip {
 			}
 			zos.closeEntry();
 			zos.close();
+			fos.close();
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
+		} finally {
+			in = null;
+			zos = null;
+			fos = null;
 		}
 	}
 

@@ -182,25 +182,28 @@ public class ToolStatusManager {
 				tool = AppVetProperties.androidTools.get(i);
 			} else if (os == DeviceOS.IOS) {
 				tool = AppVetProperties.iosTools.get(i);
-			}
-			if (tool.toolType == ToolType.TESTTOOL ||
-					tool.toolType == ToolType.REPORT) {
-				ToolStatus toolStatus = getToolStatus(os, appId,
-						tool.toolId);
-				if (toolStatus == ToolStatus.ERROR) {
-					numToolErrors++;
-				} else if (toolStatus == ToolStatus.HIGH) {
-					numToolHighs++;
-				} else if (toolStatus == ToolStatus.MODERATE) {
-					numToolModerates++;
-				} else if (toolStatus == ToolStatus.LOW) {
-					numToolLows++;
-				} else if (toolStatus == ToolStatus.SUBMITTED) {
-					numToolSubmitted++;
-				} else if (toolStatus == ToolStatus.NA) {
-					numToolNAs++; 
+			} 
+			if (tool != null) {
+				if (tool.toolType == ToolType.TESTTOOL ||
+						tool.toolType == ToolType.REPORT) {
+					ToolStatus toolStatus = getToolStatus(os, appId,
+							tool.toolId);
+					if (toolStatus == ToolStatus.ERROR) {
+						numToolErrors++;
+					} else if (toolStatus == ToolStatus.HIGH) {
+						numToolHighs++;
+					} else if (toolStatus == ToolStatus.MODERATE) {
+						numToolModerates++;
+					} else if (toolStatus == ToolStatus.LOW) {
+						numToolLows++;
+					} else if (toolStatus == ToolStatus.SUBMITTED) {
+						numToolSubmitted++;
+					} else if (toolStatus == ToolStatus.NA) {
+						numToolNAs++; 
+					}
 				}
 			}
+
 		}
 
 		// Set app status based on TESTTOOL and REPORT statuses
