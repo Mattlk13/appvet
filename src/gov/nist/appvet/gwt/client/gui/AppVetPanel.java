@@ -438,6 +438,13 @@ public class AppVetPanel extends DockLayoutPanel {
 		appSelectionModel.addSelectionChangeHandler(new AppListHandler(this,
 				configInfo));
 		tools = configInfo.getTools();
+		
+		for (int i = 0; i < tools.size(); i++) {
+			ToolInfoGwt tool = tools.get(i);
+			log.info("tool " + tool.getName() + ", template: " + tool.getReportTemplateURL());
+		}
+		
+		
 		documentationURL = configInfo.getDocumentationURL();
 		ssoActive = configInfo.getSSOActive();
 		ssoLogoutURL = configInfo.getSsoLogoutURL();
@@ -1225,6 +1232,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	public void removeSession(final boolean sessionExpired) {
 		// First stop polling the server for data
 		pollingTimer.cancel();
+		killDialogBox(messageDialogBox);
 
 		appVetServiceAsync.removeSession(sessionId,
 				new AsyncCallback<Boolean>() {
@@ -1929,6 +1937,9 @@ public class AppVetPanel extends DockLayoutPanel {
 			removeSession(true);
 		} else if (diff <= 60000 && timeoutWarningMessage == false) {
 			// 60 seconds left before timeout, alert user
+			// Close current message if its exists
+			killDialogBox(messageDialogBox);
+			// Now show timeout dialog
 			showTimeoutDialog(diff);
 		} else if (diff <= 6000 && timeoutWarningMessage == true) {
 			// Timeout warning already displayed. Do nothing.

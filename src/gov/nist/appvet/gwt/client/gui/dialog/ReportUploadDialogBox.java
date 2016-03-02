@@ -269,20 +269,21 @@ public class ReportUploadDialogBox extends DialogBox {
 
 						ToolType toolType = selectedTool.getType();
 
-						if (toolType == ToolType.SUMMARY) {
-							
-							if (toolRiskComboBox != null) {
-								toolRiskComboBox.setVisible(false);
-								riskLabel.setVisible(false);
-								statusLabel.setText(selectedToolName
-										+ " requires a " + reportFileType
-										+ " report.");
-								
-							} else {
-								log.warning("toolRiskComboBox is null");
-							}
-							break;
-						} else if (toolType == ToolType.AUDIT) {
+//						if (toolType == ToolType.SUMMARY) {
+//							
+//							if (toolRiskComboBox != null) {
+//								toolRiskComboBox.setVisible(false);
+//								riskLabel.setVisible(false);
+//								statusLabel.setText(selectedToolName
+//										+ " requires a " + reportFileType
+//										+ " report.");
+//								
+//							} else {
+//								log.warning("toolRiskComboBox is null");
+//							}
+//							break;
+//						} else 
+						if (toolType == ToolType.SUMMARY || toolType == ToolType.AUDIT) {
 							
 							if (toolRiskComboBox != null) {
 								toolRiskComboBox.setVisible(true);

@@ -108,7 +108,7 @@ public class ToolAdapter implements Runnable {
 				.getXPathValue("/ToolAdapter/Description/Category");
 		toolType = ToolType.getAnalysisType(toolValue);
 		
-		log.debug("Loading tool adapter " + toolId + " '" + name + "' of type: " + toolType.name());
+		//log.debug("Loading tool adapter " + toolId + " '" + name + "' of type: " + toolType.name());
 
 
 		String osStr = xml.getXPathValue("/ToolAdapter/Description/OS");
@@ -133,7 +133,7 @@ public class ToolAdapter implements Runnable {
 		// Report template download URL (optional)
 		reportTemplateURL = xml.getXPathValue("/ToolAdapter/Description/ReportTemplateURL"); 
 		if (reportTemplateURL != null) {
-			log.debug("Report template URL: " + reportTemplateURL);
+			//log.debug("Report template URL: " + reportTemplateURL);
 		} else {
 			//log.warn("Report template URL for tool '" + toolId + "' is null");
 		}
@@ -141,14 +141,14 @@ public class ToolAdapter implements Runnable {
 		// Report icon (optional
 		iconURL = xml.getXPathValue("/ToolAdapter/Description/Icon/URL");
 		if (iconURL != null) {
-			log.debug("Icon URL: " + iconURL);
+			//log.debug("Icon URL: " + iconURL);
 		} else {
 			//log.warn("Icon URL for tool '" + toolId + "' is null");
 		}
 		
 		iconAltText = xml.getXPathValue("/ToolAdapter/Description/Icon/AltText");
 		if (iconAltText != null) {
-			log.debug("Icon ALT Text: " + iconAltText);
+			//log.debug("Icon ALT Text: " + iconAltText);
 		} else {
 			//log.warn("Icon ALT Text for tool '" + toolId + "' is null");
 		}
@@ -168,24 +168,27 @@ public class ToolAdapter implements Runnable {
 		} else {
 			// log.debug("No authorization required for " + name + " tool.");
 		}
+		
+		final String reportFileTypeString = xml
+				.getXPathValue("/ToolAdapter/Description/ReportFile");
 
 		// App submission format type (i.e., binary app file or app name,
 		// package, etc. as a string)
 		String appSubmitStr = xml
 				.getXPathValue("/ToolAdapter/Description/AppSubmit");
-		log.debug("AppSubmitStr: " + appSubmitStr);
+		//log.debug("AppSubmitStr: " + appSubmitStr);
 		appSubmitType = AppSubmitType.getSubmitType(appSubmitStr);
-		log.debug("appSubmitType: " + appSubmitType);
+		//log.debug("appSubmitType: " + appSubmitType);
 		// Report configuration
-		final String reportFileTypeString = xml
-				.getXPathValue("/ToolAdapter/Description/ReportFile");
-		log.debug("Report file type string: " + reportFileTypeString);
+		final String reportTemplateURL = xml
+				.getXPathValue("/ToolAdapter/Description/ReportTemplateURL");
+		//log.debug("Report file type string: " + reportFileTypeString);
 		checkNullString(configFileName, "reportFileTypeString",
 				reportFileTypeString);
 		reportFileType = ReportFileType.getFileType(reportFileTypeString);
-		log.debug("Report file: " + reportFileType.name());
+		//log.debug("Report file: " + reportFileType.name());
 		reportName = generateReportName();
-		log.debug("Report name: " + reportName);
+		//log.debug("Report name: " + reportName);
 
 		// Protocol config
 		for (Protocol p : Protocol.values()) {
@@ -199,19 +202,18 @@ public class ToolAdapter implements Runnable {
 		checkNullString(configFileName, "protocolXPath", protocolXPath);
 		protocolXPath += "/" + protocol.xmlTag;
 
-		log.debug("Adding Tool:\n" + "Config file: " + configFileName + "\n"
-				+ "Tool name: " + name + "\n" 
-				+ "Tool ID: " + toolId + "\n"
-				+ "Tool type: " + toolType + "\n" 
-				+ "Restriction type: " + restrictionType + "\n"
-				+ "OS: " + os.name()
-				+ "\n" + "Vendor: " + vendorName + "\n" 
-				+ "Website: " + webSite
-				+ "\n" + 
-				"App submit type: " + appSubmitType.name() 
-				+ "\n"
-				+ "Report file type: " + reportFileType.name() + "\n"
-				+ "AppVet protocol: " + protocol + "\n", 
+		log.debug("Adding Tool Adapter: " + configFileName + ":\n" 
+				+ "-Name: " + name + "\n" 
+				+ "-ID: " + toolId + "\n"
+				+ "-Type: " + toolType + "\n" 
+				+ "-Report File Type: " + reportFileType.name() + "\n"
+				+ "-Report template URL: " + reportTemplateURL + "\n"
+				+ "-OS: " + os.name() + "\n" 
+				+ "-Restriction Type: " + restrictionType + "\n"
+				+ "-Vendor: " + vendorName + "\n" 
+				+ "-Website: " + webSite + "\n" 
+				+ "-App Submit Type: " + appSubmitType.name() + "\n"
+				+ "-AppVet Protocol: " + protocol + "\n",
 				false);
 
 		switch (protocol) {
@@ -519,7 +521,6 @@ public class ToolAdapter implements Runnable {
 
 	public String generateReportName() {
 		final String reportSuffix = "_security_report";
-		log.debug("Switching on report file type: " + reportFileType);
 		switch (reportFileType) {
 		case TXT:
 			return toolId + reportSuffix + "." + ReportFileType.TXT.value;
