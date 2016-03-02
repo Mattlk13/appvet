@@ -217,7 +217,6 @@ public class ToolAdapter implements Runnable {
 				false);
 
 		switch (protocol) {
-
 		case SYNCHRONOUS:
 			Transaction transaction = new Transaction(protocol, protocolXPath,
 					xml, configFileName);
