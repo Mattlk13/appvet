@@ -207,7 +207,8 @@ public class ReportUploadDialogBox extends DialogBox {
 				 */
 				if (tool.getType() == ToolType.SUMMARY) {
 					
-					/* PUT YOUR SPECIFIC ACCESS POLICY HERE FOR EACH TOOL/REPORT */
+					/* PUT YOUR SPECIFIC POLICY HERE FOR 
+					 * ALLOWING A TOOL REPORT TO BE UPLOADED */
 					
 					if (tool.getId().equals("androidsummary") || tool.getId().equals("iossummary")) {
 						if (role == Role.ADMIN){
@@ -263,8 +264,23 @@ public class ReportUploadDialogBox extends DialogBox {
 						fileUpload.getElement().setAttribute("accept", filter);
 
 						if (toolRiskComboBox != null) {
-							toolRiskComboBox.setVisible(true);
-							riskLabel.setVisible(true);
+							
+							/* PUT YOUR SPECIFIC POLICY HERE FOR 
+							 * ALLOWING A TOOL RISK TO BE SET BY THE UPLOADER */
+							
+							if (selectedTool.getId().equals("androidsummary") 
+									|| selectedTool.getId().equals("iossummary")
+									|| selectedTool.getId().equals("golive")
+									|| selectedTool.getId().equals("approval")) {
+								
+								toolRiskComboBox.setVisible(false);
+								riskLabel.setVisible(false);
+								
+							} else {
+								toolRiskComboBox.setVisible(true);
+								riskLabel.setVisible(true);
+							}
+
 							String reportTemplateURL = selectedTool.getReportTemplateURL();
 							if (reportTemplateURL != null) {
 								// There is a report template available for download
