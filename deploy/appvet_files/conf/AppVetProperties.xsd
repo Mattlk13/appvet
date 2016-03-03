@@ -45,7 +45,9 @@
 					</xs:annotation>
 				</xs:element>
 
-				<xs:element name="SSO" type="SSOType" maxOccurs="1" minOccurs="1"></xs:element>
+				<xs:element name="SSO" type="SSOType" maxOccurs="1"
+					minOccurs="1">
+				</xs:element>
 				<xs:element name="OrgLogoAltText" type="xs:string"
 					maxOccurs="1" minOccurs="0">
 				</xs:element>
@@ -91,10 +93,13 @@
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-				<xs:element name="Display" type="DisplayType"></xs:element>
+				<xs:element name="Display" type="DisplayType"
+					maxOccurs="1" minOccurs="0">
+				</xs:element>
 				<xs:element name="DocumentationURL" type="xs:string"
 					maxOccurs="1" minOccurs="0">
 				</xs:element>
+				<xs:element name="OrgLevelNames" type="OrgLevelNamesType" maxOccurs="1" minOccurs="1"></xs:element>
 			</xs:sequence>
 
 		</xs:complexType>
@@ -359,6 +364,24 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="OrgLevelNamesType">
+		<xs:sequence>
+			<!-- Default admin username and password. -->
+			<xs:element name="Level1" type="xs:string" maxOccurs="1"
+				minOccurs="1">
+			</xs:element>
+			<xs:element name="Level2" type="xs:string" maxOccurs="1"
+				minOccurs="1">			
+			</xs:element>
+			<xs:element name="Level3" type="xs:string" maxOccurs="1"
+				minOccurs="1">				
+			</xs:element>
+			<xs:element name="Level4" type="xs:string" maxOccurs="1"
+				minOccurs="1">				
+			</xs:element>		
 		</xs:sequence>
 	</xs:complexType>
 
