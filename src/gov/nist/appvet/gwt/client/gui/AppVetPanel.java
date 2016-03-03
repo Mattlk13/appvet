@@ -437,14 +437,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appSelectionModel = new SingleSelectionModel<AppInfoGwt>();
 		appSelectionModel.addSelectionChangeHandler(new AppListHandler(this,
 				configInfo));
-		tools = configInfo.getTools();
-		
-		for (int i = 0; i < tools.size(); i++) {
-			ToolInfoGwt tool = tools.get(i);
-			log.info("tool " + tool.getName() + ", template: " + tool.getReportTemplateURL());
-		}
-		
-		
+		tools = configInfo.getTools();		
 		documentationURL = configInfo.getDocumentationURL();
 		ssoActive = configInfo.getSSOActive();
 		ssoLogoutURL = configInfo.getSsoLogoutURL();

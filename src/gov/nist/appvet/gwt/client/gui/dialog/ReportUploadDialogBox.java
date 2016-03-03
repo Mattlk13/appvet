@@ -190,19 +190,15 @@ public class ReportUploadDialogBox extends DialogBox {
 		toolNamesComboBox.setSize("231px", "22px");
 		statusLabel = new HTML("");
 		
-		// Add tools to toolNamesComboBox. Note only ADMINS can submit
-		// SUMMARY reports while only ADMINs and all ANALYSTs can submit
-		// final determination reports (AUDITs).
+		// Add tools to toolNamesComboBox
 		String roleStr = userInfo.getRole();
 		if (roleStr == null) 
 			log.severe("roleStr is null");
 		Role role = Role.getRole(roleStr);
 		if (role == null)
 			log.severe("role is null");
-		
 
 		// Set new list with only permitted tools
-		//log.info("tools size: " + tools.size());
 		for (int i = 0; i < tools.size(); i++) {
 			ToolInfoGwt tool = tools.get(i);
 			if (tool.getOs().equals(os.name())) {
@@ -210,7 +206,9 @@ public class ReportUploadDialogBox extends DialogBox {
 				 * This should match the policies defined in ReportUploadDialogBox!
 				 */
 				if (tool.getType() == ToolType.SUMMARY) {
-					/* Specific use-case for CW */
+					
+					/* PUT YOUR SPECIFIC ACCESS POLICY HERE FOR EACH TOOL/REPORT */
+					
 					if (tool.getId().equals("androidsummary") || tool.getId().equals("iossummary")) {
 						if (role == Role.ADMIN){
 							// CW summary -- only admins
@@ -253,11 +251,8 @@ public class ReportUploadDialogBox extends DialogBox {
 				String selectedToolName = toolNamesComboBox.getItemText(i);
 				
 				for (int j = 0; j < permittedToolReports.size(); j++) {
-					
 					ToolInfoGwt selectedTool = permittedToolReports.get(j);
-					
 					if (selectedTool.getName().equals(selectedToolName)) {
-						
 						String reportFileType = selectedTool
 								.getReportFileType();
 						if (reportFileType == null) {
@@ -267,56 +262,25 @@ public class ReportUploadDialogBox extends DialogBox {
 						String filter = "." + reportFileType;
 						fileUpload.getElement().setAttribute("accept", filter);
 
-						ToolType toolType = selectedTool.getType();
-
-//						if (toolType == ToolType.SUMMARY) {
-//							
-//							if (toolRiskComboBox != null) {
-//								toolRiskComboBox.setVisible(false);
-//								riskLabel.setVisible(false);
-//								statusLabel.setText(selectedToolName
-//										+ " requires a " + reportFileType
-//										+ " report.");
-//								
-//							} else {
-//								log.warning("toolRiskComboBox is null");
-//							}
-//							break;
-//						} else 
-						if (toolType == ToolType.SUMMARY || toolType == ToolType.AUDIT) {
-							
-							if (toolRiskComboBox != null) {
-								toolRiskComboBox.setVisible(true);
-								riskLabel.setVisible(true);
-								String reportTemplateURL = selectedTool.getReportTemplateURL();
-								//log.info("Report template URL: " + reportTemplateURL);
-								if (reportTemplateURL != null) {
-									// There is a report template available for download
-									statusLabel.setHTML(selectedToolName
-											+ " requires a " + reportFileType
-											+ " report. Download <a href=\"" + reportTemplateURL + "\" target=\"_blank\"><b>template</b>.</a>");
-								} else {
-									statusLabel.setHTML(selectedToolName
-											+ " requires a " + reportFileType
-											+ " report.");
-								}
-								
+						if (toolRiskComboBox != null) {
+							toolRiskComboBox.setVisible(true);
+							riskLabel.setVisible(true);
+							String reportTemplateURL = selectedTool.getReportTemplateURL();
+							if (reportTemplateURL != null) {
+								// There is a report template available for download
+								statusLabel.setHTML(selectedToolName
+										+ " requires a " + reportFileType
+										+ " report. Download <a href=\"" + reportTemplateURL + "\" target=\"_blank\"><b>template</b>.</a>");
 							} else {
-								log.warning("toolRiskComboBox is null");
-							}
-							break;
-						} else {
-							if (toolRiskComboBox != null) {
-								toolRiskComboBox.setVisible(true);
-								riskLabel.setVisible(true);
-								statusLabel.setText(selectedToolName
+								statusLabel.setHTML(selectedToolName
 										+ " requires a " + reportFileType
 										+ " report.");
-							} else {
-								log.warning("toolRiskComboBox is null");
 							}
-							break;
+							
+						} else {
+							log.warning("toolRiskComboBox is null");
 						}
+						break;
 					}
 				}
 			}

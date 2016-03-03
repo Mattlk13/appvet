@@ -349,6 +349,9 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					if (toolInfo.requiresAuthentication()) {
 						toolInfo.setAuthenticationParameterNames(iosTool.authenticationParams);
 					}
+					toolInfo.setReportTemplateURL(iosTool.reportTemplateURL);
+					toolInfo.setIconURL(iosTool.iconURL);
+					toolInfo.setIconAltText(iosTool.iconAltText);
 					toolInfo.setReportFileType(iosTool.reportFileType.name());
 					tools.add(toolInfo);
 				}
