@@ -55,10 +55,12 @@ public class Emailer {
 
 				// Step2: Set up mail message.
 				// TODO: Need to add Authenticator for the following
-				getMailSession = Session.getDefaultInstance(mailServerProperties, null);
+				getMailSession = Session.getDefaultInstance(
+						mailServerProperties, null);
 				generateMailMessage = new MimeMessage(getMailSession);
 				generateMailMessage.setFrom(new InternetAddress(senderEmail, senderName));
-				generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+				generateMailMessage.addRecipient(Message.RecipientType.TO, 
+						new InternetAddress(recipient));
 
 				// Add all admins as BCC'd recipients
 				for (int i = 0; i < adminUsers.size(); i++) {
@@ -66,7 +68,9 @@ public class Emailer {
 					String adminUserEmail = adminUser.getEmail();
 					if (!adminUserEmail.equals(senderEmail)) {
 						// Only add admin if not also the sender
-						generateMailMessage.addRecipient(Message.RecipientType.BCC, new InternetAddress(adminUserEmail));
+						generateMailMessage.addRecipient(
+								Message.RecipientType.BCC, 
+								new InternetAddress(adminUserEmail));
 					}
 				}
 
