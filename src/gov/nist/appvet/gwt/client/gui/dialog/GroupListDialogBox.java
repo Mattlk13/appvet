@@ -4,7 +4,6 @@ import gov.nist.appvet.gwt.client.gui.dialog.UserListDialogBox.UserListHandler;
 import gov.nist.appvet.gwt.client.gui.table.appslist.GroupsListPagingDataGrid;
 import gov.nist.appvet.gwt.client.gui.table.appslist.UsersListPagingDataGrid;
 import gov.nist.appvet.shared.all.Group;
-import gov.nist.appvet.shared.all.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;

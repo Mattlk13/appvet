@@ -33,7 +33,6 @@ public class GroupAcctDialogBox extends DialogBox {
 	public PushButton okButton = null;
 
 	public GroupAcctDialogBox(String username, Group group) {
-		log.info("trace aaa");
 		DockPanel dockPanel = new DockPanel();
 		setWidget(dockPanel);
 		dockPanel.setSize("394px", "219px");

@@ -23,6 +23,7 @@ import gov.nist.appvet.gwt.client.gui.table.PagingDataGrid;
 import gov.nist.appvet.shared.all.Group;
 
 import java.util.Comparator;
+import java.util.logging.Logger;
 
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.user.cellview.client.Column;
@@ -33,7 +34,8 @@ import com.google.gwt.user.cellview.client.DataGrid;
  * @author steveq@nist.gov
  */
 public class GroupsListPagingDataGrid<T> extends PagingDataGrid<T> {
-	
+	private static Logger log = Logger.getLogger("GroupsListPagingDataGrid");
+
 	// Turn off sorting of columns for 508 Compliance
 	private final boolean SORTING_ON = false;
 	
@@ -48,6 +50,7 @@ public class GroupsListPagingDataGrid<T> extends PagingDataGrid<T> {
 			public String getValue(T object) {
 				boolean level1Analyst = ((Group) object).isLevel1Analyst;
 				if (level1Analyst) {
+					log.info("Is level1 analyst");
 					return "<font color=red>" + ((Group) object).level1Name + "</font>";
 				} else {
 					return ((Group) object).level1Name;

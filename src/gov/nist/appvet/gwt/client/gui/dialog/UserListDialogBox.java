@@ -260,7 +260,6 @@ public class UserListDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		doneButton.setSize("70px", "18px");
 		getUsersList();
-		// getOrgDeptList();
 	}
 
 	public void deleteUser(final String username) {
