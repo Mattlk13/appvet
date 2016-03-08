@@ -198,6 +198,7 @@ public class ReportUploadDialogBox extends DialogBox {
 		if (role == null)
 			log.severe("role is null");
 
+		// TODO: Update for groups
 		// Set new list with only permitted tools
 		for (int i = 0; i < tools.size(); i++) {
 			ToolInfoGwt tool = tools.get(i);
@@ -217,7 +218,9 @@ public class ReportUploadDialogBox extends DialogBox {
 						}
 					} else if (tool.getId().equals("golive")) {
 						// Go Live -- only admins and analysts
-						if (role == Role.ADMIN || role == Role.ANALYST || role == Role.ORG_ANALYST || role == Role.DEPT_ANALYST){
+						if (role == Role.ADMIN || role == Role.ANALYST 
+//								|| role == Role.ORG_ANALYST || role == Role.DEPT_ANALYST
+								){
 							permittedToolReports.add(tool);
 						}
 					} else if (tool.getId().equals("approval")) {
@@ -226,7 +229,10 @@ public class ReportUploadDialogBox extends DialogBox {
 					}					
 				} else if (tool.getType() == ToolType.AUDIT) {
 					// Final determination -- only admins and analysts
-					if (role == Role.ADMIN || role == Role.ANALYST || role == Role.ORG_ANALYST || role == Role.DEPT_ANALYST) {
+					if (role == Role.ADMIN || role == Role.ANALYST 
+//							|| 
+//							role == Role.ORG_ANALYST || role == Role.DEPT_ANALYST
+							) {
 						permittedToolReports.add(tool);
 					}
 				} else if (tool.getType() == ToolType.TESTTOOL || tool.getType() == ToolType.REPORT) {

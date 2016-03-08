@@ -784,11 +784,10 @@ searchPanel {
 
 .
 {
-	margin-bottom: 5px;
-	border-top: solid Background;
-	border-right: solid Maroon;
-	border-bottom: solid Maroon;
-	border-left: solid Maroon;
+	border-top: 1px solid Background;
+	border-right: 1px solid Maroon;
+	border-bottom: 1px solid Maroon;
+	border-left: 1px solid Maroon;
 }
 .appInfoHtml2 {
 	border: 1px dashed #990000;
@@ -834,6 +833,8 @@ searchPanel {
 }
 
 .userFormPanel {
+	margin: 5px;
+	padding: 5px;
 	border: 1px solid Silver;
 }
 

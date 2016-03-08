@@ -56,47 +56,11 @@ import com.google.gwt.view.client.SingleSelectionModel;
 public class UserListDialogBox extends DialogBox {
 	private static Logger log = Logger.getLogger("UserListDialogBox");
 
-	class UserListHandler implements SelectionChangeEvent.Handler {
-		UserListDialogBox usersDialogBox = null;
-
-		public UserListHandler(UserListDialogBox usersDialogBox) {
-			this.usersDialogBox = usersDialogBox;
-		}
-
-		@Override
-		public void onSelectionChange(SelectionChangeEvent event) {
-			selectedUser = usersSelectionModel.getSelectedObject();
-		}
-	}
-
 	public PushButton doneButton = null;
 	private final static GWTServiceAsync appVetServiceAsync = GWT
 			.create(GWTService.class);
 	public static MessageDialogBox messageDialogBox = null;
 	public UserAcctAdminDialogBox userInfoDialogBox = null;
-
-	public static void killDialogBox(DialogBox dialogBox) {
-		if (dialogBox != null) {
-			dialogBox.hide();
-			dialogBox = null;
-		}
-	}
-
-	public static void showMessageDialog(String windowTitle, String message,
-			boolean isError) {
-		messageDialogBox = new MessageDialogBox(message, isError);
-		messageDialogBox.setText(windowTitle);
-		messageDialogBox.center();
-		messageDialogBox.closeButton.setFocus(true);
-		messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				messageDialogBox.hide();
-				messageDialogBox = null;
-			}
-		});
-	}
-
 	public List<UserInfo> allUsers = null;
 	public SingleSelectionModel<UserInfo> usersSelectionModel = null;
 	public UsersListPagingDataGrid<UserInfo> usersListTable = null;
@@ -318,12 +282,9 @@ public class UserListDialogBox extends DialogBox {
 		});
 	}
 
-	@SuppressWarnings("deprecation")
 	public void editUser(final boolean newUser, final boolean ssoActive) {
-
 		if (newUser) {
-			userInfoDialogBox = new UserAcctAdminDialogBox(null,
-					usersListTable, allUsers, ssoActive);
+			userInfoDialogBox = new UserAcctAdminDialogBox(null, ssoActive);
 			userInfoDialogBox.setText("Add User");
 			userInfoDialogBox.lastNameTextBox.setFocus(true);
 		} else {
@@ -333,13 +294,10 @@ public class UserListDialogBox extends DialogBox {
 						+ "default AppVet administrator", false);
 				return;
 			}
-
-			userInfoDialogBox = new UserAcctAdminDialogBox(selectedUser,
-					usersListTable, allUsers, ssoActive);
+			userInfoDialogBox = new UserAcctAdminDialogBox(selectedUser, ssoActive);
 			userInfoDialogBox.setText(selectedUser.getFirstName() + " "
 					+ selectedUser.getLastName());
 			userInfoDialogBox.lastNameTextBox.setFocus(true);
-
 		}
 		userInfoDialogBox.center();
 		userInfoDialogBox.cancelButton.addClickHandler(new ClickHandler() {
@@ -349,7 +307,7 @@ public class UserListDialogBox extends DialogBox {
 				userInfoDialogBox = null;
 			}
 		});
-		userInfoDialogBox.okButton.addClickHandler(new ClickHandler() {
+		userInfoDialogBox.submitButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 
@@ -369,10 +327,7 @@ public class UserListDialogBox extends DialogBox {
 				userInfo.setDepartment(userInfoDialogBox.deptSuggestBox
 						.getText());
 				userInfo.setEmail(userInfoDialogBox.emailTextBox.getText());
-				final int selectedRoleIndex = userInfoDialogBox.roleComboBox
-						.getSelectedIndex();
-				userInfo.setRole(userInfoDialogBox.roleComboBox
-						.getValue(selectedRoleIndex));
+				userInfo.setGroups(userInfoDialogBox.updatedGroups);
 
 				if (newUser) {
 					userInfo.setNewUser(true);
@@ -432,11 +387,11 @@ public class UserListDialogBox extends DialogBox {
 						selectedUserChanged = true;
 					}
 
-					if (!selectedUser.getRole().equals(
-							userInfoDialogBox.roleComboBox
-									.getValue(selectedRoleIndex))) {
-						selectedUserChanged = true;
-					}
+//					if (!selectedUser.getRole().equals(
+//							userInfoDialogBox.roleComboBox
+//									.getValue(selectedRoleIndex))) {
+//						selectedUserChanged = true;
+//					}
 
 					if (!selectedUser.getEmail().equals(
 							userInfoDialogBox.emailTextBox.getText())) {
@@ -560,5 +515,40 @@ public class UserListDialogBox extends DialogBox {
 						}
 					}
 				});
+	}
+	
+	class UserListHandler implements SelectionChangeEvent.Handler {
+		UserListDialogBox usersDialogBox = null;
+
+		public UserListHandler(UserListDialogBox usersDialogBox) {
+			this.usersDialogBox = usersDialogBox;
+		}
+
+		@Override
+		public void onSelectionChange(SelectionChangeEvent event) {
+			selectedUser = usersSelectionModel.getSelectedObject();
+		}
+	}
+
+	public static void killDialogBox(DialogBox dialogBox) {
+		if (dialogBox != null) {
+			dialogBox.hide();
+			dialogBox = null;
+		}
+	}
+
+	public static void showMessageDialog(String windowTitle, String message,
+			boolean isError) {
+		messageDialogBox = new MessageDialogBox(message, isError);
+		messageDialogBox.setText(windowTitle);
+		messageDialogBox.center();
+		messageDialogBox.closeButton.setFocus(true);
+		messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				messageDialogBox.hide();
+				messageDialogBox = null;
+			}
+		});
 	}
 }

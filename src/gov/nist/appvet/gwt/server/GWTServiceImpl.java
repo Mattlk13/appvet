@@ -209,14 +209,14 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					&& password.equals(AppVetProperties.DEFAULT_ADMIN_PASSWORD)) {
 				log.debug("Adding user-defined default admin '" + username
 						+ "'");
-				String org = AppVetProperties.DEFAULT_ADMIN_ORG;
-				String dept = AppVetProperties.DEFAULT_ADMIN_DEPT;
+//				String org = AppVetProperties.DEFAULT_ADMIN_ORG;
+//				String dept = AppVetProperties.DEFAULT_ADMIN_DEPT;
 				String email = AppVetProperties.DEFAULT_ADMIN_EMAIL;
-				String role = AppVetProperties.DEFAULT_ADMIN_ROLE.name();
+//				String role = AppVetProperties.DEFAULT_ADMIN_ROLE.name();
+				String groups = AppVetProperties.DEFAULT_ADMIN_GROUP;
 				String lastName = AppVetProperties.DEFAULT_ADMIN_LASTNAME;
 				String firstName = AppVetProperties.DEFAULT_ADMIN_FIRSTNAME;
-				if (Database.adminAddNewUser(username, password, org, dept, 
-						email, role, lastName, firstName)) {
+				if (Database.adminAddNewUser(username, password, email, groups, lastName, firstName)) {
 					log.debug("Added new admin user '" + username + "'");
 				} else {
 					log.debug("Could not add new admin user '" + username + "'");

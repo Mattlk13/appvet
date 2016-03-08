@@ -532,6 +532,7 @@ public class AppVetServlet extends HttpServlet {
 		toolMgrThread.start();
 	}
 	
+	// TODO: Update for groups
 	public boolean requesterAuthorizedToAccessAppId(String appId, String requesterUsername) {
 		// Check if the owner is the requester
 		String ownerName = Database.getOwner(appId);
@@ -546,19 +547,23 @@ public class AppVetServlet extends HttpServlet {
 		if (requesterRole == Role.ADMIN){
 			// Requester is an admin
 			return true;
-		} else if (requesterRole == Role.ANALYST) {
-			// Requester is an analyst
-			return true;
 		} 
+//		else if (requesterRole == Role.ANALYST) {
+//			// Requester is an analyst
+//			return true;
+//		} 
 		
 		// Check if requester is an ORG or DEPT analyst
-		if (requesterRole != Role.ORG_ANALYST && requesterRole != Role.DEPT_ANALYST) {
-			// Requester is not an org analyst
-			log.debug("Requester is not an org or dept analyst. Aborting authorization");
-			return false;
-		}
+//		if (requesterRole != Role.ORG_ANALYST && requesterRole != Role.DEPT_ANALYST) {
+//			// Requester is not an org analyst
+//			log.debug("Requester is not an org or dept analyst. Aborting authorization");
+//			return false;
+//		}
+		
+		// TODO: THE FOLLOWING MUST BE CHANGED FOR GROUPS!
 		
 		// Check if requester is in the same org or dept/org as the owner
+		/*
 		if (requesterRole == Role.ORG_ANALYST) {
 			String requesterOrg = Database.getOrganization(requesterUsername);
 			String ownerOrg = Database.getOrganization(ownerName);
@@ -582,6 +587,7 @@ public class AppVetServlet extends HttpServlet {
 				return true;
 			}
 		}
+		*/
 		
 		log.debug("Authorization failed for " + requesterUsername);
 		return false;
@@ -1032,6 +1038,7 @@ public class AppVetServlet extends HttpServlet {
 		}
 	}
 
+	// TODO: Update for groups
 	private void submitReport(String submitterUserName, AppInfo appInfo,
 			HttpServletResponse response) {
 		final ToolAdapter tool = ToolAdapter.getByToolId(appInfo.os,
@@ -1055,7 +1062,9 @@ public class AppVetServlet extends HttpServlet {
 					return;
 				}
 			} else if (tool.toolId.equals("golive")) {
-				if (submitterRole == Role.ADMIN || submitterRole == Role.ANALYST || submitterRole == Role.ORG_ANALYST || submitterRole == Role.DEPT_ANALYST){
+				if (submitterRole == Role.ADMIN || submitterRole == Role.ANALYST 
+//						|| submitterRole == Role.ORG_ANALYST || submitterRole == Role.DEPT_ANALYST
+						){
 					// Go Live -- only admins and analysts
 				} else {
 					appInfo.log.error("Submitter " + submitterUserName + " not authorized to submit " + tool.toolType.name() + " reports");
@@ -1065,7 +1074,9 @@ public class AppVetServlet extends HttpServlet {
 				// Third-party approval -- all users permitted
 			}			
 		} else if (tool.toolType == ToolType.AUDIT) {
-			if (submitterRole == Role.ADMIN || submitterRole == Role.ANALYST || submitterRole == Role.ORG_ANALYST || submitterRole == Role.DEPT_ANALYST) {
+			if (submitterRole == Role.ADMIN || submitterRole == Role.ANALYST 
+//					|| submitterRole == Role.ORG_ANALYST || submitterRole == Role.DEPT_ANALYST
+					) {
 				// Final determination -- only admins and analysts
 			} else {
 				appInfo.log.error("Submitter " + submitterUserName + " not authorized to submit " + tool.toolType.name() + " reports");

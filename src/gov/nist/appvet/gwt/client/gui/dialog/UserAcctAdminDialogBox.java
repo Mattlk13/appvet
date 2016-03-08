@@ -22,10 +22,12 @@ package gov.nist.appvet.gwt.client.gui.dialog;
 import gov.nist.appvet.gwt.client.GWTService;
 import gov.nist.appvet.gwt.client.GWTServiceAsync;
 import gov.nist.appvet.gwt.client.gui.table.appslist.UsersListPagingDataGrid;
+import gov.nist.appvet.shared.all.Group;
 import gov.nist.appvet.shared.all.OrgDepts;
 import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.UserInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -41,7 +43,6 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.PushButton;
@@ -52,6 +53,8 @@ import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.RadioButton;
 
 /**
  * @author steveq@nist.gov
@@ -60,44 +63,53 @@ public class UserAcctAdminDialogBox extends DialogBox {
 	private static Logger log = Logger.getLogger("UserAcctAdminDialogBox");
 
 	public PushButton cancelButton = null;
-	public PushButton okButton = null;
+	public PushButton submitButton = null;
+	public PushButton setGroupsButton = null;
 	public TextBox lastNameTextBox = null;
 	public TextBox firstNameTextBox = null;
 	public TextBox userIdTextBox = null;
 	public PasswordTextBox password1TextBox = null;
 	public PasswordTextBox password2TextBox = null;
 	public TextBox emailTextBox = null;
-	public ListBox roleComboBox = null;
+	//public ListBox roleComboBox = null;
 	public SuggestBox orgSuggestBox = null;
 	public MultiWordSuggestOracle orgOracle = null;
 	public SuggestBox deptSuggestBox = null;
 	public MultiWordSuggestOracle deptOracle = null;
-	public List<UserInfo> allUsers = null;
+//	public List<UserInfo> allUsers = null;
 	public List<OrgDepts> orgDeptsList = null;
 	public boolean newUser = false;
-	public UsersListPagingDataGrid<UserInfo> usersListTable = null;
+//	public UsersListPagingDataGrid<UserInfo> usersListTable = null;
 	public Label passwordAgainLabel = null;
 	private final DateTimeFormat dateTimeFormat = DateTimeFormat
 			.getFormat("yyyy-MM-dd HH:mm:ss");
 	private static MessageDialogBox messageDialogBox = null;
 	private final static GWTServiceAsync appVetServiceAsync = GWT
 			.create(GWTService.class);
+	private GroupListDialogBox groupListDialogBox = null;
+	public RadioButton adminRadioButton = null;
+	public RadioButton toolRadioButton = null;
+	public RadioButton userAnalystRadioButton = null;
+	public ArrayList<Group> updatedGroups = null;
 
 	@SuppressWarnings("deprecation")
-	public UserAcctAdminDialogBox(UserInfo userInfo,
-			UsersListPagingDataGrid<UserInfo> usersListTable,
-			List<UserInfo> allUsers, boolean useSSO) {
+	public UserAcctAdminDialogBox(final UserInfo userInfo,
+			//UsersListPagingDataGrid<UserInfo> usersListTable,
+			//List<UserInfo> allUsers, 
+			boolean useSSO) {
+		log.info("trace a");
+		if (userInfo == null) {
+			newUser = true;
+		}
 		
 		// Get orgs and depts now
 		getOrgDeptList();
 		
 		setWidth("386px");
-		this.usersListTable = usersListTable;
-		this.allUsers = allUsers;
+//		this.usersListTable = usersListTable;
+//		this.allUsers = allUsers;
 		
-		if (userInfo == null) {
-			newUser = true;
-		}
+
 
 		if (newUser) {
 			passwordAgainLabel = new Label("Password (again): ");
@@ -106,7 +118,8 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		}
 		passwordAgainLabel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-		
+		log.info("trace b");
+
 		final VerticalPanel verticalPanel_1 = new VerticalPanel();
 		verticalPanel_1.setSize("100%", "100%");
 		verticalPanel_1.setSpacing(5);
@@ -299,27 +312,62 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		horizontalPanel_8.add(lblRole);
 		horizontalPanel_8.setCellHorizontalAlignment(lblRole,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		lblRole.setWidth("170px");
+		lblRole.setWidth("364px");
 		horizontalPanel_8.setCellVerticalAlignment(lblRole,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_8.setCellWidth(lblRole, "50%");
 		lblRole.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		roleComboBox = new ListBox();
-
-		horizontalPanel_8.add(roleComboBox);
-		horizontalPanel_8.setCellWidth(roleComboBox, "50%");
-		horizontalPanel_8.setCellVerticalAlignment(roleComboBox,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_8.setCellHorizontalAlignment(roleComboBox,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		roleComboBox.addItem(Role.USER.name());
-		roleComboBox.addItem(Role.TOOL_PROVIDER.name());
-		roleComboBox.addItem(Role.DEPT_ANALYST.name());
-		roleComboBox.addItem(Role.ORG_ANALYST.name());
-		roleComboBox.addItem(Role.ANALYST.name());
-		roleComboBox.addItem(Role.ADMIN.name());
 		
-		roleComboBox.setWidth("190px");
+		Grid grid = new Grid(3, 2);
+		verticalPanel_1.add(grid);
+		verticalPanel_1.setCellVerticalAlignment(grid, HasVerticalAlignment.ALIGN_MIDDLE);
+		
+		adminRadioButton = new RadioButton("buttonGroup", "Admin");
+		adminRadioButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent arg0) {
+				setGroupsButton.setEnabled(false);
+			}
+		});
+		grid.setWidget(0, 0, adminRadioButton);
+		adminRadioButton.setWidth("140px");
+		grid.getCellFormatter().setWidth(0, 0, "170px");
+		
+		toolRadioButton = new RadioButton("buttonGroup", "Tool");
+		toolRadioButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent arg0) {
+				setGroupsButton.setEnabled(false);
+			}
+		});
+		grid.setWidget(1, 0, toolRadioButton);
+		
+		userAnalystRadioButton = new RadioButton("buttonGroup", "User/Analyst");
+		userAnalystRadioButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent arg0) {
+				setGroupsButton.setEnabled(true);
+			}
+		});
+		userAnalystRadioButton.setChecked(true);
+		grid.setWidget(2, 0, userAnalystRadioButton);
+		
+		setGroupsButton = new PushButton("New button");
+		setGroupsButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent arg0) {
+				// Check if user ID is filled out since this is needed to set
+				// up groups for the user
+				if (userIdTextBox.getValue() == null || userIdTextBox.getValue().isEmpty()) {
+					showMessageDialog("Groups Error", "User ID must be non-empty", true);
+				} else {
+					// Open Groups List Dialog Box.  Note that userInfo.getGroups() might be null
+					editGroups(userIdTextBox.getValue(), userInfo.getGroups());
+				}
+			}
+		});
+		setGroupsButton.setHTML("Set Groups");
+		grid.setWidget(2, 1, setGroupsButton);
+		grid.getCellFormatter().setWidth(2, 1, "180px");
+		grid.getCellFormatter().setHorizontalAlignment(2, 1, HasHorizontalAlignment.ALIGN_CENTER);
+		grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
+		grid.getCellFormatter().setVerticalAlignment(0, 0, HasVerticalAlignment.ALIGN_MIDDLE);
 		final HorizontalPanel horizontalPanel_13 = new HorizontalPanel();
 		verticalPanel_1.add(horizontalPanel_13);
 		horizontalPanel_13
@@ -444,14 +492,14 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		horizontalPanel.setCellVerticalAlignment(cancelButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		cancelButton.setSize("70px", "18px");
-		okButton = new PushButton("Submit");
-		okButton.setEnabled(true);
-		horizontalPanel.add(okButton);
-		horizontalPanel.setCellHorizontalAlignment(okButton,
+		submitButton = new PushButton("Submit");
+		submitButton.setEnabled(true);
+		horizontalPanel.add(submitButton);
+		horizontalPanel.setCellHorizontalAlignment(submitButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel.setCellVerticalAlignment(okButton,
+		horizontalPanel.setCellVerticalAlignment(submitButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		okButton.setSize("70px", "18px");
+		submitButton.setSize("70px", "18px");
 		// If not a new user, set fields with the user's current info.
 		if (!newUser) {
 			lastNameTextBox.setText(userInfo.getLastName());
@@ -465,19 +513,19 @@ public class UserAcctAdminDialogBox extends DialogBox {
 			deptSuggestBox.setText(userInfo.getDepartment());
 			emailTextBox.setText(userInfo.getEmail());		
 			
-			if (userInfo.getRole().equals(Role.USER.name())) {
-				roleComboBox.setSelectedIndex(0);
-			} else if (userInfo.getRole().equals(Role.TOOL_PROVIDER.name())) {
-				roleComboBox.setSelectedIndex(1);
-			} else if (userInfo.getRole().equals(Role.DEPT_ANALYST.name())) {
-				roleComboBox.setSelectedIndex(2);
-			} else if (userInfo.getRole().equals(Role.ORG_ANALYST.name())) {
-				roleComboBox.setSelectedIndex(3);
-			} else if (userInfo.getRole().equals(Role.ANALYST.name())) {
-				roleComboBox.setSelectedIndex(4);
-			} else if (userInfo.getRole().equals(Role.ADMIN.name())) {
-				roleComboBox.setSelectedIndex(5);
-			}
+//			if (userInfo.getRole().equals(Role.USER.name())) {
+//				roleComboBox.setSelectedIndex(0);
+//			} else if (userInfo.getRole().equals(Role.TOOL_PROVIDER.name())) {
+//				roleComboBox.setSelectedIndex(1);
+//			} else if (userInfo.getRole().equals(Role.DEPT_ANALYST.name())) {
+//				roleComboBox.setSelectedIndex(2);
+//			} else if (userInfo.getRole().equals(Role.ORG_ANALYST.name())) {
+//				roleComboBox.setSelectedIndex(3);
+//			} else if (userInfo.getRole().equals(Role.ANALYST.name())) {
+//				roleComboBox.setSelectedIndex(4);
+//			} else if (userInfo.getRole().equals(Role.ADMIN.name())) {
+//				roleComboBox.setSelectedIndex(5);
+//			}
 		}
 		final SimplePanel simplePanel = new SimplePanel();
 		simplePanel.setStyleName("userFormPanel");
@@ -493,7 +541,6 @@ public class UserAcctAdminDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		dockPanel.add(simplePanel, DockPanel.CENTER);
 		
-		// TODO
 		if (useSSO) {
 			// SSO is used so disable password fields
 			password1TextBox.setEnabled(false);
@@ -512,8 +559,40 @@ public class UserAcctAdminDialogBox extends DialogBox {
 			passwordLabel.setVisible(true);
 			passwordLabel3.setVisible(true);
 		}
-		
+		log.info("trace c");
 
+	}
+	
+	public void editGroups(String userName, ArrayList<Group> groups) {
+
+		groupListDialogBox = new GroupListDialogBox(userName, groups);
+		groupListDialogBox.setText("Groups");
+		groupListDialogBox.center(); // Forces display
+		
+		groupListDialogBox.cancelButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				groupListDialogBox.hide();
+				groupListDialogBox = null;
+			}
+		});
+		
+		groupListDialogBox.okButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				groupListDialogBox.hide();
+				groupListDialogBox = null;
+				
+				// Get all group info
+				updatedGroups = groupListDialogBox.getGroups();
+				// Compare new group info to old group info
+				
+				// If group info changed, set button text
+				//setGroupsButton.setHTML("<font color=green>Groups Changed!</font>");
+				userAnalystRadioButton.setHTML("User/Analyst <font color=green>(Groups Changed!)</font>");
+			}
+		});
+		
 	}
 	
 	
@@ -556,7 +635,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		}
 	}
 	
-	
+	// TODO: Update for groups
 	public void getOrgDeptList() {
 		appVetServiceAsync.getOrgDeptsList(new AsyncCallback<List<OrgDepts>>() {
 			

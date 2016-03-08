@@ -31,6 +31,8 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * @author steveq@nist.gov
  */
 public class UserInfo implements IsSerializable {
+	private static Logger log = Logger.getLogger("UserInfo");
+
 	private boolean newUser = false;
 	// -------------- Updated by user/admin -------------
 	private String userName = null;
@@ -44,9 +46,9 @@ public class UserInfo implements IsSerializable {
 	private String email = null;
 	private String role = null;
 	private ArrayList<UserToolCredentials> toolCredentials = null;
-	private static Logger log = Logger.getLogger("UserInfo");
 	private boolean defaultAdmin = false;
 
+	private ArrayList<Group> groups = null;
 	
 	// private String toolsCredentials = null;
 	// --------------- Updated only by AppVet --------------
@@ -299,5 +301,13 @@ public class UserInfo implements IsSerializable {
 
 	public void setDefaultAdmin(boolean defaultAdmin) {
 		this.defaultAdmin = defaultAdmin;
+	}
+
+	public ArrayList<Group> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(ArrayList<Group> groups) {
+		this.groups = groups;
 	}
 }
