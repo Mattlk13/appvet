@@ -180,7 +180,7 @@ public class GroupListDialogBox extends DialogBox {
 			@Override
 			public void onClick(ClickEvent event) {
 				// Deselect current selection
-				groupsSelectionModel.clear();
+				//groupsSelectionModel.clear();
 				
 				log.info("userRadioButton: " + groupAcctDialogBox.userRadioButton.getValue());
 				log.info("level1Name: " + groupAcctDialogBox.level1SuggestionBox.getValue());
