@@ -3,6 +3,7 @@ package gov.nist.appvet.gwt.client.gui.dialog;
 import java.util.logging.Logger;
 
 
+
 import gov.nist.appvet.shared.all.Group;
 
 import com.google.gwt.user.client.ui.DialogBox;
@@ -32,7 +33,7 @@ public class GroupAcctDialogBox extends DialogBox {
 	public PushButton cancelButton = null;
 	public PushButton okButton = null;
 
-	public GroupAcctDialogBox(String username, Group group) {
+	public GroupAcctDialogBox(Group group) {
 		DockPanel dockPanel = new DockPanel();
 		setWidget(dockPanel);
 		dockPanel.setSize("394px", "219px");

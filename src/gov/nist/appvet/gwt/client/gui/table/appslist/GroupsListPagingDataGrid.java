@@ -48,10 +48,8 @@ public class GroupsListPagingDataGrid<T> extends PagingDataGrid<T> {
 				new TextCell()) {
 			@Override
 			public String getValue(T object) {
-				boolean level1Analyst = ((Group) object).isLevel1Analyst;
-				if (level1Analyst) {
-					log.info("Is level1 analyst");
-					return "<font color=red>" + ((Group) object).level1Name + "</font>";
+				if (((Group) object).isLevel1Analyst) {
+					return ((Group) object).level1Name + "*";
 				} else {
 					return ((Group) object).level1Name;
 				}
@@ -65,7 +63,7 @@ public class GroupsListPagingDataGrid<T> extends PagingDataGrid<T> {
 						((Group) o2).level1Name);
 			}
 		});
-		dataGrid.addColumn(level1Column, "Level-1");
+		dataGrid.addColumn(level1Column, "Level 1");
 		dataGrid.setColumnWidth(level1Column, "50px");
 		
 		// Level 2
@@ -73,7 +71,11 @@ public class GroupsListPagingDataGrid<T> extends PagingDataGrid<T> {
 				new TextCell()) {
 			@Override
 			public String getValue(T object) {
-				return ((Group) object).level2Name;
+				if (((Group) object).isLevel2Analyst) {
+					return ((Group) object).level2Name + "*";
+				} else {
+					return ((Group) object).level2Name;
+				}
 			}
 		};
 		level2Column.setSortable(SORTING_ON);
@@ -84,7 +86,7 @@ public class GroupsListPagingDataGrid<T> extends PagingDataGrid<T> {
 						((Group) o2).level2Name);
 			}
 		});
-		dataGrid.addColumn(level2Column, "Level-2");
+		dataGrid.addColumn(level2Column, "Level 2");
 		dataGrid.setColumnWidth(level2Column, "50px");
 		
 		// Level 3
@@ -92,7 +94,11 @@ public class GroupsListPagingDataGrid<T> extends PagingDataGrid<T> {
 				new TextCell()) {
 			@Override
 			public String getValue(T object) {
-				return ((Group) object).level3Name;
+				if (((Group) object).isLevel3Analyst) {
+					return ((Group) object).level3Name + "*";
+				} else {
+					return ((Group) object).level3Name;
+				}
 			}
 		};
 		level3Column.setSortable(SORTING_ON);
@@ -103,7 +109,7 @@ public class GroupsListPagingDataGrid<T> extends PagingDataGrid<T> {
 						((Group) o2).level3Name);
 			}
 		});
-		dataGrid.addColumn(level3Column, "Level-3");
+		dataGrid.addColumn(level3Column, "Level 3");
 		dataGrid.setColumnWidth(level3Column, "50px");
 		
 		// Level 4
@@ -111,7 +117,11 @@ public class GroupsListPagingDataGrid<T> extends PagingDataGrid<T> {
 				new TextCell()) {
 			@Override
 			public String getValue(T object) {
-				return ((Group) object).level4Name;
+				if (((Group) object).isLevel4Analyst) {
+					return ((Group) object).level4Name + "*";
+				} else {
+					return ((Group) object).level4Name;
+				}
 			}
 		};
 		level4Column.setSortable(SORTING_ON);
@@ -122,7 +132,7 @@ public class GroupsListPagingDataGrid<T> extends PagingDataGrid<T> {
 						((Group) o2).level4Name);
 			}
 		});
-		dataGrid.addColumn(level4Column, "Level-4");
+		dataGrid.addColumn(level4Column, "Level 4");
 		dataGrid.setColumnWidth(level4Column, "50px");
 	}
 	

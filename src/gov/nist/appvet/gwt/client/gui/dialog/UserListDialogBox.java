@@ -321,10 +321,10 @@ public class UserListDialogBox extends DialogBox {
 						.getText());
 				userInfo.setFirstName(userInfoDialogBox.firstNameTextBox
 						.getText());
-				userInfo.setOrganization(userInfoDialogBox.orgSuggestBox
-						.getText());
-				userInfo.setDepartment(userInfoDialogBox.deptSuggestBox
-						.getText());
+//				userInfo.setOrganization(userInfoDialogBox.orgSuggestBox
+//						.getText());
+//				userInfo.setDepartment(userInfoDialogBox.deptSuggestBox
+//						.getText());
 				userInfo.setEmail(userInfoDialogBox.emailTextBox.getText());
 				userInfo.setGroups(userInfoDialogBox.updatedGroups);
 
@@ -371,15 +371,15 @@ public class UserListDialogBox extends DialogBox {
 						selectedUserChanged = true;
 					}
 
-					if (!selectedUser.getOrganization().equals(
-							userInfoDialogBox.orgSuggestBox.getText())) {
-						selectedUserChanged = true;
-					}
-
-					if (!selectedUser.getDepartment().equals(
-							userInfoDialogBox.deptSuggestBox.getText())) {
-						selectedUserChanged = true;
-					}
+//					if (!selectedUser.getOrganization().equals(
+//							userInfoDialogBox.orgSuggestBox.getText())) {
+//						selectedUserChanged = true;
+//					}
+//
+//					if (!selectedUser.getDepartment().equals(
+//							userInfoDialogBox.deptSuggestBox.getText())) {
+//						selectedUserChanged = true;
+//					}
 
 					if (!selectedUser.getEmail().equals(
 							userInfoDialogBox.emailTextBox.getText())) {
@@ -391,26 +391,23 @@ public class UserListDialogBox extends DialogBox {
 //									.getValue(selectedRoleIndex))) {
 //						selectedUserChanged = true;
 //					}
-
-					if (!selectedUser.getEmail().equals(
-							userInfoDialogBox.emailTextBox.getText())) {
-						selectedUserChanged = true;
-					}
+//
+//					if (!selectedUser.getEmail().equals(
+//							userInfoDialogBox.emailTextBox.getText())) {
+//						selectedUserChanged = true;
+//					}
 
 					if (!selectedUserChanged) {
 						showMessageDialog("AppVet Error",
 								"No information changed. Cancelling update.",
 								true);
-					} else {
-						submitUserInfo(newUser, userInfo);
-						userInfoDialogBox.hide();
-						userInfoDialogBox = null;
+						return;
 					}
-				} else {
-					submitUserInfo(newUser, userInfo);
-					userInfoDialogBox.hide();
-					userInfoDialogBox = null;
-				}
+				} 
+				// Send updated user info to server
+				submitUserInfo(newUser, userInfo);
+				userInfoDialogBox.hide();
+				userInfoDialogBox = null;
 			}
 		});
 	}

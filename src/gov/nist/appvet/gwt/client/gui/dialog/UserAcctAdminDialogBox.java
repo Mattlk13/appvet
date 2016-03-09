@@ -358,7 +358,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 					showMessageDialog("Groups Error", "User ID must be non-empty", true);
 				} else {
 					// Open Groups List Dialog Box.  Note that userInfo.getGroups() might be null
-					editGroups(userIdTextBox.getValue(), userInfo.getGroups());
+					editGroups(userInfo, userInfo.getGroups());
 				}
 			}
 		});
@@ -563,10 +563,10 @@ public class UserAcctAdminDialogBox extends DialogBox {
 
 	}
 	
-	public void editGroups(String userName, ArrayList<Group> groups) {
+	public void editGroups(UserInfo userInfo, ArrayList<Group> groups) {
 
-		groupListDialogBox = new GroupListDialogBox(userName, groups);
-		groupListDialogBox.setText("Groups");
+		groupListDialogBox = new GroupListDialogBox(userInfo, groups);
+		groupListDialogBox.setText("Groups for " + userInfo.getFullName());
 		groupListDialogBox.center(); // Forces display
 		
 		groupListDialogBox.cancelButton.addClickHandler(new ClickHandler() {
@@ -580,16 +580,15 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		groupListDialogBox.okButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				groupListDialogBox.hide();
-				groupListDialogBox = null;
-				
 				// Get all group info
 				updatedGroups = groupListDialogBox.getGroups();
-				// Compare new group info to old group info
 				
 				// If group info changed, set button text
-				//setGroupsButton.setHTML("<font color=green>Groups Changed!</font>");
 				userAnalystRadioButton.setHTML("User/Analyst <font color=green>(Groups Changed!)</font>");
+			
+				// Now remove
+				groupListDialogBox.hide();
+				groupListDialogBox = null;
 			}
 		});
 		

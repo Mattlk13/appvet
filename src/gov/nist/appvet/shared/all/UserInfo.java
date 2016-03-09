@@ -233,17 +233,17 @@ public class UserInfo implements IsSerializable {
 			return false;
 		}
 		
-		if (!Validate.isPrintable(organization)) {
-			AppVetPanel.showMessageDialog("Account Setting Error",
-					"Invalid organization", true);
-			return false;
-		}
-		
-		if (!Validate.isPrintable(department)) {
-			AppVetPanel.showMessageDialog("Account Setting Error",
-					"Invalid department", true);
-			return false;
-		}
+//		if (!Validate.isPrintable(organization)) {
+//			AppVetPanel.showMessageDialog("Account Setting Error",
+//					"Invalid organization", true);
+//			return false;
+//		}
+//		
+//		if (!Validate.isPrintable(department)) {
+//			AppVetPanel.showMessageDialog("Account Setting Error",
+//					"Invalid department", true);
+//			return false;
+//		}
 		
 		if (!Validate.isValidEmail(email)) {
 			AppVetPanel.showMessageDialog("Account Setting Error",
@@ -277,11 +277,11 @@ public class UserInfo implements IsSerializable {
 			}	
 		}
 		
-		if (!Validate.isValidRole(role)) {
-			AppVetPanel.showMessageDialog("Account Setting Error",
-					"Invalid role", true);
-			return false;
-		}
+//		if (!Validate.isValidRole(role)) {
+//			AppVetPanel.showMessageDialog("Account Setting Error",
+//					"Invalid role", true);
+//			return false;
+//		}
 		return true;
 	}
 	
