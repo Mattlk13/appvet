@@ -20,13 +20,14 @@ public class Group {
 	
 	/**
 	 * Group string should have the format 
-	 * "level1 <ANALYST>, level2 <ANALYST>, level3 <ANALYST>, level4 <ANALYST>".
+	 * "level1 [*], level2 [*], level3 [*], level4 [*]" where '*' represents
+	 * an ANALYST role.
 	 * This method is used when acquiring group information from the database
 	 * as strings.
 	 * @param groupStr
 	 */
 	public Group(String groupStr) {
-		String analyst = "[" + Role.ANALYST.name() + "]";
+		String analyst = " (" + Role.ANALYST.name() + ")";
 		String[] levels = groupStr.split(",");
 		if (levels != null && levels.length > 0) {
 			for (int i = 0; i < levels.length; i++) {
@@ -68,11 +69,11 @@ public class Group {
 	public String toString() {
 		String tmpStr = "";
 		if (isAdmin) {
-			return "[" + Role.ADMIN.name() + "]";
+			return Role.ADMIN.name();
 		} else if (isTool) {
-			return "[" + Role.TOOL_PROVIDER.name() + "]";
+			return Role.TOOL_PROVIDER.name();
 		} else {
-			String analyst = "[" + Role.ANALYST.name() + "]";
+			String analyst = " (" + Role.ANALYST.name() + ")";
 			if (level1Name != null && !level1Name.isEmpty()) {
 				tmpStr += level1Name;
 				if (isLevel1Analyst) {

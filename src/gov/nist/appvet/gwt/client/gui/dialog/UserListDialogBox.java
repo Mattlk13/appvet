@@ -385,6 +385,10 @@ public class UserListDialogBox extends DialogBox {
 							userInfoDialogBox.emailTextBox.getText())) {
 						selectedUserChanged = true;
 					}
+					
+					if (userInfoDialogBox.groupsHaveChanged) {
+						selectedUserChanged = true;
+					}
 
 //					if (!selectedUser.getRole().equals(
 //							userInfoDialogBox.roleComboBox
@@ -398,7 +402,7 @@ public class UserListDialogBox extends DialogBox {
 //					}
 
 					if (!selectedUserChanged) {
-						showMessageDialog("AppVet Error",
+						showMessageDialog("AppVet User Account",
 								"No information changed. Cancelling update.",
 								true);
 						return;
