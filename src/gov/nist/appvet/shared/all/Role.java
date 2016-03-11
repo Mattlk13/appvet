@@ -11,13 +11,13 @@ public enum Role {
 	// A USER_ANALYST is a role that indicates multiple USER and/or 
 	// ANALYST roles for a user.
 	USER_ANALYST,
-	// An ANALYST is a user that can access all apps in the group and
-	// all apps in all subgroups. This role is used when there is a need
-	// to distinguish the user's role for a specific group.
+	// An ANALYST is a user that can access all apps in an org unit and
+	// all apps in all sub org units. This role is used when there is a need
+	// to distinguish the user's role for a specific org unit.
 	ANALYST,
 	// A USER is a user that can access only their own apps. This role is 
 	// used when there is a need
-	// to distinguish the user's role for a specific group.
+	// to distinguish the user's role for a specific org unit.
 	USER;
 	
 	private Role() {

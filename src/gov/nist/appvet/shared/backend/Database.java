@@ -274,7 +274,7 @@ public class Database {
 			connection = getConnection();
 			preparedStatement = connection
 					.prepareStatement(""
-							+ "REPLACE INTO users (username, lastName, firstName, email, groups) values "
+							+ "REPLACE INTO users (username, lastName, firstName, email, role) values "
 							+ "(?, ?, ?, ?, ?)");
 			log.debug("Admin Adding user: " + username);
 			preparedStatement.setString(1, username);
@@ -414,7 +414,7 @@ public class Database {
 				}
 				arrayList.add(userInfo);
 			}
-		} catch (final SQLException e) {
+		} catch (final Exception e) {
 			log.error(e.toString());
 			arrayList = null;
 		} finally {
@@ -428,19 +428,19 @@ public class Database {
 	}
 
 	public static boolean adminAddNewUser(String username, String password,
-			String email, String groups, String lastName, String firstName) {
+			String email, String role, String lastName, String firstName) {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		try {
 			connection = getConnection();
 			preparedStatement = connection
 					.prepareStatement("REPLACE INTO users (username, password, "
-							+ "email, groups, lastName, firstName) "
+							+ "email, role, lastName, firstName) "
 							+ "values (?, ?, ?, ?, ?, ?)");
 			preparedStatement.setString(1, username);
 			preparedStatement.setString(2, getPBKDF2Password(password));
 			preparedStatement.setString(3, email);
-			preparedStatement.setString(4, groups);
+			preparedStatement.setString(4, role);
 			preparedStatement.setString(5, lastName);
 			preparedStatement.setString(6, firstName);
 			preparedStatement.executeUpdate();
@@ -530,9 +530,9 @@ public class Database {
 			case USER_ANALYST:
 				// Users and analysts can view their own apps as well as
 				// any apps that are submitted by other users that are members
-				// of groups in which the user is an analyst. Note that analysts
-				// for a group can view all apps in the group as well as apps
-				// in all subgroups of the group. Here, we select all apps
+				// of org units where the user is an analyst. Note that analysts
+				// in an org unit can view all apps in the org unit as well as apps
+				// in all org units under the analyst's org unit. Here, we select all apps
 				// then filter them below based on the user's analyst roles.
 				if (lastClientUpdate != null) {
 					sql = "SELECT * FROM apps WHERE username = '" + username
@@ -575,103 +575,6 @@ public class Database {
 		return appsListGwt;
 	}
 
-	public static String getGroups(String username) {
-		return getString("SELECT groups FROM users " + "WHERE username='"
-				+ username + "'");
-	}
-
-//	// TODO: Update this for groups
-//	public static AppsListGwt getUpdatedApps(String username,
-//			Date lastClientUpdateDate) {
-//		Connection connection = null;
-//		Statement statement = null;
-//		ResultSet resultSet = null;
-//		Role userRole = null;
-//		String sql = null;
-//		AppsListGwt appsListGwt = null;
-//
-//		try {
-//			Timestamp lastClientUpdate = new Timestamp(
-//					lastClientUpdateDate.getTime());
-//
-//			// Get apps based on user's role
-//			userRole = getRole(username);
-//			switch (userRole) {
-//			case ADMIN:
-//				// Admin can view all apps
-//				sql = "SELECT * FROM apps WHERE lastupdated > '"
-//						+ lastClientUpdate + "'";
-//				break;
-//			// case ANALYST:
-//			// // Analyst can view all apps
-//			// sql = "SELECT * FROM apps WHERE lastupdated > '"
-//			// + lastClientUpdate + "'";
-//			// break;
-//			// case ORG_ANALYST:
-//			// // Filtered below for just organization's apps
-//			// sql = "SELECT * FROM apps WHERE lastupdated > '"
-//			// + lastClientUpdate + "'";
-//			// break;
-//			// case DEPT_ANALYST:
-//			// // Filtered below for just department's apps for an org
-//			// sql = "SELECT * FROM apps WHERE lastupdated > '"
-//			// + lastClientUpdate + "'";
-//			// break;
-//			case TOOL_PROVIDER:
-//				// Tool provider can only view apps submitted by them (for
-//				// testing)
-//				sql = "SELECT * FROM apps WHERE username = '" + username
-//						+ "' and lastupdated > '" + lastClientUpdate + "'";
-//				break;
-//			case USER:
-//				// Users can only see apps they have submitted
-//				sql = "SELECT * FROM apps WHERE username = '" + username
-//						+ "' and lastupdated > '" + lastClientUpdate + "'";
-//				break;
-//			default:
-//				log.error("Unknown user role: " + userRole);
-//				return null;
-//			}
-//			// log.debug("SQL: " + sql);
-//			connection = getConnection();
-//			statement = connection.createStatement();
-//			resultSet = statement.executeQuery(sql);
-//
-//			if (resultSet.wasNull()) {
-//				log.warn("resultSet was null");
-//			}
-//
-//			ArrayList<AppInfoGwt> appsList = new ArrayList<AppInfoGwt>();
-//
-//			while (resultSet.next()) {
-//				AppInfoGwt appInfo = getAppInfo(resultSet);
-//				if (userRole == Role.ADMIN || userRole == Role.TOOL_PROVIDER) {
-//					appsList.add(appInfo);
-//				} else if (userRole == Role.USER_ANALYST) {
-//					if (appIsAccessibleToAnalyst(username, userRoles, appInfo)) {
-//						appsList.add(appInfo);
-//					}
-//				} 
-//			}
-//
-//			// Return lastChecked timestamp and apps
-//			appsListGwt = new AppsListGwt();
-//			appsListGwt.appsLastChecked = new Date(System.currentTimeMillis());
-//			appsListGwt.apps = appsList;
-//
-//		} catch (final SQLException e) {
-//			log.error(username + ": " + e.toString());
-//		} finally {
-//			sql = null;
-//			userRole = null;
-//			cleanUpConnection(connection);
-//			cleanUpStatement(statement);
-//			cleanUpResultSet(resultSet);
-//		}
-//
-//		return appsListGwt;
-//	}
-
 	public static boolean isAppAccessibleToAnalyst(String analystName,
 			UserRoleInfo analystRoleInfo, AppInfoGwt appInfo) {
 		// Check if app was uploaded by user
@@ -679,7 +582,7 @@ public class Database {
 			return true;
 		}
 
-		// Check if app was uploaded by an owner that is a member of any group
+		// Check if app was uploaded by an owner that is a member of any org unit
 		// that
 		// is accessible to the analyst
 		UserRoleInfo appOwnerRoleInfo = Database.getRoleInfo(appInfo.ownerName);
@@ -687,7 +590,7 @@ public class Database {
 		// Check if app is owned by an ADMIN or TOOL_PROVIDER. If so, ANALYSTs
 		// cannot
 		// access apps owned by ADMINs or TOOL_PROVIDERs because they are
-		// not members of any user or analyst groups and have access to all
+		// not members of any user or analyst org unit and have access to all
 		// apps. Giving an analyst access to apps owned by ADMIN or
 		// TOOL_PROVIDER would provide access to ALL apps.
 		if (appOwnerRoleInfo.getRole() == Role.ADMIN) {
@@ -1507,8 +1410,14 @@ public class Database {
 	public static UserRoleInfo getRoleInfo(String username) {
 		String roleString = getString("SELECT roles FROM users "
 				+ "WHERE username='" + username + "'");
-		UserRoleInfo roles = new UserRoleInfo(roleString);
-		return roles;
+		UserRoleInfo roles;
+		try {
+			roles = new UserRoleInfo(roleString);
+			return roles;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public static String getSessionUser(String sessionId) {

@@ -4,7 +4,6 @@ import java.util.logging.Logger;
 
 import gov.nist.appvet.shared.all.OrgUnit;
 import gov.nist.appvet.shared.all.Role;
-import gov.nist.appvet.shared.all.UserRoleInfo;
 
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockPanel;
@@ -20,7 +19,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 
 public class OrgUnitDialogGox extends DialogBox {
-	private static Logger log = Logger.getLogger("GroupAcctDialogBox");
+	private static Logger log = Logger.getLogger("OrgUnitDialogGox");
 	public RadioButton userRadioButton = null;
 	public RadioButton level1RadioButton = null;
 	public RadioButton level2RadioButton = null;
@@ -220,7 +219,7 @@ public class OrgUnitDialogGox extends DialogBox {
 		
 		log.info("trace fff");
 
-		// Set group data if it exists 
+		// Set org unit data if it exists 
 		if (orgUnit == null) {
 			userRadioButton.setValue(true);
 		} else {

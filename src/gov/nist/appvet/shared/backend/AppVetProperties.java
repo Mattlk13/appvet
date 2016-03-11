@@ -65,9 +65,6 @@ public class AppVetProperties {
 	public static String DEFAULT_ADMIN_PASSWORD = null;
 	public static final String DEFAULT_ADMIN_FIRSTNAME = "AppVet";
 	public static final String DEFAULT_ADMIN_LASTNAME = "Administrator";
-	public static final String DEFAULT_ADMIN_GROUP = "ADMIN";
-//	public static final String DEFAULT_ADMIN_ORG = "AppVetOrg";
-//	public static final String DEFAULT_ADMIN_DEPT = "AppVetDept";
 	public static final String DEFAULT_ADMIN_EMAIL = "appvet@appvet.org";
 	public static final Role DEFAULT_ADMIN_ROLE = Role.ADMIN;
 

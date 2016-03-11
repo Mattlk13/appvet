@@ -323,7 +323,7 @@ public class UserListDialogBox extends DialogBox {
 				userInfo.setFirstName(userInfoDialogBox.firstNameTextBox
 						.getText());
 				userInfo.setEmail(userInfoDialogBox.emailTextBox.getText());
-				userInfo.setGroups(userInfoDialogBox.groups);
+				userInfo.setUserRoleInfo(userInfoDialogBox.userRoleInfo);
 
 				if (newUser) {
 					userInfo.setNewUser(true);

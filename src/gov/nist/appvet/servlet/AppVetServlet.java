@@ -533,7 +533,6 @@ public class AppVetServlet extends HttpServlet {
 		toolMgrThread.start();
 	}
 	
-	// TODO: Update for groups
 	public boolean requesterAuthorizedToAccessAppId(String appId, String requesterUsername) {
 		// Check if the owner is the requester
 		String ownerName = Database.getOwner(appId);
@@ -1006,7 +1005,6 @@ public class AppVetServlet extends HttpServlet {
 		}
 	}
 
-	// TODO: Update for groups
 	private void submitReport(String submitterUserName, AppInfo appInfo,
 			HttpServletResponse response) {
 		final ToolAdapter tool = ToolAdapter.getByToolId(appInfo.os,
