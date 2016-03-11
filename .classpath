@@ -39,5 +39,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="/home/carwash/Google/gwt-2.6.1/validation-api-1.0.0.GA-sources.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/javax.mail.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/zip4j_1.3.2.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
