@@ -27,6 +27,8 @@ import gov.nist.appvet.shared.all.DeviceOS;
 import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.ToolType;
 import gov.nist.appvet.shared.all.UserInfo;
+import gov.nist.appvet.shared.all.UserRoleInfo;
+import gov.nist.appvet.shared.backend.Database;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -191,12 +193,14 @@ public class ReportUploadDialogBox extends DialogBox {
 		statusLabel = new HTML("");
 		
 		// Add tools to toolNamesComboBox
-		String roleStr = userInfo.getRole();
-		if (roleStr == null) 
-			log.severe("roleStr is null");
-		Role role = Role.getRole(roleStr);
-		if (role == null)
-			log.severe("role is null");
+		UserRoleInfo submitterRoleInfo = Database.getRoleInfo(userInfo.getUserName());
+		Role submitterRole = submitterRoleInfo.getRole();
+//		String roleStr = userInfo.getRole();
+//		if (roleStr == null) 
+//			log.severe("roleStr is null");
+//		Role role = Role.getRole(roleStr);
+//		if (role == null)
+//			log.severe("role is null");
 
 		// TODO: Update for groups
 		// Set new list with only permitted tools
@@ -212,13 +216,13 @@ public class ReportUploadDialogBox extends DialogBox {
 					 * ALLOWING A TOOL REPORT TO BE UPLOADED */
 					
 					if (tool.getId().equals("androidsummary") || tool.getId().equals("iossummary")) {
-						if (role == Role.ADMIN){
+						if (submitterRole == Role.ADMIN){
 							// CW summary -- only admins
 							permittedToolReports.add(tool);
 						}
 					} else if (tool.getId().equals("golive")) {
 						// Go Live -- only admins and analysts
-						if (role == Role.ADMIN || role == Role.ANALYST 
+						if (submitterRole == Role.ADMIN || submitterRole == Role.USER_ANALYST 
 //								|| role == Role.ORG_ANALYST || role == Role.DEPT_ANALYST
 								){
 							permittedToolReports.add(tool);
@@ -229,7 +233,7 @@ public class ReportUploadDialogBox extends DialogBox {
 					}					
 				} else if (tool.getType() == ToolType.AUDIT) {
 					// Final determination -- only admins and analysts
-					if (role == Role.ADMIN || role == Role.ANALYST 
+					if (submitterRole == Role.ADMIN || submitterRole == Role.USER_ANALYST 
 //							|| 
 //							role == Role.ORG_ANALYST || role == Role.DEPT_ANALYST
 							) {

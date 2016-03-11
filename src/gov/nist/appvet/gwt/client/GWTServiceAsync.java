@@ -85,8 +85,8 @@ public interface GWTServiceAsync {
 	void getUsersList(AsyncCallback<List<UserInfo>> callback)
 			throws IllegalArgumentException;
 	
-	void getOrgDeptsList(AsyncCallback<List<OrgDepts>> callback)
-			throws IllegalArgumentException;
+//	void getOrgDeptsList(AsyncCallback<List<OrgDepts>> callback)
+//			throws IllegalArgumentException;
 
 	void removeSession(String sessionId, AsyncCallback<Boolean> callback)
 			throws IllegalArgumentException;
@@ -94,7 +94,7 @@ public interface GWTServiceAsync {
 	void updateSessionExpiration(String sessionId, Date sessionExpiration,
 			AsyncCallback<Date> callback) throws IllegalArgumentException;
 
-	void updateSelf(UserInfo userInfo, AsyncCallback<Boolean> callback)
+	void selfUpdatePassword(UserInfo userInfo, AsyncCallback<Boolean> callback)
 			throws IllegalArgumentException;
 
 	void updateUserToolCredentials(String username,

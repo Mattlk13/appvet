@@ -811,7 +811,7 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		adminMenuBar.addItem("Alerts", alertMenubar);
 
-		if (userInfo.getRole().equals(Role.ADMIN.name())) {
+		if (userInfo.getUserRoleInfo().getRole() == Role.ADMIN) {
 			appVetMenuBar.addItem(adminMenuItem);
 		}
 
@@ -1987,10 +1987,10 @@ public class AppVetPanel extends DockLayoutPanel {
 						.getText();
 				final String newFirstName = userAcctDialogBox.firstNameTextBox
 						.getText();
-				final String newOrganization = userAcctDialogBox.organizationTextBox
-						.getText();
-				final String newDepartment = userAcctDialogBox.departmentTextBox
-						.getText();
+//				final String newOrganization = userAcctDialogBox.organizationTextBox
+//						.getText();
+//				final String newDepartment = userAcctDialogBox.departmentTextBox
+//						.getText();
 				final String newEmail = userAcctDialogBox.emailTextBox
 						.getText();
 				final String newPassword1 = userAcctDialogBox.password1TextBox
@@ -2001,11 +2001,9 @@ public class AppVetPanel extends DockLayoutPanel {
 				updatedUserInfo.setUserName(userInfo.getUserName());
 				updatedUserInfo.setLastName(newLastName);
 				updatedUserInfo.setFirstName(newFirstName);
-				updatedUserInfo.setOrganization(newOrganization);
-				updatedUserInfo.setDepartment(newDepartment);
 				updatedUserInfo.setEmail(newEmail);
 				updatedUserInfo.setPasswords(newPassword1, newPassword2);
-				updatedUserInfo.setRole(userInfo.getRole());
+//				updatedUserInfo.setRoles(userInfo.getRole());
 
 				if (ssoActive) {
 					if (!updatedUserInfo.isValid(true))
@@ -2015,7 +2013,7 @@ public class AppVetPanel extends DockLayoutPanel {
 						return;
 				}
 
-				appVetServiceAsync.updateSelf(updatedUserInfo,
+				appVetServiceAsync.selfUpdatePassword(updatedUserInfo,
 						new AsyncCallback<Boolean>() {
 							@Override
 							public void onFailure(Throwable caught) {
@@ -2036,14 +2034,14 @@ public class AppVetPanel extends DockLayoutPanel {
 											.getLastName());
 									userInfo.setFirstName(updatedUserInfo
 											.getFirstName());
-									userInfo.setOrganization(updatedUserInfo
-											.getOrganization());
-									userInfo.setDepartment(updatedUserInfo
-											.getDepartment());
+//									userInfo.setOrganization(updatedUserInfo
+//											.getOrganization());
+//									userInfo.setDepartment(updatedUserInfo
+//											.getDepartment());
 									userInfo.setEmail(updatedUserInfo
 											.getEmail());
 									updatedUserInfo.setPassword("");
-									userInfo.setRole(updatedUserInfo.getRole());
+//									userInfo.setRole(updatedUserInfo.getRole());
 
 									killDialogBox(userAcctDialogBox);
 									showMessageDialog("Account Update",

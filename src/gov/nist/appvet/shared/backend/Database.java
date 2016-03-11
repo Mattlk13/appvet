@@ -26,8 +26,9 @@ import gov.nist.appvet.gwt.shared.SystemAlertType;
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import gov.nist.appvet.shared.all.AppStatus;
 import gov.nist.appvet.shared.all.DeviceOS;
-import gov.nist.appvet.shared.all.Group;
+import gov.nist.appvet.shared.all.OrgUnit;
 import gov.nist.appvet.shared.all.Role;
+import gov.nist.appvet.shared.all.UserRoleInfo;
 import gov.nist.appvet.shared.all.UserInfo;
 import gov.nist.appvet.shared.all.UserToolCredentials;
 
@@ -159,21 +160,13 @@ public class Database {
 			userInfo = new UserInfo();
 			resultSet.next();
 			userInfo.setUserName(resultSet.getString(1));
-			userInfo.setPassword(getNonNullAttributeValue(resultSet
-					.getString(2)));
-			userInfo.setLastName(getNonNullAttributeValue(resultSet
-					.getString(3)));
-			userInfo.setFirstName(getNonNullAttributeValue(resultSet
-					.getString(4)));
-			userInfo.setOrganization(getNonNullAttributeValue(resultSet
-					.getString(5)));
-			userInfo.setDepartment(getNonNullAttributeValue(resultSet
-					.getString(6)));
-			userInfo.setEmail(getNonNullAttributeValue(resultSet.getString(7)));
-			userInfo.setRole(getNonNullAttributeValue(resultSet.getString(8)));
-			userInfo.setLastLogon(resultSet.getTimestamp(9));
-			userInfo.setFromHost(getNonNullAttributeValue(resultSet
-					.getString(10)));
+			userInfo.setPassword(resultSet.getString(2));
+			userInfo.setLastName(resultSet.getString(3));
+			userInfo.setFirstName(resultSet.getString(4));
+			userInfo.setEmail(resultSet.getString(5));
+			userInfo.setUserRoleInfo(new UserRoleInfo(resultSet.getString(6)));
+			userInfo.setLastLogon(resultSet.getTimestamp(7));
+			userInfo.setFromHost(resultSet.getString(8));
 			// Check if default admin
 			if (userInfo.getFirstName().equals(
 					AppVetProperties.DEFAULT_ADMIN_FIRSTNAME)
@@ -183,7 +176,7 @@ public class Database {
 			}
 			// Set tool authentication
 			if (tools != null && tools.size() != 0) {
-				String toolCredentialsStr = resultSet.getString(11);
+				String toolCredentialsStr = resultSet.getString(9);
 				ArrayList<UserToolCredentials> toolCredentialsList = null;
 				if (toolCredentialsStr == null) {
 					// Create new tool credentials list
@@ -283,22 +276,16 @@ public class Database {
 					.prepareStatement(""
 							+ "REPLACE INTO users (username, lastName, firstName, email, groups) values "
 							+ "(?, ?, ?, ?, ?)");
-			// log.debug("Admin Adding user: " + username);
+			log.debug("Admin Adding user: " + username);
 			preparedStatement.setString(1, username);
 			// log.debug("Admin Adding lastname: " + userInfo.getLastName());
 			preparedStatement.setString(2, userInfo.getLastName());
 			// log.debug("Admin Adding firstname: " + userInfo.getFirstName());
 			preparedStatement.setString(3, userInfo.getFirstName());
-			// log.debug("Admin Adding organization: " +
-			// userInfo.getOrganization());
-//			preparedStatement.setString(4, userInfo.getOrganization());
-			// log.debug("Admin Adding dept: " + userInfo.getDepartment());
-//			preparedStatement.setString(5, userInfo.getDepartment());
 			// log.debug("Admin Adding email: " + userInfo.getEmail());
 			preparedStatement.setString(4, userInfo.getEmail());
-			// log.debug("Admin Adding role: " + userInfo.getRole());
-			String groupsStr = Group.getGroupsString(userInfo.getGroups());
-			preparedStatement.setString(5, groupsStr);
+			log.debug("Admin Adding roles: " + userInfo.getUserRoleInfo().toString());
+			preparedStatement.setString(5, userInfo.getUserRoleInfo().toString());
 			preparedStatement.executeUpdate();
 			final String password = userInfo.getPassword();
 			final String passwordAgain = userInfo.getPasswordAgain();
@@ -331,7 +318,7 @@ public class Database {
 		Connection connection = null;
 		Statement statement = null;
 		try {
-			// log.debug("Admin Updating user: " + userInfo.getUserName());
+			log.debug("Admin Updating user: " + userInfo.getUserName());
 			// log.debug("Admin Updating lastname: " + userInfo.getLastName());
 			// log.debug("Admin Updating firstname: " +
 			// userInfo.getFirstName());
@@ -339,18 +326,16 @@ public class Database {
 			// userInfo.getOrganization());
 			// log.debug("Admin Updating dept: " + userInfo.getDepartment());
 			// log.debug("Admin Updating email: " + userInfo.getEmail());
-			// log.debug("Admin Updating role: " + userInfo.getRole());
+			log.debug("Admin Updating role: " + userInfo.getUserRoleInfo().toString());
 			connection = getConnection();
 			statement = connection.createStatement();
-			statement.executeUpdate("UPDATE users SET " + "username='"
-//					+ userInfo.getUserName() + "', org='"
-//					+ userInfo.getOrganization() + "', dept='"
-					+ userInfo.getDepartment() + "', email='"
-					+ userInfo.getEmail() + "', groups='" 
-					+ Group.getGroupsString(userInfo.getGroups())
-					+ "', lastName='" + userInfo.getLastName()
-					+ "', firstName='" + userInfo.getFirstName()
-					+ "' WHERE username='" + userInfo.getUserName() + "'");
+			statement.executeUpdate("UPDATE users SET "
+					+ "username='" + userInfo.getUserName() + "', "
+					+ "lastName='" + userInfo.getLastName() + "', "
+					+ "firstName='" + userInfo.getFirstName() + "', "
+					+ "email='" + userInfo.getEmail() + "', "
+					+ "roles='" + userInfo.getUserRoleInfo().toString() + "' "
+					+ "WHERE username='" + userInfo.getUserName() + "'");
 			if (userInfo.isChangePassword()) {
 				final String userName = userInfo.getUserName();
 				final String password = userInfo.getPassword();
@@ -413,23 +398,13 @@ public class Database {
 			while (resultSet.next()) {
 				userInfo = new UserInfo();
 				userInfo.setUserName(resultSet.getString(1));
-				userInfo.setPassword(getNonNullAttributeValue(resultSet
-						.getString(2)));
-				userInfo.setLastName(getNonNullAttributeValue(resultSet
-						.getString(3)));
-				userInfo.setFirstName(getNonNullAttributeValue(resultSet
-						.getString(4)));
-				userInfo.setOrganization(getNonNullAttributeValue(resultSet
-						.getString(5)));
-				userInfo.setDepartment(getNonNullAttributeValue(resultSet
-						.getString(6)));
-				userInfo.setEmail(getNonNullAttributeValue(resultSet
-						.getString(7)));
-				userInfo.setRole(getNonNullAttributeValue(resultSet
-						.getString(8)));
-				userInfo.setLastLogon(resultSet.getTimestamp(9));
-				userInfo.setFromHost(getNonNullAttributeValue(resultSet
-						.getString(10)));
+				userInfo.setPassword(resultSet.getString(2));
+				userInfo.setLastName(resultSet.getString(3));
+				userInfo.setFirstName(resultSet.getString(4));
+				userInfo.setEmail(resultSet.getString(5));
+				userInfo.setUserRoleInfo(new UserRoleInfo(resultSet.getString(6)));
+				userInfo.setLastLogon(resultSet.getTimestamp(7));
+				userInfo.setFromHost(resultSet.getString(8));
 				// Check if default admin
 				if (userInfo.getFirstName().equals(
 						AppVetProperties.DEFAULT_ADMIN_FIRSTNAME)
@@ -453,8 +428,7 @@ public class Database {
 	}
 
 	public static boolean adminAddNewUser(String username, String password,
-			String email, String groups,
-			String lastName, String firstName) {
+			String email, String groups, String lastName, String firstName) {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		try {
@@ -465,8 +439,6 @@ public class Database {
 							+ "values (?, ?, ?, ?, ?, ?)");
 			preparedStatement.setString(1, username);
 			preparedStatement.setString(2, getPBKDF2Password(password));
-//			preparedStatement.setString(3, org);
-//			preparedStatement.setString(4, dept);
 			preparedStatement.setString(3, email);
 			preparedStatement.setString(4, groups);
 			preparedStatement.setString(5, lastName);
@@ -516,44 +488,59 @@ public class Database {
 				+ "'");
 	}
 
-	// TODO: Update this for groups
-	public static AppsListGwt getAllApps(String username) {
+	public static AppsListGwt getApps(String username, 
+			Date lastClientUpdateDate) {
 		Connection connection = null;
 		AppsListGwt appsListGwt = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		String sql = null;
-		Role userRole = getRole(username);
+		Timestamp lastClientUpdate = null;
+		if (lastClientUpdateDate != null) {
+			lastClientUpdate = new Timestamp(lastClientUpdateDate.getTime());
+		}
+		UserRoleInfo userRoleInfo = getRoleInfo(username);
 		try {
 			// Get apps based on user's role
-			userRole = getRole(username);
+			Role userRole = userRoleInfo.getRole();
 			switch (userRole) {
 			case ADMIN:
 				// Admin can view all apps
-				sql = "SELECT * FROM apps ORDER BY submittime DESC";
+				if (lastClientUpdate != null) {
+					// Get only updated apps
+					sql = "SELECT * FROM apps WHERE lastupdated > '"
+							+ lastClientUpdate + "'";
+				} else {
+					// Get all apps
+					sql = "SELECT * FROM apps ORDER BY submittime DESC";
+				}
 				break;
-//			case ANALYST:
-//				// Analyst can view all apps
-//				sql = "SELECT * FROM apps ORDER BY submittime DESC";
-//				break;
-//			case ORG_ANALYST:
-//				// Filtered below for just organization's apps
-//				sql = "SELECT * FROM apps ORDER BY submittime DESC";
-//				break;
-//			case DEPT_ANALYST:
-//				// Filtered below for just department's apps
-//				sql = "SELECT * FROM apps ORDER BY submittime DESC";
-//				break;
 			case TOOL_PROVIDER:
 				// Tool provider can only view apps submitted by them (for
-				// testing)
-				sql = "SELECT * FROM apps WHERE username='" + username
-						+ "' ORDER BY submittime DESC";
+				// testing). Note that this should not be confused with the
+				// tools ability to upload reports for all apps.
+				if (lastClientUpdate != null) {
+					sql = "SELECT * FROM apps WHERE username = '" + username
+							+ "' and lastupdated > '" + lastClientUpdate + "'";
+				} else {
+					sql = "SELECT * FROM apps WHERE username='" + username
+							+ "' ORDER BY submittime DESC";
+				}
 				break;
-			case USER:
-				// Users can only see apps they have submitted
-				sql = "SELECT * FROM apps WHERE username='" + username
-						+ "' ORDER BY submittime DESC";
+			case USER_ANALYST:
+				// Users and analysts can view their own apps as well as
+				// any apps that are submitted by other users that are members
+				// of groups in which the user is an analyst. Note that analysts
+				// for a group can view all apps in the group as well as apps
+				// in all subgroups of the group. Here, we select all apps
+				// then filter them below based on the user's analyst roles.
+				if (lastClientUpdate != null) {
+					sql = "SELECT * FROM apps WHERE username = '" + username
+							+ "' and lastupdated > '" + lastClientUpdate + "'";
+				} else {
+					sql = "SELECT * FROM apps WHERE username='" + username
+							+ "' ORDER BY submittime DESC";
+				}
 				break;
 			default:
 				log.error("Unknown user role: " + userRole);
@@ -562,34 +549,17 @@ public class Database {
 			connection = getConnection();
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
-//			String userOrg = Database.getOrganization(username);
-//			String userDept = Database.getDepartment(username);
 			ArrayList<AppInfoGwt> appsList = new ArrayList<AppInfoGwt>();
+
 			while (resultSet.next()) {
-				// Get each app
 				AppInfoGwt appInfo = getAppInfo(resultSet);
-//				if (userRole == Role.ORG_ANALYST) {
-//					// An ORG_ANALYST can view all apps from an org
-//					String appSubmitterUser = appInfo.ownerName;
-//					String submitterOrg = Database
-//							.getOrganization(appSubmitterUser);
-//					if (userOrg.equals(submitterOrg)) {
-//						appsList.add(appInfo);
-//					}
-//				} else if (userRole == Role.DEPT_ANALYST) {
-//					// A DEPT_ANALYST can view all apps from a dept in an org
-//					String appSubmitterUser = appInfo.ownerName;
-//					String submitterOrg = Database
-//							.getOrganization(appSubmitterUser);
-//					String submitterDept = Database
-//							.getDepartment(appSubmitterUser);
-//					if (userOrg.equals(submitterOrg)
-//							&& userDept.equals(submitterDept)) {
-//						appsList.add(appInfo);
-//					}
-//				} else {
+				if (userRole == Role.ADMIN || userRole == Role.TOOL_PROVIDER) {
 					appsList.add(appInfo);
-//				}
+				} else if (userRole == Role.USER_ANALYST) {
+					if (isAppAccessibleToAnalyst(username, userRoleInfo, appInfo)) {
+						appsList.add(appInfo);
+					}
+				} 
 			}
 			// Return last-checked timestamp and apps
 			appsListGwt = new AppsListGwt();
@@ -605,130 +575,156 @@ public class Database {
 		return appsListGwt;
 	}
 
-//	public static String getOrganization(String username) {
-//		return getString("SELECT org FROM users " + "WHERE username='"
-//				+ username + "'");
-//	}
-//
-//	public static String getDepartment(String username) {
-//		return getString("SELECT dept FROM users " + "WHERE username='"
-//				+ username + "'");
-//	}
-	
 	public static String getGroups(String username) {
 		return getString("SELECT groups FROM users " + "WHERE username='"
 				+ username + "'");
 	}
 
-	// TODO: Update this for groups
-	public static AppsListGwt getUpdatedApps(String username,
-			Date lastClientUpdateDate) {
-		Connection connection = null;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Role userRole = null;
-		String sql = null;
-		AppsListGwt appsListGwt = null;
-
-		try {
-			Timestamp lastClientUpdate = new Timestamp(
-					lastClientUpdateDate.getTime());
-
-			// Get apps based on user's role
-			userRole = getRole(username);
-			switch (userRole) {
-			case ADMIN:
-				// Admin can view all apps
-				sql = "SELECT * FROM apps WHERE lastupdated > '"
-						+ lastClientUpdate + "'";
-				break;
-//			case ANALYST:
-//				// Analyst can view all apps
+//	// TODO: Update this for groups
+//	public static AppsListGwt getUpdatedApps(String username,
+//			Date lastClientUpdateDate) {
+//		Connection connection = null;
+//		Statement statement = null;
+//		ResultSet resultSet = null;
+//		Role userRole = null;
+//		String sql = null;
+//		AppsListGwt appsListGwt = null;
+//
+//		try {
+//			Timestamp lastClientUpdate = new Timestamp(
+//					lastClientUpdateDate.getTime());
+//
+//			// Get apps based on user's role
+//			userRole = getRole(username);
+//			switch (userRole) {
+//			case ADMIN:
+//				// Admin can view all apps
 //				sql = "SELECT * FROM apps WHERE lastupdated > '"
 //						+ lastClientUpdate + "'";
 //				break;
-//			case ORG_ANALYST:
-//				// Filtered below for just organization's apps
-//				sql = "SELECT * FROM apps WHERE lastupdated > '"
-//						+ lastClientUpdate + "'";
+//			// case ANALYST:
+//			// // Analyst can view all apps
+//			// sql = "SELECT * FROM apps WHERE lastupdated > '"
+//			// + lastClientUpdate + "'";
+//			// break;
+//			// case ORG_ANALYST:
+//			// // Filtered below for just organization's apps
+//			// sql = "SELECT * FROM apps WHERE lastupdated > '"
+//			// + lastClientUpdate + "'";
+//			// break;
+//			// case DEPT_ANALYST:
+//			// // Filtered below for just department's apps for an org
+//			// sql = "SELECT * FROM apps WHERE lastupdated > '"
+//			// + lastClientUpdate + "'";
+//			// break;
+//			case TOOL_PROVIDER:
+//				// Tool provider can only view apps submitted by them (for
+//				// testing)
+//				sql = "SELECT * FROM apps WHERE username = '" + username
+//						+ "' and lastupdated > '" + lastClientUpdate + "'";
 //				break;
-//			case DEPT_ANALYST:
-//				// Filtered below for just department's apps for an org
-//				sql = "SELECT * FROM apps WHERE lastupdated > '"
-//						+ lastClientUpdate + "'";
+//			case USER:
+//				// Users can only see apps they have submitted
+//				sql = "SELECT * FROM apps WHERE username = '" + username
+//						+ "' and lastupdated > '" + lastClientUpdate + "'";
 //				break;
-			case TOOL_PROVIDER:
-				// Tool provider can only view apps submitted by them (for
-				// testing)
-				sql = "SELECT * FROM apps WHERE username = '" + username
-						+ "' and lastupdated > '" + lastClientUpdate + "'";
-				break;
-			case USER:
-				// Users can only see apps they have submitted
-				sql = "SELECT * FROM apps WHERE username = '" + username
-						+ "' and lastupdated > '" + lastClientUpdate + "'";
-				break;
-			default:
-				log.error("Unknown user role: " + userRole);
-				return null;
-			}
-			// log.debug("SQL: " + sql);
-			connection = getConnection();
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery(sql);
-
-			if (resultSet.wasNull()) {
-				log.warn("resultSet was null");
-			}
-
-//			String userOrg = Database.getOrganization(username);
-//			String userDept = Database.getDepartment(username);
-			ArrayList<AppInfoGwt> appsList = new ArrayList<AppInfoGwt>();
-
-			while (resultSet.next()) {
-				// Get app info
-				AppInfoGwt appInfo = getAppInfo(resultSet);
-
-//				if (userRole == Role.ORG_ANALYST) {
-					// An ORG_ANALYST can view all apps from an org
-//					String appSubmitterUser = appInfo.ownerName;
-//					String submitterOrg = Database
-//							.getOrganization(appSubmitterUser);
-//					if (userOrg.equals(submitterOrg)) {
+//			default:
+//				log.error("Unknown user role: " + userRole);
+//				return null;
+//			}
+//			// log.debug("SQL: " + sql);
+//			connection = getConnection();
+//			statement = connection.createStatement();
+//			resultSet = statement.executeQuery(sql);
+//
+//			if (resultSet.wasNull()) {
+//				log.warn("resultSet was null");
+//			}
+//
+//			ArrayList<AppInfoGwt> appsList = new ArrayList<AppInfoGwt>();
+//
+//			while (resultSet.next()) {
+//				AppInfoGwt appInfo = getAppInfo(resultSet);
+//				if (userRole == Role.ADMIN || userRole == Role.TOOL_PROVIDER) {
+//					appsList.add(appInfo);
+//				} else if (userRole == Role.USER_ANALYST) {
+//					if (appIsAccessibleToAnalyst(username, userRoles, appInfo)) {
 //						appsList.add(appInfo);
 //					}
-//				} else if (userRole == Role.DEPT_ANALYST) {
-//					// A DEPT_ANALYST can view all apps from a dept in an org
-//					String appSubmitterUser = appInfo.ownerName;
-//					String submitterOrg = Database
-//							.getOrganization(appSubmitterUser);
-//					String submitterDept = Database
-//							.getDepartment(appSubmitterUser);
-//					if (userOrg.equals(submitterOrg)
-//							&& userDept.equals(submitterDept)) {
-//						appsList.add(appInfo);
-//					}
-//				} else {
-					appsList.add(appInfo);
-//				}
-			}
+//				} 
+//			}
+//
+//			// Return lastChecked timestamp and apps
+//			appsListGwt = new AppsListGwt();
+//			appsListGwt.appsLastChecked = new Date(System.currentTimeMillis());
+//			appsListGwt.apps = appsList;
+//
+//		} catch (final SQLException e) {
+//			log.error(username + ": " + e.toString());
+//		} finally {
+//			sql = null;
+//			userRole = null;
+//			cleanUpConnection(connection);
+//			cleanUpStatement(statement);
+//			cleanUpResultSet(resultSet);
+//		}
+//
+//		return appsListGwt;
+//	}
 
-			// Return lastChecked timestamp and apps
-			appsListGwt = new AppsListGwt();
-			appsListGwt.appsLastChecked = new Date(System.currentTimeMillis());
-			appsListGwt.apps = appsList;
-
-		} catch (final SQLException e) {
-			log.error(username + ": " + e.toString());
-		} finally {
-			sql = null;
-			userRole = null;
-			cleanUpConnection(connection);
-			cleanUpStatement(statement);
-			cleanUpResultSet(resultSet);
+	public static boolean isAppAccessibleToAnalyst(String analystName,
+			UserRoleInfo analystRoleInfo, AppInfoGwt appInfo) {
+		// Check if app was uploaded by user
+		if (analystName.equals(appInfo.ownerName)) {
+			return true;
 		}
 
-		return appsListGwt;
+		// Check if app was uploaded by an owner that is a member of any group
+		// that
+		// is accessible to the analyst
+		UserRoleInfo appOwnerRoleInfo = Database.getRoleInfo(appInfo.ownerName);
+
+		// Check if app is owned by an ADMIN or TOOL_PROVIDER. If so, ANALYSTs
+		// cannot
+		// access apps owned by ADMINs or TOOL_PROVIDERs because they are
+		// not members of any user or analyst groups and have access to all
+		// apps. Giving an analyst access to apps owned by ADMIN or
+		// TOOL_PROVIDER would provide access to ALL apps.
+		if (appOwnerRoleInfo.getRole() == Role.ADMIN) {
+			return false;
+		} else if (appOwnerRoleInfo.getRole() == Role.TOOL_PROVIDER) {
+			return false;
+		}
+		
+		ArrayList<OrgUnit> appOwnerOrgUnits = appOwnerRoleInfo.getOrgUnits();
+		// If owner's user and analyst org units are null or empty, return false
+		if (appOwnerOrgUnits == null || appOwnerOrgUnits.isEmpty()) {
+			return false;
+		}
+
+		ArrayList<OrgUnit> analystOrgUnits = analystRoleInfo.getOrgUnits();
+		// If analyst's user and analyst org units are null or empty, return false
+		if (analystOrgUnits == null || analystOrgUnits.isEmpty()) {
+			return false;
+		}
+		
+		for (int i = 0; i < analystOrgUnits.size(); i++) {
+			OrgUnit analystOrgUnit = analystOrgUnits.get(i);
+			if (analystOrgUnit.orgUnitRole == Role.ANALYST) {
+				for (int j = 0; j < appOwnerOrgUnits.size(); j++) {
+					OrgUnit appOwnerOrgUnit = appOwnerOrgUnits.get(j);
+					// Check if analyst's org unit hiearchy is contained in 
+					// the app owner's org unit hierarchy
+					if (appOwnerOrgUnit.getHierarchyStr().indexOf(
+							analystOrgUnit.getHierarchyStr(), 0) > -1) {
+						// Analyst has access to app owner's org unit
+						return true;
+					}
+				}
+			
+			}
+		}
+		return false;
 	}
 
 	public static boolean removeSession(String sessionId, String clientIpAddress) {
@@ -1433,7 +1429,10 @@ public class Database {
 			 * sql));
 			 */
 		} catch (final Exception e) {
-			log.error("Could not connect to database: " + e.toString());
+			log.error("Could not connect to database: "
+					+ e.toString()
+					+ "\n"
+					+ "Make sure your MySQL password in your AppVetProperties.xml file is correct");
 		}
 		return connection;
 	}
@@ -1505,15 +1504,11 @@ public class Database {
 				+ username + "'");
 	}
 
-	public static Role getRole(String username) {
-		String roleString = getString("SELECT role FROM users "
+	public static UserRoleInfo getRoleInfo(String username) {
+		String roleString = getString("SELECT roles FROM users "
 				+ "WHERE username='" + username + "'");
-		final Role userRole = Role.getRole(roleString);
-		roleString = null;
-		if (userRole == null) {
-			log.error("Error getting user role");
-		}
-		return userRole;
+		UserRoleInfo roles = new UserRoleInfo(roleString);
+		return roles;
 	}
 
 	public static String getSessionUser(String sessionId) {

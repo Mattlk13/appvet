@@ -32,6 +32,7 @@ import gov.nist.appvet.shared.all.DeviceOS;
 import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.ToolType;
 import gov.nist.appvet.shared.all.UserInfo;
+import gov.nist.appvet.shared.all.UserRoleInfo;
 import gov.nist.appvet.shared.all.Validate;
 import gov.nist.appvet.shared.backend.AppInfo;
 import gov.nist.appvet.shared.backend.AppStatusManager;
@@ -543,54 +544,20 @@ public class AppVetServlet extends HttpServlet {
 		}
 		
 		// Check if requester is an ADMIN or ANALYST (both have access to all apps)
-		Role requesterRole = Database.getRole(requesterUsername);
-		if (requesterRole == Role.ADMIN){
+		UserRoleInfo requesterRoleInfo = Database.getRoleInfo(requesterUsername);
+		if (requesterRoleInfo.getRole() == Role.ADMIN){
 			// Requester is an admin
 			return true;
-		} 
-//		else if (requesterRole == Role.ANALYST) {
-//			// Requester is an analyst
-//			return true;
-//		} 
-		
-		// Check if requester is an ORG or DEPT analyst
-//		if (requesterRole != Role.ORG_ANALYST && requesterRole != Role.DEPT_ANALYST) {
-//			// Requester is not an org analyst
-//			log.debug("Requester is not an org or dept analyst. Aborting authorization");
-//			return false;
-//		}
-		
-		// TODO: THE FOLLOWING MUST BE CHANGED FOR GROUPS!
-		
-		// Check if requester is in the same org or dept/org as the owner
-		/*
-		if (requesterRole == Role.ORG_ANALYST) {
-			String requesterOrg = Database.getOrganization(requesterUsername);
-			String ownerOrg = Database.getOrganization(ownerName);
-			if (!ownerOrg.equals(requesterOrg)) {
-				// Owner org is not the same as requester org
-				return false;
+		} else if (requesterRoleInfo.getRole() == Role.USER_ANALYST) {
+			AppInfo appInfo = new AppInfo(appId);
+			if (Database.isAppAccessibleToAnalyst(requesterUsername, requesterRoleInfo, appInfo)) {
+				return true;
 			} else {
-				// Owner org is same as requester org
-				return true;
-			}
-		} else if (requesterRole == Role.DEPT_ANALYST) {
-			String requesterOrg = Database.getOrganization(requesterUsername);
-			String ownerOrg = Database.getOrganization(ownerName);
-			String requesterDept = Database.getDepartment(requesterUsername);
-			String ownerDept = Database.getDepartment(ownerName);
-			if (!ownerDept.equals(requesterDept) || !ownerOrg.equals(requesterOrg)) {
-				// Requester dept is not the same as owner dept
 				return false;
-			} else if (ownerDept.equals(requesterDept) && ownerOrg.equals(ownerOrg)){
-				// Requester dept and org is the same as owner
-				return true;
 			}
-		}
-		*/
-		
-		log.debug("Authorization failed for " + requesterUsername);
-		return false;
+		} else {
+			return false;
+		}  
 	}
 
 	/** TODO: Search app store for metadata. */
@@ -858,7 +825,8 @@ public class AppVetServlet extends HttpServlet {
 	private void returnAppVetLog(String userName, HttpServletResponse response,
 			String clientIpAddress) {
 		try {
-			Role userRole = Database.getRole(userName);
+			UserRoleInfo userRoleInfo = Database.getRoleInfo(userName);
+			Role userRole = userRoleInfo.getRole();
 			if (userRole != Role.ADMIN) {
 				sendHttpResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
 						"Unauthorized access to AppVet log", true);
@@ -1046,8 +1014,9 @@ public class AppVetServlet extends HttpServlet {
 		log.debug("Submit report for " + tool.os + " tool " + tool.toolId + ", type: " + tool.toolType);
 		log.debug("Tool report name: " + tool.reportName);
 		
-		Role submitterRole = Database.getRole(submitterUserName);
-		
+		UserRoleInfo submitterRoleInfo = Database.getRoleInfo(submitterUserName);
+		Role submitterRole = submitterRoleInfo.getRole();
+				
 		/*
 		 * TODO: Make the following configurable via tool adapter properties
 		 * The following should match the policies defined in ReportUploadDialogBox!

@@ -2,9 +2,9 @@ package gov.nist.appvet.gwt.client.gui.dialog;
 
 import java.util.logging.Logger;
 
-
-
-import gov.nist.appvet.shared.all.Group;
+import gov.nist.appvet.shared.all.OrgUnit;
+import gov.nist.appvet.shared.all.Role;
+import gov.nist.appvet.shared.all.UserRoleInfo;
 
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockPanel;
@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 
-public class GroupAcctDialogBox extends DialogBox {
+public class OrgUnitDialogGox extends DialogBox {
 	private static Logger log = Logger.getLogger("GroupAcctDialogBox");
 	public RadioButton userRadioButton = null;
 	public RadioButton level1RadioButton = null;
@@ -33,7 +33,7 @@ public class GroupAcctDialogBox extends DialogBox {
 	public PushButton cancelButton = null;
 	public PushButton okButton = null;
 
-	public GroupAcctDialogBox(Group group) {
+	public OrgUnitDialogGox(OrgUnit orgUnit) {
 		DockPanel dockPanel = new DockPanel();
 		setWidget(dockPanel);
 		dockPanel.setSize("394px", "219px");
@@ -221,41 +221,39 @@ public class GroupAcctDialogBox extends DialogBox {
 		log.info("trace fff");
 
 		// Set group data if it exists 
-		if (group == null) {
+		if (orgUnit == null) {
 			userRadioButton.setValue(true);
 		} else {
 			// User
-			if (group.isUser) {
+			if (orgUnit.orgUnitRole == Role.USER) {
 				userRadioButton.setValue(true);
+				
+				
+			} else if (orgUnit.orgUnitRole == Role.ANALYST) {
+				int analystLevel = orgUnit.getHierarchy().size();
+				if (analystLevel == 1) {
+					level1RadioButton.setValue(true);
+				} else if (analystLevel == 2) {
+					level2RadioButton.setValue(true);
+				} else if (analystLevel == 3) {
+					level3RadioButton.setValue(true);
+				} else if (analystLevel == 4) {
+					level4RadioButton.setValue(true);
+				}
+				for (int i = 0; i < orgUnit.getHierarchy().size(); i++) {
+					String levelName = orgUnit.getHierarchy().get(i);
+					if (i == 0) {
+						level1SuggestionBox.setText(levelName);
+					} else if (i == 1) {
+						level2SuggestionBox.setText(levelName);
+					} else if (i == 2) {
+						level3SuggestionBox.setText(levelName);
+					} else if (i == 3) {
+						level4SuggestionBox.setText(levelName);
+					}
+				}
 			}
-			// Level 1
-			if (group.level1Name != null && !group.level1Name.isEmpty()) {
-				level1SuggestionBox.setText(group.level1Name);
-			}
-			if (group.isLevel1Analyst) {
-				level1RadioButton.setValue(true);
-			}
-			// Level 2
-			if (group.level2Name != null && !group.level2Name.isEmpty()) {
-				level2SuggestionBox.setText(group.level2Name);
-			}
-			if (group.isLevel2Analyst) {
-				level2RadioButton.setValue(true);
-			}
-			// Level 3
-			if (group.level3Name != null && !group.level3Name.isEmpty()) {
-				level3SuggestionBox.setText(group.level3Name);
-			}
-			if (group.isLevel3Analyst) {
-				level3RadioButton.setValue(true);
-			}
-			// Level 4
-			if (group.level4Name != null && !group.level4Name.isEmpty()) {
-				level4SuggestionBox.setText(group.level4Name);
-			}
-			if (group.isLevel4Analyst) {
-				level4RadioButton.setValue(true);
-			}			
+			
 		}
 		log.info("trace ggg");
 

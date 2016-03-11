@@ -52,8 +52,8 @@ public class UserAcctDialogBox extends DialogBox {
 	public PasswordTextBox currentPasswordTextBox = null;
 	public PasswordTextBox password1TextBox = null;
 	public PasswordTextBox password2TextBox = null;
-	public TextBox organizationTextBox = null;
-	public TextBox departmentTextBox = null;
+//	public TextBox organizationTextBox = null;
+//	public TextBox departmentTextBox = null;
 	public TextBox emailTextBox = null;
 	private static Logger log = Logger.getLogger("UserAcctDialogBox");
 	public static MessageDialogBox messageDialogBox = null;
@@ -164,19 +164,20 @@ public class UserAcctDialogBox extends DialogBox {
 		horizontalPanel_10.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.add(horizontalPanel_10);
 		
-		Label label_1 = new Label("Organization: ");
-		label_1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		horizontalPanel_10.add(label_1);
-		label_1.setWidth("170px");
-		
-		organizationTextBox = new TextBox();
-		organizationTextBox.setText(userInfoGwt.getOrganization());
-		organizationTextBox.setEnabled(false);
-		organizationTextBox.setAlignment(TextAlignment.LEFT);
-		horizontalPanel_10.add(organizationTextBox);
-		horizontalPanel_10.setCellWidth(organizationTextBox, "50%");
-		horizontalPanel_10.setCellVerticalAlignment(organizationTextBox, HasVerticalAlignment.ALIGN_MIDDLE);
-		organizationTextBox.setSize("180px", "20px");
+//		Label label_1 = new Label("Organization: ");
+//		label_1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+//		horizontalPanel_10.add(label_1);
+//		label_1.setWidth("170px");
+//		
+//		organizationTextBox = new TextBox();
+//		organizationTextBox.setText(userInfoGwt.getOrganization());
+//		organizationTextBox.setEnabled(false);
+//		organizationTextBox.setAlignment(TextAlignment.LEFT);
+//		horizontalPanel_10.add(organizationTextBox);
+//		horizontalPanel_10.setCellWidth(organizationTextBox, "50%");
+//		horizontalPanel_10.setCellVerticalAlignment(organizationTextBox, HasVerticalAlignment.ALIGN_MIDDLE);
+//		organizationTextBox.setSize("180px", "20px");
+//		
 		final HorizontalPanel horizontalPanel_4 = new HorizontalPanel();
 		horizontalPanel_4
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
@@ -197,15 +198,15 @@ public class UserAcctDialogBox extends DialogBox {
 		horizontalPanel_4.setCellWidth(lblDepartment, "50%");
 		lblDepartment
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		departmentTextBox = new TextBox();
-		departmentTextBox.setText(userInfoGwt.getDepartment());
-		departmentTextBox.setEnabled(false);
-		departmentTextBox.setAlignment(TextAlignment.LEFT);
-		horizontalPanel_4.add(departmentTextBox);
-		horizontalPanel_4.setCellVerticalAlignment(departmentTextBox,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_4.setCellWidth(departmentTextBox, "50%");
-		departmentTextBox.setSize("180px", "20px");
+//		departmentTextBox = new TextBox();
+//		departmentTextBox.setText(userInfoGwt.getDepartment());
+//		departmentTextBox.setEnabled(false);
+//		departmentTextBox.setAlignment(TextAlignment.LEFT);
+//		horizontalPanel_4.add(departmentTextBox);
+//		horizontalPanel_4.setCellVerticalAlignment(departmentTextBox,
+//				HasVerticalAlignment.ALIGN_MIDDLE);
+//		horizontalPanel_4.setCellWidth(departmentTextBox, "50%");
+//		departmentTextBox.setSize("180px", "20px");
 		
 		final HorizontalPanel horizontalPanel_5 = new HorizontalPanel();
 		horizontalPanel_5

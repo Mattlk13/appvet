@@ -28,7 +28,6 @@ import gov.nist.appvet.gwt.shared.ToolStatusGwt;
 import gov.nist.appvet.shared.all.AppVetParameter;
 import gov.nist.appvet.shared.all.AppVetServletCommand;
 import gov.nist.appvet.shared.all.DeviceOS;
-import gov.nist.appvet.shared.all.OrgDepts;
 import gov.nist.appvet.shared.all.ToolType;
 import gov.nist.appvet.shared.all.UserInfo;
 import gov.nist.appvet.shared.all.UserToolCredentials;
@@ -46,9 +45,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -61,7 +58,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = AppVetProperties.log;
-	
+
 	/** This method is called by AppVet.java. */
 	public ConfigInfoGwt handleServletRequest() {
 		HttpServletRequest request = getThreadLocalRequest();
@@ -121,7 +118,8 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			if (Database.updateUserLogonTime(ssoUsername)) {
 				log.debug("Updated logon time for user '" + ssoUsername + "'.");
 			} else {
-				log.debug("Could not update logon time for user '" + ssoUsername + "'.");
+				log.debug("Could not update logon time for user '"
+						+ ssoUsername + "'.");
 				return null;
 			}
 			// Clear all expired sessions
@@ -149,7 +147,6 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		}
 	}
 
-	@Override
 	public Boolean setAlertMessage(String username, SystemAlert alert) {
 		if (Database.setAlertMessage(username, alert)) {
 			return new Boolean(true);
@@ -158,7 +155,6 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		}
 	}
 
-	@Override
 	public Boolean clearAlertMessage(String username) {
 		if (Database.update("DELETE FROM alerts")) {
 			return new Boolean(true);
@@ -167,12 +163,10 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		}
 	}
 
-	@Override
 	public SystemAlert getAlertMessage() {
 		return Database.getAlertMessage();
 	}
 
-	@Override
 	public List<UserInfo> adminSetUser(UserInfo userInfo)
 			throws IllegalArgumentException {
 		if (userInfo.isNewUser()) {
@@ -196,7 +190,6 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	 * for AppVet SSO which uses the organization's secured environment to
 	 * provide user authentication.
 	 */
-	@Override
 	public ConfigInfoGwt authenticateNonSSO(String username, String password)
 			throws IllegalArgumentException {
 		String sql = "SELECT * FROM users " + "where username='" + username
@@ -209,14 +202,12 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					&& password.equals(AppVetProperties.DEFAULT_ADMIN_PASSWORD)) {
 				log.debug("Adding user-defined default admin '" + username
 						+ "'");
-//				String org = AppVetProperties.DEFAULT_ADMIN_ORG;
-//				String dept = AppVetProperties.DEFAULT_ADMIN_DEPT;
 				String email = AppVetProperties.DEFAULT_ADMIN_EMAIL;
-//				String role = AppVetProperties.DEFAULT_ADMIN_ROLE.name();
 				String groups = AppVetProperties.DEFAULT_ADMIN_GROUP;
 				String lastName = AppVetProperties.DEFAULT_ADMIN_LASTNAME;
 				String firstName = AppVetProperties.DEFAULT_ADMIN_FIRSTNAME;
-				if (Database.adminAddNewUser(username, password, email, groups, lastName, firstName)) {
+				if (Database.adminAddNewUser(username, password, email, groups,
+						lastName, firstName)) {
 					log.debug("Added new admin user '" + username + "'");
 				} else {
 					log.debug("Could not add new admin user '" + username + "'");
@@ -283,6 +274,10 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		}
 	}
 
+	/**
+	 * Get AppVet configuration information from AppVetProperties and
+	 * user account information to be sent to the GWT client.
+	 */
 	private static ConfigInfoGwt getConfigInfo(String username,
 			String sessionId, Date sessionExpiration) {
 		final ConfigInfoGwt configInfo = new ConfigInfoGwt();
@@ -314,7 +309,8 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					toolInfo.setName(androidTool.name);
 					toolInfo.setId(androidTool.toolId);
 					toolInfo.setType(androidTool.toolType);
-					toolInfo.setRestrictionType(androidTool.restrictionType.name());
+					toolInfo.setRestrictionType(androidTool.restrictionType
+							.name());
 					toolInfo.setAuthenticationRequired(androidTool.authenticationRequired);
 					if (toolInfo.requiresAuthentication()) {
 						toolInfo.setAuthenticationParameterNames(androidTool.authenticationParams);
@@ -372,6 +368,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		} else {
 			configInfo.setUserInfo(userInfo);
 		}
+		// Get tool credentials
 		ArrayList<UserToolCredentials> toolCredentials = configInfo
 				.getUserInfo().getToolCredentials();
 		if (toolCredentials == null) {
@@ -380,7 +377,6 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		return configInfo;
 	}
 
-	@Override
 	public Boolean deleteApp(DeviceOS os, String appid, String username)
 			throws IllegalArgumentException {
 		// Delete database entries
@@ -390,8 +386,8 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			final String appIdPath = AppVetProperties.APPS_ROOT + "/" + appid;
 			final File appDirectory = new File(appIdPath);
 			FileUtil.deleteDirectory(appDirectory);
-			final String iconPath = AppVetProperties.APP_IMAGES_PATH + "/" + appid
-					+ ".png";
+			final String iconPath = AppVetProperties.APP_IMAGES_PATH + "/"
+					+ appid + ".png";
 			File iconFile = new File(iconPath);
 			if (iconFile.exists()) {
 				iconFile.delete();
@@ -404,34 +400,29 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		}
 	}
 
-	@Override
 	public Boolean deleteUser(String username) throws IllegalArgumentException {
 		return Database.deleteUser(username);
 	}
 
-	@Override
-	public AppsListGwt getAllApps(String username) throws IllegalArgumentException {
-		return Database.getAllApps(username);
+	public AppsListGwt getAllApps(String username)
+			throws IllegalArgumentException {
+		return Database.getApps(username, null);
 	}
 
-	@Override
 	public List<ToolStatusGwt> getToolsResults(DeviceOS os, String sessionId,
 			String appId) throws IllegalArgumentException {
 		return getToolsStatuses(os, sessionId, appId);
 	}
 
-	@Override
 	public AppsListGwt getUpdatedApps(Date lastClientUpdate, String username)
 			throws IllegalArgumentException {
-		return Database.getUpdatedApps(username, lastClientUpdate);
+		return Database.getApps(username, lastClientUpdate);
 	}
 
-	@Override
 	public List<UserInfo> getUsersList() throws IllegalArgumentException {
 		return Database.getUsers(null);
 	}
 
-	@Override
 	public Boolean removeSession(String sessionId)
 			throws IllegalArgumentException {
 		final String clientIpAddress = getThreadLocalRequest().getRemoteAddr();
@@ -445,7 +436,6 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		}
 	}
 
-	@Override
 	public Date updateSessionExpiration(String sessionId, Date newSessionTimeout)
 			throws IllegalArgumentException {
 		final String clientIpAddress = getThreadLocalRequest().getRemoteAddr();
@@ -595,13 +585,11 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		return toolStatusGwt;
 	}
 
-	@Override
-	public Boolean updateSelf(UserInfo userInfo)
+	public Boolean selfUpdatePassword(UserInfo userInfo)
 			throws IllegalArgumentException {
 		return Database.updateUser(userInfo);
 	}
 
-	@Override
 	public Boolean updateUserToolCredentials(String username,
 			ArrayList<UserToolCredentials> credentialsList)
 			throws IllegalArgumentException {
@@ -613,49 +601,48 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	 * This method gets the organizations and departments for users. Note that
 	 * this method is inefficient and should be optimized.
 	 */
-	@Override
-	public List<OrgDepts> getOrgDeptsList() throws IllegalArgumentException {
-		Hashtable<String, List<String>> orgDeptHashtable = new Hashtable<String, List<String>>();
-		List<UserInfo> users = Database.getUsers(null);
-		for (int i = 0; i < users.size(); i++) {
-			UserInfo user = users.get(i);
-			// log.debug("Adding org/dept for user: " + user.getUserName());
-			String userOrg = user.getOrganization();
-			String userDept = user.getDepartment();
-			if (!orgDeptHashtable.containsKey(userOrg)) {
-				// log.debug("Adding new org " + userOrg);
-				// Add this org to the hashtable
-				List<String> deptList = new ArrayList<String>();
-				deptList.add(userDept);
-				// log.debug("Adding new dept " + userDept + " for new org " +
-				// userOrg);
-				orgDeptHashtable.put(userOrg, deptList);
-			} else {
-				// Org is already in hashtable so check if dept is in its list
-				List<String> deptList = orgDeptHashtable.get(userOrg);
-				if (!listContains(deptList, userDept)) {
-					// Add it to the list
-					deptList.add(userDept);
-					// log.debug("Adding new dept " + userDept +
-					// " to existing org " + userOrg);
-				}
-			}
-		}
-		List<OrgDepts> orgDeptsList = new ArrayList<OrgDepts>();
-		Set<String> keys = orgDeptHashtable.keySet();
-		for (String key : keys) {
-			List<String> deptList = orgDeptHashtable.get(key);
-			// log.debug("key: " + key);
-			for (int i = 0; i < deptList.size(); i++) {
-				// log.debug("depts: " + deptList.get(i));
-			}
-			OrgDepts orgDepts = new OrgDepts();
-			orgDepts.orgName = key;
-			orgDepts.deptNames = deptList.toArray(new String[deptList.size()]);
-			orgDeptsList.add(orgDepts);
-		}
-		return orgDeptsList;
-	}
+//	public List<OrgDepts> getOrgDeptsList() throws IllegalArgumentException {
+//		Hashtable<String, List<String>> orgDeptHashtable = new Hashtable<String, List<String>>();
+//		List<UserInfo> users = Database.getUsers(null);
+//		for (int i = 0; i < users.size(); i++) {
+//			UserInfo user = users.get(i);
+//			// log.debug("Adding org/dept for user: " + user.getUserName());
+//			String userOrg = user.getOrganization();
+//			String userDept = user.getDepartment();
+//			if (!orgDeptHashtable.containsKey(userOrg)) {
+//				// log.debug("Adding new org " + userOrg);
+//				// Add this org to the hashtable
+//				List<String> deptList = new ArrayList<String>();
+//				deptList.add(userDept);
+//				// log.debug("Adding new dept " + userDept + " for new org " +
+//				// userOrg);
+//				orgDeptHashtable.put(userOrg, deptList);
+//			} else {
+//				// Org is already in hashtable so check if dept is in its list
+//				List<String> deptList = orgDeptHashtable.get(userOrg);
+//				if (!listContains(deptList, userDept)) {
+//					// Add it to the list
+//					deptList.add(userDept);
+//					// log.debug("Adding new dept " + userDept +
+//					// " to existing org " + userOrg);
+//				}
+//			}
+//		}
+//		List<OrgDepts> orgDeptsList = new ArrayList<OrgDepts>();
+//		Set<String> keys = orgDeptHashtable.keySet();
+//		for (String key : keys) {
+//			List<String> deptList = orgDeptHashtable.get(key);
+//			// log.debug("key: " + key);
+//			for (int i = 0; i < deptList.size(); i++) {
+//				// log.debug("depts: " + deptList.get(i));
+//			}
+//			OrgDepts orgDepts = new OrgDepts();
+//			orgDepts.orgName = key;
+//			orgDepts.deptNames = deptList.toArray(new String[deptList.size()]);
+//			orgDeptsList.add(orgDepts);
+//		}
+//		return orgDeptsList;
+//	}
 
 	private boolean listContains(List<String> list, String item) {
 		for (int i = 0; i < list.size(); i++) {
@@ -665,4 +652,10 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		}
 		return false;
 	}
+//
+//	@Override
+//	public List<OrgDepts> getOrgDeptsList() throws IllegalArgumentException {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 }

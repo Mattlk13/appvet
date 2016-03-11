@@ -286,6 +286,7 @@ public class UserListDialogBox extends DialogBox {
 			userInfoDialogBox = new UserAcctAdminDialogBox(null, ssoActive);
 			userInfoDialogBox.setText("Add User");
 			userInfoDialogBox.lastNameTextBox.setFocus(true);
+			
 		} else {
 			selectedUser = usersSelectionModel.getSelectedObject();
 			if (selectedUser.isDefaultAdmin()) {
@@ -321,12 +322,8 @@ public class UserListDialogBox extends DialogBox {
 						.getText());
 				userInfo.setFirstName(userInfoDialogBox.firstNameTextBox
 						.getText());
-//				userInfo.setOrganization(userInfoDialogBox.orgSuggestBox
-//						.getText());
-//				userInfo.setDepartment(userInfoDialogBox.deptSuggestBox
-//						.getText());
 				userInfo.setEmail(userInfoDialogBox.emailTextBox.getText());
-				userInfo.setGroups(userInfoDialogBox.updatedGroups);
+				userInfo.setGroups(userInfoDialogBox.groups);
 
 				if (newUser) {
 					userInfo.setNewUser(true);
@@ -386,7 +383,7 @@ public class UserListDialogBox extends DialogBox {
 						selectedUserChanged = true;
 					}
 					
-					if (userInfoDialogBox.groupsHaveChanged) {
+					if (userInfoDialogBox.orgUnitsHaveChanged) {
 						selectedUserChanged = true;
 					}
 
@@ -491,7 +488,7 @@ public class UserListDialogBox extends DialogBox {
 					@Override
 					public void onFailure(Throwable caught) {
 						showMessageDialog("AppVet Error",
-								"App list retrieval error", true);
+								"User update retrieval error", true);
 					}
 
 					@Override

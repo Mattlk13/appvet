@@ -33,11 +33,6 @@ public class AppInfoGwt implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/** The AppVet ID of the app. */
 	public String appId = null;
-	/** Used by AppVet to determine if an app's status was recently updated 
-	 * (but not yet consumed by AppVet). Rarely used within an AppInfoCore 
-	 * object.
-	 */
-	//public boolean updated = false;
 	public Date lastUpdated = null;
 	/** The display name of the app. */
 	public String appName = null;
@@ -62,7 +57,7 @@ public class AppInfoGwt implements Serializable {
 	public String versionName = null;
 	/** The target OS platform for the app. */
 	public DeviceOS os = null;
-	/** The submitter (owner) of an app during app submission. */
+	/** The submitter (owner) username of an app during app submission. */
 	public String ownerName = null;
 	/** Submission date and time of the app. */
 	public Date submitTime = null;

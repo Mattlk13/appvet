@@ -51,7 +51,7 @@ public interface GWTService extends RemoteService {
 	List<ToolStatusGwt> getToolsResults(DeviceOS os, String sessionId,
 			String appId) throws IllegalArgumentException;
 
-	Boolean updateSelf(UserInfo userInfo) throws IllegalArgumentException;
+	Boolean selfUpdatePassword(UserInfo userInfo) throws IllegalArgumentException;
 
 	Date updateSessionExpiration(String sessionId, Date sessionExpiration)
 			throws IllegalArgumentException;
@@ -82,7 +82,7 @@ public interface GWTService extends RemoteService {
 
 	List<UserInfo> getUsersList() throws IllegalArgumentException;
 
-	List<OrgDepts> getOrgDeptsList() throws IllegalArgumentException;
+//	List<OrgDepts> getOrgDeptsList() throws IllegalArgumentException;
 
 	Boolean removeSession(String sessionId) throws IllegalArgumentException;
 

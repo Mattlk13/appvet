@@ -41,21 +41,17 @@ public class UserInfo implements IsSerializable {
 	private boolean changePassword = false;
 	private String lastName = null;
 	private String firstName = null;
-	private String organization = null;
-	private String department = null;
 	private String email = null;
-	private String role = null;
 	private ArrayList<UserToolCredentials> toolCredentials = null;
 	private boolean defaultAdmin = false;
-
-	private ArrayList<Group> groups = null;
+	private UserRoleInfo userRoleInfo = null;
 	
-	// private String toolsCredentials = null;
 	// --------------- Updated only by AppVet --------------
 	private Date lastLogon = null;
 	private String fromHost = null;
 
 	public UserInfo() {
+		
 	}
 
 	public String getEmail() {
@@ -85,23 +81,7 @@ public class UserInfo implements IsSerializable {
 	public String getNameWithLastNameInitial() {
 		return firstName + " " + lastName.substring(0, 1) + ".";
 	}
-
-	public String getOrganization() {
-		return organization;
-	}
 	
-	public String getDepartment() {
-		return department;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public String getRole() {
-		return role;
-	}
-
 	public String getUserName() {
 		return userName;
 	}
@@ -113,10 +93,6 @@ public class UserInfo implements IsSerializable {
 	public boolean isNewUser() {
 		return newUser;
 	}
-
-//	public void setChangePassword(boolean changePassword) {
-//		this.changePassword = changePassword;
-//	}
 
 	public void setEmail(String email) {
 		this.email = email;
@@ -141,13 +117,9 @@ public class UserInfo implements IsSerializable {
 	public void setNewUser(boolean newUser) {
 		this.newUser = newUser;
 	}
-
-	public void setOrganization(String organization) {
-		this.organization = organization;
-	}
 	
-	public void setDepartment(String department) {
-		this.department = department;
+	public String getPassword() {
+		return password;
 	}
 
 	public void setPassword(String password) {
@@ -167,10 +139,6 @@ public class UserInfo implements IsSerializable {
 		}
 	}
 
-	public void setRole(String role) {
-		this.role = role;
-	}
-
 	public void setUserName(String username) {
 		userName = username;
 	}
@@ -188,13 +156,7 @@ public class UserInfo implements IsSerializable {
 		if (userName.toLowerCase().indexOf(lowerCaseToken) > -1) {
 			return true;
 		}
-		if (organization.toLowerCase().indexOf(lowerCaseToken) > -1) {
-			return true;
-		}
 		if (email.toLowerCase().indexOf(lowerCaseToken) > -1) {
-			return true;
-		}
-		if (role.toLowerCase().indexOf(lowerCaseToken) > -1) {
 			return true;
 		}
 		if (lastLogon.toString().toLowerCase().indexOf(lowerCaseToken) > -1) {
@@ -233,18 +195,6 @@ public class UserInfo implements IsSerializable {
 			return false;
 		}
 		
-//		if (!Validate.isPrintable(organization)) {
-//			AppVetPanel.showMessageDialog("Account Setting Error",
-//					"Invalid organization", true);
-//			return false;
-//		}
-//		
-//		if (!Validate.isPrintable(department)) {
-//			AppVetPanel.showMessageDialog("Account Setting Error",
-//					"Invalid department", true);
-//			return false;
-//		}
-		
 		if (!Validate.isValidEmail(email)) {
 			AppVetPanel.showMessageDialog("Account Setting Error",
 					"Invalid email", true);
@@ -276,12 +226,6 @@ public class UserInfo implements IsSerializable {
 				return false;
 			}	
 		}
-		
-//		if (!Validate.isValidRole(role)) {
-//			AppVetPanel.showMessageDialog("Account Setting Error",
-//					"Invalid role", true);
-//			return false;
-//		}
 		return true;
 	}
 	
@@ -302,12 +246,12 @@ public class UserInfo implements IsSerializable {
 	public void setDefaultAdmin(boolean defaultAdmin) {
 		this.defaultAdmin = defaultAdmin;
 	}
-
-	public ArrayList<Group> getGroups() {
-		return groups;
+	
+	public void setUserRoleInfo(UserRoleInfo userRoleInfo) {
+		this.userRoleInfo = userRoleInfo;
 	}
-
-	public void setGroups(ArrayList<Group> groups) {
-		this.groups = groups;
+	
+	public UserRoleInfo getUserRoleInfo() {
+		return userRoleInfo;
 	}
 }
