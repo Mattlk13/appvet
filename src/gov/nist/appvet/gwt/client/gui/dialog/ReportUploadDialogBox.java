@@ -215,7 +215,7 @@ public class ReportUploadDialogBox extends DialogBox {
 						}
 					} else if (tool.getId().equals("golive")) {
 						// Go Live -- only admins and analysts
-						if (submitterRole == UserRoleInfo.Role.ADMIN || submitterRole == UserRoleInfo.Role.USER_ANALYST 
+						if (submitterRole == UserRoleInfo.Role.ADMIN || submitterRole == UserRoleInfo.Role.ANALYST 
 //								|| role == Role.ORG_ANALYST || role == Role.DEPT_ANALYST
 								){
 							permittedToolReports.add(tool);
@@ -226,7 +226,7 @@ public class ReportUploadDialogBox extends DialogBox {
 					}					
 				} else if (tool.getType() == ToolType.AUDIT) {
 					// Final determination -- only admins and analysts
-					if (submitterRole == UserRoleInfo.Role.ADMIN || submitterRole == UserRoleInfo.Role.USER_ANALYST 
+					if (submitterRole == UserRoleInfo.Role.ADMIN || submitterRole == UserRoleInfo.Role.ANALYST 
 //							|| 
 //							role == Role.ORG_ANALYST || role == Role.DEPT_ANALYST
 							) {

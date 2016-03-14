@@ -1,0 +1,14 @@
+mysql> alter table users drop column org;
+Query OK, 0 rows affected (0.21 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table users drop column dept;
+Query OK, 0 rows affected (0.13 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table users change role role varchar(500);
+Query OK, 4 rows affected (0.26 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> delete from users;
+Query OK, 4 rows affected (0.00 sec)

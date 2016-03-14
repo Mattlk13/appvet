@@ -26,7 +26,6 @@ import gov.nist.appvet.gwt.shared.SystemAlertType;
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import gov.nist.appvet.shared.all.AppStatus;
 import gov.nist.appvet.shared.all.DeviceOS;
-import gov.nist.appvet.shared.all.OrgUnit;
 import gov.nist.appvet.shared.all.UserRoleInfo;
 import gov.nist.appvet.shared.all.UserInfo;
 import gov.nist.appvet.shared.all.UserToolCredentials;
@@ -531,13 +530,18 @@ public class Database {
 							+ "' ORDER BY submittime DESC";
 				}
 				break;
-			case USER_ANALYST:
-				// Users and analysts can view their own apps as well as
-				// any apps that are submitted by other users that are members
-				// of org units where the user is an analyst. Note that analysts
-				// in an org unit can view all apps in the org unit as well as apps
-				// in all org units under the analyst's org unit. Here, we select all apps
-				// then filter them below based on the user's analyst roles.
+			case ANALYST:
+				// We filter results below
+				if (lastClientUpdate != null) {
+					// Get only updated apps
+					sql = "SELECT * FROM apps WHERE lastupdated > '"
+							+ lastClientUpdate + "'";
+				} else {
+					// Get all apps
+					sql = "SELECT * FROM apps ORDER BY submittime DESC";
+				}
+				break;
+			case USER:
 				if (lastClientUpdate != null) {
 					sql = "SELECT * FROM apps WHERE username = '" + username
 							+ "' and lastupdated > '" + lastClientUpdate + "'";
@@ -556,14 +560,20 @@ public class Database {
 			ArrayList<AppInfoGwt> appsList = new ArrayList<AppInfoGwt>();
 
 			while (resultSet.next()) {
-				AppInfoGwt appInfo = getAppInfo(resultSet);
-				if (userRole == UserRoleInfo.Role.ADMIN || userRole == UserRoleInfo.Role.TOOL_PROVIDER) {
-					appsList.add(appInfo);
-				} else if (userRole == UserRoleInfo.Role.USER_ANALYST) {
-					if (isAppAccessibleToAnalyst(username, userRoleInfo, appInfo)) {
-						appsList.add(appInfo);
+				AppInfoGwt resultSetAppInfo = getAppInfo(resultSet);
+				if (userRole == UserRoleInfo.Role.ADMIN) {
+					// ADMINs can view all apps
+					appsList.add(resultSetAppInfo);
+				} else if (userRole == UserRoleInfo.Role.ANALYST) {
+					// ANALYSTs can view apps in their org unit and below
+					if (isAppAccessibleToAnalyst(username, userRoleInfo, resultSetAppInfo)) {
+						appsList.add(resultSetAppInfo);
 					}
-				} 
+				} else if (userRole == UserRoleInfo.Role.USER ||
+						userRole == UserRoleInfo.Role.TOOL_PROVIDER) {
+					// USERS and TOOL_PROVIDERS can view only their own apps
+					appsList.add(resultSetAppInfo);
+				}
 			}
 			// Return last-checked timestamp and apps
 			appsListGwt = new AppsListGwt();
@@ -591,45 +601,35 @@ public class Database {
 		// is accessible to the analyst
 		UserRoleInfo appOwnerRoleInfo = Database.getRoleInfo(appInfo.ownerName);
 
-		// Check if app is owned by an ADMIN or TOOL_PROVIDER. If so, ANALYSTs
+		// Check if app is owned by an ADMIN. If so, ANALYSTs
 		// cannot
-		// access apps owned by ADMINs or TOOL_PROVIDERs because they are
-		// not members of any user or analyst org unit and have access to all
-		// apps. Giving an analyst access to apps owned by ADMIN or
-		// TOOL_PROVIDER would provide access to ALL apps.
+		// access apps owned by ADMINs because ADMINs are
+		// not members of any org unit and have access to all
+		// apps. Giving an ANALYST access to apps owned by ADMIN would provide 
+		// the ANALYST access to ALL apps.
 		if (appOwnerRoleInfo.getRole() == UserRoleInfo.Role.ADMIN) {
-			return false;
-		} else if (appOwnerRoleInfo.getRole() == UserRoleInfo.Role.TOOL_PROVIDER) {
 			return false;
 		}
 		
-		ArrayList<OrgUnit> appOwnerOrgUnits = appOwnerRoleInfo.getOrgUnits();
-		// If owner's user and analyst org units are null or empty, return false
-		if (appOwnerOrgUnits == null || appOwnerOrgUnits.isEmpty()) {
+		String appOwnerHierarchyStr = appOwnerRoleInfo.getOrgUnitHierarchyStr();
+		// If owner's hierarchy are null or empty, return false
+		if (appOwnerHierarchyStr == null || appOwnerHierarchyStr.isEmpty()) {
+			log.warn("App owner's hierarchy string is null or empty");
 			return false;
 		}
 
-		ArrayList<OrgUnit> analystOrgUnits = analystRoleInfo.getOrgUnits();
+		String analystHierarchyStr = analystRoleInfo.getOrgUnitHierarchyStr();
 		// If analyst's user and analyst org units are null or empty, return false
-		if (analystOrgUnits == null || analystOrgUnits.isEmpty()) {
+		if (analystHierarchyStr == null || analystHierarchyStr.isEmpty()) {
+			log.warn("Analyst's hierarchy string is null or empty");
 			return false;
 		}
 		
-		for (int i = 0; i < analystOrgUnits.size(); i++) {
-			OrgUnit analystOrgUnit = analystOrgUnits.get(i);
-			if (analystOrgUnit.getOrgUnitRole() == OrgUnit.Role.ANALYST) {
-				for (int j = 0; j < appOwnerOrgUnits.size(); j++) {
-					OrgUnit appOwnerOrgUnit = appOwnerOrgUnits.get(j);
-					// Check if analyst's org unit hiearchy is contained in 
-					// the app owner's org unit hierarchy
-					if (appOwnerOrgUnit.getHierarchyStr().indexOf(
-							analystOrgUnit.getHierarchyStr(), 0) > -1) {
-						// Analyst has access to app owner's org unit
-						return true;
-					}
-				}
-			
-			}
+		// Check if analyst's org unit hiearchy is contained in 
+		// the app owner's org unit hierarchy
+		if (appOwnerHierarchyStr.indexOf(analystHierarchyStr, 0) > -1) {
+			// Analyst has access to app owner's org unit
+			return true;
 		}
 		return false;
 	}

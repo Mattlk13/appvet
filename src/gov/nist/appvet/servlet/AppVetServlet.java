@@ -546,7 +546,7 @@ public class AppVetServlet extends HttpServlet {
 		if (requesterRoleInfo.getRole() == UserRoleInfo.Role.ADMIN){
 			// Requester is an admin
 			return true;
-		} else if (requesterRoleInfo.getRole() == UserRoleInfo.Role.USER_ANALYST) {
+		} else if (requesterRoleInfo.getRole() == UserRoleInfo.Role.ANALYST) {
 			AppInfo appInfo = new AppInfo(appId);
 			if (Database.isAppAccessibleToAnalyst(requesterUsername, requesterRoleInfo, appInfo)) {
 				return true;
