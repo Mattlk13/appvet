@@ -52,8 +52,6 @@ public class UserAcctDialogBox extends DialogBox {
 	public PasswordTextBox currentPasswordTextBox = null;
 	public PasswordTextBox password1TextBox = null;
 	public PasswordTextBox password2TextBox = null;
-//	public TextBox organizationTextBox = null;
-//	public TextBox departmentTextBox = null;
 	public TextBox emailTextBox = null;
 	private static Logger log = Logger.getLogger("UserAcctDialogBox");
 	public static MessageDialogBox messageDialogBox = null;

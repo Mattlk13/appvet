@@ -2,7 +2,7 @@
 <appvet:ToolAdapter xmlns:appvet="https://appsec.nist.gov/appvet"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="https://appsec.nist.gov/appvet/ToolAdapter.xsd ">
-	
+
 	<appvet:Description>
 		<appvet:Name>Third-Party Approval</appvet:Name>
 		<appvet:Id>approval</appvet:Id>
@@ -17,21 +17,15 @@
 
 		<appvet:AuthenticationRequired>false</appvet:AuthenticationRequired>
 
-   <!-- 
-    		<appvet:ReportTemplateURL>https://appsec.nist.gov/appvet_images/report_template.pdf</appvet:ReportTemplateURL>	
-    -->
-    
-   <!--
-    <appvet:Icon>
-    	<appvet:URL>http://www.example.com/logo.png</appvet:URL>
-    	<appvet:AltText>LogoName</appvet:AltText>
-    </appvet:Icon>	
-    -->
-    
+		<!-- <appvet:ReportTemplateURL>https://appsec.nist.gov/appvet_images/report_template.pdf</appvet:ReportTemplateURL> -->
+
+		<!-- <appvet:Icon> <appvet:URL>http://www.example.com/logo.png</appvet:URL> 
+			<appvet:AltText>LogoName</appvet:AltText> </appvet:Icon> -->
+
 	</appvet:Description>
-	
+
 	<appvet:Protocol>
-		<appvet:Internal/>
+		<appvet:Internal />
 	</appvet:Protocol>
-	
+
 </appvet:ToolAdapter>

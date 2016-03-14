@@ -12,16 +12,13 @@ h1 {
 	padding-left: 10px;
 	border: outset;
 	font-size: 18em;
-	font-weight: bold
-	text-align: center;
+	font-weight: bold text-align: center;
 }
 
 h3 {
 	margin-top: 0px;
 	margin-bottom: 0px;
 }
-
-
 
 .sendButton {
 	display: block;
@@ -80,8 +77,7 @@ h3 {
 	padding-right: 5px;
 	padding-left: 5px;
 	font-size: 14px;
-	font-weight: bold
-	vertical-align: middle;
+	font-weight: bold vertical-align: middle;
 }
 
 .logoTitle {
@@ -111,8 +107,7 @@ h3 {
 	padding-top: 15px;
 	padding-right: 10px;
 	font-size: 24px;
-	font-weight: bold
-	background-color: Black;
+	font-weight: bold background-color: Black;
 }
 
 .atpVersion {
@@ -129,8 +124,7 @@ h3 {
 errorMessage {
 	color: #990000;
 	font-size: 14px;
-	font-weight: bold
-	vertical-align: middle;
+	font-weight: bold vertical-align: middle;
 	text-align: center;
 }
 
@@ -251,7 +245,7 @@ searchPanel {
 	padding-bottom: 2px;
 	margin-top: 5px;
 	margin-bottom: 5px;
-/* 	padding-top: 5px; */
+	/* 	padding-top: 5px; */
 /* 	padding-botton: 5px; */
 /* 	vertical-align: middle; */
 }
@@ -298,7 +292,6 @@ searchPanel {
 	margin-bottom: 5px;
 	margin-left: 5px;
 	vertical-align: middle;
-	
 }
 
 .apkZipUploadLabel {
@@ -367,8 +360,7 @@ searchPanel {
 .appInfoName {
 	color: darkslategray;
 	margin-left: 10px;
-	font-weight: bold
-	font-size: 24px;
+	font-weight: bold font-size: 24px;
 }
 
 .appInfoVersion {
@@ -553,7 +545,6 @@ searchPanel {
 	margin-top: 5px;
 	margin-right: 5px;
 	margin-left: 5px;
-	
 }
 
 .taLogo {
@@ -663,7 +654,6 @@ searchPanel {
 
 .reportUploadLabel {
 	margin-left: 8px;
-	
 }
 
 .reportUploadButtonPanel {
@@ -736,6 +726,7 @@ searchPanel {
 	color: blue;
 	font-size: x-small;
 }
+
 .usersDockPanel {
 	border: 1px solid Silver;
 }
@@ -790,10 +781,54 @@ searchPanel {
 
 .
 {
-	border-top: 1px solid Background;
-	border-right: 1px solid Maroon;
-	border-bottom: 1px solid Maroon;
-	border-left: 1px solid Maroon;
+border-top
+:
+ 
+1
+px
+ 
+solid
+ 
+Background
+;
+
+	
+border-right
+:
+ 
+1
+px
+ 
+solid
+ 
+Maroon
+;
+
+	
+border-bottom
+:
+ 
+1
+px
+ 
+solid
+ 
+Maroon
+;
+
+	
+border-left
+:
+ 
+1
+px
+ 
+solid
+ 
+Maroon
+;
+
+
 }
 .appInfoHtml2 {
 	border: 1px dashed #990000;
@@ -872,28 +907,34 @@ searchPanel {
 .appInfoDecoratePanel {
 	margin-top: 5px;
 }
+
 .gwt-StatusLabel {
 	color: Blue;
 	margin-top: 5px;
 	margin-bottom: 5px;
 	margin-left: 5px;
 }
+
 .AppVetPushButton {
 	cursor: hand;
 	cursor: pointer;
 }
+
 .statusError {
 	color: #990000;
 	font-weight: bold;
 }
+
 .statusOk {
 	color: #0000ff;
 	font-weight: bold;
 }
+
 .statusWarning {
 	color: #cc6633;
 	font-weight: bold;
 }
+
 .appvetTextArea {
 	margin-right: 5px;
 }

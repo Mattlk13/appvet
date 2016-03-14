@@ -42,9 +42,9 @@ import gov.nist.appvet.shared.all.AppStatus;
 import gov.nist.appvet.shared.all.AppVetParameter;
 import gov.nist.appvet.shared.all.AppVetServletCommand;
 import gov.nist.appvet.shared.all.DeviceOS;
-import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.ToolType;
 import gov.nist.appvet.shared.all.UserInfo;
+import gov.nist.appvet.shared.all.UserRoleInfo;
 import gov.nist.appvet.shared.all.Validate;
 
 import java.util.ArrayList;
@@ -749,13 +749,13 @@ public class AppVetPanel extends DockLayoutPanel {
 										killDialogBox(setAlertDialogBox);
 										SystemAlertType alertType = null;
 										if (setAlertDialogBox.alertNormalRadioButton
-												.isChecked())
+												.getValue())
 											alertType = SystemAlertType.NORMAL;
 										else if (setAlertDialogBox.alertWarningRadioButton
-												.isChecked())
+												.getValue())
 											alertType = SystemAlertType.WARNING;
 										else if (setAlertDialogBox.alertCriticalRadioButton
-												.isChecked())
+												.getValue())
 											alertType = SystemAlertType.CRITICAL;
 
 										String alertMessage = setAlertDialogBox.alertTextArea
@@ -811,7 +811,7 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		adminMenuBar.addItem("Alerts", alertMenubar);
 
-		if (userInfo.getUserRoleInfo().getRole() == Role.ADMIN) {
+		if (userInfo.getUserRoleInfo().getRole() == UserRoleInfo.Role.ADMIN) {
 			appVetMenuBar.addItem(adminMenuItem);
 		}
 
@@ -2003,7 +2003,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				updatedUserInfo.setFirstName(newFirstName);
 				updatedUserInfo.setEmail(newEmail);
 				updatedUserInfo.setPasswords(newPassword1, newPassword2);
-//				updatedUserInfo.setRoles(userInfo.getRole());
+				updatedUserInfo.setUserRoleInfo(userInfo.getUserRoleInfo());
 
 				if (ssoActive) {
 					if (!updatedUserInfo.isValid(true))

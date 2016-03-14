@@ -24,7 +24,7 @@ package gov.nist.appvet.shared.backend;
  */
 import gov.nist.appvet.servlet.shared.Emailer;
 import gov.nist.appvet.shared.all.DeviceOS;
-import gov.nist.appvet.shared.all.Role;
+import gov.nist.appvet.shared.all.UserRoleInfo;
 import gov.nist.appvet.shared.all.Validate;
 
 import java.io.File;
@@ -66,7 +66,7 @@ public class AppVetProperties {
 	public static final String DEFAULT_ADMIN_FIRSTNAME = "AppVet";
 	public static final String DEFAULT_ADMIN_LASTNAME = "Administrator";
 	public static final String DEFAULT_ADMIN_EMAIL = "appvet@appvet.org";
-	public static final Role DEFAULT_ADMIN_ROLE = Role.ADMIN;
+	public static final UserRoleInfo.Role DEFAULT_ADMIN_ROLE = UserRoleInfo.Role.ADMIN;
 
 	static {
 		//System.out.println("*** Starting AppVet v" + APPVET_VERSION + " ***");

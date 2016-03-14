@@ -1,7 +1,7 @@
 package gov.nist.appvet.servlet.shared;
 
-import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.UserInfo;
+import gov.nist.appvet.shared.all.UserRoleInfo;
 import gov.nist.appvet.shared.backend.AppVetProperties;
 import gov.nist.appvet.shared.backend.Database;
 import gov.nist.appvet.shared.backend.Logger;
@@ -25,7 +25,7 @@ public class Emailer {
 	static List<UserInfo> adminUsers = null;
 
 	static {
-		adminUsers = Database.getUsers(Role.ADMIN);
+		adminUsers = Database.getUsers(UserRoleInfo.Role.ADMIN);
 	}
 
 

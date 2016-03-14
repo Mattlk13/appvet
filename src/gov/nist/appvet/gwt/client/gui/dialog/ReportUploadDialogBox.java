@@ -24,7 +24,6 @@ import java.util.logging.Logger;
 
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import gov.nist.appvet.shared.all.DeviceOS;
-import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.ToolType;
 import gov.nist.appvet.shared.all.UserInfo;
 import gov.nist.appvet.shared.all.UserRoleInfo;
@@ -193,14 +192,8 @@ public class ReportUploadDialogBox extends DialogBox {
 		statusLabel = new HTML("");
 		
 		// Add tools to toolNamesComboBox
-		UserRoleInfo submitterRoleInfo = Database.getRoleInfo(userInfo.getUserName());
-		Role submitterRole = submitterRoleInfo.getRole();
-//		String roleStr = userInfo.getRole();
-//		if (roleStr == null) 
-//			log.severe("roleStr is null");
-//		Role role = Role.getRole(roleStr);
-//		if (role == null)
-//			log.severe("role is null");
+		UserRoleInfo submitterRoleInfo = userInfo.getUserRoleInfo();
+		UserRoleInfo.Role submitterRole = submitterRoleInfo.getRole();
 
 		// TODO: Update for groups
 		// Set new list with only permitted tools
@@ -216,13 +209,13 @@ public class ReportUploadDialogBox extends DialogBox {
 					 * ALLOWING A TOOL REPORT TO BE UPLOADED */
 					
 					if (tool.getId().equals("androidsummary") || tool.getId().equals("iossummary")) {
-						if (submitterRole == Role.ADMIN){
+						if (submitterRole == UserRoleInfo.Role.ADMIN){
 							// CW summary -- only admins
 							permittedToolReports.add(tool);
 						}
 					} else if (tool.getId().equals("golive")) {
 						// Go Live -- only admins and analysts
-						if (submitterRole == Role.ADMIN || submitterRole == Role.USER_ANALYST 
+						if (submitterRole == UserRoleInfo.Role.ADMIN || submitterRole == UserRoleInfo.Role.USER_ANALYST 
 //								|| role == Role.ORG_ANALYST || role == Role.DEPT_ANALYST
 								){
 							permittedToolReports.add(tool);
@@ -233,7 +226,7 @@ public class ReportUploadDialogBox extends DialogBox {
 					}					
 				} else if (tool.getType() == ToolType.AUDIT) {
 					// Final determination -- only admins and analysts
-					if (submitterRole == Role.ADMIN || submitterRole == Role.USER_ANALYST 
+					if (submitterRole == UserRoleInfo.Role.ADMIN || submitterRole == UserRoleInfo.Role.USER_ANALYST 
 //							|| 
 //							role == Role.ORG_ANALYST || role == Role.DEPT_ANALYST
 							) {

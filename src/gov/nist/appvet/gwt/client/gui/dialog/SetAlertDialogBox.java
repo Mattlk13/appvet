@@ -73,7 +73,7 @@ public class SetAlertDialogBox extends DialogBox {
 		grid.setWidth("100%");
 		
 		alertNormalRadioButton = new SimpleRadioButton("group1");
-		alertNormalRadioButton.setChecked(true);
+		alertNormalRadioButton.setValue(true);
 		grid.setWidget(0, 0, alertNormalRadioButton);
 		
 		Label lblNormal = new Label("Normal");

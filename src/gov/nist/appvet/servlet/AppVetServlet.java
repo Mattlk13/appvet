@@ -29,7 +29,6 @@ import gov.nist.appvet.shared.all.AppStatus;
 import gov.nist.appvet.shared.all.AppVetParameter;
 import gov.nist.appvet.shared.all.AppVetServletCommand;
 import gov.nist.appvet.shared.all.DeviceOS;
-import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.ToolType;
 import gov.nist.appvet.shared.all.UserInfo;
 import gov.nist.appvet.shared.all.UserRoleInfo;
@@ -544,10 +543,10 @@ public class AppVetServlet extends HttpServlet {
 		
 		// Check if requester is an ADMIN or ANALYST (both have access to all apps)
 		UserRoleInfo requesterRoleInfo = Database.getRoleInfo(requesterUsername);
-		if (requesterRoleInfo.getRole() == Role.ADMIN){
+		if (requesterRoleInfo.getRole() == UserRoleInfo.Role.ADMIN){
 			// Requester is an admin
 			return true;
-		} else if (requesterRoleInfo.getRole() == Role.USER_ANALYST) {
+		} else if (requesterRoleInfo.getRole() == UserRoleInfo.Role.USER_ANALYST) {
 			AppInfo appInfo = new AppInfo(appId);
 			if (Database.isAppAccessibleToAnalyst(requesterUsername, requesterRoleInfo, appInfo)) {
 				return true;
@@ -825,8 +824,8 @@ public class AppVetServlet extends HttpServlet {
 			String clientIpAddress) {
 		try {
 			UserRoleInfo userRoleInfo = Database.getRoleInfo(userName);
-			Role userRole = userRoleInfo.getRole();
-			if (userRole != Role.ADMIN) {
+			UserRoleInfo.Role userRole = userRoleInfo.getRole();
+			if (userRole != UserRoleInfo.Role.ADMIN) {
 				sendHttpResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
 						"Unauthorized access to AppVet log", true);
 				return;
@@ -1013,7 +1012,7 @@ public class AppVetServlet extends HttpServlet {
 		log.debug("Tool report name: " + tool.reportName);
 		
 		UserRoleInfo submitterRoleInfo = Database.getRoleInfo(submitterUserName);
-		Role submitterRole = submitterRoleInfo.getRole();
+		UserRoleInfo.Role submitterRole = submitterRoleInfo.getRole();
 				
 		/*
 		 * TODO: Make the following configurable via tool adapter properties
@@ -1022,14 +1021,16 @@ public class AppVetServlet extends HttpServlet {
 		 */
 		if (tool.toolType == ToolType.SUMMARY) {
 			if (tool.toolId.equals("androidsummary") || tool.toolId.equals("iossummary")) {
-				if (submitterRole == Role.ADMIN){
+				if (submitterRole == UserRoleInfo.Role.ADMIN){
 					// CW summary -- only admins
 				} else {
 					appInfo.log.error("Submitter " + submitterUserName + " not authorized to submit " + tool.toolType.name() + " reports");
 					return;
 				}
 			} else if (tool.toolId.equals("golive")) {
-				if (submitterRole == Role.ADMIN || submitterRole == Role.ANALYST 
+				if (submitterRole == UserRoleInfo.Role.ADMIN 
+						//|| 
+						//submitterRole == UserRoleInfo.Role.ANALYST 
 //						|| submitterRole == Role.ORG_ANALYST || submitterRole == Role.DEPT_ANALYST
 						){
 					// Go Live -- only admins and analysts
@@ -1041,8 +1042,9 @@ public class AppVetServlet extends HttpServlet {
 				// Third-party approval -- all users permitted
 			}			
 		} else if (tool.toolType == ToolType.AUDIT) {
-			if (submitterRole == Role.ADMIN || submitterRole == Role.ANALYST 
-//					|| submitterRole == Role.ORG_ANALYST || submitterRole == Role.DEPT_ANALYST
+			if (submitterRole == UserRoleInfo.Role.ADMIN 
+					//|| submitterRole == UserRoleInfo.Role.ANALYST 
+//					//|| submitterRole == Role.ORG_ANALYST || submitterRole == Role.DEPT_ANALYST
 					) {
 				// Final determination -- only admins and analysts
 			} else {

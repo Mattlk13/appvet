@@ -20,7 +20,7 @@
 package gov.nist.appvet.gwt.shared;
 
 /**
- * This enumeration defines the possible AppVet user roles.
+ * This enumeration defines the possible AppVet alert types.
  * @author steveq@nist.gov
  */
 public enum SystemAlertType {

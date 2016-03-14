@@ -60,14 +60,14 @@ public class UserListDialogBox extends DialogBox {
 	private final static GWTServiceAsync appVetServiceAsync = GWT
 			.create(GWTService.class);
 	public static MessageDialogBox messageDialogBox = null;
-	public UserAcctAdminDialogBox userInfoDialogBox = null;
+	public UserAcctAdminDialogBox userAcctAdminDialogBox = null;
 	public List<UserInfo> allUsers = null;
 	public SingleSelectionModel<UserInfo> usersSelectionModel = null;
 	public UsersListPagingDataGrid<UserInfo> usersListTable = null;
 	public UserInfo selectedUser = null;
 	public boolean searchMode = true;
 	public TextBox searchTextBox = null;
-	public PushButton addButton = null;
+	public PushButton addUserButton = null;
 
 	public UserListDialogBox(int numRowsUsersList, final boolean useSSO) {
 		super(false, true);
@@ -184,29 +184,29 @@ public class UserListDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel.setCellHorizontalAlignment(horizontalPanel_2,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		addButton = new PushButton("Add");
-		addButton.addClickHandler(new ClickHandler() {
+		addUserButton = new PushButton("Add");
+		addUserButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				editUser(true, useSSO);
 			}
 		});
-		addButton.setHTML("Add");
-		horizontalPanel_2.add(addButton);
-		horizontalPanel_2.setCellHorizontalAlignment(addButton,
+		addUserButton.setHTML("Add");
+		horizontalPanel_2.add(addUserButton);
+		horizontalPanel_2.setCellHorizontalAlignment(addUserButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_2.setCellVerticalAlignment(addButton,
+		horizontalPanel_2.setCellVerticalAlignment(addUserButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		addButton.setSize("70px", "18px");
-		final PushButton editButton = new PushButton("Edit");
-		editButton.addClickHandler(new ClickHandler() {
+		addUserButton.setSize("70px", "18px");
+		final PushButton editUserButton = new PushButton("Edit");
+		editUserButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				editUser(false, useSSO);
 			}
 		});
-		final PushButton pshbtnNewButton = new PushButton("Delete");
-		pshbtnNewButton.addClickHandler(new ClickHandler() {
+		final PushButton deleteUserButton = new PushButton("Delete");
+		deleteUserButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				final UserInfo selected = usersSelectionModel
@@ -237,20 +237,20 @@ public class UserListDialogBox extends DialogBox {
 						});
 			}
 		});
-		pshbtnNewButton.setHTML("Delete");
-		horizontalPanel_2.add(pshbtnNewButton);
-		horizontalPanel_2.setCellVerticalAlignment(pshbtnNewButton,
+		deleteUserButton.setHTML("Delete");
+		horizontalPanel_2.add(deleteUserButton);
+		horizontalPanel_2.setCellVerticalAlignment(deleteUserButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_2.setCellHorizontalAlignment(pshbtnNewButton,
+		horizontalPanel_2.setCellHorizontalAlignment(deleteUserButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		pshbtnNewButton.setSize("70px", "18px");
-		editButton.setHTML("Edit");
-		horizontalPanel_2.add(editButton);
-		horizontalPanel_2.setCellHorizontalAlignment(editButton,
+		deleteUserButton.setSize("70px", "18px");
+		editUserButton.setHTML("Edit");
+		horizontalPanel_2.add(editUserButton);
+		horizontalPanel_2.setCellHorizontalAlignment(editUserButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_2.setCellVerticalAlignment(editButton,
+		horizontalPanel_2.setCellVerticalAlignment(editUserButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		editButton.setSize("70px", "18px");
+		editUserButton.setSize("70px", "18px");
 		doneButton = new PushButton("Done");
 		doneButton.setHTML("Done");
 		horizontalPanel_2.add(doneButton);
@@ -283,9 +283,9 @@ public class UserListDialogBox extends DialogBox {
 
 	public void editUser(final boolean newUser, final boolean ssoActive) {
 		if (newUser) {
-			userInfoDialogBox = new UserAcctAdminDialogBox(null, ssoActive);
-			userInfoDialogBox.setText("Add User");
-			userInfoDialogBox.lastNameTextBox.setFocus(true);
+			userAcctAdminDialogBox = new UserAcctAdminDialogBox(null, ssoActive);
+			userAcctAdminDialogBox.setText("Add User");
+			userAcctAdminDialogBox.lastNameTextBox.setFocus(true);
 			
 		} else {
 			selectedUser = usersSelectionModel.getSelectedObject();
@@ -294,36 +294,42 @@ public class UserListDialogBox extends DialogBox {
 						+ "default AppVet administrator", false);
 				return;
 			}
-			userInfoDialogBox = new UserAcctAdminDialogBox(selectedUser, ssoActive);
-			userInfoDialogBox.setText(selectedUser.getFirstName() + " "
+			userAcctAdminDialogBox = new UserAcctAdminDialogBox(selectedUser, ssoActive);
+			userAcctAdminDialogBox.setText(selectedUser.getFirstName() + " "
 					+ selectedUser.getLastName());
-			userInfoDialogBox.lastNameTextBox.setFocus(true);
+			userAcctAdminDialogBox.lastNameTextBox.setFocus(true);
 		}
-		userInfoDialogBox.center();
-		userInfoDialogBox.cancelButton.addClickHandler(new ClickHandler() {
+		userAcctAdminDialogBox.center();
+		userAcctAdminDialogBox.cancelButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				userInfoDialogBox.hide();
-				userInfoDialogBox = null;
+				userAcctAdminDialogBox.hide();
+				userAcctAdminDialogBox = null;
 			}
 		});
-		userInfoDialogBox.submitButton.addClickHandler(new ClickHandler() {
+		userAcctAdminDialogBox.submitButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-
-				final String newPassword1 = userInfoDialogBox.password1TextBox
+				final String newPassword1 = userAcctAdminDialogBox.password1TextBox
 						.getValue();
-				final String newPassword2 = userInfoDialogBox.password2TextBox
+				final String newPassword2 = userAcctAdminDialogBox.password2TextBox
 						.getValue();
 				final UserInfo userInfo = new UserInfo();
-				userInfo.setUserName(userInfoDialogBox.userIdTextBox.getText());
+				userInfo.setUserName(userAcctAdminDialogBox.userIdTextBox.getText());
 				userInfo.setPasswords(newPassword1, newPassword2);
-				userInfo.setLastName(userInfoDialogBox.lastNameTextBox
+				userInfo.setLastName(userAcctAdminDialogBox.lastNameTextBox
 						.getText());
-				userInfo.setFirstName(userInfoDialogBox.firstNameTextBox
+				userInfo.setFirstName(userAcctAdminDialogBox.firstNameTextBox
 						.getText());
-				userInfo.setEmail(userInfoDialogBox.emailTextBox.getText());
-				userInfo.setUserRoleInfo(userInfoDialogBox.userRoleInfo);
+				userInfo.setEmail(userAcctAdminDialogBox.emailTextBox.getText());
+				if (userAcctAdminDialogBox.userRoleInfo == null) {
+					// This should never occur.
+					log.severe("User role info should not be null");
+					return;
+				}
+
+				// Update the user role info
+				userInfo.setUserRoleInfo(userAcctAdminDialogBox.userRoleInfo);
 
 				if (newUser) {
 					userInfo.setNewUser(true);
@@ -354,49 +360,28 @@ public class UserListDialogBox extends DialogBox {
 					}
 
 					if (!selectedUser.getUserName().equals(
-							userInfoDialogBox.userIdTextBox.getText())) {
+							userAcctAdminDialogBox.userIdTextBox.getText())) {
 						selectedUserChanged = true;
 					}
 
 					if (!selectedUser.getLastName().equals(
-							userInfoDialogBox.lastNameTextBox.getText())) {
+							userAcctAdminDialogBox.lastNameTextBox.getText())) {
 						selectedUserChanged = true;
 					}
 
 					if (!selectedUser.getFirstName().equals(
-							userInfoDialogBox.firstNameTextBox.getText())) {
+							userAcctAdminDialogBox.firstNameTextBox.getText())) {
 						selectedUserChanged = true;
 					}
 
-//					if (!selectedUser.getOrganization().equals(
-//							userInfoDialogBox.orgSuggestBox.getText())) {
-//						selectedUserChanged = true;
-//					}
-//
-//					if (!selectedUser.getDepartment().equals(
-//							userInfoDialogBox.deptSuggestBox.getText())) {
-//						selectedUserChanged = true;
-//					}
-
 					if (!selectedUser.getEmail().equals(
-							userInfoDialogBox.emailTextBox.getText())) {
+							userAcctAdminDialogBox.emailTextBox.getText())) {
 						selectedUserChanged = true;
 					}
 					
-					if (userInfoDialogBox.orgUnitsHaveChanged) {
+					if (userAcctAdminDialogBox.userRoleInfoHasChanged) {
 						selectedUserChanged = true;
 					}
-
-//					if (!selectedUser.getRole().equals(
-//							userInfoDialogBox.roleComboBox
-//									.getValue(selectedRoleIndex))) {
-//						selectedUserChanged = true;
-//					}
-//
-//					if (!selectedUser.getEmail().equals(
-//							userInfoDialogBox.emailTextBox.getText())) {
-//						selectedUserChanged = true;
-//					}
 
 					if (!selectedUserChanged) {
 						showMessageDialog("AppVet User Account",
@@ -404,11 +389,12 @@ public class UserListDialogBox extends DialogBox {
 								true);
 						return;
 					}
+
 				} 
 				// Send updated user info to server
 				submitUserInfo(newUser, userInfo);
-				userInfoDialogBox.hide();
-				userInfoDialogBox = null;
+				userAcctAdminDialogBox.hide();
+				userAcctAdminDialogBox = null;
 			}
 		});
 	}
@@ -482,11 +468,13 @@ public class UserListDialogBox extends DialogBox {
 	}
 
 	public void submitUserInfo(final boolean newUser, final UserInfo userInfo) {
+		log.info("Sending to adminSetUser()");
 		appVetServiceAsync.adminSetUser(userInfo,
 				new AsyncCallback<List<UserInfo>>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
+						log.severe(caught.getMessage());
 						showMessageDialog("AppVet Error",
 								"User update retrieval error", true);
 					}

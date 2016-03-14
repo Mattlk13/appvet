@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <AppVet xmlns="http://appvet.github.io/appvet/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://appvet.github.io/appvet/schemas AppVetProperties.xsd">
-	
+
 	<Admin>
-		<!-- Initial credentials to launch AppVet for the first time. Does not have to be 'admin'. -->
+		<!-- Initial credentials to launch AppVet for the first time. Does not 
+			have to be 'admin'. -->
 		<Username>johndoe</Username>
 		<Password>JoHnDoE</Password>
 	</Admin>
-	
+
 	<Host>
 		<!-- Hostname examples: 'myhost.example.gov' or '123.45.6.7'. For local 
-			development, use 'localhost'. Make sure that these parameters match 				your Tomcat configuration. -->
+			development, use 'localhost'. Make sure that these parameters match your 
+			Tomcat configuration. -->
 		<Hostname>127.0.0.1</Hostname>
 		<SSL>false</SSL>
 		<Port>8080</Port>
 	</Host>
-	
+
 	<Logging>
 		<Level>DEBUG</Level>
 		<!-- For development, set ToConsole to true to view logging in Eclipse 
@@ -24,73 +26,64 @@
 	</Logging>
 
 	<SSO>
-        <!-- To login and add users manually, set Active=false. If Active==false,
-             all other SSO elements will be ignored by AppVet.-->
-  		<Active>true</Active>
+		<!-- To login and add users manually, set Active=false. If Active==false, 
+			all other SSO elements will be ignored by AppVet. -->
+		<Active>true</Active>
 		<UnauthorizedURL>unauthorized.html</UnauthorizedURL>
 		<LogoutURL>logout.html</LogoutURL>
 		<UserParams>
-  		<!-- Set the authentication parameters used by the organization. Only
-  		EmailParamName is required and is used as the username if UserNameParamName is
-  		not available. -->
+			<!-- Set the authentication parameters used by the organization. Only 
+				EmailParamName is required and is used as the username if UserNameParamName 
+				is not available. -->
 			<EmailParamName>CAS_Email-Address</EmailParamName>
 		</UserParams>
 	</SSO>
 
 	<OrgLogoAltText>My org logo ALT text!</OrgLogoAltText>
-	
+
 	<Sessions>
 		<Timeout>300000</Timeout>
 		<GetUpdatesDelay>5000</GetUpdatesDelay>
 	</Sessions>
-	
+
 	<Database>
 		<URL>jdbc:mysql://localhost</URL>
 		<UserName>root</UserName>
 		<Password>mypassword1</Password>
 	</Database>
-	
-<!-- EMAIL OPTIONAL
 
-    <Email>
-		<SMTPHost>smtp.test.com</SMTPHost>
-		<SMTPPort>25</SMTPPort>
-		<EnableTLS>true</EnableTLS>
-		<SenderEmail>appvet@test.com</SenderEmail>
-		<SenderName>My AppVet</SenderName>
-		<SMTPAuth>true</SMTPAuth>
-		<SenderEmailPassword>MyEmailPassword</SenderEmailPassword>
-	</Email>
--->
-	
+	<!-- EMAIL OPTIONAL <Email> <SMTPHost>smtp.test.com</SMTPHost> <SMTPPort>25</SMTPPort> 
+		<EnableTLS>true</EnableTLS> <SenderEmail>appvet@test.com</SenderEmail> <SenderName>My 
+		AppVet</SenderName> <SMTPAuth>true</SMTPAuth> <SenderEmailPassword>MyEmailPassword</SenderEmailPassword> 
+		</Email> -->
+
 	<ToolServices>
 		<PollingInterval>1000</PollingInterval>
 		<StaggerInterval>1000</StaggerInterval>
 		<ConnectionTimeout>30000</ConnectionTimeout>
 		<SocketTimeout>1200000</SocketTimeout>
-		<!-- Max time for AppVet to wait from the time an app enters the 
-		PROCESSING state (after registration) until the time all tool reports
-		have been received for the app (in milliseconds). Default timeout
-		is 10 minutes = 600000ms -->
+		<!-- Max time for AppVet to wait from the time an app enters the PROCESSING 
+			state (after registration) until the time all tool reports have been received 
+			for the app (in milliseconds). Default timeout is 10 minutes = 600000ms -->
 		<Timeout>600000</Timeout>
 	</ToolServices>
-	
+
 	<Apps>
 		<KeepApps>true</KeepApps>
 	</Apps>
-	
+
 	<Display>
 		<NumRowsAppsList>20</NumRowsAppsList>
 		<NumRowsUsersList>20</NumRowsUsersList>
 	</Display>
-	
+
 	<DocumentationURL>http://csrc.nist.gov/projects/appvet/</DocumentationURL>
-	
+
 	<OrgLevelNames>
 		<Level1>Agency</Level1>
 		<Level2>Department</Level2>
 		<Level3>Group</Level3>
 		<Level4>Team</Level4>
 	</OrgLevelNames>
-	
+
 </AppVet>

@@ -31,6 +31,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * @author steveq@nist.gov
  */
 public class UserInfo implements IsSerializable {
+	
 	private static Logger log = Logger.getLogger("UserInfo");
 
 	private boolean newUser = false;
