@@ -205,6 +205,14 @@ public class UserInfo implements IsSerializable {
 			return false;
 		}
 		
+		// We validate role in the calling program.
+//		if (!Validate.isValidRole(roleStr)) {
+//			log.info("Validating roleStr: " + roleStr);
+//			AppVetPanel.showMessageDialog("Account Setting Error",
+//					"Invalid role or org hierarchy", true);
+//			return false;
+//		}
+		
 		if (!ignoreBlankPassword) {
 			if (password != null && !password.isEmpty() &&
 					passwordAgain != null && !passwordAgain.isEmpty()) {
@@ -250,14 +258,6 @@ public class UserInfo implements IsSerializable {
 	public void setDefaultAdmin(boolean defaultAdmin) {
 		this.defaultAdmin = defaultAdmin;
 	}
-	
-//	public void setUserRoleInfo(UserRoleInfo userRoleInfo) {
-//		this.userRoleInfo = userRoleInfo;
-//	}
-//	
-//	public UserRoleInfo getUserRoleInfo() {
-//		return userRoleInfo;
-//	}
 
 	public String getRoleStr() {
 		return roleStr;

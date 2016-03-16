@@ -32,7 +32,6 @@ import java.util.logging.Logger;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -67,7 +66,6 @@ public class UserAcctAdminDialogBox extends DialogBox {
 	public PasswordTextBox password2TextBox = null;
 	public TextBox emailTextBox = null;
 	public SimplePanel orgUnitPanel = null;
-//	public boolean userRoleInfoHasChanged = false;
 	public boolean newUser = false;
 	public Label passwordLabel = null;
 	public Label passwordAgainLabel = null;
@@ -83,10 +81,12 @@ public class UserAcctAdminDialogBox extends DialogBox {
 	public SuggestBox level3SuggestBox = null;
 	public SuggestBox level4SuggestBox = null;
 	public List<String> hierarchies = null;
+	public ConfigInfoGwt confInfo = null;
 
 	@SuppressWarnings("deprecation")
 	public UserAcctAdminDialogBox(final ConfigInfoGwt configInfo,
 			final UserInfo userInfo, boolean useSSO, List<String> orgHierarchies) {
+		confInfo = configInfo;
 		if (userInfo == null) {
 			newUser = true;
 		}
@@ -281,7 +281,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		HorizontalPanel horizontalPanel_5 = new HorizontalPanel();
 		verticalPanel.add(horizontalPanel_5);
 
-		Label level1Label = new Label(configInfo.getOrgLevel1Name() + ": ");
+		Label level1Label = new Label(configInfo.getOrgLevel1Name() + " (Required): ");
 		horizontalPanel_5.add(level1Label);
 		horizontalPanel_5.setCellVerticalAlignment(level1Label,
 				HasVerticalAlignment.ALIGN_MIDDLE);
@@ -302,7 +302,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		HorizontalPanel horizontalPanel_6 = new HorizontalPanel();
 		verticalPanel.add(horizontalPanel_6);
 
-		Label level2Label = new Label(configInfo.getOrgLevel2Name() + ": ");
+		Label level2Label = new Label(configInfo.getOrgLevel2Name() + " (Required): ");
 		horizontalPanel_6.add(level2Label);
 		horizontalPanel_6.setCellVerticalAlignment(level2Label,
 				HasVerticalAlignment.ALIGN_MIDDLE);
@@ -638,8 +638,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		String level1 = level1SuggestBox.getValue();
 		if (level1 == null || level1.isEmpty()) {
 			// Level1 is required
-			showMessageDialog("AppVet User Account", "Invalid level1 name",
-					true);
+			//log.severe("Invalid " + confInfo.getOrgLevel1Name());
 			return null;
 		} else {
 			roleStr += level1;
@@ -647,25 +646,73 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		String level2 = level2SuggestBox.getValue();
 		if (level2 == null || level2.isEmpty()) {
 			// Level2 is required
-			showMessageDialog("AppVet User Account", "Invalid level2 name",
-					true);
+			//log.severe("Invalid " + confInfo.getOrgLevel2Name());
 			return null;
 		} else {
 			roleStr += "," + level2;
 		}
+
 		String level3 = level3SuggestBox.getValue();
 		if (level3 == null || level3.isEmpty()) {
-			// Level3 is not required. Do nothing.
+			// Check if level 4 is not null
 		} else {
 			roleStr += "," + level3;
 		}
+		
 		String level4 = level4SuggestBox.getValue();
 		if (level4 == null || level4.isEmpty()) {
 			// Level4 is not required. Do nothing.
 		} else {
 			roleStr += "," + level4;
 		}
+
 		return roleStr;
+	}
+	
+	/** Get database representation of role. */
+	public boolean validateRoleAndHierarchies() {
+		boolean adminRadioSelected = adminRadioButton.getValue();
+		boolean toolRadioSelected = toolRadioButton.getValue();
+		boolean analystRadioSelected = analystRadioButton.getValue();
+		boolean userRadioSelected = userRadioButton.getValue();
+		if (!adminRadioSelected && !toolRadioSelected && !analystRadioSelected
+				&& !userRadioSelected) {
+			showMessageDialog("AppVet User Account", "No user role selected",
+					true);
+			return false;
+		}
+
+		String level1 = level1SuggestBox.getValue();
+		if (level1 == null || level1.isEmpty()) {
+			// Level1 is required
+			log.severe("Invalid " + confInfo.getOrgLevel1Name());
+			showMessageDialog("AppVet User Account", "Invalid " + confInfo.getOrgLevel1Name(),
+					true);
+			return false;
+		}
+		String level2 = level2SuggestBox.getValue();
+		if (level2 == null || level2.isEmpty()) {
+			// Level2 is required
+			showMessageDialog("AppVet User Account", "Invalid " + confInfo.getOrgLevel2Name(),
+					true);
+			return false;
+		}
+		String level4 = level4SuggestBox.getValue();
+		if (level4 == null || level4.isEmpty()) {
+			// Level4 is not required. Do nothing.
+		}
+		
+		String level3 = level3SuggestBox.getValue();
+		if (level3 == null || level3.isEmpty()) {
+			// Check if level 4 is not null
+			if (level4 != null && !level4.isEmpty()) {
+				showMessageDialog("AppVet User Account", confInfo.getOrgLevel3Name() + " cannot be null if " + 
+						confInfo.getOrgLevel4Name() + " is not null.",
+						true);
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public static void killDialogBox(DialogBox dialogBox) {

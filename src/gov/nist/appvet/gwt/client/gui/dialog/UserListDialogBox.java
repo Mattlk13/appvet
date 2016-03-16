@@ -317,20 +317,69 @@ public class UserListDialogBox extends DialogBox {
 		userAcctAdminDialogBox.submitButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				// Get user account values
+				
 				final String newPassword1 = userAcctAdminDialogBox.password1TextBox
 						.getValue();
 				final String newPassword2 = userAcctAdminDialogBox.password2TextBox
 						.getValue();
+				final String newUserName = userAcctAdminDialogBox.userIdTextBox.getText();
+				final String newLastName = userAcctAdminDialogBox.lastNameTextBox.getText();
+				final String newFirstName = userAcctAdminDialogBox.firstNameTextBox.getText();
+				final String newEmail = userAcctAdminDialogBox.emailTextBox.getText();
+				final String newRoleStr = userAcctAdminDialogBox.getRoleStr();
+				
+				// First make sure that the information has changed if this
+				// is not for a new user. If it hasn't changed, cancel the 
+				// update request.
+				if (!newUser) {
+					// Make sure a change was made. If not, don't update
+					// database.
+					boolean selectedUserChanged = false;
+
+					if (newPassword1 != null && !newPassword1.isEmpty()) {
+						selectedUserChanged = true;
+					}
+
+					if (newPassword2 != null && !newPassword2.isEmpty()) {
+						selectedUserChanged = true;
+					}
+
+					if (!selectedUser.getUserName().equals(newUserName)) {
+						selectedUserChanged = true;
+					}
+					
+					if (!selectedUser.getLastName().equals(newLastName)) {
+						selectedUserChanged = true;
+					}
+
+					if (!selectedUser.getFirstName().equals(newFirstName)) {
+						selectedUserChanged = true;
+					}
+
+					if (!selectedUser.getEmail().equals(newEmail)) {
+						selectedUserChanged = true;
+					}
+					
+					if (!selectedUser.getRoleStr().equals(newRoleStr)) {
+						selectedUserChanged = true;
+					}
+
+					if (!selectedUserChanged) {
+						showMessageDialog("AppVet User Account",
+								"No information changed. Cancelling update.",
+								true);
+						return;
+					}
+				} 
+
+				// Check that all values are valid
 				final UserInfo userInfo = new UserInfo();
-				userInfo.setUserName(userAcctAdminDialogBox.userIdTextBox.getText());
+				userInfo.setUserName(newUserName);
 				userInfo.setPasswords(newPassword1, newPassword2);
-				userInfo.setLastName(userAcctAdminDialogBox.lastNameTextBox
-						.getText());
-				userInfo.setFirstName(userAcctAdminDialogBox.firstNameTextBox
-						.getText());
-				userInfo.setEmail(userAcctAdminDialogBox.emailTextBox.getText());
-				userInfo.setRoleStr(userAcctAdminDialogBox.getRoleStr());
+				userInfo.setLastName(newLastName);
+				userInfo.setFirstName(newFirstName);
+				userInfo.setEmail(newEmail);
+				userInfo.setRoleStr(newRoleStr);
 
 				if (newUser) {
 					userInfo.setNewUser(true);
@@ -346,53 +395,12 @@ public class UserListDialogBox extends DialogBox {
 						return;
 					}
 				}
+				
+				// Validate roles and hierarchies
+				if (!userAcctAdminDialogBox.validateRoleAndHierarchies()) {
+					return;
+				}
 
-				if (!newUser) {
-					// Make sure a change was made. If not, don't update
-					// database.
-					boolean selectedUserChanged = false;
-
-					if (newPassword1 != null && !newPassword1.isEmpty()) {
-						selectedUserChanged = true;
-					}
-
-					if (newPassword2 != null && !newPassword2.isEmpty()) {
-						selectedUserChanged = true;
-					}
-
-					if (!selectedUser.getUserName().equals(
-							userAcctAdminDialogBox.userIdTextBox.getText())) {
-						selectedUserChanged = true;
-					}
-
-					if (!selectedUser.getLastName().equals(
-							userAcctAdminDialogBox.lastNameTextBox.getText())) {
-						selectedUserChanged = true;
-					}
-
-					if (!selectedUser.getFirstName().equals(
-							userAcctAdminDialogBox.firstNameTextBox.getText())) {
-						selectedUserChanged = true;
-					}
-
-					if (!selectedUser.getEmail().equals(
-							userAcctAdminDialogBox.emailTextBox.getText())) {
-						selectedUserChanged = true;
-					}
-					
-					if (!selectedUser.getRoleStr().equals(
-							userAcctAdminDialogBox.getRoleStr())) {
-						selectedUserChanged = true;
-					}
-
-					if (!selectedUserChanged) {
-						showMessageDialog("AppVet User Account",
-								"No information changed. Cancelling update.",
-								true);
-						return;
-					}
-
-				} 
 				// Send updated user info to server
 				submitUserInfo(newUser, userInfo);
 				userAcctAdminDialogBox.hide();

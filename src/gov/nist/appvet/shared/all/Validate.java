@@ -117,6 +117,10 @@ public class Validate {
 		return email
 				.matches("[A-Za-z0-9._%+-][A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{3}");
 	}
+	
+	public static boolean isValidRole(String roleStr) {
+		return isPrintable(roleStr);
+	}
 
 	public static boolean isUrl(String s) {
 		if (s == null || s.isEmpty()) {
@@ -126,9 +130,6 @@ public class Validate {
 	}
 
 	public static boolean isLegalFileName(String fileName) {
-		if (fileName == null || fileName.isEmpty()) {
-			return false;
-		}
 		return isPrintable(fileName) && !hasWhiteSpace(fileName);
 	}
 
@@ -160,17 +161,6 @@ public class Validate {
 		}
 		return isPrintable(str) && !hasWhiteSpace(str);
 	}
-
-//	public static boolean isValidRole(String roleName) {
-//		if (roleName == null || roleName.isEmpty()) {
-//			return false;
-//		}
-//		Role role = Role.getRole(roleName);
-//		if (role != null)
-//			return true;
-//		else
-//			return false;
-//	}
 	
 	public static boolean hasValidOs(String appOS) {
 		if (appOS == null || appOS.isEmpty()) {
