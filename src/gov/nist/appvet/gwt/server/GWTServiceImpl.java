@@ -194,31 +194,30 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			throws IllegalArgumentException {
 		String sql = "SELECT * FROM users " + "where username='" + username
 				+ "'";
-		if (!Database.exists(sql)) {
-			// Check if user is the AppVet default Admin defined in
-			// AppVetProperties.xml. This user will always be able to access
-			// AppVet, even if its database info has been corrupted.
-			if (username.equals(AppVetProperties.DEFAULT_ADMIN_USERNAME)
-					&& password.equals(AppVetProperties.DEFAULT_ADMIN_PASSWORD)) {
-				log.debug("Adding user-defined default admin '" + username
-						+ "'");
-				String email = AppVetProperties.DEFAULT_ADMIN_EMAIL;
-				String role = AppVetProperties.DEFAULT_ADMIN_ROLE.name();
-				String lastName = AppVetProperties.DEFAULT_ADMIN_LASTNAME;
-				String firstName = AppVetProperties.DEFAULT_ADMIN_FIRSTNAME;
-				if (Database.adminAddNewUser(username, password, email, role,
-						lastName, firstName)) {
-					log.debug("Added new admin user '" + username + "'");
-				} else {
-					log.debug("Could not add new admin user '" + username + "'");
-					return null;
-				}
+
+		// Check if user is the AppVet default Admin defined in
+		// AppVetProperties.xml. This user will always be able to access
+		// AppVet, even if its database info has been corrupted.
+		if (username.equals(AppVetProperties.DEFAULT_ADMIN_USERNAME)
+				&& password.equals(AppVetProperties.DEFAULT_ADMIN_PASSWORD)) {
+			log.debug("Adding user-defined default admin '" + username + "'");
+			String email = AppVetProperties.DEFAULT_ADMIN_EMAIL;
+			String role = AppVetProperties.DEFAULT_ADMIN_ROLE.name();
+			String lastName = AppVetProperties.DEFAULT_ADMIN_LASTNAME;
+			String firstName = AppVetProperties.DEFAULT_ADMIN_FIRSTNAME;
+			if (Database.adminAddNewUser(username, password, email, role,
+					lastName, firstName)) {
+				log.debug("Added new admin user '" + username + "'");
 			} else {
-				log.debug("User '" + username
-						+ "' does not exist in database. Cannot authenticate.");
+				log.debug("Could not add new admin user '" + username + "'");
 				return null;
 			}
+		} else if (!Database.exists(sql)) {
+			log.debug("User '" + username
+					+ "' does not exist in database. Cannot authenticate.");
+			return null;
 		}
+
 		log.debug("User '" + username + "' exists in database.");
 		if (Authenticate.isAuthenticated(username, password)) {
 			log.debug("User '" + username + "' authenticated");
@@ -275,8 +274,8 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	}
 
 	/**
-	 * Get AppVet configuration information from AppVetProperties and
-	 * user account information to be sent to the GWT client.
+	 * Get AppVet configuration information from AppVetProperties and user
+	 * account information to be sent to the GWT client.
 	 */
 	private static ConfigInfoGwt getConfigInfo(String username,
 			String sessionId, Date sessionExpiration) {
@@ -296,6 +295,12 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		configInfo.setDocumentationURL(AppVetProperties.DOCUMENTATION_URL);
 		configInfo.setSSOActive(AppVetProperties.SSO_ACTIVE);
 		configInfo.setSSOLogoutURL(AppVetProperties.SSO_LOGOUT_URL);
+		configInfo.setOrgLevel1Name(AppVetProperties.ORG_LEVEL1_NAME);
+		configInfo.setOrgLevel2Name(AppVetProperties.ORG_LEVEL2_NAME);
+		configInfo.setOrgLevel3Name(AppVetProperties.ORG_LEVEL3_NAME);
+		configInfo.setOrgLevel4Name(AppVetProperties.ORG_LEVEL4_NAME);
+		configInfo.setKeepApps(AppVetProperties.KEEP_APPS);
+
 		final ArrayList<ToolInfoGwt> tools = new ArrayList<ToolInfoGwt>();
 		// Get Android tools
 		final ArrayList<ToolAdapter> androidTools = AppVetProperties.androidTools;
@@ -407,6 +412,10 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	public AppsListGwt getAllApps(String username)
 			throws IllegalArgumentException {
 		return Database.getApps(username, null);
+	}
+	
+	public List<String> getOrgHierarchies() {
+		return Database.getOrgHierarchies();
 	}
 
 	public List<ToolStatusGwt> getToolsResults(DeviceOS os, String sessionId,
@@ -601,48 +610,49 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	 * This method gets the organizations and departments for users. Note that
 	 * this method is inefficient and should be optimized.
 	 */
-//	public List<OrgDepts> getOrgDeptsList() throws IllegalArgumentException {
-//		Hashtable<String, List<String>> orgDeptHashtable = new Hashtable<String, List<String>>();
-//		List<UserInfo> users = Database.getUsers(null);
-//		for (int i = 0; i < users.size(); i++) {
-//			UserInfo user = users.get(i);
-//			// log.debug("Adding org/dept for user: " + user.getUserName());
-//			String userOrg = user.getOrganization();
-//			String userDept = user.getDepartment();
-//			if (!orgDeptHashtable.containsKey(userOrg)) {
-//				// log.debug("Adding new org " + userOrg);
-//				// Add this org to the hashtable
-//				List<String> deptList = new ArrayList<String>();
-//				deptList.add(userDept);
-//				// log.debug("Adding new dept " + userDept + " for new org " +
-//				// userOrg);
-//				orgDeptHashtable.put(userOrg, deptList);
-//			} else {
-//				// Org is already in hashtable so check if dept is in its list
-//				List<String> deptList = orgDeptHashtable.get(userOrg);
-//				if (!listContains(deptList, userDept)) {
-//					// Add it to the list
-//					deptList.add(userDept);
-//					// log.debug("Adding new dept " + userDept +
-//					// " to existing org " + userOrg);
-//				}
-//			}
-//		}
-//		List<OrgDepts> orgDeptsList = new ArrayList<OrgDepts>();
-//		Set<String> keys = orgDeptHashtable.keySet();
-//		for (String key : keys) {
-//			List<String> deptList = orgDeptHashtable.get(key);
-//			// log.debug("key: " + key);
-//			for (int i = 0; i < deptList.size(); i++) {
-//				// log.debug("depts: " + deptList.get(i));
-//			}
-//			OrgDepts orgDepts = new OrgDepts();
-//			orgDepts.orgName = key;
-//			orgDepts.deptNames = deptList.toArray(new String[deptList.size()]);
-//			orgDeptsList.add(orgDepts);
-//		}
-//		return orgDeptsList;
-//	}
+	// public List<OrgDepts> getOrgDeptsList() throws IllegalArgumentException {
+	// Hashtable<String, List<String>> orgDeptHashtable = new Hashtable<String,
+	// List<String>>();
+	// List<UserInfo> users = Database.getUsers(null);
+	// for (int i = 0; i < users.size(); i++) {
+	// UserInfo user = users.get(i);
+	// // log.debug("Adding org/dept for user: " + user.getUserName());
+	// String userOrg = user.getOrganization();
+	// String userDept = user.getDepartment();
+	// if (!orgDeptHashtable.containsKey(userOrg)) {
+	// // log.debug("Adding new org " + userOrg);
+	// // Add this org to the hashtable
+	// List<String> deptList = new ArrayList<String>();
+	// deptList.add(userDept);
+	// // log.debug("Adding new dept " + userDept + " for new org " +
+	// // userOrg);
+	// orgDeptHashtable.put(userOrg, deptList);
+	// } else {
+	// // Org is already in hashtable so check if dept is in its list
+	// List<String> deptList = orgDeptHashtable.get(userOrg);
+	// if (!listContains(deptList, userDept)) {
+	// // Add it to the list
+	// deptList.add(userDept);
+	// // log.debug("Adding new dept " + userDept +
+	// // " to existing org " + userOrg);
+	// }
+	// }
+	// }
+	// List<OrgDepts> orgDeptsList = new ArrayList<OrgDepts>();
+	// Set<String> keys = orgDeptHashtable.keySet();
+	// for (String key : keys) {
+	// List<String> deptList = orgDeptHashtable.get(key);
+	// // log.debug("key: " + key);
+	// for (int i = 0; i < deptList.size(); i++) {
+	// // log.debug("depts: " + deptList.get(i));
+	// }
+	// OrgDepts orgDepts = new OrgDepts();
+	// orgDepts.orgName = key;
+	// orgDepts.deptNames = deptList.toArray(new String[deptList.size()]);
+	// orgDeptsList.add(orgDepts);
+	// }
+	// return orgDeptsList;
+	// }
 
 	private boolean listContains(List<String> list, String item) {
 		for (int i = 0; i < list.size(); i++) {
@@ -652,10 +662,10 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		}
 		return false;
 	}
-//
-//	@Override
-//	public List<OrgDepts> getOrgDeptsList() throws IllegalArgumentException {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+	//
+	// @Override
+	// public List<OrgDepts> getOrgDeptsList() throws IllegalArgumentException {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
 }

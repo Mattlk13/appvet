@@ -103,7 +103,7 @@
 				<xs:element name="DocumentationURL" type="xs:string"
 					maxOccurs="1" minOccurs="0">
 				</xs:element>
-				<xs:element name="OrgLevelNames" type="OrgLevelNamesType"
+				<xs:element name="OrgHierarchyLevels" type="OrgHierarchyLevelsType"
 					maxOccurs="1" minOccurs="1"></xs:element>
 			</xs:sequence>
 
@@ -377,7 +377,7 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:complexType name="OrgLevelNamesType">
+	<xs:complexType name="OrgHierarchyLevelsType">
 		<xs:sequence>
 			<!-- Default admin username and password. -->
 			<xs:element name="Level1" type="xs:string" maxOccurs="1"

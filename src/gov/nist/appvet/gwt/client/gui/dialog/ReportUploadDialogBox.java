@@ -24,10 +24,9 @@ import java.util.logging.Logger;
 
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import gov.nist.appvet.shared.all.DeviceOS;
+import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.ToolType;
 import gov.nist.appvet.shared.all.UserInfo;
-import gov.nist.appvet.shared.all.UserRoleInfo;
-import gov.nist.appvet.shared.backend.Database;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -192,48 +191,49 @@ public class ReportUploadDialogBox extends DialogBox {
 		statusLabel = new HTML("");
 		
 		// Add tools to toolNamesComboBox
-		UserRoleInfo submitterRoleInfo = userInfo.getUserRoleInfo();
-		UserRoleInfo.Role submitterRole = submitterRoleInfo.getRole();
-
-		// TODO: Update for groups
+		String submitterRoleStr = userInfo.getRoleStr();
+		Role submitterRole = null;
+		try {
+			submitterRole = Role.getRole(submitterRoleStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		// Set new list with only permitted tools
 		for (int i = 0; i < tools.size(); i++) {
 			ToolInfoGwt tool = tools.get(i);
 			if (tool.getOs().equals(os.name())) {
+				
+				/* PUT YOUR SPECIFIC POLICY HERE FOR PERMITTING
+				 *  TOOL REPORT TO BE UPLOADED */
+				
 				/*
-				 * This should match the policies defined in ReportUploadDialogBox!
+				 * THE FOLLOWING SHOULD MATCH THE POLICIES DEFINED IN YOUR
+				 * AppVetServlet.submitReport()!
 				 */
+				
 				if (tool.getType() == ToolType.SUMMARY) {
-					
-					/* PUT YOUR SPECIFIC POLICY HERE FOR 
-					 * ALLOWING A TOOL REPORT TO BE UPLOADED */
-					
 					if (tool.getId().equals("androidsummary") || tool.getId().equals("iossummary")) {
-						if (submitterRole == UserRoleInfo.Role.ADMIN){
-							// CW summary -- only admins
+						// Only ADMINs are permitted to submit summary reports
+						if (submitterRole == Role.ADMIN){
 							permittedToolReports.add(tool);
 						}
 					} else if (tool.getId().equals("golive")) {
-						// Go Live -- only admins and analysts
-						if (submitterRole == UserRoleInfo.Role.ADMIN || submitterRole == UserRoleInfo.Role.ANALYST 
-//								|| role == Role.ORG_ANALYST || role == Role.DEPT_ANALYST
-								){
+						// Only ADMINs and ANALYSTs are permitted to submit GoLive reports
+						if (submitterRole == Role.ADMIN || submitterRole == Role.ANALYST){
 							permittedToolReports.add(tool);
 						}
 					} else if (tool.getId().equals("approval")) {
-						// Third-party approval -- all users permitted
+						// All users are permitted to submit Approval reports
 						permittedToolReports.add(tool);
 					}					
 				} else if (tool.getType() == ToolType.AUDIT) {
-					// Final determination -- only admins and analysts
-					if (submitterRole == UserRoleInfo.Role.ADMIN || submitterRole == UserRoleInfo.Role.ANALYST 
-//							|| 
-//							role == Role.ORG_ANALYST || role == Role.DEPT_ANALYST
-							) {
+					// Only ADMINs and ANALYSTs can submit Audit reports
+					if (submitterRole == Role.ADMIN || submitterRole == Role.ANALYST) {
 						permittedToolReports.add(tool);
 					}
-				} else if (tool.getType() == ToolType.TESTTOOL || tool.getType() == ToolType.REPORT) {
-					// All users permitted
+				} else if (tool.getType() == ToolType.TESTTOOL || 
+						tool.getType() == ToolType.REPORT) {
+					// All users are permitted to submit TESTTOOL or REPORT reports
 					permittedToolReports.add(tool);
 				} 
 			}
@@ -506,7 +506,7 @@ public class ReportUploadDialogBox extends DialogBox {
 
 				String risk = null;
 				if (toolType == ToolType.SUMMARY) {
-					// SUMMARY reports only have status of LOW (which is displayed as "AVAILABLE")
+					// SUMMARY reports only have a status of LOW (which is displayed as "AVAILABLE")
 					risk = "AVAILABLE";
 				} else {
 					int selectedRiskIndex = toolRiskComboBox.getSelectedIndex();

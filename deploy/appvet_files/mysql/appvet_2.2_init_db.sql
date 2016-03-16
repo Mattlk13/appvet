@@ -172,7 +172,7 @@ CREATE TABLE `users` (
   `lastName` varchar(32) DEFAULT NULL,
   `firstName` varchar(32) DEFAULT NULL,
   `email` varchar(120) DEFAULT NULL,
-  `groups` varchar(5000) DEFAULT NULL,
+  `role` varchar(500) DEFAULT 'NEW',
   `lastlogon` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `fromhost` varchar(120) DEFAULT NULL,
   `toolsAuth` varchar(1000) DEFAULT NULL,

@@ -42,9 +42,9 @@ import gov.nist.appvet.shared.all.AppStatus;
 import gov.nist.appvet.shared.all.AppVetParameter;
 import gov.nist.appvet.shared.all.AppVetServletCommand;
 import gov.nist.appvet.shared.all.DeviceOS;
+import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.ToolType;
 import gov.nist.appvet.shared.all.UserInfo;
-import gov.nist.appvet.shared.all.UserRoleInfo;
 import gov.nist.appvet.shared.all.Validate;
 
 import java.util.ArrayList;
@@ -793,8 +793,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				new Command() {
 					@Override
 					public void execute() {
-						usersDialogBox = new UserListDialogBox(configInfo
-								.getNumRowsUsersList(), ssoActive);
+						usersDialogBox = new UserListDialogBox(configInfo, ssoActive);
 						usersDialogBox.setText("Users");
 						usersDialogBox.center();
 						usersDialogBox.doneButton.setFocus(true);
@@ -811,8 +810,14 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		adminMenuBar.addItem("Alerts", alertMenubar);
 
-		if (userInfo.getUserRoleInfo().getRole() == UserRoleInfo.Role.ADMIN) {
-			appVetMenuBar.addItem(adminMenuItem);
+		Role role;
+		try {
+			role = Role.getRole(userInfo.getRoleStr());
+			if (role == Role.ADMIN) {
+				appVetMenuBar.addItem(adminMenuItem);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		final HorizontalSplitPanel centerAppVetSplitPanel = new HorizontalSplitPanel();
@@ -1164,6 +1169,10 @@ public class AppVetPanel extends DockLayoutPanel {
 		downloadReportsButton.setSize("80px", "");
 
 		downloadAppButton = new PushButton("Download App");
+		if (!configInfo.isKeepApps()) {
+			// Hide download app button if KEEP_APPS is false
+			downloadAppButton.setVisible(false);
+		}
 		horizontalPanel_1.add(downloadAppButton);
 		downloadAppButton
 				.setHTML("<img width=\"80px\" src=\"images/download-app-up.png\" alt=\"Download App\" />");
@@ -1632,6 +1641,7 @@ public class AppVetPanel extends DockLayoutPanel {
 							String status = null;
 
 							if (toolStatus.getStatusHtml().indexOf("LOW") > -1) {
+								// Pre-processor status of LOW is displayed as "COMPLETED"
 								status = "<div id=\"tabledim\" style='color: black'>COMPLETED</div>";
 							} else {
 								status = toolStatus.getStatusHtml();
@@ -2003,7 +2013,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				updatedUserInfo.setFirstName(newFirstName);
 				updatedUserInfo.setEmail(newEmail);
 				updatedUserInfo.setPasswords(newPassword1, newPassword2);
-				updatedUserInfo.setUserRoleInfo(userInfo.getUserRoleInfo());
+				updatedUserInfo.setRoleStr(userInfo.getRoleStr());
 
 				if (ssoActive) {
 					if (!updatedUserInfo.isValid(true))

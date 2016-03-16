@@ -45,7 +45,10 @@ public class UserInfo implements IsSerializable {
 	private String email = null;
 	private ArrayList<UserToolCredentials> toolCredentials = null;
 	private boolean defaultAdmin = false;
-	private UserRoleInfo userRoleInfo = null;
+	/* The string representation of a UserRoleInfo object which can be read from or written
+	 * to the database.
+	 */
+	private String roleStr = null;
 	
 	// --------------- Updated only by AppVet --------------
 	private Date lastLogon = null;
@@ -248,11 +251,19 @@ public class UserInfo implements IsSerializable {
 		this.defaultAdmin = defaultAdmin;
 	}
 	
-	public void setUserRoleInfo(UserRoleInfo userRoleInfo) {
-		this.userRoleInfo = userRoleInfo;
+//	public void setUserRoleInfo(UserRoleInfo userRoleInfo) {
+//		this.userRoleInfo = userRoleInfo;
+//	}
+//	
+//	public UserRoleInfo getUserRoleInfo() {
+//		return userRoleInfo;
+//	}
+
+	public String getRoleStr() {
+		return roleStr;
 	}
-	
-	public UserRoleInfo getUserRoleInfo() {
-		return userRoleInfo;
+
+	public void setRoleStr(String roleStr) {
+		this.roleStr = roleStr;
 	}
 }

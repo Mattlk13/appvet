@@ -29,9 +29,9 @@ import gov.nist.appvet.shared.all.AppStatus;
 import gov.nist.appvet.shared.all.AppVetParameter;
 import gov.nist.appvet.shared.all.AppVetServletCommand;
 import gov.nist.appvet.shared.all.DeviceOS;
+import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.ToolType;
 import gov.nist.appvet.shared.all.UserInfo;
-import gov.nist.appvet.shared.all.UserRoleInfo;
 import gov.nist.appvet.shared.all.Validate;
 import gov.nist.appvet.shared.backend.AppInfo;
 import gov.nist.appvet.shared.backend.AppStatusManager;
@@ -541,14 +541,20 @@ public class AppVetServlet extends HttpServlet {
 			return true;
 		}
 		
-		// Check if requester is an ADMIN or ANALYST (both have access to all apps)
-		UserRoleInfo requesterRoleInfo = Database.getRoleInfo(requesterUsername);
-		if (requesterRoleInfo.getRole() == UserRoleInfo.Role.ADMIN){
+		// Check if requester is an ADMIN or ANALYST
+		String requesterRoleStr = Database.getRoleStr(requesterUsername);
+		Role requesterRole = null;
+		try {
+			requesterRole = Role.getRole(requesterRoleStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (requesterRole == Role.ADMIN){
 			// Requester is an admin
 			return true;
-		} else if (requesterRoleInfo.getRole() == UserRoleInfo.Role.ANALYST) {
+		} else if (requesterRole == Role.ANALYST) {
 			AppInfo appInfo = new AppInfo(appId);
-			if (Database.isAppAccessibleToAnalyst(requesterUsername, requesterRoleInfo, appInfo)) {
+			if (Database.appIsAccessibleToUser(requesterUsername, appInfo)) {
 				return true;
 			} else {
 				return false;
@@ -823,9 +829,9 @@ public class AppVetServlet extends HttpServlet {
 	private void returnAppVetLog(String userName, HttpServletResponse response,
 			String clientIpAddress) {
 		try {
-			UserRoleInfo userRoleInfo = Database.getRoleInfo(userName);
-			UserRoleInfo.Role userRole = userRoleInfo.getRole();
-			if (userRole != UserRoleInfo.Role.ADMIN) {
+			String userRoleStr = Database.getRoleStr(userName);
+			Role userRole = Role.getRole(userRoleStr);
+			if (userRole != Role.ADMIN) {
 				sendHttpResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
 						"Unauthorized access to AppVet log", true);
 				return;
@@ -1011,51 +1017,82 @@ public class AppVetServlet extends HttpServlet {
 		log.debug("Submit report for " + tool.os + " tool " + tool.toolId + ", type: " + tool.toolType);
 		log.debug("Tool report name: " + tool.reportName);
 		
-		UserRoleInfo submitterRoleInfo = Database.getRoleInfo(submitterUserName);
-		UserRoleInfo.Role submitterRole = submitterRoleInfo.getRole();
+		String submitterRoleStr = Database.getRoleStr(submitterUserName);
+		String appOwnerRoleStr = Database.getRoleStr(appInfo.ownerName);
+		Role submitterRole = null;
+		try {
+			submitterRole = Role.getRole(submitterRoleStr);
+			// Make sure that submitter can access the app for the related app
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 				
 		/*
 		 * TODO: Make the following configurable via tool adapter properties
 		 * The following should match the policies defined in ReportUploadDialogBox!
 		 * The following can be modified to support specific use-case policies.
 		 */
+		
+		/* PUT YOUR SPECIFIC POLICY HERE FOR PERMITTING
+		 *  TOOL REPORT TO BE UPLOADED */
+		
+		/*
+		 * THE FOLLOWING SHOULD MATCH THE POLICIES DEFINED IN YOUR
+		 * ReportUploadDialogBox constructor!
+		 */
+		
 		if (tool.toolType == ToolType.SUMMARY) {
 			if (tool.toolId.equals("androidsummary") || tool.toolId.equals("iossummary")) {
-				if (submitterRole == UserRoleInfo.Role.ADMIN){
-					// CW summary -- only admins
+				if (submitterRole == Role.ADMIN){
+					// Only ADMINs are permitted to submit summary reports
 				} else {
-					appInfo.log.error("Submitter " + submitterUserName + " not authorized to submit " + tool.toolType.name() + " reports");
+					// No other users are permitted to submit summary reports
+					appInfo.log.error("Submitter " + submitterUserName + " is not authorized to submit " + tool.toolType.name() + " reports");
 					return;
 				}
 			} else if (tool.toolId.equals("golive")) {
-				if (submitterRole == UserRoleInfo.Role.ADMIN 
-						//|| 
-						//submitterRole == UserRoleInfo.Role.ANALYST 
-//						|| submitterRole == Role.ORG_ANALYST || submitterRole == Role.DEPT_ANALYST
-						){
-					// Go Live -- only admins and analysts
+				if (submitterRole == Role.ADMIN){
+					// ADMINs are permitted to submit GoLive reports
+				} else if (submitterRole == Role.ANALYST) {
+					// Check if ANALYST can access related app
+					if (Database.appIsAccessibleToUser(submitterUserName, appInfo)) {
+						// Approved ANALYSTs are permitted to submit GoLive reports
+					} else {
+						// Unapproved ANALYSTs are not permitted to submit GoLive reports
+						appInfo.log.error("Submitter " + submitterUserName + " is not authorized to submit " + tool.toolType.name() + " reports");
+						return;
+					}
 				} else {
-					appInfo.log.error("Submitter " + submitterUserName + " not authorized to submit " + tool.toolType.name() + " reports");
+					// No other users can submit GoLive reports
+					appInfo.log.error("Submitter " + submitterUserName + " is not authorized to submit " + tool.toolType.name() + " reports");
 					return;
 				}
 			} else if (tool.toolId.equals("approval")) {
 				// Third-party approval -- all users permitted
 			}			
 		} else if (tool.toolType == ToolType.AUDIT) {
-			if (submitterRole == UserRoleInfo.Role.ADMIN 
-					//|| submitterRole == UserRoleInfo.Role.ANALYST 
-//					//|| submitterRole == Role.ORG_ANALYST || submitterRole == Role.DEPT_ANALYST
-					) {
-				// Final determination -- only admins and analysts
+			if (submitterRole == Role.ADMIN) {
+				// ADMINs are permitted to submit AUDIT reports
+			} else if (submitterRole == Role.ANALYST) {
+				// Check if ANALYST can access related app
+				if (Database.appIsAccessibleToUser(submitterUserName, appInfo)) {
+					// Approved ANALYSTs are permitted to submit AUDIT reports
+				} else {
+					// Unapproved ANALYSTs are not permitted to submit AUDIT reports
+					appInfo.log.error("Submitter " + submitterUserName + " is not authorized to submit " + tool.toolType.name() + " reports");
+					return;
+				}
 			} else {
-				appInfo.log.error("Submitter " + submitterUserName + " not authorized to submit " + tool.toolType.name() + " reports");
+				// No other users can submit AUDIT reports
+				appInfo.log.error("Submitter " + submitterUserName + " is not authorized to submit " + tool.toolType.name() + " reports");
 				return;
 			}
 		} else if (tool.toolType == ToolType.TESTTOOL || tool.toolType == ToolType.REPORT) {
 			// All users permitted
 		} 
 
-		
 		// Save report
 		final boolean reportSaved = FileUtil.saveReportUpload(appInfo.appId,
 				tool.reportName, appInfo.fileItem);

@@ -22,10 +22,10 @@ package gov.nist.appvet.gwt.client.gui.dialog;
 import gov.nist.appvet.gwt.client.GWTService;
 import gov.nist.appvet.gwt.client.GWTServiceAsync;
 import gov.nist.appvet.gwt.client.gui.table.appslist.UsersListPagingDataGrid;
+import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
+import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.UserInfo;
-import gov.nist.appvet.shared.all.UserRoleInfo;
 import gov.nist.appvet.shared.all.Validate;
-import gov.nist.appvet.shared.all.UserRoleInfo.Role;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,8 +70,9 @@ public class UserListDialogBox extends DialogBox {
 	public boolean searchMode = true;
 	public TextBox searchTextBox = null;
 	public PushButton addUserButton = null;
+	public List<String> orgHierarchies = new ArrayList<String>();
 
-	public UserListDialogBox(int numRowsUsersList, final boolean useSSO) {
+	public UserListDialogBox(final ConfigInfoGwt configInfo, final boolean useSSO) {
 		super(false, true);
 		setSize("", "450px");
 		setAnimationEnabled(false);
@@ -168,7 +169,7 @@ public class UserListDialogBox extends DialogBox {
 		dockLayoutPanel.setSize("", "380px");
 		usersListTable = new UsersListPagingDataGrid<UserInfo>();
 		usersListTable.dataGrid.setFocus(false);
-		usersListTable.setPageSize(numRowsUsersList);
+		usersListTable.setPageSize(configInfo.getNumRowsUsersList());
 		usersListTable.dataGrid.setSize("342px", "342px");
 		usersListTable.dataGrid
 				.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
@@ -190,7 +191,7 @@ public class UserListDialogBox extends DialogBox {
 		addUserButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				editUser(true, useSSO);
+				editUser(configInfo, true, useSSO);
 			}
 		});
 		addUserButton.setHTML("Add");
@@ -204,7 +205,7 @@ public class UserListDialogBox extends DialogBox {
 		editUserButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				editUser(false, useSSO);
+				editUser(configInfo, false, useSSO);
 			}
 		});
 		final PushButton deleteUserButton = new PushButton("Delete");
@@ -283,9 +284,12 @@ public class UserListDialogBox extends DialogBox {
 		});
 	}
 
-	public void editUser(final boolean newUser, final boolean ssoActive) {
+	public void editUser(final ConfigInfoGwt configInfo, 
+			final boolean newUser, final boolean ssoActive) {
+		
 		if (newUser) {
-			userAcctAdminDialogBox = new UserAcctAdminDialogBox(null, ssoActive);
+			userAcctAdminDialogBox = 
+					new UserAcctAdminDialogBox(configInfo, null, ssoActive, orgHierarchies);
 			userAcctAdminDialogBox.setText("Add User");
 			userAcctAdminDialogBox.lastNameTextBox.setFocus(true);
 			
@@ -296,7 +300,8 @@ public class UserListDialogBox extends DialogBox {
 						+ "default AppVet administrator", false);
 				return;
 			}
-			userAcctAdminDialogBox = new UserAcctAdminDialogBox(selectedUser, ssoActive);
+			userAcctAdminDialogBox = 
+					new UserAcctAdminDialogBox(configInfo, selectedUser, ssoActive, orgHierarchies);
 			userAcctAdminDialogBox.setText(selectedUser.getFirstName() + " "
 					+ selectedUser.getLastName());
 			userAcctAdminDialogBox.lastNameTextBox.setFocus(true);
@@ -325,54 +330,7 @@ public class UserListDialogBox extends DialogBox {
 				userInfo.setFirstName(userAcctAdminDialogBox.firstNameTextBox
 						.getText());
 				userInfo.setEmail(userAcctAdminDialogBox.emailTextBox.getText());
-				// Get user role info
-				UserRoleInfo newUserRoleInfo = null;
-				if (userAcctAdminDialogBox.adminRadioButton.getValue()) {
-					newUserRoleInfo = new UserRoleInfo(Role.ADMIN);
-				} else if (userAcctAdminDialogBox.toolRadioButton.getValue()) {
-					newUserRoleInfo = new UserRoleInfo(Role.TOOL_PROVIDER);
-				} else if (userAcctAdminDialogBox.analystRadioButton.getValue()) {
-					newUserRoleInfo = new UserRoleInfo(Role.ANALYST);
-				} else if (userAcctAdminDialogBox.userRadioButton.getValue()) {
-					newUserRoleInfo = new UserRoleInfo(Role.USER);
-				}
-				if (newUserRoleInfo.getRole() == Role.ANALYST ||
-						newUserRoleInfo.getRole() == Role.USER) {
-					String level1 = userAcctAdminDialogBox.level1SuggestBox.getValue();
-					if (level1 == null || level1.isEmpty()) {
-						// Level1 is required
-						showMessageDialog("AppVet User Account",
-								"Invalid level1 name",
-								true);
-						return;
-					} else {
-						newUserRoleInfo.getOrgUnitHierarchy().add(level1);
-					}
-					String level2 = userAcctAdminDialogBox.level2SuggestBox.getValue();
-					if (level2 == null || level2.isEmpty()) {
-						// Level2 is required
-						showMessageDialog("AppVet User Account",
-								"Invalid level2 name",
-								true);
-						return;
-					} else {
-						newUserRoleInfo.getOrgUnitHierarchy().add(level2);
-					}
-					String level3 = userAcctAdminDialogBox.level3SuggestBox.getValue();
-					if (level3 == null || level3.isEmpty()) {
-						// Level3 is not required. Do nothing.
-					} else {
-						newUserRoleInfo.getOrgUnitHierarchy().add(level3);
-					}
-					String level4 = userAcctAdminDialogBox.level4SuggestBox.getValue();
-					if (level4 == null || level4.isEmpty()) {
-						// Level4 is not required. Do nothing.
-					} else {
-						newUserRoleInfo.getOrgUnitHierarchy().add(level3);
-					}							
-				}
-				// Set user role info
-				userInfo.setUserRoleInfo(newUserRoleInfo);
+				userInfo.setRoleStr(userAcctAdminDialogBox.getRoleStr());
 
 				if (newUser) {
 					userInfo.setNewUser(true);
@@ -422,7 +380,8 @@ public class UserListDialogBox extends DialogBox {
 						selectedUserChanged = true;
 					}
 					
-					if (userAcctAdminDialogBox.userRoleInfoHasChanged) {
+					if (!selectedUser.getRoleStr().equals(
+							userAcctAdminDialogBox.getRoleStr())) {
 						selectedUserChanged = true;
 					}
 
@@ -474,6 +433,20 @@ public class UserListDialogBox extends DialogBox {
 				} else if ((usersList != null) && (usersList.size() > 0)) {
 					setAllUsers(usersList);
 				}
+				// Set org hierarchies list
+				try {
+					orgHierarchies.clear();
+					for (int i = 0; i < usersList.size(); i++) {
+						UserInfo userInfo = usersList.get(i);
+						String hierarchyStr = 
+								Role.getOrgHierarchyStr(userInfo.getRoleStr());
+						if (hierarchyStr != null) {
+							orgHierarchies.add(hierarchyStr);
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}
@@ -511,7 +484,6 @@ public class UserListDialogBox extends DialogBox {
 	}
 
 	public void submitUserInfo(final boolean newUser, final UserInfo userInfo) {
-		log.info("Sending to adminSetUser()");
 		appVetServiceAsync.adminSetUser(userInfo,
 				new AsyncCallback<List<UserInfo>>() {
 
@@ -540,6 +512,20 @@ public class UserListDialogBox extends DialogBox {
 
 							allUsers = result;
 							setAllUsers(allUsers);
+							// Set org hierarchies list
+							try {
+								orgHierarchies.clear();
+								for (int i = 0; i < result.size(); i++) {
+									UserInfo userInfo = result.get(i);
+									String hierarchyStr = 
+											Role.getOrgHierarchyStr(userInfo.getRoleStr());
+									if (hierarchyStr != null) {
+										orgHierarchies.add(hierarchyStr);
+									}
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				});

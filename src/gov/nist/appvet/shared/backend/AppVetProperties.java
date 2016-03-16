@@ -24,7 +24,7 @@ package gov.nist.appvet.shared.backend;
  */
 import gov.nist.appvet.servlet.shared.Emailer;
 import gov.nist.appvet.shared.all.DeviceOS;
-import gov.nist.appvet.shared.all.UserRoleInfo;
+import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.Validate;
 
 import java.io.File;
@@ -36,7 +36,7 @@ import java.util.ArrayList;
 public class AppVetProperties {
 	public static boolean error = false;
 	/** AppVet Github release version number. */
-	public static final String APPVET_VERSION = "2.1.9"; 
+	public static final String APPVET_VERSION = "2.2"; 
 	// Logging
 	public static Logger log = null;
 	private static String APPVET_LOG_NAME = "appvet_log.txt";
@@ -66,7 +66,7 @@ public class AppVetProperties {
 	public static final String DEFAULT_ADMIN_FIRSTNAME = "AppVet";
 	public static final String DEFAULT_ADMIN_LASTNAME = "Administrator";
 	public static final String DEFAULT_ADMIN_EMAIL = "appvet@appvet.org";
-	public static final UserRoleInfo.Role DEFAULT_ADMIN_ROLE = UserRoleInfo.Role.ADMIN;
+	public static final Role DEFAULT_ADMIN_ROLE = Role.ADMIN;
 
 	static {
 		//System.out.println("*** Starting AppVet v" + APPVET_VERSION + " ***");
@@ -161,7 +161,12 @@ public class AppVetProperties {
 	/* Documentation URL */
 	public static String DOCUMENTATION_URL = null;
 	public static String DEFAULT_DOCUMENTATION_URL = "http://appvet.github.io/appvet/";
-	
+	/* Org hierarchy level names */
+	public static String ORG_LEVEL1_NAME = null;
+	public static String ORG_LEVEL2_NAME = null;
+	public static String ORG_LEVEL3_NAME = null;
+	public static String ORG_LEVEL4_NAME = null;
+
 	// Tools
 	public static ArrayList<ToolAdapter> androidTools = null;
 	public static ArrayList<ToolAdapter> iosTools = null;
@@ -367,6 +372,15 @@ public class AppVetProperties {
 		if (DOCUMENTATION_URL == null || DOCUMENTATION_URL.isEmpty()) {
 			DOCUMENTATION_URL = DEFAULT_DOCUMENTATION_URL;
 		}
+		
+		ORG_LEVEL1_NAME = xml.getXPathValue("/AppVet/OrgHierarchyLevels/Level1");
+		printVal("ORG_LEVEL1_NAME", ORG_LEVEL1_NAME);
+		ORG_LEVEL2_NAME = xml.getXPathValue("/AppVet/OrgHierarchyLevels/Level2");
+		printVal("ORG_LEVEL2_NAME", ORG_LEVEL2_NAME);
+		ORG_LEVEL3_NAME = xml.getXPathValue("/AppVet/OrgHierarchyLevels/Level3");
+		printVal("ORG_LEVEL3_NAME", ORG_LEVEL3_NAME);
+		ORG_LEVEL4_NAME = xml.getXPathValue("/AppVet/OrgHierarchyLevels/Level4");
+		printVal("ORG_LEVEL4_NAME", ORG_LEVEL4_NAME);
 
 		// Apache logging
 		System.setProperty("org.apache.commons.logging.Log",

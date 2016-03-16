@@ -79,11 +79,11 @@
 
 	<DocumentationURL>http://csrc.nist.gov/projects/appvet/</DocumentationURL>
 
-	<OrgLevelNames>
+	<OrgHierarchyLevels>
 		<Level1>Agency</Level1>
 		<Level2>Department</Level2>
 		<Level3>Group</Level3>
 		<Level4>Team</Level4>
-	</OrgLevelNames>
+	</OrgHierarchyLevels>
 
 </AppVet>

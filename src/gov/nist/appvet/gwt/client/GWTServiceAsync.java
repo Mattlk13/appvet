@@ -54,6 +54,9 @@ public interface GWTServiceAsync {
 			AsyncCallback<List<UserInfo>> callback)
 			throws IllegalArgumentException;
 	
+	void getOrgHierarchies(AsyncCallback<List<String>> callback)
+			throws IllegalArgumentException;
+	
 	void handleServletRequest(
 			AsyncCallback<ConfigInfoGwt> callback)
 			throws IllegalArgumentException;		

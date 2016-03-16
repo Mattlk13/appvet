@@ -22,6 +22,7 @@ package gov.nist.appvet.gwt.client.gui.dialog;
 import java.util.logging.Logger;
 
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
+import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.UserInfo;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -49,6 +50,8 @@ public class UserAcctDialogBox extends DialogBox {
 	public TextBox lastNameTextBox = null;
 	public TextBox firstNameTextBox = null;
 	public TextBox userIdTextBox = null;
+	public TextBox roleTextBox = null;
+	public TextBox orgTextBox = null;
 	public PasswordTextBox currentPasswordTextBox = null;
 	public PasswordTextBox password1TextBox = null;
 	public PasswordTextBox password2TextBox = null;
@@ -162,20 +165,27 @@ public class UserAcctDialogBox extends DialogBox {
 		horizontalPanel_10.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.add(horizontalPanel_10);
 		
-//		Label label_1 = new Label("Organization: ");
-//		label_1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-//		horizontalPanel_10.add(label_1);
-//		label_1.setWidth("170px");
-//		
-//		organizationTextBox = new TextBox();
-//		organizationTextBox.setText(userInfoGwt.getOrganization());
-//		organizationTextBox.setEnabled(false);
-//		organizationTextBox.setAlignment(TextAlignment.LEFT);
-//		horizontalPanel_10.add(organizationTextBox);
-//		horizontalPanel_10.setCellWidth(organizationTextBox, "50%");
-//		horizontalPanel_10.setCellVerticalAlignment(organizationTextBox, HasVerticalAlignment.ALIGN_MIDDLE);
-//		organizationTextBox.setSize("180px", "20px");
-//		
+		Label label_1 = new Label("Role: ");
+		label_1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		horizontalPanel_10.add(label_1);
+		label_1.setWidth("170px");
+		
+		roleTextBox = new TextBox();
+		String roleStr = userInfoGwt.getRoleStr();
+		Role role = null;
+		try {
+			role = Role.getRole(roleStr);
+			roleTextBox.setText(role.name());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		roleTextBox.setEnabled(false);
+		roleTextBox.setAlignment(TextAlignment.LEFT);
+		horizontalPanel_10.add(roleTextBox);
+		horizontalPanel_10.setCellWidth(roleTextBox, "50%");
+		horizontalPanel_10.setCellVerticalAlignment(roleTextBox, HasVerticalAlignment.ALIGN_MIDDLE);
+		roleTextBox.setSize("180px", "20px");
+		
 		final HorizontalPanel horizontalPanel_4 = new HorizontalPanel();
 		horizontalPanel_4
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
@@ -186,7 +196,7 @@ public class UserAcctDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.setCellVerticalAlignment(horizontalPanel_4,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		final Label lblDepartment = new Label("Department");
+		final Label lblDepartment = new Label("Organization Unit: ");
 		horizontalPanel_4.add(lblDepartment);
 		horizontalPanel_4.setCellVerticalAlignment(lblDepartment,
 				HasVerticalAlignment.ALIGN_MIDDLE);
@@ -196,15 +206,24 @@ public class UserAcctDialogBox extends DialogBox {
 		horizontalPanel_4.setCellWidth(lblDepartment, "50%");
 		lblDepartment
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-//		departmentTextBox = new TextBox();
-//		departmentTextBox.setText(userInfoGwt.getDepartment());
-//		departmentTextBox.setEnabled(false);
-//		departmentTextBox.setAlignment(TextAlignment.LEFT);
-//		horizontalPanel_4.add(departmentTextBox);
-//		horizontalPanel_4.setCellVerticalAlignment(departmentTextBox,
-//				HasVerticalAlignment.ALIGN_MIDDLE);
-//		horizontalPanel_4.setCellWidth(departmentTextBox, "50%");
-//		departmentTextBox.setSize("180px", "20px");
+		orgTextBox = new TextBox();
+		try {
+			if (role == Role.ADMIN) {
+				orgTextBox.setText("ALL");
+			} else {
+				String orgHierarchy = Role.getOrgHierarchyDisplayStr(roleStr);
+				orgTextBox.setText(orgHierarchy);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		orgTextBox.setEnabled(false);
+		orgTextBox.setAlignment(TextAlignment.LEFT);
+		horizontalPanel_4.add(orgTextBox);
+		horizontalPanel_4.setCellVerticalAlignment(orgTextBox,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_4.setCellWidth(orgTextBox, "50%");
+		orgTextBox.setSize("180px", "20px");
 		
 		final HorizontalPanel horizontalPanel_5 = new HorizontalPanel();
 		horizontalPanel_5

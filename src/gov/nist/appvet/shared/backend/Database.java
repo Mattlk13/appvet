@@ -26,7 +26,7 @@ import gov.nist.appvet.gwt.shared.SystemAlertType;
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import gov.nist.appvet.shared.all.AppStatus;
 import gov.nist.appvet.shared.all.DeviceOS;
-import gov.nist.appvet.shared.all.UserRoleInfo;
+import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.UserInfo;
 import gov.nist.appvet.shared.all.UserToolCredentials;
 
@@ -162,7 +162,7 @@ public class Database {
 			userInfo.setLastName(resultSet.getString(3));
 			userInfo.setFirstName(resultSet.getString(4));
 			userInfo.setEmail(resultSet.getString(5));
-			userInfo.setUserRoleInfo(new UserRoleInfo(resultSet.getString(6)));
+			userInfo.setRoleStr(resultSet.getString(6));
 			userInfo.setLastLogon(resultSet.getTimestamp(7));
 			userInfo.setFromHost(resultSet.getString(8));
 			// Check if default admin
@@ -282,8 +282,8 @@ public class Database {
 			preparedStatement.setString(3, userInfo.getFirstName());
 			// log.debug("Admin Adding email: " + userInfo.getEmail());
 			preparedStatement.setString(4, userInfo.getEmail());
-			log.debug("Admin Adding role: " + userInfo.getUserRoleInfo().getDbString());
-			preparedStatement.setString(5, userInfo.getUserRoleInfo().getDbString());
+			log.debug("Admin Adding role: " + userInfo.getRoleStr());
+			preparedStatement.setString(5, userInfo.getRoleStr());
 			preparedStatement.executeUpdate();
 			final String password = userInfo.getPassword();
 			final String passwordAgain = userInfo.getPasswordAgain();
@@ -324,7 +324,7 @@ public class Database {
 			// userInfo.getOrganization());
 			// log.debug("Admin Updating dept: " + userInfo.getDepartment());
 			// log.debug("Admin Updating email: " + userInfo.getEmail());
-			log.debug("Admin Updating role: " + userInfo.getUserRoleInfo().getDbString());
+			log.debug("Admin Updating role: " + userInfo.getRoleStr());
 			connection = getConnection();
 			statement = connection.createStatement();
 			statement.executeUpdate("UPDATE users SET "
@@ -332,7 +332,7 @@ public class Database {
 					+ "lastName='" + userInfo.getLastName() + "', "
 					+ "firstName='" + userInfo.getFirstName() + "', "
 					+ "email='" + userInfo.getEmail() + "', "
-					+ "role='" + userInfo.getUserRoleInfo().getDbString() + "' "
+					+ "role='" + userInfo.getRoleStr() + "' "
 					+ "WHERE username='" + userInfo.getUserName() + "'");
 			if (userInfo.isChangePassword()) {
 				final String userName = userInfo.getUserName();
@@ -375,7 +375,7 @@ public class Database {
 	 *            If null, select all users.
 	 * @return
 	 */
-	public static List<UserInfo> getUsers(UserRoleInfo.Role role) {
+	public static List<UserInfo> getUsers(Role role) {
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -400,12 +400,7 @@ public class Database {
 				userInfo.setLastName(resultSet.getString(3));
 				userInfo.setFirstName(resultSet.getString(4));
 				userInfo.setEmail(resultSet.getString(5));
-				log.debug("Getting user info");
-				String userRoleInfoStr = resultSet.getString(6);
-				log.debug("userRoleInfoStr: " + userRoleInfoStr);
-				UserRoleInfo userRoleInfo = new UserRoleInfo(userRoleInfoStr);
-				log.debug("userRoleInfo.getRole(): " + userRoleInfo.getRole());
-				userInfo.setUserRoleInfo(userRoleInfo);
+				userInfo.setRoleStr(resultSet.getString(6));
 				userInfo.setLastLogon(resultSet.getTimestamp(7));
 				userInfo.setFromHost(resultSet.getString(8));
 				// Check if default admin
@@ -423,6 +418,37 @@ public class Database {
 		} finally {
 			sql = null;
 			userInfo = null;
+			cleanUpResultSet(resultSet);
+			cleanUpStatement(statement);
+			cleanUpConnection(connection);
+		}
+		return arrayList;
+	}
+	
+	public static List<String> getOrgHierarchies() {
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		String sql = null;
+		ArrayList<String> arrayList = null;
+		try {
+			connection = getConnection();
+			sql = "SELECT * FROM users ORDER BY lastName ASC";
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(sql);
+			arrayList = new ArrayList<String>();
+			while (resultSet.next()) {
+				String roleStr = resultSet.getString(6);
+				String heirarchy = Role.getOrgHierarchyStr(roleStr);
+				if (heirarchy != null) {
+					arrayList.add(heirarchy);
+				}
+			}
+		} catch (final Exception e) {
+			log.error(e.toString());
+			arrayList = null;
+		} finally {
+			sql = null;
 			cleanUpResultSet(resultSet);
 			cleanUpStatement(statement);
 			cleanUpConnection(connection);
@@ -502,13 +528,12 @@ public class Database {
 		if (lastClientUpdateDate != null) {
 			lastClientUpdate = new Timestamp(lastClientUpdateDate.getTime());
 		}
-		UserRoleInfo userRoleInfo = getRoleInfo(username);
 		try {
 			// Get apps based on user's role
-			UserRoleInfo.Role userRole = userRoleInfo.getRole();
+			Role userRole = Role.getRole(getRoleStr(username));
 			switch (userRole) {
 			case ADMIN:
-				// Admin can view all apps
+				// ADMINs can view all apps
 				if (lastClientUpdate != null) {
 					// Get only updated apps
 					sql = "SELECT * FROM apps WHERE lastupdated > '"
@@ -519,9 +544,8 @@ public class Database {
 				}
 				break;
 			case TOOL_PROVIDER:
-				// Tool provider can only view apps submitted by them (for
-				// testing). Note that this should not be confused with the
-				// tools ability to upload reports for all apps.
+				// TOOL_PROVIDERs can only view their own apps. Note, however,
+				// that TOOL_PROVIDERs can submit reports for any app.
 				if (lastClientUpdate != null) {
 					sql = "SELECT * FROM apps WHERE username = '" + username
 							+ "' and lastupdated > '" + lastClientUpdate + "'";
@@ -531,7 +555,7 @@ public class Database {
 				}
 				break;
 			case ANALYST:
-				// We filter results below
+				// ANALYSTs can view any app in their org unit and below.
 				if (lastClientUpdate != null) {
 					// Get only updated apps
 					sql = "SELECT * FROM apps WHERE lastupdated > '"
@@ -542,6 +566,7 @@ public class Database {
 				}
 				break;
 			case USER:
+				// USERs can only view their own apps.
 				if (lastClientUpdate != null) {
 					sql = "SELECT * FROM apps WHERE username = '" + username
 							+ "' and lastupdated > '" + lastClientUpdate + "'";
@@ -561,16 +586,16 @@ public class Database {
 
 			while (resultSet.next()) {
 				AppInfoGwt resultSetAppInfo = getAppInfo(resultSet);
-				if (userRole == UserRoleInfo.Role.ADMIN) {
+				if (userRole == Role.ADMIN) {
 					// ADMINs can view all apps
 					appsList.add(resultSetAppInfo);
-				} else if (userRole == UserRoleInfo.Role.ANALYST) {
+				} else if (userRole == Role.ANALYST) {
 					// ANALYSTs can view apps in their org unit and below
-					if (isAppAccessibleToAnalyst(username, userRoleInfo, resultSetAppInfo)) {
+					if (appIsAccessibleToUser(username, resultSetAppInfo)) {
 						appsList.add(resultSetAppInfo);
 					}
-				} else if (userRole == UserRoleInfo.Role.USER ||
-						userRole == UserRoleInfo.Role.TOOL_PROVIDER) {
+				} else if (userRole == Role.USER ||
+						userRole == Role.TOOL_PROVIDER) {
 					// USERS and TOOL_PROVIDERS can view only their own apps
 					appsList.add(resultSetAppInfo);
 				}
@@ -581,6 +606,8 @@ public class Database {
 			appsListGwt.apps = appsList;
 		} catch (final SQLException e) {
 			log.error(username + ": " + e.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			cleanUpConnection(connection);
 			cleanUpStatement(statement);
@@ -589,48 +616,84 @@ public class Database {
 		return appsListGwt;
 	}
 
-	public static boolean isAppAccessibleToAnalyst(String analystName,
-			UserRoleInfo analystRoleInfo, AppInfoGwt appInfo) {
-		// Check if app was uploaded by user
-		if (analystName.equals(appInfo.ownerName)) {
+	public static boolean appIsAccessibleToUser(String userName,
+			AppInfoGwt appInfo) {	
+		// Check if the user owns the app
+		if (userName.equals(appInfo.ownerName)) {
 			return true;
 		}
 
-		// Check if app was uploaded by an owner that is a member of any org unit
-		// that
-		// is accessible to the analyst
-		UserRoleInfo appOwnerRoleInfo = Database.getRoleInfo(appInfo.ownerName);
-
-		// Check if app is owned by an ADMIN. If so, ANALYSTs
-		// cannot
-		// access apps owned by ADMINs because ADMINs are
-		// not members of any org unit and have access to all
-		// apps. Giving an ANALYST access to apps owned by ADMIN would provide 
-		// the ANALYST access to ALL apps.
-		if (appOwnerRoleInfo.getRole() == UserRoleInfo.Role.ADMIN) {
+		// Check if user is an ADMIN
+		String userRoleStr = Database.getRoleStr(userName);
+		Role userRole = null;
+		try {
+			userRole = Role.getRole(userRoleStr);
+			if (userRole == Role.ADMIN){
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// Check if app owner still exists in the database. If they do not, 
+		// deny the request because we cannot verify the app owner's role
+		// (which, for example, could be ADMIN).
+		String ownerName = appInfo.ownerName;
+		if (!Database.userExists(ownerName)) {
+			log.warn("App owner " + ownerName + " no longer exists in database");
 			return false;
 		}
 		
-		String appOwnerHierarchyStr = appOwnerRoleInfo.getOrgUnitHierarchyStr();
-		// If owner's hierarchy are null or empty, return false
-		if (appOwnerHierarchyStr == null || appOwnerHierarchyStr.isEmpty()) {
-			log.warn("App owner's hierarchy string is null or empty");
-			return false;
+		// Check if app was uploaded by an owner that is a member of an org unit
+		// accessible to the user if the user is an ANALYST.
+		String appOwnerRoleStr = Database.getRoleStr(ownerName);
+
+		// Check if app is owned by an ADMIN. If so, users cannot access
+		// apps owned by ADMINs (unless the user is also an ADMIN).
+		try {
+			Role appOwnerRole = Role.getRole(appOwnerRoleStr);
+			if (appOwnerRole == Role.ADMIN) {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
-		String analystHierarchyStr = analystRoleInfo.getOrgUnitHierarchyStr();
-		// If analyst's user and analyst org units are null or empty, return false
-		if (analystHierarchyStr == null || analystHierarchyStr.isEmpty()) {
-			log.warn("Analyst's hierarchy string is null or empty");
-			return false;
+		// Check if owner's hierarchy is null
+		String appOwnerHierarchyStr = null;
+		try {
+			appOwnerHierarchyStr = Role.getOrgHierarchyStr(appOwnerRoleStr);
+			if (appOwnerHierarchyStr == null || appOwnerHierarchyStr.isEmpty()) {
+				log.warn("App owner's hierarchy string is null or empty");
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
-		// Check if analyst's org unit hiearchy is contained in 
-		// the app owner's org unit hierarchy
-		if (appOwnerHierarchyStr.indexOf(analystHierarchyStr, 0) > -1) {
-			// Analyst has access to app owner's org unit
-			return true;
+
+		// Check if user's hierarchy is null
+		String userHierarchyStr = null;
+		try {
+			userHierarchyStr = Role.getOrgHierarchyStr(userRoleStr);
+			if (userHierarchyStr == null || userHierarchyStr.isEmpty()) {
+				log.warn("User's hierarchy string is null or empty");
+				return false;
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
 		}
+
+		//log.debug("ACCESSIBLE?: " + userHierarchyStr + " in " + appOwnerHierarchyStr);
+
+		// Check if user's role is ANALYST and if user has access to the 
+		// owner's org unit.
+		if (userRole == Role.ANALYST) {
+			if (appOwnerHierarchyStr.indexOf(userHierarchyStr, 0) > -1) {
+				// Analyst has access to app owner's org unit
+				return true;
+			}
+		}
+
 		return false;
 	}
 
@@ -1140,8 +1203,6 @@ public class Database {
 				+ type);
 	}
 
-	// /////////////////////////////////////////////////////////////
-
 	public static boolean adminExists() {
 		Connection connection = null;
 		Statement statement = null;
@@ -1150,7 +1211,7 @@ public class Database {
 		boolean foundAdmin = false;
 		try {
 			connection = getConnection();
-			sql = "SELECT * FROM users WHERE role='" + UserRoleInfo.Role.ADMIN.name() + "'";
+			sql = "SELECT * FROM users WHERE role='" + Role.ADMIN.name() + "'";
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
@@ -1411,17 +1472,9 @@ public class Database {
 				+ username + "'");
 	}
 
-	public static UserRoleInfo getRoleInfo(String username) {
-		String userInfoRoleStr = getString("SELECT role FROM users "
+	public static String getRoleStr(String username) {
+		return getString("SELECT role FROM users "
 				+ "WHERE username='" + username + "'");
-		UserRoleInfo userInfoRole;
-		try {
-			userInfoRole = new UserRoleInfo(userInfoRoleStr);
-			return userInfoRole;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	public static String getSessionUser(String sessionId) {

@@ -50,6 +50,8 @@ public interface GWTService extends RemoteService {
 
 	List<ToolStatusGwt> getToolsResults(DeviceOS os, String sessionId,
 			String appId) throws IllegalArgumentException;
+	
+	List<String> getOrgHierarchies() throws IllegalArgumentException;
 
 	Boolean selfUpdatePassword(UserInfo userInfo) throws IllegalArgumentException;
 
