@@ -682,6 +682,11 @@ public class UserAcctAdminDialogBox extends DialogBox {
 			return false;
 		}
 
+		if (adminRadioSelected || toolRadioSelected) {
+			return true;
+		}
+		
+		// Check the following if user is ANALYST or USER
 		String level1 = level1SuggestBox.getValue();
 		if (level1 == null || level1.isEmpty()) {
 			// Level1 is required
