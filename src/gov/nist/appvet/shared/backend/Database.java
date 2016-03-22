@@ -30,7 +30,6 @@ import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.UserInfo;
 import gov.nist.appvet.shared.all.UserToolCredentials;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -264,7 +263,7 @@ public class Database {
 		return null;
 	}
 
-	public static boolean adminAddNewUser(UserInfo userInfo) {
+	public synchronized static boolean adminAddNewUser(UserInfo userInfo) {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		final String username = userInfo.getUserName();
@@ -312,7 +311,7 @@ public class Database {
 	 * This method updates user information but does not update a user's tool
 	 * credentials.
 	 */
-	public static boolean updateUser(UserInfo userInfo) {
+	public synchronized static boolean updateUser(UserInfo userInfo) {
 		Connection connection = null;
 		Statement statement = null;
 		try {
@@ -456,7 +455,7 @@ public class Database {
 		return arrayList;
 	}
 
-	public static boolean adminAddNewUser(String username, String password,
+	public synchronized static boolean adminAddNewUser(String username, String password,
 			String email, String role, String lastName, String firstName) {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -483,7 +482,7 @@ public class Database {
 		}
 	}
 
-	public static boolean deleteApp(DeviceOS os, String appId) {
+	public synchronized static boolean deleteApp(DeviceOS os, String appId) {
 		final boolean appDeleted = update("DELETE FROM apps " + "WHERE appid='"
 				+ appId + "'");
 		boolean statusDeleted = false;
@@ -512,7 +511,7 @@ public class Database {
 				+ appId + "'");
 	}
 
-	public static boolean deleteUser(String username) {
+	public synchronized static boolean deleteUser(String username) {
 		return update("DELETE FROM users " + "WHERE username='" + username
 				+ "'");
 	}
@@ -697,7 +696,7 @@ public class Database {
 		return false;
 	}
 
-	public static boolean removeSession(String sessionId, String clientIpAddress) {
+	public synchronized static boolean removeSession(String sessionId, String clientIpAddress) {
 		return update("DELETE FROM sessions WHERE (clientaddress='"
 				+ clientIpAddress + "' OR clientaddress='127.0.0.1') "
 				+ "AND sessionid='" + sessionId + "'");
@@ -751,7 +750,7 @@ public class Database {
 		return getTimestamp(sql);
 	}
 
-	public static boolean updateSessionExpiration(String sessionId,
+	public synchronized static boolean updateSessionExpiration(String sessionId,
 			String clientIpAddress, Date newSesionTimeout) {
 		Timestamp sessionExpiration = new Timestamp(newSesionTimeout.getTime());
 		return update("UPDATE sessions SET expiretime='" + sessionExpiration
@@ -776,7 +775,7 @@ public class Database {
 	 * 
 	 * TODO: Look into possible XML schema for this.
 	 */
-	public static void saveUserToolCredentials(String username,
+	public synchronized static void saveUserToolCredentials(String username,
 			ArrayList<UserToolCredentials> credentialsList) {
 		StringBuffer credentialsStrBuf = new StringBuffer();
 		for (int i = 0; i < credentialsList.size(); i++) {
@@ -820,7 +819,7 @@ public class Database {
 	 * status of the app from PROCESSING to ERROR upon the next startup of
 	 * AppVet.
 	 */
-	public static void setProcessingStatusToError() {
+	public synchronized static void setProcessingStatusToError() {
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -829,18 +828,20 @@ public class Database {
 			connection = getConnection();
 			sql = "SELECT * FROM apps WHERE appstatus='"
 					+ AppStatus.PROCESSING.name() + "'";
-			// arrayList = new ArrayList<UserInfoGwt>();
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				String appId = resultSet.getString(1);
-				AppInfo appInfo = new AppInfo(appId);
-				appInfo.log
-						.warn("Found app "
-								+ appId
-								+ " in interrupted PROCESSING state. Changing status to ERROR.");
-				update("UPDATE apps SET appstatus='" + AppStatus.ERROR.name()
-						+ "' " + "WHERE appId='" + appId + "'");
+				Database.killStuckApp(appId);
+//				AppStatusManager.setAppStatus(appId, AppStatus.ERROR);
+//
+//				AppInfo appInfo = new AppInfo(appId);
+//				appInfo.log
+//						.warn("Found app "
+//								+ appId
+//								+ " in interrupted PROCESSING state. Changing status to ERROR.");
+//				update("UPDATE apps SET appstatus='" + AppStatus.ERROR.name()
+//						+ "' " + "WHERE appId='" + appId + "'");
 			}
 		} catch (final SQLException e) {
 			log.error(e.toString());
@@ -852,7 +853,7 @@ public class Database {
 		}
 	}
 
-	private static ArrayList<UserToolCredentials> createToolCredentialsList(
+	private synchronized static ArrayList<UserToolCredentials> createToolCredentialsList(
 			String username, ArrayList<ToolInfoGwt> tools) {
 		ArrayList<UserToolCredentials> toolCredentialsList = new ArrayList<UserToolCredentials>();
 		// Initialize credentials for each tool
@@ -884,68 +885,14 @@ public class Database {
 	}
 
 	/**
-	 * Kill timed-out tools stuck in SUBMITTED state to ERROR forcing app status
-	 * to ERROR. Note that a tool should only be in a SUBMITTED state for a few
-	 * seconds (to submit the app to the tool)
+	 * Kill timed-out app and set app state to ERROR.
 	 */
-	public static boolean killProcessingTools(String appId, DeviceOS os) {
+	public synchronized static boolean killStuckApp(String appId) {
 		AppInfo appInfo = new AppInfo(appId);
-		String sql = null;
-		if (os == DeviceOS.ANDROID) {
-			String androidTableName = "androidtoolstatus";
-			ArrayList<String> androidTools = getTableColumnNames(androidTableName);
-			for (int i = 1; i < androidTools.size(); i++) {
-				// Skip appid column
-				String toolId = androidTools.get(i);
-				sql = "SELECT " + toolId + " FROM " + androidTableName
-						+ " WHERE appid='" + appId + "'";
-				String toolStatusString = Database.getString(sql);
-				ToolStatus toolStatus = ToolStatus.getStatus(toolStatusString);
-				if (toolStatus == null) {
-					log.error("Unknown Android tool status encountered while "
-							+ "killing active tool");
-					return false;
-				}
-				// Only kill tool if tool is stuck in SUBMITTED state
-				if (toolStatus == ToolStatus.SUBMITTED) {
-					ToolStatusManager.setToolStatus(os, appId, toolId,
-							ToolStatus.ERROR);
-					appInfo.log.warn("Tool " + toolId + " exceeded timeout. "
-							+ "Setting tool status to " + ToolStatus.ERROR);
-				}
-			}
-			return true;
-		} else if (os == DeviceOS.IOS) {
-			String iosTableName = "iostoolstatus";
-			ArrayList<String> androidTools = getTableColumnNames(iosTableName);
-			for (int i = 1; i < androidTools.size(); i++) {
-				// Skip appid column
-				String toolId = androidTools.get(i);
-				sql = "SELECT " + toolId + " FROM " + iosTableName
-						+ " WHERE appid='" + appId + "'";
-				String toolStatusString = Database.getString(sql);
-				ToolStatus toolStatus = ToolStatus.getStatus(toolStatusString);
-				if (toolStatus == null) {
-					log.error("Unknown iOS tool status encountered while killing active tool");
-					return false;
-				}
-				if (toolStatus == ToolStatus.SUBMITTED) {
-					ToolStatusManager.setToolStatus(os, appId, toolId,
-							ToolStatus.ERROR);
-					log.warn("Tool " + toolId
-							+ " exceeded timeout. Setting tool status to "
-							+ ToolStatus.ERROR);
-					appInfo.log.warn("Tool " + toolId
-							+ " exceeded timeout. Setting tool status to "
-							+ ToolStatus.ERROR);
-				}
-			}
-			return true;
-
-		} else {
-			log.error("Unknown OS for getting processing tool IDs.");
-			return false;
-		}
+		appInfo.log.info("One or more tools exceeded timeout. "
+				+ "Setting app status to " + ToolStatus.ERROR);
+		AppStatusManager.setAppStatus(appId, AppStatus.ERROR);
+		return true;
 	}
 
 	public static ArrayList<UserToolCredentials> getUserToolCredentials(
@@ -1017,7 +964,7 @@ public class Database {
 		return toolsList;
 	}
 
-	private static void updateToolCredentials(String username,
+	private synchronized static void updateToolCredentials(String username,
 			ArrayList<UserToolCredentials> toolCredentialsList,
 			ArrayList<ToolInfoGwt> tools) {
 		try {
@@ -1197,7 +1144,7 @@ public class Database {
 		return true;
 	}
 
-	public static boolean addTableColumn(String tableName, String columnName,
+	public synchronized static boolean addTableColumn(String tableName, String columnName,
 			String type) {
 		return update("ALTER TABLE " + tableName + " ADD " + columnName + " "
 				+ type);
@@ -1298,22 +1245,22 @@ public class Database {
 		}
 	}
 
-	/**
-	 * For an app that has timed-out waiting for one or more reports to be
-	 * received, set all tools in a SUBMITTED state to ERROR.
-	 * 
-	 * @param appId
-	 */
-	public static void setAppProcessingTimeoutToError(String appId) {
-
-	}
+//	/**
+//	 * For an app that has timed-out waiting for one or more reports to be
+//	 * received, set all tools in a SUBMITTED state to ERROR.
+//	 * 
+//	 * @param appId
+//	 */
+//	public synchronized static void setAppProcessingTimeoutToError(String appId) {
+//
+//	}
 
 	/**
 	 * Get the next app that has the given appstatus, in ascending order.
 	 * 
 	 * @return The appid of the next app.
 	 */
-	public static String getNextApp(AppStatus appStatus) {
+	public synchronized static String getNextApp(AppStatus appStatus) {
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -1376,7 +1323,7 @@ public class Database {
 				+ appid + "'");
 	}
 
-	public static Connection getConnection() {
+	public synchronized static Connection getConnection() {
 		Connection connection = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -1527,7 +1474,7 @@ public class Database {
 		}
 	}
 
-	public static boolean updateAppMetadata(String appid, String appName,
+	public synchronized static boolean updateAppMetadata(String appid, String appName,
 			String packageName, String versionCode, String versionName) {
 		return update("UPDATE apps SET appname='" + appName
 				+ "', packagename='" + packageName + "', versioncode='"

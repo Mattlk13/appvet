@@ -236,7 +236,9 @@ class ConvertHandler extends Thread {
 
     private void convertDirectory( File dir ) {
         File[] files = dir.listFiles();
-
+        if (files == null) {
+        	return;
+        }
         for( int n=0; n<files.length; n++ ) {
             if( files[n].isDirectory() ) {
                 convertDirectory( files[n] );

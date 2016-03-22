@@ -423,6 +423,9 @@ public class AppVetProperties {
 			return;
 		}
 		File[] listOfFiles = folder.listFiles();
+		if (listOfFiles == null) {
+			return;
+		}
 		for (final File toolConfigFile : listOfFiles) {
 			if (toolConfigFile.isFile()) {
 				final String toolConfigFileName = toolConfigFile.getName();

@@ -106,6 +106,7 @@ public class Authenticate {
 					.getPasswordHash(username);
 			if (storedPasswordHash == null || storedPasswordHash.isEmpty()) {
 				log.debug("Stored password hash is null or empty");
+				return false;
 			}
 			return validatePassword(password, storedPasswordHash);
 		} catch (final NoSuchAlgorithmException e) {

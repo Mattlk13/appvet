@@ -56,12 +56,12 @@ import com.google.gwt.view.client.SingleSelectionModel;
  * @author steveq@nist.gov
  */
 public class UserListDialogBox extends DialogBox {
-	private static Logger log = Logger.getLogger("UserListDialogBox");
+	private Logger log = Logger.getLogger("UserListDialogBox");
 
 	public PushButton doneButton = null;
-	private final static GWTServiceAsync appVetServiceAsync = GWT
+	private final GWTServiceAsync appVetServiceAsync = GWT
 			.create(GWTService.class);
-	public static MessageDialogBox messageDialogBox = null;
+	public MessageDialogBox messageDialogBox = null;
 	public UserAcctAdminDialogBox userAcctAdminDialogBox = null;
 	public List<UserInfo> allUsers = null;
 	public SingleSelectionModel<UserInfo> usersSelectionModel = null;
@@ -335,35 +335,27 @@ public class UserListDialogBox extends DialogBox {
 					// Make sure a change was made. If not, don't update
 					// database.
 					boolean selectedUserChanged = false;
-
 					if (newPassword1 != null && !newPassword1.isEmpty()) {
 						selectedUserChanged = true;
 					}
-
 					if (newPassword2 != null && !newPassword2.isEmpty()) {
 						selectedUserChanged = true;
 					}
-
 					if (!selectedUser.getUserName().equals(newUserName)) {
 						selectedUserChanged = true;
 					}
-					
 					if (!selectedUser.getLastName().equals(newLastName)) {
 						selectedUserChanged = true;
 					}
-
 					if (!selectedUser.getFirstName().equals(newFirstName)) {
 						selectedUserChanged = true;
 					}
-
 					if (!selectedUser.getEmail().equals(newEmail)) {
 						selectedUserChanged = true;
 					}
-					
 					if (!selectedUser.getRoleStr().equals(newRoleStr)) {
 						selectedUserChanged = true;
 					}
-
 					if (!selectedUserChanged) {
 						showMessageDialog("AppVet User Account",
 								"No information changed. Cancelling update.",
@@ -380,25 +372,18 @@ public class UserListDialogBox extends DialogBox {
 				userInfo.setFirstName(newFirstName);
 				userInfo.setEmail(newEmail);
 				userInfo.setRoleStr(newRoleStr);
-
 				if (newUser) {
 					userInfo.setNewUser(true);
 				}
 
-				if (newUser && !ssoActive) {
-					//log.info("newUser && !ssoActive");
-					if (!userInfo.isValid(false)) {
-						return;
-					}
-				} else {
-					if (!userInfo.isValid(true)) {
-						return;
-					}
-				}
-				
-				// Validate roles and hierarchies
-				if (!userAcctAdminDialogBox.validateRoleAndHierarchies()) {
+				// Validate new user info
+				if (!userInfoIsValid(userInfo, ssoActive)) {
 					return;
+				} else {
+					// Validate roles and hierarchies
+					if (!userAcctAdminDialogBox.validateRoleAndHierarchies()) {
+						return;
+					}
 				}
 
 				// Send updated user info to server
@@ -438,6 +423,7 @@ public class UserListDialogBox extends DialogBox {
 				if (usersList == null) {
 					showMessageDialog("AppVet Error", "No users available",
 							true);
+					return;
 				} else if ((usersList != null) && (usersList.size() > 0)) {
 					setAllUsers(usersList);
 				}
@@ -552,14 +538,74 @@ public class UserListDialogBox extends DialogBox {
 		}
 	}
 
-	public static void killDialogBox(DialogBox dialogBox) {
+	public void killDialogBox(DialogBox dialogBox) {
 		if (dialogBox != null) {
 			dialogBox.hide();
 			dialogBox = null;
 		}
 	}
+	
+	public boolean userInfoIsValid(UserInfo userInfo, boolean ssoActive) {
 
-	public static void showMessageDialog(String windowTitle, String message,
+		if (!Validate.isValidUserName(userInfo.getUserName())) {
+			showMessageDialog("Account Setting Error", "Invalid username", true);
+			return false;
+		}
+
+		if (!Validate.isAlpha(userInfo.getLastName())) {
+			showMessageDialog("Account Setting Error", "Invalid last name",
+					true);
+			return false;
+		}
+
+		if (!Validate.isAlpha(userInfo.getFirstName())) {
+			showMessageDialog("Account Setting Error", "Invalid first name",
+					true);
+			return false;
+		}
+
+		if (!Validate.isValidEmail(userInfo.getEmail())) {
+			showMessageDialog("Account Setting Error", "Invalid email", true);
+			return false;
+		}
+
+		// We validate role in the calling program.
+		// if (!Validate.isValidRole(roleStr)) {
+		// log.info("Validating roleStr: " + roleStr);
+		// AppVetPanel.showMessageDialog("Account Setting Error",
+		// "Invalid role or org hierarchy", true);
+		// return false;
+		// }
+
+		if (!ssoActive) {
+			// Password is required for NON-SSO mode
+			String password = userInfo.getPassword();
+			String passwordAgain = userInfo.getPasswordAgain();
+			if (password != null && !password.isEmpty()
+					&& passwordAgain != null && !passwordAgain.isEmpty()) {
+				if (!Validate.isValidPassword(password)) {
+					showMessageDialog("Account Setting Error",
+							"Invalid password", true);
+					return false;
+				}
+				if (!password.equals(passwordAgain)) {
+					showMessageDialog("Account Setting Error",
+							"Passwords do not match", true);
+					return false;
+				}
+			} else {
+				showMessageDialog("Account Setting Error",
+						"Password is empty or null", true);
+				return false;
+			}
+		} else {
+			// SSO is active so we ignore password fields (since passwords
+			// are handled by the organization's SSO environment. Do nothing.
+		}
+		return true;
+	}
+
+	public void showMessageDialog(String windowTitle, String message,
 			boolean isError) {
 		messageDialogBox = new MessageDialogBox(message, isError);
 		messageDialogBox.setText(windowTitle);

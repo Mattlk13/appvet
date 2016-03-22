@@ -100,7 +100,7 @@ public class ToolStatusManager {
 			ToolStatus auditStatus = getToolStatus(os, appId, auditTool.toolId);
 			if (auditStatus == null || auditStatus == ToolStatus.NA) {
 				// Audit tool exists but status is not available
-			} else if (auditStatus != null && auditStatus != ToolStatus.NA){
+			} else {
 				if (auditStatus == ToolStatus.LOW) {
 					AppStatusManager.setAppStatus(appId, AppStatus.LOW);
 					return;

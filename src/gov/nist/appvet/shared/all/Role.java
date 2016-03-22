@@ -30,11 +30,15 @@ public enum Role {
 	private Role() {
 	}
 	
-	/** A roleStr is a String that has the following valid forms: 
-	 * ADMIN
-	 * TOOL_PROVIDER
-	 * ANALYST:level1,level2[,level3[,level4]]
-	 * USER:level1,level2[,level3[,level4]]
+	/** Get a role given a roleStr. A roleStr is a String that defines a 
+	 * role and its related org hierarchy (if available) and has the following 
+	 * forms: 
+	 * <ul>
+	 * <li>ADMIN
+	 * <li>TOOL_PROVIDER
+	 * <li>ANALYST:level1,level2[,level3[,level4]]
+	 * <li>USER:level1,level2[,level3[,level4]]
+	 * </ul>
 	 */
 	public static Role getRole(String roleStr) throws Exception {
 		if (roleStr != null && !roleStr.isEmpty()) {
@@ -67,6 +71,17 @@ public enum Role {
 		}
 	}
 	
+	/** Get an array of org hierarchies given a roleStr. A roleStr is a String 
+	 * that defines a role and its related org hierarchy (if available) and 
+	 * has the following 
+	 * forms: 
+	 * <ul>
+	 * <li>ADMIN
+	 * <li>TOOL_PROVIDER
+	 * <li>ANALYST:level1,level2[,level3[,level4]]
+	 * <li>USER:level1,level2[,level3[,level4]]
+	 * </ul>
+	 */
 	public static ArrayList<String> getOrgHierarchy(String roleStr) throws Exception {
 		if (roleStr != null && !roleStr.isEmpty()) {
 			if (roleStr.equals(Role.ADMIN.name())) {
@@ -108,6 +123,18 @@ public enum Role {
 		}
 	}
 	
+	/** Get a String representation of org hierarchies given a roleStr. 
+	 * A roleStr is a String 
+	 * that defines a role and its related org hierarchy (if available) and 
+	 * has the following 
+	 * forms: 
+	 * <ul>
+	 * <li>ADMIN
+	 * <li>TOOL_PROVIDER
+	 * <li>ANALYST:level1,level2[,level3[,level4]]
+	 * <li>USER:level1,level2[,level3[,level4]]
+	 * </ul>
+	 */
 	public static String getOrgHierarchyStr(String roleStr) throws Exception {
 		if (roleStr != null && !roleStr.isEmpty()) {
 			if (roleStr.equals(Role.ADMIN.name())) {
@@ -152,7 +179,16 @@ public enum Role {
 		}
 	}
 	
-	/** Display org hierarchy using slash ('/') delimitter. */
+	/** Get a String representation of org hierarchies for display purposes
+	 * given a roleStr. A roleStr is a String that defines a role and its 
+	 * related org hierarchy (if available) and has the following forms: 
+	 * <ul>
+	 * <li>ADMIN
+	 * <li>TOOL_PROVIDER
+	 * <li>ANALYST:level1,level2[,level3[,level4]]
+	 * <li>USER:level1,level2[,level3[,level4]]
+	 * </ul>
+	 */
 	public static String getOrgHierarchyDisplayStr(String roleStr) throws Exception {
 		if (roleStr != null && !roleStr.isEmpty()) {
 			if (roleStr.equals(Role.ADMIN.name())) {
@@ -197,48 +233,48 @@ public enum Role {
 		}
 	}
 	
-	/** Get display string using role and slash ('/') delimitter for hierarchy levels.*/
-	public static String getDbDisplayStr(Role role, ArrayList<String> hierarchy) throws Exception {
-		if (role == Role.ADMIN || 
-				role == Role.TOOL_PROVIDER ||
-				role == Role.NEW) {
-			return role.name();
-		}
-		if (role == Role.ANALYST || role == Role.USER) {
-			String dbStr = role.name() + ": ";
-			for (int i = 0; i < hierarchy.size(); i++) {
-				String level = hierarchy.get(i);
-				String trimmedLevel = level.trim();
-				dbStr += trimmedLevel;
-				if (i < hierarchy.size() - 1) {
-					dbStr += "/";
-				}
-			}
-			return dbStr;
-		} else {
-			throw new Exception("Unknown role");
-		}
-	}
+//	/** Get display string using role and slash ('/') delimitter for hierarchy levels.*/
+//	public static String getDbDisplayStr(Role role, ArrayList<String> hierarchy) throws Exception {
+//		if (role == Role.ADMIN || 
+//				role == Role.TOOL_PROVIDER ||
+//				role == Role.NEW) {
+//			return role.name();
+//		}
+//		if (role == Role.ANALYST || role == Role.USER) {
+//			String dbStr = role.name() + ": ";
+//			for (int i = 0; i < hierarchy.size(); i++) {
+//				String level = hierarchy.get(i);
+//				String trimmedLevel = level.trim();
+//				dbStr += trimmedLevel;
+//				if (i < hierarchy.size() - 1) {
+//					dbStr += "/";
+//				}
+//			}
+//			return dbStr;
+//		} else {
+//			throw new Exception("Unknown role");
+//		}
+//	}
 	
-	public static String getDbStr(Role role, ArrayList<String> hierarchy) throws Exception {
-		if (role == Role.ADMIN || 
-				role == Role.TOOL_PROVIDER ||
-				role == Role.NEW) {
-			return role.name();
-		}
-		if (role == Role.ANALYST || role == Role.USER) {
-			String dbStr = role.name() + ":";
-			for (int i = 0; i < hierarchy.size(); i++) {
-				String level = hierarchy.get(i);
-				String trimmedLevel = level.trim();
-				dbStr += trimmedLevel;
-				if (i < hierarchy.size() - 1) {
-					dbStr += ",";
-				}
-			}
-			return dbStr;
-		} else {
-			throw new Exception("Unknown role");
-		}
-	}
+//	public static String getDbStr(Role role, ArrayList<String> hierarchy) throws Exception {
+//		if (role == Role.ADMIN || 
+//				role == Role.TOOL_PROVIDER ||
+//				role == Role.NEW) {
+//			return role.name();
+//		}
+//		if (role == Role.ANALYST || role == Role.USER) {
+//			String dbStr = role.name() + ":";
+//			for (int i = 0; i < hierarchy.size(); i++) {
+//				String level = hierarchy.get(i);
+//				String trimmedLevel = level.trim();
+//				dbStr += trimmedLevel;
+//				if (i < hierarchy.size() - 1) {
+//					dbStr += ",";
+//				}
+//			}
+//			return dbStr;
+//		} else {
+//			throw new Exception("Unknown role");
+//		}
+//	}
 }

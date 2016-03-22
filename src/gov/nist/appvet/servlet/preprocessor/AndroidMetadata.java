@@ -54,17 +54,20 @@ import java.util.concurrent.TimeUnit;
  */
 public class AndroidMetadata {
 	
-	private static final DeviceOS OS = DeviceOS.ANDROID;
-	private static final Logger log = AppVetProperties.log;
+	private final DeviceOS OS = DeviceOS.ANDROID;
+	private final Logger log = AppVetProperties.log;
 
-	public static final String APKTOOL_WINDOWS_COMMAND = "apktool.bat";
-	public static final String APKTOOL_LINUX_COMMAND = "apktool";
+	public final String APKTOOL_WINDOWS_COMMAND = "apktool.bat";
+	public final String APKTOOL_LINUX_COMMAND = "apktool";
 	
 	/** Both Android and iOS MUST use the metadata tool ID 'appinfo' */
-	private static final String METADATA_TOOL_ID = "appinfo";
-	private static ToolAdapter appinfoTool = null;
+	private final String METADATA_TOOL_ID = "appinfo";
+	private ToolAdapter appinfoTool = null;
+	
+	public AndroidMetadata() {
+	}
 
-	public static boolean getMetadata(AppInfo appInfo) {
+	public boolean getMetadata(AppInfo appInfo) {
 		appinfoTool = ToolAdapter.getByToolId(OS, METADATA_TOOL_ID);
 		if (appinfoTool == null) {
 			appInfo.log.error("Android tool adapter 'appinfo' was not found. "
@@ -102,7 +105,7 @@ public class AndroidMetadata {
 		return true;
 	}
 	
-	public static void updateDbMetadata(AppInfo appInfo) {
+	public void updateDbMetadata(AppInfo appInfo) {
 		if (appInfo.appName == null || appInfo.appName.isEmpty() || 
 				appInfo.appName.equals("Received")) {
 			// Name has not been found or set. If app project name is 
@@ -128,7 +131,7 @@ public class AndroidMetadata {
 				appInfo.versionName);
 	}
 	
-	private static void writeReport(AppInfo appInfo, String errorMessage) {
+	private void writeReport(AppInfo appInfo, String errorMessage) {
 		// The ID "appinfo" is the default metadata tool ID.
 		final ToolAdapter appinfoTool = ToolAdapter.getByToolId(appInfo.os,
 				METADATA_TOOL_ID);
@@ -206,7 +209,7 @@ public class AndroidMetadata {
 	/**
 	 * Use apktool to decode APK file.
 	 */
-	private static boolean decodeApk(AppInfo appInfo) {
+	private boolean decodeApk(AppInfo appInfo) {
 		if (AppVetProperties.APKTOOL_HOME == null) {
 			appInfo.log
 					.warn("APKTOOL_HOME, which is used to launch the apktool, is null.");
@@ -250,7 +253,7 @@ public class AndroidMetadata {
 		}
 	}
 	
-	private static boolean execute(String command, StringBuffer output) {
+	private boolean execute(String command, StringBuffer output) {
 		List<String> commandArgs = Arrays.asList(command.split("\\s+"));
 		ProcessBuilder pb = new ProcessBuilder(commandArgs);
 		Process process = null;
@@ -301,25 +304,25 @@ public class AndroidMetadata {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			}
-			if (errorHandler.isAlive()) {
+			} 
+			if (errorHandler != null && errorHandler.isAlive()) {
 				try {
 					errorHandler.inputStream.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
-			if (process.isAlive()) {
+			if (process != null && process.isAlive()) {
 				process.destroy();
 			} 
 		}
 
 	}
 
-	private static class IOThreadHandler extends Thread {
+	private class IOThreadHandler extends Thread {
 		private InputStream inputStream;
 		private StringBuilder output = new StringBuilder();
-		private static final String lineSeparator = 
+		private final String lineSeparator = 
 				System.getProperty("line.separator");;
 
 		IOThreadHandler(InputStream inputStream) {
@@ -336,7 +339,9 @@ public class AndroidMetadata {
 					output.append(line + lineSeparator);
 				}
 			} finally {
-				br.close();
+				if (br != null) {
+					br.close();
+				}
 			}
 		}
 
@@ -345,7 +350,7 @@ public class AndroidMetadata {
 		}
 	}
 
-	private static boolean getMetaData(AppInfo appInfo) {
+	private boolean getMetaData(AppInfo appInfo) {
 		final String projectPath = appInfo.getProjectPath();
 		try {
 			File manifestFile = new File(projectPath + "/AndroidManifest.xml");
@@ -379,7 +384,7 @@ public class AndroidMetadata {
 	/**
 	 * Get metadata XML elements and their values.
 	 */
-	private static boolean getElementValues(AppInfo appInfo,
+	private boolean getElementValues(AppInfo appInfo,
 			File manifestFile, File stringsFile) {
 		final XmlUtil manifestXml = new XmlUtil(manifestFile);
 		// Get package name
@@ -477,7 +482,7 @@ public class AndroidMetadata {
 		}
 	}
 
-	private static void setIcon(AppInfo appInfo, String iconValue) {
+	private void setIcon(AppInfo appInfo, String iconValue) {
 		File iconFile = null;
 		if (iconValue == null || iconValue.isEmpty()) {
 			appInfo.log.warn("Could not retrieve icon name from "
@@ -513,7 +518,7 @@ public class AndroidMetadata {
 		writeIconFile(appInfo, iconFile);
 	}
 	
-	public static void writeIconFile(AppInfo appInfo, File sourceFile) {
+	public void writeIconFile(AppInfo appInfo, File sourceFile) {
 		// Save icon file in $CATALINA_HOME/webapps/appvet_images so that they
 		// can be referenced quickly by URL
 		File destFile = new File(AppVetProperties.APP_IMAGES_PATH + "/"
@@ -527,18 +532,24 @@ public class AndroidMetadata {
 		}
 	}
 
-	private static File getIcon(String resFolderPath,
+	private File getIcon(String resFolderPath,
 			String iconDirectoryName, String iconName) {
 		File resDirectory = new File(resFolderPath);
 		File[] resFiles = resDirectory.listFiles();
 		File[] iconDirectoryFiles = null;
 		try {
+			if (resFiles == null) {
+				return null;
+			}
 			for (final File resFile : resFiles) {
 				if (resFile.isDirectory()) {
 					// Icon could be in one of several directories containing
 					// <iconDirectoryName>
 					if (resFile.getName().contains(iconDirectoryName)) {
 						iconDirectoryFiles = resFile.listFiles();
+						if (iconDirectoryFiles == null) {
+							return null;
+						}
 						for (final File iconFile : iconDirectoryFiles) {
 							if (iconFile.getName().equals(iconName + ".png")) {
 								return iconFile;
@@ -553,8 +564,5 @@ public class AndroidMetadata {
 			resFiles = null;
 			resDirectory = null;
 		}
-	}
-
-	private AndroidMetadata() {
 	}
 }

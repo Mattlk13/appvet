@@ -24,7 +24,6 @@ import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.gwt.shared.SystemAlert;
 import gov.nist.appvet.gwt.shared.ToolStatusGwt;
 import gov.nist.appvet.shared.all.DeviceOS;
-import gov.nist.appvet.shared.all.OrgDepts;
 import gov.nist.appvet.shared.all.UserInfo;
 import gov.nist.appvet.shared.all.UserToolCredentials;
 
@@ -83,8 +82,6 @@ public interface GWTService extends RemoteService {
 			throws IllegalArgumentException;
 
 	List<UserInfo> getUsersList() throws IllegalArgumentException;
-
-//	List<OrgDepts> getOrgDeptsList() throws IllegalArgumentException;
 
 	Boolean removeSession(String sessionId) throws IllegalArgumentException;
 

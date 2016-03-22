@@ -82,7 +82,11 @@ public class FileUtil {
 			return;
 		}
 		if (file.exists()) {
-			for (final File f : file.listFiles()) {
+			File[] files = file.listFiles();
+			if (files == null) {
+				return;
+			}
+			for (final File f : files) {
 				if (f.isDirectory()) {
 					deleteDirectory(f);
 					f.delete();

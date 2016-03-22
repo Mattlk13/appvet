@@ -61,13 +61,13 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 public class LoginPanel extends DockLayoutPanel {
 
 	// See appvet.gwt.xml
-	private static Logger log = Logger.getLogger("LoginPanel");
+	private Logger log = Logger.getLogger("LoginPanel");
 	private final PushButton loginButton = new PushButton("LOGIN");
 	private final TextBox userNameTextBox = new TextBox();
 	private final PasswordTextBox passwordTextBox = new PasswordTextBox();
 	private final Label loginStatusLabel = new Label("");
 	private final GWTServiceAsync appVetService = GWT.create(GWTService.class);
-	private static MessageDialogBox messageDialogBox = null;
+	private MessageDialogBox messageDialogBox = null;
 
 	
 	public LoginPanel(Unit unit) {

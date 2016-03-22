@@ -61,7 +61,7 @@ public class JsonTest {
 
 	public static void main(String[] args) {
 
-		JsonTest test = new JsonTest();
+		//JsonTest test = new JsonTest();
 
 	}
 }

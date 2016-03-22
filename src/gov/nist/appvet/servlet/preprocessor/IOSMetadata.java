@@ -32,13 +32,15 @@ import com.kylinworks.PNGConverter;
  */
 public class IOSMetadata {
 
-	private static final Logger log = AppVetProperties.log;
-	private static final DeviceOS OS = DeviceOS.IOS;
+	private final Logger log = AppVetProperties.log;
+	private final DeviceOS OS = DeviceOS.IOS;
 	/** Both iOS and Android MUST use the metadata tool ID 'appinfo' */
-	private static final String METADATA_TOOL_ID = "appinfo";
-	private static ToolAdapter appinfoTool = null;
+	private final String METADATA_TOOL_ID = "appinfo";
+	private ToolAdapter appinfoTool = null;
+	
+	public IOSMetadata() {}
 
-	public static boolean getMetadata(AppInfo appInfo) {
+	public boolean getMetadata(AppInfo appInfo) {
 		appinfoTool = ToolAdapter.getByToolId(OS, METADATA_TOOL_ID);
 		if (appinfoTool == null) {
 			appInfo.log.error("iOS tool adapter 'appinfo' was not found. "
@@ -103,7 +105,7 @@ public class IOSMetadata {
 		return true;
 	}
 
-	public static void updateDbMetadata(AppInfo appInfo) {
+	public void updateDbMetadata(AppInfo appInfo) {
 		if (appInfo.appName == null || appInfo.appName.isEmpty() || 
 				appInfo.appName.equals("Received")) {
 			// Name has not been found or set. If app project name is 
@@ -131,7 +133,7 @@ public class IOSMetadata {
 				appInfo.versionName);
 	}
 
-	private static void writeReport(AppInfo appInfo, String errorMessage) {
+	private void writeReport(AppInfo appInfo, String errorMessage) {
 		// The ID "appinfo" is the default metadata tool ID.
 		final ToolAdapter appinfoTool = ToolAdapter.getByToolId(appInfo.os,
 				METADATA_TOOL_ID);
@@ -192,7 +194,7 @@ public class IOSMetadata {
 		}
 	}
 
-	public static boolean copyFile(String sourceFilePath, String destFilePath) {
+	public boolean copyFile(String sourceFilePath, String destFilePath) {
 		if (sourceFilePath == null || destFilePath == null) {
 			return false;
 		}
@@ -215,9 +217,12 @@ public class IOSMetadata {
 		}
 	}
 
-	public static void getIcon(File dir, AppInfo appInfo) {
+	public void getIcon(File dir, AppInfo appInfo) {
 		try {
 			File[] files = dir.listFiles();
+			if (files == null) {
+				return;
+			}
 			for (File file : files) {
 				if (file.isDirectory()) {
 					getIcon(file, appInfo);
@@ -243,7 +248,7 @@ public class IOSMetadata {
 		}
 	}
 
-	public static void writeIconFile(AppInfo appInfo, File sourceFile) {
+	public void writeIconFile(AppInfo appInfo, File sourceFile) {
 		// Save icon file in $CATALINA_HOME/webapps/appvet_images so that they
 		// can be referenced quickly by URL
 		File destFile = new File(AppVetProperties.APP_IMAGES_PATH + "/"
@@ -259,9 +264,12 @@ public class IOSMetadata {
 		new PNGConverter(destFile);
 	}
 
-	public static void searchForPlist(File dir, AppInfo appInfo) {
+	public void searchForPlist(File dir, AppInfo appInfo) {
 		try {
 			File[] files = dir.listFiles();
+			if (files == null) {
+				return;
+			}
 			for (File file : files) {
 				// Check if we have everything
 				if (appInfo.appName != null
@@ -286,7 +294,7 @@ public class IOSMetadata {
 		}
 	}
 
-	private static void getPlistInfo(String destPlistPath, AppInfo appInfo) {
+	private void getPlistInfo(String destPlistPath, AppInfo appInfo) {
 		try {
 			NSObject x = PropertyListParser.parse(new File(destPlistPath));
 			NSDictionary d = (NSDictionary) x;
@@ -330,7 +338,7 @@ public class IOSMetadata {
 		}
 	}
 
-	public static boolean containsValidChars(String value) {
+	public boolean containsValidChars(String value) {
 		if (value.contains("$") || value.contains("{") || value.contains(":")) {
 			return false;
 		} else {
@@ -338,7 +346,7 @@ public class IOSMetadata {
 		}
 	}
 
-	public static boolean isAppNameKey(String key) {
+	public boolean isAppNameKey(String key) {
 		if (key.equals("bundleDisplayName") /* iTunes plist item */
 				|| key.equals("itemName") /* iTunes plist item */
 				|| key.equals("playlistName") /* iTunes plist item */
@@ -350,7 +358,7 @@ public class IOSMetadata {
 		}
 	}
 
-	public static boolean isAppPackageKey(String key) {
+	public boolean isAppPackageKey(String key) {
 		if (key.equals("softwareVersionBundleId") /* iTunes plist item */
 				|| key.equals("CFBundleIdentifier")) {
 			return true;
@@ -359,7 +367,7 @@ public class IOSMetadata {
 		}
 	}
 
-	public static boolean isAppVersionKey(String key) {
+	public boolean isAppVersionKey(String key) {
 		if (key.equals("bundleShortVersionString") /* iTunes plist item */
 				|| key.equals("bundleVersion") /* iTunes plist item */
 				|| key.equals("CFBundleVersion")) {
@@ -369,7 +377,7 @@ public class IOSMetadata {
 		}
 	}
 
-	public static boolean isAppIconKey(String key) {
+	public boolean isAppIconKey(String key) {
 		if (key.equals("CFBundlePrimaryIcon") /* iTunes plist item */
 				|| key.equals("CFBundleIconFile")
 				|| key.equals("CFBundleIcons")) /* iTunes plist item */
@@ -378,10 +386,6 @@ public class IOSMetadata {
 		} else {
 			return false;
 		}
-	}
-
-	private IOSMetadata() {
-
 	}
 
 }

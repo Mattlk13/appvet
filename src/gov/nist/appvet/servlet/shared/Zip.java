@@ -33,8 +33,8 @@ import java.util.zip.ZipOutputStream;
  */
 public class Zip {
 	List<String> fileList;
-	private static String OUTPUT_ZIP_FILE = null;
-	private static String SOURCE_FOLDER = null;
+	private String OUTPUT_ZIP_FILE = null;
+	private String SOURCE_FOLDER = null;
 
 	public Zip() {
 		fileList = new ArrayList<String>();
@@ -93,6 +93,9 @@ public class Zip {
 		}
 		if (node.isDirectory()) {
 			String[] subNote = node.list();
+			if (subNote == null) {
+				return;
+			}
 			for (String filename : subNote) {
 				generateFileList(new File(node, filename));
 			}

@@ -30,6 +30,7 @@ import java.util.Date;
  * @author steveq@nist.gov
  */
 public class AppInfoGwt implements Serializable {
+	/** Recommended for serializable classes. */
 	private static final long serialVersionUID = 1L;
 	/** The AppVet ID of the app. */
 	public String appId = null;
@@ -79,12 +80,22 @@ public class AppInfoGwt implements Serializable {
 
 	/** Set the app filename and project name. */
 	public void setAppFileAndProjectName(String appFileName, DeviceOS os) {
-		this.appFileName = appFileName;
+		if (appFileName == null) {
+			return;
+		} else {
+			this.appFileName = appFileName;
+		}
+		if (os == null) {
+			return;
+		}
 		String extension = null;
 		if (os == DeviceOS.ANDROID) {
 			extension = ".apk";
 		} else if (os == DeviceOS.IOS) {
 			extension = ".ipa";
+		} else {
+			// Invalid extension
+			return;
 		}
 		String lowercaseAppFileName = appFileName.toLowerCase();
 		int extensionIndex = lowercaseAppFileName.indexOf(extension);

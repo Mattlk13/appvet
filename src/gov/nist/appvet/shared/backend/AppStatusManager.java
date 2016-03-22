@@ -94,7 +94,7 @@ public class AppStatusManager {
 				+ "where appid='" + appid + "'");
 	}
 
-	public static AppStatus getAppStatus(String appid) {
+	public synchronized static AppStatus getAppStatus(String appid) {
 		String appStatusStr = getAppStatusName(appid);
 		return AppStatus.getStatus(appStatusStr);
 	}

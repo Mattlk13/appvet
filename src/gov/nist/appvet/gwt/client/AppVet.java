@@ -19,8 +19,6 @@
  */
 package gov.nist.appvet.gwt.client;
 
-import java.util.logging.Logger;
-
 import gov.nist.appvet.gwt.client.gui.AppVetPanel;
 import gov.nist.appvet.gwt.client.gui.LoginPanel;
 import gov.nist.appvet.gwt.client.gui.dialog.MessageDialogBox;
@@ -41,9 +39,8 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
  */
 public class AppVet implements EntryPoint {
 
-	private static Logger log = Logger.getLogger("AppVet");
 	private final GWTServiceAsync appVetService = GWT.create(GWTService.class);
-	private static MessageDialogBox messageDialogBox = null;
+	private MessageDialogBox messageDialogBox = null;
 
 	
 	@Override

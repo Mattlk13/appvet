@@ -46,7 +46,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 	private final boolean SORTING_ON = false;
 	private final DateTimeFormat dateTimeFormat = DateTimeFormat
 			.getFormat("yyyy-MM-dd HH:mm:ss");
-	private static Logger log = Logger.getLogger("AppsListPagingDataGrid");
+	private Logger log = Logger.getLogger("AppsListPagingDataGrid");
 
 	@Override
 	public void initTableColumns(DataGrid<T> dataGrid,

@@ -53,7 +53,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author steveq@nist.gov
  */
 public class ReportUploadDialogBox extends DialogBox {
-	private static Logger log = Logger.getLogger("ReportUploadDialogBox");
+	private Logger log = Logger.getLogger("ReportUploadDialogBox");
 	public FormPanel uploadReportForm = null;
 	public HTML statusLabel = null;
 	public FileUpload fileUpload = null;

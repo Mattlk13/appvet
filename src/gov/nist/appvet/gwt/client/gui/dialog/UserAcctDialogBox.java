@@ -56,8 +56,8 @@ public class UserAcctDialogBox extends DialogBox {
 	public PasswordTextBox password1TextBox = null;
 	public PasswordTextBox password2TextBox = null;
 	public TextBox emailTextBox = null;
-	private static Logger log = Logger.getLogger("UserAcctDialogBox");
-	public static MessageDialogBox messageDialogBox = null;
+	private Logger log = Logger.getLogger("UserAcctDialogBox");
+	public MessageDialogBox messageDialogBox = null;
 	
 	public UserAcctDialogBox(final ConfigInfoGwt configInfoGwt, final boolean ssoActive) {
 		setSize("400px", "406px");
@@ -196,7 +196,7 @@ public class UserAcctDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.setCellVerticalAlignment(horizontalPanel_4,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		final Label lblDepartment = new Label("Organization Unit: ");
+		final Label lblDepartment = new Label("Organizational Unit: ");
 		horizontalPanel_4.add(lblDepartment);
 		horizontalPanel_4.setCellVerticalAlignment(lblDepartment,
 				HasVerticalAlignment.ALIGN_MIDDLE);
@@ -406,7 +406,7 @@ public class UserAcctDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 	}
 	
-	public static void showMessageDialog(String windowTitle, String message,
+	public void showMessageDialog(String windowTitle, String message,
 			boolean isError) {
 		messageDialogBox = new MessageDialogBox(message, isError);
 		messageDialogBox.setText(windowTitle);
@@ -420,22 +420,10 @@ public class UserAcctDialogBox extends DialogBox {
 		});
 	}
 	
-	public static void killDialogBox(DialogBox dialogBox) {
+	public void killDialogBox(DialogBox dialogBox) {
 		if (dialogBox != null) {
 			dialogBox.hide();
 			dialogBox = null;
 		} 
 	}
-
-//	public void getToolsAuthentication(final ConfigInfoGwt configInfoGwt) {
-//		toolAuthParamDialogBox = new ToolAuthParamDialogBox(configInfoGwt);
-//		toolAuthParamDialogBox.setText("Tool Account Information");
-//		toolAuthParamDialogBox.center();
-//		toolAuthParamDialogBox.okButton.addClickHandler(new ClickHandler() {
-//			@Override
-//			public void onClick(ClickEvent event) {
-//				toolAuthParamDialogBox.hide();
-//			}
-//		});
-//	}
 }

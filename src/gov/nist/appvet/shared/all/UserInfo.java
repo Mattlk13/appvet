@@ -21,9 +21,6 @@ package gov.nist.appvet.shared.all;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Logger;
-
-import gov.nist.appvet.gwt.client.gui.AppVetPanel;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -32,8 +29,6 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  */
 public class UserInfo implements IsSerializable {
 	
-	private static Logger log = Logger.getLogger("UserInfo");
-
 	private boolean newUser = false;
 	// -------------- Updated by user/admin -------------
 	private String userName = null;
@@ -177,70 +172,6 @@ public class UserInfo implements IsSerializable {
 		}
 		return false;
 	}
-
-	
-	public boolean isValid(boolean ignoreBlankPassword) {
-		
-		if (!Validate.isValidUserName(userName)) {
-			AppVetPanel.showMessageDialog("Account Setting Error",
-					"Invalid username", true);
-			return false;
-		}
-		
-		if (!Validate.isAlpha(lastName)) {
-			AppVetPanel.showMessageDialog("Account Setting Error",
-					"Invalid last name", true);
-			return false;
-		}
-		
-		if (!Validate.isAlpha(firstName)) {
-			AppVetPanel.showMessageDialog("Account Setting Error",
-					"Invalid first name", true);
-			return false;
-		}
-		
-		if (!Validate.isValidEmail(email)) {
-			AppVetPanel.showMessageDialog("Account Setting Error",
-					"Invalid email", true);
-			return false;
-		}
-		
-		// We validate role in the calling program.
-//		if (!Validate.isValidRole(roleStr)) {
-//			log.info("Validating roleStr: " + roleStr);
-//			AppVetPanel.showMessageDialog("Account Setting Error",
-//					"Invalid role or org hierarchy", true);
-//			return false;
-//		}
-		
-		if (!ignoreBlankPassword) {
-			if (password != null && !password.isEmpty() &&
-					passwordAgain != null && !passwordAgain.isEmpty()) {
-				if (!Validate.isValidPassword(password)) {
-					AppVetPanel.showMessageDialog("Account Setting Error",
-							"Invalid password", true);
-					return false;
-				}
-				if (!password.equals(passwordAgain)) {
-					AppVetPanel.showMessageDialog("Account Setting Error",
-							"Passwords do not match", true);
-					return false;
-				}
-			} else {
-				AppVetPanel.showMessageDialog("Account Setting Error",
-						"Password is empty or null", true);
-				return false;
-			}
-		} else {
-			if (!password.equals(passwordAgain)) {
-				AppVetPanel.showMessageDialog("Account Setting Error",
-						"Passwords do not match", true);
-				return false;
-			}	
-		}
-		return true;
-	}
-	
 
 	public ArrayList<UserToolCredentials> getToolCredentials() {
 		return toolCredentials;

@@ -22,7 +22,7 @@ public class NameValueDialogBox extends DialogBox {
 	private TextBox nameTextBox = null;
 	private TextBox valueTextBox = null;
 	private String previousValue = null;
-	private static Logger log = Logger.getLogger("NameValueDialogBox");
+	private Logger log = Logger.getLogger("NameValueDialogBox");
 
 	public NameValueDialogBox() {
 		setWidth("");

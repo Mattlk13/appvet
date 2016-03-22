@@ -48,7 +48,7 @@ public class AppUploadDialogBox extends DialogBox {
 	public Hidden hiddenAppPackage = null;
 	public Hidden hiddenAppVersion = null;
 	public Hidden hiddenAppOS = null;
-	private static Logger log = Logger.getLogger("AppUploadDialogBox");
+	private Logger log = Logger.getLogger("AppUploadDialogBox");
 	public Label statusLabel = null;
 
 	public AppUploadDialogBox(String sessionId, String servletURL) {

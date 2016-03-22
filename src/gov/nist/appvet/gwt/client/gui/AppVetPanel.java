@@ -99,12 +99,12 @@ import com.google.gwt.view.client.SingleSelectionModel;
 public class AppVetPanel extends DockLayoutPanel {
 
 	// See appvet.gwt.xml
-	private static int NUM_APPS_SHOW_REFRESH_WARNING = 0;
-	private static Logger log = Logger.getLogger("AppVetPanel");
+	private final int NUM_APPS_SHOW_REFRESH_WARNING = 0;
+	private Logger log = Logger.getLogger("AppVetPanel");
 	private SingleSelectionModel<AppInfoGwt> appSelectionModel = null;
-	private static long MAX_SESSION_IDLE_DURATION = 0;
-	private static int POLLING_INTERVAL = 0;
-	private final static GWTServiceAsync appVetServiceAsync = GWT
+	private long MAX_SESSION_IDLE_DURATION = 0;
+	private int POLLING_INTERVAL = 0;
+	private final GWTServiceAsync appVetServiceAsync = GWT
 			.create(GWTService.class);
 	private HTML appInfoName = null;
 	private HTML appInfoPackage = null;
@@ -123,31 +123,30 @@ public class AppVetPanel extends DockLayoutPanel {
 	private List<AppInfoGwt> allApps = null;
 	private TextBox searchTextBox = null;
 	private String sessionId = null;
-	private static Date sessionExpiration = null;
-	private static Timer pollingTimer = null;
-	private static Timer warningTimer = null;
+	private Date sessionExpiration = null;
+	private Timer pollingTimer = null;
+	private Timer warningTimer = null;
 	private HorizontalPanel appsListButtonPanel = null;
 	private SimplePanel rightCenterPanel = null;
-	private static AppUploadDialogBox appUploadDialogBox = null;
-	private static MessageDialogBox errorDialogBox = null;
-	private static MessageDialogBox messageDialogBox = null;
-	private static AboutDialogBox aboutDialogBox = null;
-	private static UserListDialogBox usersDialogBox = null;
-	private static YesNoConfirmDialog deleteConfirmDialogBox = null;
-	private static ReportUploadDialogBox reportUploadDialogBox = null;
-	private static UserAcctDialogBox userAcctDialogBox = null;
+	private AppUploadDialogBox appUploadDialogBox = null;
+	private MessageDialogBox messageDialogBox = null;
+	private AboutDialogBox aboutDialogBox = null;
+	private UserListDialogBox usersDialogBox = null;
+	private YesNoConfirmDialog deleteConfirmDialogBox = null;
+	private ReportUploadDialogBox reportUploadDialogBox = null;
+	private UserAcctDialogBox userAcctDialogBox = null;
 	public final Label statusMessageLabel = new Label("");
 	private String SERVLET_URL = null;
 	private ArrayList<ToolInfoGwt> tools = null;
 	private InlineLabel appsLabel = null;
-	private static double NORTH_PANEL_HEIGHT = 110.0;
-	private static double SOUTH_PANEL_HEIGHT = 47.0;
-	private static boolean searchMode = false;
+	private double NORTH_PANEL_HEIGHT = 110.0;
+	private double SOUTH_PANEL_HEIGHT = 47.0;
+	private boolean searchMode = false;
 	private MenuItem accountMenuItem = null;
-	public static boolean timeoutWarningMessage = false;
+	public boolean timeoutWarningMessage = false;
 	public String documentationURL = null;
 	public boolean ssoActive = false;
-	public static String ssoLogoutURL = null;
+	public String ssoLogoutURL = null;
 
 	class AppListHandler implements SelectionChangeEvent.Handler {
 		ConfigInfoGwt configInfo = null;
@@ -243,32 +242,31 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 	}
 
-	public static int[] getCenterPosition(
-			com.google.gwt.user.client.ui.UIObject object) {
-		final int windowWidth = Window.getClientWidth();
-		final int windowHeight = Window.getClientHeight();
-		final int xposition = (windowWidth / 2)
-				- (object.getOffsetHeight() / 2);
-		final int yposition = (windowHeight / 2)
-				- (object.getOffsetWidth() / 2);
-		final int[] position = { xposition, yposition };
-		return position;
-	}
+//	public static int[] getCenterPosition(
+//			com.google.gwt.user.client.ui.UIObject object) {
+//		final int windowWidth = Window.getClientWidth();
+//		final int windowHeight = Window.getClientHeight();
+//		final int xposition = (windowWidth / 2)
+//				- (object.getOffsetHeight() / 2);
+//		final int yposition = (windowHeight / 2)
+//				- (object.getOffsetWidth() / 2);
+//		final int[] position = { xposition, yposition };
+//		return position;
+//	}
 
-	public static void killDialogBox(DialogBox dialogBox) {
+	public void killDialogBox(DialogBox dialogBox) {
 		if (dialogBox != null) {
 			dialogBox.hide();
 			dialogBox = null;
 		}
 	}
 
-	public static void logoutSSO() {
+	public void logoutSSO() {
 		// Cancel poller
 		pollingTimer.cancel();
 
 		// Close any open dialog boxes
 		killDialogBox(appUploadDialogBox);
-		killDialogBox(errorDialogBox);
 		killDialogBox(messageDialogBox);
 		killDialogBox(aboutDialogBox);
 		killDialogBox(usersDialogBox);
@@ -281,13 +279,12 @@ public class AppVetPanel extends DockLayoutPanel {
 		System.gc();
 	}
 
-	public static void logoutNonSSO() {
+	public void logoutNonSSO() {
 		// Cancel poller
 		pollingTimer.cancel();
 
 		// Close any open dialog boxes
 		killDialogBox(appUploadDialogBox);
-		killDialogBox(errorDialogBox);
 		killDialogBox(messageDialogBox);
 		killDialogBox(aboutDialogBox);
 		killDialogBox(usersDialogBox);
@@ -306,7 +303,67 @@ public class AppVetPanel extends DockLayoutPanel {
 		System.gc();
 	}
 
-	public static void showMessageDialog(String windowTitle, String message,
+	public boolean userInfoIsValid(UserInfo userInfo, boolean ssoActive) {
+
+		if (!Validate.isValidUserName(userInfo.getUserName())) {
+			showMessageDialog("Account Setting Error", "Invalid username", true);
+			return false;
+		}
+
+		if (!Validate.isAlpha(userInfo.getLastName())) {
+			showMessageDialog("Account Setting Error", "Invalid last name",
+					true);
+			return false;
+		}
+
+		if (!Validate.isAlpha(userInfo.getFirstName())) {
+			showMessageDialog("Account Setting Error", "Invalid first name",
+					true);
+			return false;
+		}
+
+		if (!Validate.isValidEmail(userInfo.getEmail())) {
+			showMessageDialog("Account Setting Error", "Invalid email", true);
+			return false;
+		}
+
+		// We validate role in the calling program.
+		// if (!Validate.isValidRole(roleStr)) {
+		// log.info("Validating roleStr: " + roleStr);
+		// AppVetPanel.showMessageDialog("Account Setting Error",
+		// "Invalid role or org hierarchy", true);
+		// return false;
+		// }
+
+		if (!ssoActive) {
+			// Password is required for NON-SSO mode
+			String password = userInfo.getPassword();
+			String passwordAgain = userInfo.getPasswordAgain();
+			if (password != null && !password.isEmpty()
+					&& passwordAgain != null && !passwordAgain.isEmpty()) {
+				if (!Validate.isValidPassword(password)) {
+					showMessageDialog("Account Setting Error",
+							"Invalid password", true);
+					return false;
+				}
+				if (!password.equals(passwordAgain)) {
+					showMessageDialog("Account Setting Error",
+							"Passwords do not match", true);
+					return false;
+				}
+			} else {
+				showMessageDialog("Account Setting Error",
+						"Password is empty or null", true);
+				return false;
+			}
+		} else {
+			// SSO is active so we ignore password fields (since passwords
+			// are handled by the organization's SSO environment. Do nothing.
+		}
+		return true;
+	}
+
+	public void showMessageDialog(String windowTitle, String message,
 			boolean isError) {
 		messageDialogBox = new MessageDialogBox(message, isError);
 		messageDialogBox.setText(windowTitle);
@@ -348,7 +405,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 	}
 
-	public static boolean validReportFileName(String selectedToolName,
+	public boolean validReportFileName(String selectedToolName,
 			String uploadedReportFileName, ArrayList<ToolInfoGwt> tools,
 			DeviceOS appOs) {
 		String selectedToolRequiredFileType = null;
@@ -356,7 +413,8 @@ public class AppVetPanel extends DockLayoutPanel {
 			ToolInfoGwt tool = tools.get(i);
 			String toolOs = tool.getOs();
 			String toolName = tool.getName();
-			if (selectedToolName.equals(toolName) && toolOs.equals(appOs.name())) {
+			if (selectedToolName.equals(toolName)
+					&& toolOs.equals(appOs.name())) {
 				selectedToolRequiredFileType = tool.getReportFileType();
 				break;
 			} else {
@@ -423,8 +481,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		userInfo = configInfo.getUserInfo();
 		userName = userInfo.getUserName();
-		allApps = initialApps.apps;
 		lastAppsListUpdate = initialApps.appsLastChecked;
+		allApps = initialApps.apps;
 
 		sinkEvents(Event.ONCLICK);
 		sessionId = configInfo.getSessionId();
@@ -437,7 +495,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		appSelectionModel = new SingleSelectionModel<AppInfoGwt>();
 		appSelectionModel.addSelectionChangeHandler(new AppListHandler(this,
 				configInfo));
-		tools = configInfo.getTools();		
+
+		tools = configInfo.getTools();
 		documentationURL = configInfo.getDocumentationURL();
 		ssoActive = configInfo.getSSOActive();
 		ssoLogoutURL = configInfo.getSsoLogoutURL();
@@ -793,7 +852,8 @@ public class AppVetPanel extends DockLayoutPanel {
 				new Command() {
 					@Override
 					public void execute() {
-						usersDialogBox = new UserListDialogBox(configInfo, ssoActive);
+						usersDialogBox = new UserListDialogBox(configInfo,
+								ssoActive);
 						usersDialogBox.setText("Users");
 						usersDialogBox.center();
 						usersDialogBox.doneButton.setFocus(true);
@@ -1039,9 +1099,7 @@ public class AppVetPanel extends DockLayoutPanel {
 					showMessageDialog("AppVet Error", "No app is selected",
 							true);
 				} else {
-					
-					
-					
+
 					reportUploadDialogBox = new ReportUploadDialogBox(userInfo,
 							sessionId, selected.appId, SERVLET_URL,
 							selected.os, tools);
@@ -1238,45 +1296,31 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		appVetServiceAsync.removeSession(sessionId,
 				new AsyncCallback<Boolean>() {
+
 					@Override
 					public void onFailure(Throwable caught) {
-						AppVetPanel.showMessageDialog("AppVet Error",
+						showMessageDialog("AppVet Error",
 								"App list retrieval error", true);
-						errorDialogBox.closeButton.setFocus(true);
-						errorDialogBox.closeButton
-								.addClickHandler(new ClickHandler() {
-									@Override
-									public void onClick(ClickEvent event) {
-										killDialogBox(errorDialogBox);
-									}
-								});
 					}
 
 					@Override
 					public void onSuccess(Boolean result) {
 						if (result == false) {
-							AppVetPanel.showMessageDialog("AppVet Error",
+							showMessageDialog("AppVet Error",
 									"Could not remove session", true);
-							errorDialogBox.closeButton.setFocus(true);
-							errorDialogBox.closeButton
-									.addClickHandler(new ClickHandler() {
-										@Override
-										public void onClick(ClickEvent event) {
-											killDialogBox(errorDialogBox);
-										}
-									});
 						} else {
 							if (sessionExpired) {
 								// Show session expired message
-								AppVetPanel.showMessageDialog("AppVet Session",
+								showMessageDialog("AppVet Session",
 										"AppVet session has expired", true);
 								messageDialogBox.closeButton.setFocus(true);
-								messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
-									@Override
-									public void onClick(ClickEvent event) {
-										killDialogBox(messageDialogBox);
-									}
-								});
+								messageDialogBox.closeButton
+										.addClickHandler(new ClickHandler() {
+											@Override
+											public void onClick(ClickEvent event) {
+												killDialogBox(messageDialogBox);
+											}
+										});
 							}
 							if (ssoActive) {
 								logoutSSO();
@@ -1286,6 +1330,7 @@ public class AppVetPanel extends DockLayoutPanel {
 
 						}
 					}
+
 				});
 	}
 
@@ -1426,7 +1471,8 @@ public class AppVetPanel extends DockLayoutPanel {
 				new AsyncCallback<AppsListGwt>() {
 					@Override
 					public void onFailure(Throwable caught) {
-						log.severe("Error retrieving updated apps. Server might be down: " + caught.toString());
+						log.severe("Error retrieving updated apps. Server might be down: "
+								+ caught.toString());
 						pollingTimer.cancel();
 					}
 
@@ -1436,7 +1482,8 @@ public class AppVetPanel extends DockLayoutPanel {
 							showMessageDialog("AppVet Database Error",
 									"Could not retrieve updated apps", true);
 						} else {
-							//log.info("Update time: " + updatedAppsList.appsLastChecked.toString());
+							// log.info("Update time: " +
+							// updatedAppsList.appsLastChecked.toString());
 							lastAppsListUpdate = updatedAppsList.appsLastChecked;
 							if (updatedAppsList.apps.size() > 0) {
 								setUpdatedApps(updatedAppsList.apps);
@@ -1479,7 +1526,8 @@ public class AppVetPanel extends DockLayoutPanel {
 								String iconPath = null;
 								String altText = null;
 								if (selectedApp.iconURL == null) {
-									// Icon has not yet been generated for this app
+									// Icon has not yet been generated for this
+									// app
 									if (selectedApp.os == DeviceOS.ANDROID) {
 										iconPath = "images/android-icon-gray.png";
 										altText = "Android app";
@@ -1492,11 +1540,11 @@ public class AppVetPanel extends DockLayoutPanel {
 									iconPath = selectedApp.iconURL;
 									altText = selectedApp.appName;
 								}
-										
+
 								appInfoIcon.setVisible(true);
 								appInfoIcon.setUrl(iconPath);
 								appInfoIcon.setAltText(altText);
-								
+
 								// Set app name in right info panel
 								String appNameHtml = null;
 								if ((selectedApp.appStatus == AppStatus.NA)
@@ -1641,7 +1689,8 @@ public class AppVetPanel extends DockLayoutPanel {
 							String status = null;
 
 							if (toolStatus.getStatusHtml().indexOf("LOW") > -1) {
-								// Pre-processor status of LOW is displayed as "COMPLETED"
+								// Pre-processor status of LOW is displayed as
+								// "COMPLETED"
 								status = "<div id=\"tabledim\" style='color: black'>COMPLETED</div>";
 							} else {
 								status = toolStatus.getStatusHtml();
@@ -1971,25 +2020,25 @@ public class AppVetPanel extends DockLayoutPanel {
 	 * until the user's next log in.
 	 */
 	public void openUserAccount(final ConfigInfoGwt configInfoGwt) {
-		
+
 		if (configInfoGwt.getUserInfo().isDefaultAdmin()) {
 			showMessageDialog("Account Info", "Cannot change info for "
 					+ "default AppVet administrator", false);
 			return;
 		}
-		
+
 		userAcctDialogBox = new UserAcctDialogBox(configInfoGwt, ssoActive);
 		userAcctDialogBox.setText("Account Settings");
 		userAcctDialogBox.center();
 		userAcctDialogBox.password1TextBox.setFocus(true);
 		userAcctDialogBox.cancelButton.addClickHandler(new ClickHandler() {
-			
+
 			public void onClick(ClickEvent event) {
 				killDialogBox(userAcctDialogBox);
 			}
 		});
 		userAcctDialogBox.okButton.addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
 				// killDialogBox(userAcctDialogBox);
@@ -1997,10 +2046,12 @@ public class AppVetPanel extends DockLayoutPanel {
 						.getText();
 				final String newFirstName = userAcctDialogBox.firstNameTextBox
 						.getText();
-//				final String newOrganization = userAcctDialogBox.organizationTextBox
-//						.getText();
-//				final String newDepartment = userAcctDialogBox.departmentTextBox
-//						.getText();
+				// final String newOrganization =
+				// userAcctDialogBox.organizationTextBox
+				// .getText();
+				// final String newDepartment =
+				// userAcctDialogBox.departmentTextBox
+				// .getText();
 				final String newEmail = userAcctDialogBox.emailTextBox
 						.getText();
 				final String newPassword1 = userAcctDialogBox.password1TextBox
@@ -2014,13 +2065,9 @@ public class AppVetPanel extends DockLayoutPanel {
 				updatedUserInfo.setEmail(newEmail);
 				updatedUserInfo.setPasswords(newPassword1, newPassword2);
 				updatedUserInfo.setRoleStr(userInfo.getRoleStr());
-
-				if (ssoActive) {
-					if (!updatedUserInfo.isValid(true))
-						return;
-				} else {
-					if (!updatedUserInfo.isValid(false))
-						return;
+				// Validate updated user info
+				if (!userInfoIsValid(updatedUserInfo, ssoActive)) {
+					return;
 				}
 
 				appVetServiceAsync.selfUpdatePassword(updatedUserInfo,
@@ -2044,14 +2091,14 @@ public class AppVetPanel extends DockLayoutPanel {
 											.getLastName());
 									userInfo.setFirstName(updatedUserInfo
 											.getFirstName());
-//									userInfo.setOrganization(updatedUserInfo
-//											.getOrganization());
-//									userInfo.setDepartment(updatedUserInfo
-//											.getDepartment());
+									// userInfo.setOrganization(updatedUserInfo
+									// .getOrganization());
+									// userInfo.setDepartment(updatedUserInfo
+									// .getDepartment());
 									userInfo.setEmail(updatedUserInfo
 											.getEmail());
 									updatedUserInfo.setPassword("");
-//									userInfo.setRole(updatedUserInfo.getRole());
+									// userInfo.setRole(updatedUserInfo.getRole());
 
 									killDialogBox(userAcctDialogBox);
 									showMessageDialog("Account Update",

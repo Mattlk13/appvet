@@ -65,7 +65,7 @@ public class ToolMgr implements Runnable {
 					// Timeout occurred waiting for one or more reports to be received
 					// Get app info to set the status of these tools to ERROR
 					String appOS = Database.getOs(currentProcessingAppId);
-					Database.killProcessingTools(currentProcessingAppId, DeviceOS.getOS(appOS));
+					Database.killStuckApp(currentProcessingAppId);
 				}				
 			} else {
 				// Get the next PENDING app
@@ -181,7 +181,6 @@ public class ToolMgr implements Runnable {
 						availableTools = null;
 						
 						cleanUpFiles(appInfo);
-
 					}
 				}
 			}
@@ -251,9 +250,11 @@ public class ToolMgr implements Runnable {
 	
 	private boolean getAppMetaData(AppInfo appInfo) {
 		if (appInfo.os == DeviceOS.ANDROID) {
-			return AndroidMetadata.getMetadata(appInfo);
+			AndroidMetadata androidMetadata = new AndroidMetadata();
+			return androidMetadata.getMetadata(appInfo);
 		} else if (appInfo.os == DeviceOS.IOS) {
-			return IOSMetadata.getMetadata(appInfo);
+			IOSMetadata iosMetadata = new IOSMetadata();
+			return iosMetadata.getMetadata(appInfo);
 		} else {
 			appInfo.log.error("Unknown OS when getting app metadata");
 			return false;

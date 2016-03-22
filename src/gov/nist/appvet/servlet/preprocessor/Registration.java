@@ -51,7 +51,7 @@ import java.util.Date;
 public class Registration {
 
 	private AppInfo appInfo = null;
-	private static final Logger log = AppVetProperties.log;
+	private final Logger log = AppVetProperties.log;
 
 	public Registration(AppInfo appInfo) {
 		this.appInfo = appInfo;
@@ -254,7 +254,7 @@ public class Registration {
 		}
 	}
 
-	private static void setInitialToolStatus(AppInfo appInfo, ToolAdapter tool) {
+	private void setInitialToolStatus(AppInfo appInfo, ToolAdapter tool) {
 		String sql = null;
 		if (appInfo.os == DeviceOS.ANDROID) {
 			sql = "UPDATE androidtoolstatus SET " + tool.toolId + "='NA' "

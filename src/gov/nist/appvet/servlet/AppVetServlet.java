@@ -1018,7 +1018,6 @@ public class AppVetServlet extends HttpServlet {
 		log.debug("Tool report name: " + tool.reportName);
 		
 		String submitterRoleStr = Database.getRoleStr(submitterUserName);
-		String appOwnerRoleStr = Database.getRoleStr(appInfo.ownerName);
 		Role submitterRole = null;
 		try {
 			submitterRole = Role.getRole(submitterRoleStr);

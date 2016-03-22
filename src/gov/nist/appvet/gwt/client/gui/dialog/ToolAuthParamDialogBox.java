@@ -47,8 +47,8 @@ import com.google.gwt.user.client.ui.Label;
  * @author steveq@nist.gov
  */
 public class ToolAuthParamDialogBox extends DialogBox {
-	private static Logger log = Logger.getLogger("ToolAuthParamDialogBox");
-	private final static GWTServiceAsync appVetServiceAsync = GWT
+	private Logger log = Logger.getLogger("ToolAuthParamDialogBox");
+	private final GWTServiceAsync appVetServiceAsync = GWT
 			.create(GWTService.class);
 	public String username = null;
 	public PushButton okButton = null;
@@ -59,7 +59,7 @@ public class ToolAuthParamDialogBox extends DialogBox {
 	final PushButton editButton = new PushButton("Edit");
 	final PushButton saveButton = new PushButton("Save");
 	public PushButton doneButton = null;
-	public static MessageDialogBox messageDialogBox = null;
+	public MessageDialogBox messageDialogBox = null;
 	final ListBox toolsListBox = new ListBox();
 
 	public ToolAuthParamDialogBox(final ConfigInfoGwt configInfoGwt) {
@@ -84,9 +84,10 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		// Display tools and user's tool credentials
 		username = configInfoGwt.getUserInfo().getUserName();
 		toolCredentials = configInfoGwt.getUserInfo().getToolCredentials();
-		if (toolCredentials == null)
+		if (toolCredentials == null) {
 			log.severe("toolCredentials is null");
-		else {
+			toolCredentials = new ArrayList<UserToolCredentials>();
+		} else {
 //			log.log(Level.INFO,
 //					"toolCredentials size: " + toolCredentials.size());
 		}
@@ -252,7 +253,7 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		displayToolCredentials(selectedToolName);
 	}
 
-	public static void showMessageDialog(String windowTitle, String message,
+	public void showMessageDialog(String windowTitle, String message,
 			boolean isError) {
 		messageDialogBox = new MessageDialogBox(message, isError);
 		messageDialogBox.setText(windowTitle);

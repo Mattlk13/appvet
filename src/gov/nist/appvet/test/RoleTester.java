@@ -29,8 +29,8 @@ public class RoleTester {
 			String hierarchyStr = Role.getOrgHierarchyStr(roleStr);
 			System.out.println("hierarchyStr: " + hierarchyStr);
 			
-			String dbStr = Role.getDbStr(Role.USER, hierarchy);
-			System.out.println("dbStr: " + dbStr);
+//			String dbStr = Role.getDbStr(Role.USER, hierarchy);
+//			System.out.println("dbStr: " + dbStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

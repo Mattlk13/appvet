@@ -54,9 +54,7 @@ import com.google.gwt.user.client.ui.SuggestBox;
  * @author steveq@nist.gov
  */
 public class UserAcctAdminDialogBox extends DialogBox {
-	private static Logger log = Logger.getLogger("UserAcctAdminDialogBox");
-	private final static GWTServiceAsync appVetServiceAsync = GWT
-			.create(GWTService.class);
+	private Logger log = Logger.getLogger("UserAcctAdminDialogBox");
 	public PushButton cancelButton = null;
 	public PushButton submitButton = null;
 	public TextBox lastNameTextBox = null;
@@ -71,7 +69,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 	public Label passwordAgainLabel = null;
 	private final DateTimeFormat dateTimeFormat = DateTimeFormat
 			.getFormat("yyyy-MM-dd HH:mm:ss");
-	private static MessageDialogBox messageDialogBox = null;
+	private MessageDialogBox messageDialogBox = null;
 	public RadioButton adminRadioButton = null;
 	public RadioButton toolRadioButton = null;
 	public RadioButton analystRadioButton = null;
@@ -594,7 +592,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		}
 	}
 
-	public static void showMessageDialog(String windowTitle, String message,
+	public void showMessageDialog(String windowTitle, String message,
 			boolean isError) {
 		messageDialogBox = new MessageDialogBox(message, isError);
 		messageDialogBox.setText(windowTitle);
@@ -702,15 +700,13 @@ public class UserAcctAdminDialogBox extends DialogBox {
 					true);
 			return false;
 		}
-		String level4 = level4SuggestBox.getValue();
-		if (level4 == null || level4.isEmpty()) {
-			// Level4 is not required. Do nothing.
-		}
 		
 		String level3 = level3SuggestBox.getValue();
 		if (level3 == null || level3.isEmpty()) {
-			// Check if level 4 is not null
+			// Check if level 4 is not null and not empty
+			String level4 = level4SuggestBox.getValue();
 			if (level4 != null && !level4.isEmpty()) {
+				// Level 3 is invalid
 				showMessageDialog("AppVet User Account", confInfo.getOrgLevel3Name() + " cannot be null if " + 
 						confInfo.getOrgLevel4Name() + " is not null.",
 						true);
@@ -720,7 +716,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		return true;
 	}
 
-	public static void killDialogBox(DialogBox dialogBox) {
+	public void killDialogBox(DialogBox dialogBox) {
 		if (dialogBox != null) {
 			dialogBox.hide();
 			dialogBox = null;

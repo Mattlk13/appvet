@@ -57,7 +57,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger log = AppVetProperties.log;
+	private final Logger log = AppVetProperties.log;
 
 	/** This method is called by AppVet.java. */
 	public ConfigInfoGwt handleServletRequest() {
@@ -277,7 +277,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	 * Get AppVet configuration information from AppVetProperties and user
 	 * account information to be sent to the GWT client.
 	 */
-	private static ConfigInfoGwt getConfigInfo(String username,
+	private ConfigInfoGwt getConfigInfo(String username,
 			String sessionId, Date sessionExpiration) {
 		final ConfigInfoGwt configInfo = new ConfigInfoGwt();
 		configInfo.setAppVetHostUrl(AppVetProperties.HOST_URL);
@@ -462,7 +462,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		}
 	}
 
-	public static List<ToolStatusGwt> getToolsStatuses(DeviceOS os,
+	public List<ToolStatusGwt> getToolsStatuses(DeviceOS os,
 			String sessionId, String appId) {
 		final ArrayList<ToolStatusGwt> toolStatusList = new ArrayList<ToolStatusGwt>();
 		// Registration status
@@ -501,7 +501,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		return toolStatusList;
 	}
 
-	private static ToolStatusGwt getToolStatusHtml(DeviceOS os,
+	private ToolStatusGwt getToolStatusHtml(DeviceOS os,
 			String sessionId, String appId, ToolAdapter tool) {
 		if (tool == null) {
 			log.error("Tool is null");
@@ -654,14 +654,14 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	// return orgDeptsList;
 	// }
 
-	private boolean listContains(List<String> list, String item) {
-		for (int i = 0; i < list.size(); i++) {
-			if (item.equals(list.get(i))) {
-				return true;
-			}
-		}
-		return false;
-	}
+//	private boolean listContains(List<String> list, String item) {
+//		for (int i = 0; i < list.size(); i++) {
+//			if (item.equals(list.get(i))) {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 	//
 	// @Override
 	// public List<OrgDepts> getOrgDeptsList() throws IllegalArgumentException {

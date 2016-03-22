@@ -28,10 +28,8 @@ public class Emailer {
 		adminUsers = Database.getUsers(Role.ADMIN);
 	}
 
-
 	public static void sendEmail(String recipient, String subject, 
 			String content) {
-
 		if (AppVetProperties.emailEnabled) {
 			String smtpHost = AppVetProperties.SMTP_HOST;
 			String smtpPort = AppVetProperties.SMTP_PORT;
