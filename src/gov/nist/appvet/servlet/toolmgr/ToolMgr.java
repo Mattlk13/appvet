@@ -77,7 +77,6 @@ public class ToolMgr implements Runnable {
 							AppVetProperties.APP_PROCESSING_TIMEOUT);
 					// Get app info
 					AppInfo appInfo = new AppInfo(appid);
-					appInfo.log.debug("App " + appid + " processing.");
 					final long startTime = new Date().getTime();
 					appInfo.log.debug(MemoryUtil.getFreeHeap("ToolMgr.run()"));
 					// Get app metadata.

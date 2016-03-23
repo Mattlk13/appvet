@@ -23,6 +23,7 @@ package gov.nist.appvet.shared.backend;
  * @author steveq@nist.gov
  */
 import gov.nist.appvet.servlet.shared.Emailer;
+import gov.nist.appvet.servlet.toolmgr.ToolMgr;
 import gov.nist.appvet.shared.all.DeviceOS;
 import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.Validate;
@@ -31,6 +32,9 @@ import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 
 
 public class AppVetProperties {
@@ -401,6 +405,7 @@ public class AppVetProperties {
 		setupTools(DeviceOS.ANDROID);
 		setupTools(DeviceOS.IOS);
 		checkForProcessingApps();
+		startToolMgr();
 		log.debug("---------- END AppVet PROPERTIES -------------------", false);
 	}
 
@@ -508,5 +513,15 @@ public class AppVetProperties {
 	 */
 	public static void checkForProcessingApps() {
 		Database.setProcessingStatusToError();
+	}
+	
+	/** This method launches the tool manager.*/
+	public static void startToolMgr() {
+		log.info("*** Starting AppVet tool manager "
+				+ AppVetProperties.APPVET_VERSION + " on "
+				+ AppVetProperties.SERVLET_URL);
+		ToolMgr toolMgr = new ToolMgr();
+		Thread toolMgrThread = new Thread(toolMgr);
+		toolMgrThread.start();
 	}
 }

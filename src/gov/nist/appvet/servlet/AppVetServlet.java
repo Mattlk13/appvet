@@ -78,10 +78,20 @@ public class AppVetServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	/** Server logger. */
 	private static final Logger log = AppVetProperties.log;
-	/** Tool manager. */
-	private ToolMgr toolMgr = null;
-	/** Tool manager thread. */
-	private Thread toolMgrThread = null;
+
+	
+//	@Override
+//	/** This method launches the tool manager when the initial servlet is
+//	 * launched.*/
+//	public void init(ServletConfig config) throws ServletException {
+//		super.init(config);
+//		log.info("*** Starting AppVet service "
+//				+ AppVetProperties.APPVET_VERSION + " on "
+//				+ AppVetProperties.SERVLET_URL);
+//		toolMgr = new ToolMgr();
+//		toolMgrThread = new Thread(toolMgr);
+//		toolMgrThread.start();
+//	}
 
 	@Override
 	/** Handler for HTTP GET messages.*/
@@ -517,19 +527,6 @@ public class AppVetServlet extends HttpServlet {
 			item = null;
 			System.gc();
 		}
-	}
-
-	@Override
-	/** This method launches the tool manager when the initial servlet is
-	 * launched.*/
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-		log.info("*** Starting AppVet service "
-				+ AppVetProperties.APPVET_VERSION + " on "
-				+ AppVetProperties.SERVLET_URL);
-		toolMgr = new ToolMgr();
-		toolMgrThread = new Thread(toolMgr);
-		toolMgrThread.start();
 	}
 	
 	public boolean requesterAuthorizedToAccessAppId(String appId, String requesterUsername) {
