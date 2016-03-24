@@ -424,6 +424,10 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		final String uploadedReportFileNameLowercase = uploadedReportFileName
 				.toLowerCase();
+		if (selectedToolRequiredFileType == null) {
+			log.severe("selectedToolRequiredFileType is null");
+			return false;
+		}
 		final String selectedToolRequiredFileTypeLowercase = selectedToolRequiredFileType
 				.toLowerCase();
 

@@ -89,6 +89,7 @@ class ConvertHandler extends Thread {
         String newFileName =szFullPath.substring( 0, szFullPath.lastIndexOf( File.separator)+1 ) + pngFile.getName().substring(0, pngFile.getName().lastIndexOf("."))+".png";
         DataInputStream file = null;
         FileInputStream fis = null;
+        FileOutputStream fos = null;
         try{
         	fis = new FileInputStream(pngFile);
             file = new DataInputStream(fis);
@@ -207,23 +208,31 @@ class ConvertHandler extends Thread {
                 dataTrunk.m_nCRC[3] = (byte) ( lCRCValue&0xFF );
                 dataTrunk.m_nSize = newDeBuffer.length;
 
-                FileOutputStream outStream = new FileOutputStream( newFileName, false);
+                fos = new FileOutputStream( newFileName, false);
                 byte[] pngHeader = { -119, 80, 78, 71, 13, 10, 26, 10 };
-                outStream.write(pngHeader);
+                fos.write(pngHeader);
                 for( int n=0; n<trunks.size(); n++ ) {
                     trunk = trunks.get( n );
                     if( trunk.getName().equalsIgnoreCase( "CgBI")) {
                         continue;
                     }
-                    trunk.writeToStream( outStream );
+                    trunk.writeToStream( fos );
                 }
-                outStream.close();
+                fos.close();
             }
         }catch(IOException e) {
             System.out.println("Error --" + e.toString());
         } finally {
         	file = null;
         	fis = null;
+        	if (fos != null) {
+        		try {
+					fos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+        		fos = null;
+        	}
         }
 
         try {

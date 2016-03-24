@@ -33,14 +33,11 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-
 
 public class AppVetProperties {
 	public static boolean error = false;
 	/** AppVet Github release version number. */
-	public static final String APPVET_VERSION = "2.2"; 
+	public static final String APPVET_VERSION = "2.2.1"; 
 	// Logging
 	public static Logger log = null;
 	private static String APPVET_LOG_NAME = "appvet_log.txt";

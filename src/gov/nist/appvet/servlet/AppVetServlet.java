@@ -24,7 +24,6 @@ import gov.nist.appvet.servlet.shared.Emailer;
 import gov.nist.appvet.servlet.shared.ErrorMessage;
 import gov.nist.appvet.servlet.shared.ReportFileType;
 import gov.nist.appvet.servlet.shared.Zip;
-import gov.nist.appvet.servlet.toolmgr.ToolMgr;
 import gov.nist.appvet.shared.all.AppStatus;
 import gov.nist.appvet.shared.all.AppVetParameter;
 import gov.nist.appvet.shared.all.AppVetServletCommand;
@@ -56,8 +55,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -877,7 +874,14 @@ public class AppVetServlet extends HttpServlet {
 			return false;
 		} finally {
 			os = null;
-			fis = null;
+			if (fis != null) {
+				try {
+					fis.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				fis = null;
+			}
 		}
 	}
 

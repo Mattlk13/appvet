@@ -419,11 +419,12 @@ public class AndroidMetadata {
 			String line;
 			InputStream fis = null;
 			InputStreamReader isr = null;
+			BufferedReader bufferedReader = null;
 			try {
 				fis = new FileInputStream(apkToolYmlFile);
 				isr = new InputStreamReader(fis,
 						Charset.forName("UTF-8"));
-				BufferedReader bufferedReader = new BufferedReader(isr);
+				bufferedReader = new BufferedReader(isr);
 				while ((line = bufferedReader.readLine()) != null) {
 					// Remove all whitespace from line.
 					String trimmed = line.replaceAll("\\s", "");
@@ -473,6 +474,14 @@ public class AndroidMetadata {
 			} finally {
 				isr = null;
 				fis = null;
+				if (bufferedReader != null) {
+					try {
+						bufferedReader.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					bufferedReader = null;
+				}
 			}
 		} else {
 			appInfo.log.error("Could not find file 'apktool.yml' file to extract app version, minSDK, or targetSDK. APK file may be corrupted.");
