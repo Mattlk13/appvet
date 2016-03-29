@@ -36,6 +36,7 @@ import gov.nist.appvet.shared.backend.ToolStatusManager;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
@@ -247,8 +248,22 @@ public class Registration {
 			return false;
 		} finally {
 			registrationTool = null;
-			bufferedWriter = null;
-			fileWriter = null;
+			if (bufferedWriter != null) {
+				try {
+					bufferedWriter.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				bufferedWriter = null;
+			}
+			if (fileWriter != null) {
+				try {
+					fileWriter.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				fileWriter = null;
+			}
 			Database.cleanUpPreparedStatement(preparedStatement);
 			Database.cleanUpConnection(connection);
 		}

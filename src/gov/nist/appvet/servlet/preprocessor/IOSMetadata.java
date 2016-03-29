@@ -190,7 +190,14 @@ public class IOSMetadata {
 			appInfo.log.error(e.toString());
 		} finally {
 			bufferedWriter = null;
-			fileWriter = null;
+			if (fileWriter != null) {
+				try {
+					fileWriter.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				fileWriter = null;
+			}
 		}
 	}
 

@@ -609,6 +609,7 @@ public class ToolAdapter implements Runnable {
 
 			File fileOut = null;
 			FileOutputStream fileOutputStream = null;
+			InputStream inputStream = null;
 			try {
 				Date startDate = new Date();
 				final long startTime = startDate.getTime();
@@ -664,7 +665,7 @@ public class ToolAdapter implements Runnable {
 					// content represents binary content, the content must
 					// written to a binary file (e.g., PDF file).
 					final HttpEntity responseEntity = httpResponse.getEntity();
-					final InputStream inputStream = responseEntity.getContent();
+					inputStream = responseEntity.getContent();
 					final String reportPath = appInfo.getReportsPath() + "/"
 							+ generateReportName();
 					fileOut = new File(reportPath);
@@ -740,7 +741,22 @@ public class ToolAdapter implements Runnable {
 				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
 						this.toolId, ToolStatus.ERROR);
 			} finally {
-				fileOutputStream = null;
+				if (inputStream != null) {
+					try {
+						inputStream.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					inputStream = null;
+				}
+				if (fileOutputStream != null) {
+					try {
+						fileOutputStream.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					fileOutputStream = null;
+				}
 				fileOut = null;
 			}
 		}

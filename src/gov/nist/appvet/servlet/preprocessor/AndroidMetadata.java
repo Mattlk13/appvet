@@ -198,9 +198,19 @@ public class AndroidMetadata {
 			appInfo.log.error(e.toString());
 		} finally {
 			if (bufferedWriter != null) {
+				try {
+					bufferedWriter.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				bufferedWriter = null;
 			}
 			if (fileWriter != null) {
+				try {
+					fileWriter.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				fileWriter = null;
 			}
 		}

@@ -223,8 +223,22 @@ class ConvertHandler extends Thread {
         }catch(IOException e) {
             System.out.println("Error --" + e.toString());
         } finally {
-        	file = null;
-        	fis = null;
+        	if (file != null) {
+        		try {
+					file.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+        		file = null;
+        	}
+        	if (fis != null) {
+        		try {
+					fis.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+        		fis = null;
+        	}
         	if (fos != null) {
         		try {
 					fos.close();

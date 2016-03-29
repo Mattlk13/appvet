@@ -19,8 +19,6 @@
  */
 package gov.nist.appvet.gwt.client.gui.dialog;
 
-import gov.nist.appvet.gwt.client.GWTService;
-import gov.nist.appvet.gwt.client.GWTServiceAsync;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.UserInfo;
@@ -29,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.DialogBox;

@@ -873,7 +873,14 @@ public class AppVetServlet extends HttpServlet {
 			log.error(e.toString());
 			return false;
 		} finally {
-			os = null;
+			if (os != null) {
+				try {
+					os.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				os = null;
+			}
 			if (fis != null) {
 				try {
 					fis.close();

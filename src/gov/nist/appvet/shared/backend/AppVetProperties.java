@@ -37,7 +37,7 @@ import java.util.ArrayList;
 public class AppVetProperties {
 	public static boolean error = false;
 	/** AppVet Github release version number. */
-	public static final String APPVET_VERSION = "2.2.1"; 
+	public static final String APPVET_VERSION = "2.2.2"; 
 	// Logging
 	public static Logger log = null;
 	private static String APPVET_LOG_NAME = "appvet_log.txt";
@@ -320,17 +320,16 @@ public class AppVetProperties {
 			System.err.println("Default admin password is null or empty");
 		}
 		HOST = xml.getXPathValue("/AppVet/Host/Hostname");
-		if (HOST.equals("DHCP")) {
-			try {
-				InetAddress addr = InetAddress.getLocalHost();
-				HOST = addr.getHostAddress();
-				printVal("HOST (DHCP)", HOST);
-			} catch (UnknownHostException e) {
-				System.err.println(e.toString());
-			}
-		} else {
-			printVal("HOST (Static)", HOST);
-		}
+		printVal("HOST (Static)", HOST);
+//		if (HOST.equals("DHCP")) {
+//			try {
+//				InetAddress addr = InetAddress.getLocalHost();
+//				HOST = addr.getHostAddress();
+//				printVal("HOST (DHCP)", HOST);
+//			} catch (UnknownHostException e) {
+//				System.err.println(e.toString());
+//			}
+//		} 
 		SSL = new Boolean(xml.getXPathValue("/AppVet/Host/SSL")).booleanValue();
 		printVal("SSL", SSL);
 		PORT = xml.getXPathValue("/AppVet/Host/Port");

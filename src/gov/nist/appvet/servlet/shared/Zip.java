@@ -80,9 +80,30 @@ public class Zip {
 			e.printStackTrace();
 			return false;
 		} finally {
-			in = null;
-			zos = null;
-			fos = null;
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				in = null;
+			}
+			if (zos != null) {
+				try {
+					zos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				zos = null;
+			}
+			if (fos != null) {
+				try {
+					fos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				fos = null;
+			}
 		}
 	}
 
