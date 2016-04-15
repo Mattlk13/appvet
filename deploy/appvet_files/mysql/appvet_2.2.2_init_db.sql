@@ -87,7 +87,7 @@ CREATE TABLE `apps` (
   `versioncode` varchar(120) DEFAULT NULL,
   `versionname` varchar(120) DEFAULT NULL,
   `filename` varchar(120) DEFAULT NULL,
-  `submittime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   `submittime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `appstatus` varchar(120) DEFAULT NULL,
   `username` varchar(120) DEFAULT NULL,
   `clienthost` varchar(120) DEFAULT NULL,
