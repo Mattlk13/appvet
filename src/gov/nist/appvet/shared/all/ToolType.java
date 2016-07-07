@@ -23,20 +23,20 @@ package gov.nist.appvet.shared.all;
  * @author steveq@nist.gov
  */
 public enum ToolType {
-	PREPROCESSOR ("images/icon-metadata.png", "Tool icon"), 
-	// TODO: Change TESTTOOL reports to AUTO_TOOL to denote automatic upload
-	// or reports by tools.
-	TESTTOOL ("images/icon-tool.png", "Tool icon"),
-	// TODO: Change REPORT reports to MANUAL_TOOL to denote manual upload
-	// of reports by analysts.
-	REPORT ("images/icon-tool.png", "Tool icon"), 
-	AUDIT ("images/icon-seal.png", "Tool icon"), 
-	// TODO: Change SUMMARY reports to OVERVIEW reports
-	SUMMARY ("images/icon-seal.png", "Tool icon");
-	
+	PREPROCESSOR("images/icon-metadata.png", "Tool icon"), 
+	TESTTOOL(
+			"images/icon-tool.png", "Tool icon"), 
+	REPORT(
+			"images/icon-tool.png", "Report icon"),
+	AUDIT("images/icon-tool.png", "Approval/Rejection icon"),
+
+	// Leave SUMMARY for backward compatibility in AV3.0 (07-02-16)
+	SUMMARY ("images/icon-seal.png", "Tool icon")
+	;
+
 	private final String defaultIconURL;
 	private final String defaultAltText;
-	
+
 	private ToolType(String defaultIconURL, String defaultAltText) {
 		this.defaultIconURL = defaultIconURL;
 		this.defaultAltText = defaultAltText;
@@ -52,11 +52,11 @@ public enum ToolType {
 		}
 		return null;
 	}
-	
+
 	public String getDefaultIconURL() {
 		return defaultIconURL;
 	}
-	
+
 	public String getDefaultAltText() {
 		return defaultAltText;
 	}

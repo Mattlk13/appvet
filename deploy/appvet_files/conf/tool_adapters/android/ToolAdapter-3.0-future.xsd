@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://appvet.github.io/appvet/schemas" xmlns="http://appvet.github.io/appvet/schemas"
+	elementFormDefault="qualified">
+	<!-- $$Id: ToolAdapter.xsd 38580 2014-04-03 19:53:51Z steveq $$ -->
+
+	<xs:include schemaLocation=""></xs:include>
+	<xs:element name="ToolAdapter">
+		<xs:annotation>
+			<xs:documentation>The ToolServiceAdapter defines properties for an
+				AppVet tool service.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:annotation>
+				<xs:documentation>
+					This schema represents the AppVet 3.0 ToolAdapter.
+					This schema is significantly different from AppVet
+					2.2.x and will require v2.2.x tool adapters to be
+					modified to conform to this schema.
+				</xs:documentation>
+			</xs:annotation>
+			<xs:sequence>
+				<xs:element name="Id" maxOccurs="1" minOccurs="1">
+					<xs:annotation>
+						<xs:documentation>
+							The Id element defines the ID of the AppVet
+							tool service. The Id element must be
+							alphabetic lowercase. For example,
+							<Id>myandroidtester</Id>
+							.
+						</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:pattern value="[a-z]+" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Name" type="xs:string" maxOccurs="1"
+					minOccurs="1">
+					<xs:annotation>
+						<xs:documentation>
+							The Name element defines the name of an
+							AppVet tool service. For example,
+							<Name>My Android Tester</Name>
+							.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="OS" type="OsType" maxOccurs="1"
+					minOccurs="1">
+				</xs:element>
+				<xs:element name="Vendor" type="VendorType"
+					maxOccurs="1" minOccurs="1">
+					<xs:annotation>
+						<xs:documentation>
+							The VendorName element defines the vendor
+							name of the AppVet tool service. For
+							example,
+							<Vendor>Example, Inc.</Vendor>
+							.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Report" type="ReportType"
+					maxOccurs="1" minOccurs="1">
+					<xs:annotation>
+						<xs:documentation>
+							The ReportFile element defines the file type
+							of the tool service report. The ReportFormat
+							element must be TXT, PDF, HTML, or RTF. For
+							example,
+							<ReportFile>TXT</ReportFile>
+							.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Icon" type="xs:anyURI" maxOccurs="1"
+					minOccurs="0">
+				</xs:element>
+				<xs:element name="Type" type="ToolType" maxOccurs="1" minOccurs="1"></xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+	<xs:simpleType name="OtherToolType">
+		<xs:annotation>
+			<xs:documentation>
+				Note that SUMMARY is no longer permitted (use REPORT
+				instead), but SUMMARY is still included in the AppVet
+				source code to support backward compatibility.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="PREPROCESSOR" />
+			<xs:enumeration value="REPORT" />
+			<xs:enumeration value="AUDIT" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="AuthorizedUploadRoleType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="TOOL_PROVIDER" />
+			<xs:enumeration value="USER" />
+			<xs:enumeration value="ANALYST" />
+			<xs:enumeration value="ADMIN" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="OsType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ANDROID" />
+			<xs:enumeration value="IOS" />
+			<xs:enumeration value="WINDOWS" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<xs:simpleType name="ReportFileType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="TXT" />
+			<xs:enumeration value="HTML" />
+			<xs:enumeration value="PDF" />
+			<xs:enumeration value="RTF" />
+			<xs:enumeration value="JSON" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+
+
+
+
+
+	<xs:complexType name="HTTPRequestType">
+		<xs:annotation>
+			<xs:documentation>The HTTP Request is used by AppVet to send an app
+				to a
+				tool service or
+				by an asynchronous tool service to send a report
+				to
+				AppVet.
+
+				For APPVET->TOOL SERVICE
+
+				file: The app file to send to the
+				tool service.
+				username: The user ID of the tool service account
+				(optional)
+				password: The password for the tool service account
+				(optional)
+				appid: The AppVet ID of the app (for asynchronous tools
+				only)
+
+
+				For ASYNCHRONOUS SERVICE->APPVET
+
+				command: The AppVet command to
+				submit reports (use 'SUBMIT_REPORT')
+				appid: The AppVet ID of the
+				associated app
+				username: The AppVet user ID
+				password: The AppVet
+				password
+				file: The report file
+				toolrisk: The risk assessment generated
+				by the tool (i.e., 'LOW', 'MODERATE',
+				'HIGH', 'ERROR')
+
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="URL" type="xs:anyURI" minOccurs="1"
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The URL element defines the URL of the AppVet
+						tool service.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Method" type="MethodType" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The Method element defines the HTTP action to be
+						invoked (i.e., 'GET' or 'POST').
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ApprovalRequiredForLaunch" type="xs:boolean"
+				maxOccurs="1" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>This field indicates that an approval from a
+						report tool
+						is required before this tool can be launched. Note that
+						an approval can be determined at any time and that
+						the tool should launch automatically when the approval
+						moves to its approved state.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AuthenticationRequired" type="xs:boolean"
+				maxOccurs="1" minOccurs="1">
+			</xs:element>
+			<xs:element name="AuthenticationParameter" type="ParameterType"
+				maxOccurs="unbounded" minOccurs="0">
+			</xs:element>
+			<xs:element name="Parameter" type="ParameterType"
+				minOccurs="1" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						The FormParameter element defines the HTML form
+						parameters to be sent to the tool service. For
+						asynchronous tool
+						services, the form parameters
+						must include the parameter "appid" to
+						allow the
+						reports to be matched by AppVet to their
+						associated app.
+						For services that require login,
+						the service must use 'userid' and
+						'password'
+						parameters.
+
+
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="ParameterType">
+		<xs:sequence>
+			<xs:element name="Name" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>The Name element defines the name of the
+						parameter.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Value" type="xs:string" default="DEFINED_AT_RUNTIME">
+				<xs:annotation>
+					<xs:documentation>The Value element defines the value of the
+						parameter
+						element.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:simpleType name="MethodType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="POST" />
+			<xs:enumeration value="GET" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+
+
+
+	<xs:complexType name="IconType">
+		<xs:sequence>
+			<xs:element name="URL" type="xs:string" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The URL of the tool icon.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AltText" type="xs:string" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						The ALT text for the tool icon (required for 508
+						compliance).
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+
+
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="VendorType">
+		<xs:sequence>
+			<xs:element name="Name" type="xs:string" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The URL of the tool icon.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="URL" type="xs:anyURI" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						The ALT text for the tool icon (required for 508
+						compliance).
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+
+
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ReportType">
+		<xs:sequence>
+			<xs:element name="FileType" type="ReportFileType" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The URL of the tool icon.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TemplateURL" type="xs:anyURI" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						The ALT text for the tool icon (required for 508
+						compliance).
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+
+
+            <xs:element name="AuthorizedUploadRole" type="AuthorizedUploadRoleType" maxOccurs="unbounded" minOccurs="1">
+					<xs:annotation>
+						<xs:documentation>This field specifies the roles that are authorized 
+to upload a report
+for this tool. Note that there must be at least 
+one authorized role defined, and this is typically 
+the ADMIN role. For test tools, the role TOOL_PROVIDER
+must also be included. Tools such as preprocessing tools 
+and report tools should NOT include TOOL_PROVIDER as a permitted role.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+        </xs:sequence>
+	</xs:complexType>
+
+
+
+
+
+    <xs:simpleType name="PreProcessorType">
+    	<xs:restriction base="xs:string"></xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="AuditType">
+    	<xs:restriction base="xs:string"></xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="ToolType">
+    	<xs:choice>
+    		<xs:element name="TestTool" type="HTTPRequestType"></xs:element>
+    		<xs:element name="OtherTool" type="OtherToolType"></xs:element>
+    	</xs:choice>
+    </xs:complexType>
+    
+    <xs:simpleType name="ReportToolType">
+    	<xs:restriction base="xs:string"></xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="ExtendType"></xs:complexType>
+</xs:schema>

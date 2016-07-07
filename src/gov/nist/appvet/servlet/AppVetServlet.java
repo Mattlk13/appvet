@@ -1050,6 +1050,7 @@ public class AppVetServlet extends HttpServlet {
 		 * ReportUploadDialogBox constructor!
 		 */
 		
+		// TODO: For AV3, SUMMARY was removed (now uses only REPORT)
 		if (tool.toolType == ToolType.SUMMARY) {
 			if (tool.toolId.equals("androidsummary") || tool.toolId.equals("iossummary")) {
 				if (submitterRole == Role.ADMIN){
@@ -1079,7 +1080,7 @@ public class AppVetServlet extends HttpServlet {
 			} else if (tool.toolId.equals("approval")) {
 				// Third-party approval -- all users permitted
 			}			
-		} else if (tool.toolType == ToolType.AUDIT) {
+		} else if (tool.toolType == ToolType.AUDIT) {  
 			if (submitterRole == Role.ADMIN) {
 				// ADMINs are permitted to submit AUDIT reports
 			} else if (submitterRole == Role.ANALYST) {
@@ -1134,7 +1135,7 @@ public class AppVetServlet extends HttpServlet {
 			
 			UserInfo userInfo = Database.getUserInfo(appInfo.ownerName, null);
 
-			// Email if SUMMARY, REPORT, or AUDIT reports have been uploaded
+			// TODO: For AV3, AUDIT and SUMMARY was removed (now uses only REPORT)
 			if (tool.toolType == ToolType.AUDIT || tool.toolType == ToolType.SUMMARY || 
 					tool.toolType == ToolType.REPORT){
 				String emailSubject = tool.name + " report for app " + appInfo.appId + " '" + appInfo.appName + "' submitted by '" + submitterUserName + "'";

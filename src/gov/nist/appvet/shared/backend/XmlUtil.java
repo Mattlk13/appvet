@@ -105,14 +105,23 @@ public class XmlUtil {
 		}
 		XPath xPath = XPathFactory.newInstance().newXPath();
 		Node node = null;
+		Node firstChild = null;
 		try {
 			node = (Node) xPath.evaluate(nodePath,
 					document.getDocumentElement(), XPathConstants.NODE);
 			if (node == null) {
 				return null;
 			}
-			final String elementValue = node.getFirstChild().getNodeValue()
-					.trim();
+			firstChild = node.getFirstChild();
+			if (firstChild == null) {
+				return null;
+			}
+			String nodeValue = firstChild.getNodeValue();
+			if (nodeValue == null) {
+				return null;
+			}
+			
+			final String elementValue = nodeValue.trim();
 			if (elementValue != null && !elementValue.isEmpty()) {
 				return elementValue;
 			}

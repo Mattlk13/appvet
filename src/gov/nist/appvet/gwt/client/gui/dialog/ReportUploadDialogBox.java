@@ -71,7 +71,7 @@ public class ReportUploadDialogBox extends DialogBox {
 			String appid, String servletURL, DeviceOS os,
 			final ArrayList<ToolInfoGwt> tools) {
 		super(false, true);
-		
+		log.warning("ReportUploadDialogBox");
 		setWidth("100%");
 		setAnimationEnabled(false);
 		final VerticalPanel dialogVPanel = new VerticalPanel();
@@ -195,6 +195,7 @@ public class ReportUploadDialogBox extends DialogBox {
 		Role submitterRole = null;
 		try {
 			submitterRole = Role.getRole(submitterRoleStr);
+			log.info("Submitter role: " + submitterRole.name());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -211,7 +212,7 @@ public class ReportUploadDialogBox extends DialogBox {
 				 * AppVetServlet.submitReport()!
 				 */
 				
-				if (tool.getType() == ToolType.SUMMARY) {
+				if (tool.getType() == ToolType.SUMMARY) { // TODO: For AV3, SUMMARY was removed (now uses only REPORT)
 					if (tool.getId().equals("androidsummary") || tool.getId().equals("iossummary")) {
 						// Only ADMINs are permitted to submit summary reports
 						if (submitterRole == Role.ADMIN){
@@ -224,9 +225,10 @@ public class ReportUploadDialogBox extends DialogBox {
 						}
 					} else if (tool.getId().equals("approval")) {
 						// All users are permitted to submit Approval reports
+						log.warning("ADDING THIRD-PARTY TOOL!");
 						permittedToolReports.add(tool);
-					}					
-				} else if (tool.getType() == ToolType.AUDIT) {
+					} 
+				} else if (tool.getType() == ToolType.AUDIT) {  // TODO: For AV3, AUDIT was removed (now uses only REPORT)
 					// Only ADMINs and ANALYSTs can submit Audit reports
 					if (submitterRole == Role.ADMIN || submitterRole == Role.ANALYST) {
 						permittedToolReports.add(tool);
@@ -243,6 +245,7 @@ public class ReportUploadDialogBox extends DialogBox {
 		for (int i = 0; i < permittedToolReports.size(); i++) {
 			ToolInfoGwt tool = permittedToolReports.get(i);
 			if (tool.getOs().equals(os.name())) {
+				log.info("Tool " + tool.getId() + " added to toolbox");
 				toolNamesComboBox.addItem(tool.getName());
 			}
 		}
@@ -250,7 +253,7 @@ public class ReportUploadDialogBox extends DialogBox {
 		toolNamesComboBox.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent arg0) {
-
+				log.info("OnChange executed");
 				int i = toolNamesComboBox.getSelectedIndex();
 				String selectedToolName = toolNamesComboBox.getItemText(i);
 				
@@ -266,39 +269,51 @@ public class ReportUploadDialogBox extends DialogBox {
 						String filter = "." + reportFileType;
 						fileUpload.getElement().setAttribute("accept", filter);
 
-						if (toolRiskComboBox != null) {
-							
-							/* PUT YOUR SPECIFIC POLICY HERE FOR 
-							 * ALLOWING A TOOL RISK TO BE SET BY THE UPLOADER */
-							
-							if (selectedTool.getId().equals("androidsummary") 
-									|| selectedTool.getId().equals("iossummary")
-									|| selectedTool.getId().equals("golive")
-									|| selectedTool.getId().equals("approval")) {
-								
+						ToolType toolType = selectedTool.getType();
+						
+						/* PUT YOUR SPECIFIC POLICY HERE FOR 
+						 * ALLOWING A TOOL RISK TO BE SET BY THE UPLOADER */
+
+						if (toolType == ToolType.SUMMARY) {
+
+							// SUMMARY reports should not display risk combo box
+							if (toolRiskComboBox != null) {
+								// Tool risk should not be shown for SUMMARY reports
 								toolRiskComboBox.setVisible(false);
 								riskLabel.setVisible(false);
-								
 							} else {
-								toolRiskComboBox.setVisible(true);
-								riskLabel.setVisible(true);
-							}
-
-							String reportTemplateURL = selectedTool.getReportTemplateURL();
-							if (reportTemplateURL != null) {
-								// There is a report template available for download
-								statusLabel.setHTML(selectedToolName
-										+ " requires a " + reportFileType
-										+ " report. Download <a href=\"" + reportTemplateURL + "\" target=\"_blank\"><b>template</b>.</a>");
-							} else {
-								statusLabel.setHTML(selectedToolName
-										+ " requires a " + reportFileType
-										+ " report.");
+								log.warning("toolRiskComboBox is null");
+								if (riskLabel != null) {
+									riskLabel.setVisible(false);
+								}
 							}
 							
 						} else {
-							log.warning("toolRiskComboBox is null");
+							if (toolRiskComboBox != null) {
+								toolRiskComboBox.setVisible(true);
+								riskLabel.setVisible(true);
+							} else {
+								log.warning("toolRiskComboBox is null");
+								if (riskLabel != null) {
+									riskLabel.setVisible(false);
+								}
+							}
 						}
+						
+						String reportTemplateURL = selectedTool.getReportTemplateURL();
+						if (reportTemplateURL != null) {
+							log.info("Report template for " + selectedTool.getId() + " is good");
+							// There is a report template available for download
+							statusLabel.setHTML(selectedToolName
+									+ " requires a " + reportFileType
+									+ " report. Download <a href=\"" + reportTemplateURL + "\" target=\"_blank\"><b>template</b>.</a>");
+						} else {
+							log.warning("Report template for " + selectedTool.getId() + " is null");
+							statusLabel.setHTML(selectedToolName
+									+ " requires a " + reportFileType
+									+ " report.");
+						}
+						
 						break;
 					}
 				}
@@ -382,63 +397,58 @@ public class ReportUploadDialogBox extends DialogBox {
 		// Set report type filter for first tool in list
 		String selectedToolName = toolNamesComboBox.getItemText(0);
 		
-		
+		// Set first tool in tool list
 		for (int k = 0; k < permittedToolReports.size(); k++) {
 			ToolInfoGwt tool3 = permittedToolReports.get(k);
 			if (tool3.getName().equals(selectedToolName)) {
+				
 				String reportFileType = tool3.getReportFileType();
 				String filter = "." + reportFileType;
 				fileUpload.getElement().setAttribute("accept", filter);
 
 				ToolType toolType = tool3.getType();
+				
+				/* PUT YOUR SPECIFIC POLICY HERE FOR 
+				 * ALLOWING A TOOL RISK TO BE SET BY THE UPLOADER */
 
 				if (toolType == ToolType.SUMMARY) {
 
+					// SUMMARY reports should not display risk combo box
 					if (toolRiskComboBox != null) {
-						//toolRiskComboBox.setEnabled(false);
+						// Tool risk should not be shown for SUMMARY reports
 						toolRiskComboBox.setVisible(false);
-						statusLabel.setText(selectedToolName
-								+ " requires a " + reportFileType
-								+ " report.");
+						riskLabel.setVisible(false);
 					} else {
 						log.warning("toolRiskComboBox is null");
-					}
-					break;
-					
-				} else if (toolType == ToolType.AUDIT) {
-					
-					if (toolRiskComboBox != null) {
-						toolRiskComboBox.setVisible(true);
-						String reportTemplateURL = tool3.getReportTemplateURL();
-						if (reportTemplateURL != null) {
-							// There is a report template available for download
-							statusLabel.setHTML(selectedToolName
-									+ " requires a " + reportFileType
-									+ " report. Download <a href=\"" + reportTemplateURL + "\" target=\"_blank\"><b>template</b>.</a>");
-						} else {
-							statusLabel.setHTML(selectedToolName
-									+ " requires a " + reportFileType
-									+ " report.");
+						if (riskLabel != null) {
+							riskLabel.setVisible(false);
 						}
-						
-					} else {
-						log.warning("toolRiskComboBox is null");
 					}
-					break;
-
-				} else {
 					
+				} else {
 					if (toolRiskComboBox != null) {
 						toolRiskComboBox.setVisible(true);
-						statusLabel.setText(selectedToolName
-								+ " requires a " + reportFileType
-								+ " report.");
+						riskLabel.setVisible(true);
 					} else {
 						log.warning("toolRiskComboBox is null");
+						if (riskLabel != null) {
+							riskLabel.setVisible(false);
+						}
 					}
-					
-					break;
 				}
+				
+				String reportTemplateURL = tool3.getReportTemplateURL();
+				if (reportTemplateURL != null) {
+					// There is a report template available for download
+					statusLabel.setHTML(selectedToolName
+							+ " requires a " + reportFileType
+							+ " report. Download <a href=\"" + reportTemplateURL + "\" target=\"_blank\"><b>template</b>.</a>");
+				} else {
+					statusLabel.setHTML(selectedToolName
+							+ " requires a " + reportFileType
+							+ " report.");
+				}
+				break;
 			}
 		}
 		
@@ -505,7 +515,7 @@ public class ReportUploadDialogBox extends DialogBox {
 				}
 
 				String risk = null;
-				if (toolType == ToolType.SUMMARY) {
+				if (toolType == ToolType.SUMMARY) {  // TODO: For AV3, SUMMARY was removed (now uses only REPORT)
 					// SUMMARY reports only have a status of LOW (which is displayed as "AVAILABLE")
 					risk = "AVAILABLE";
 				} else {

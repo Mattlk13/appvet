@@ -1608,7 +1608,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								ToolType analysisType = toolResults.get(i)
 										.getToolType();
 
-								if (analysisType == ToolType.SUMMARY) {
+								if (analysisType == ToolType.SUMMARY) {  // TODO: For AV3, SUMMARY was removed (now uses only REPORT)
 									summaryCount++;
 									statuses += getToolStatusHtmlDisplay(toolResults
 											.get(i));
@@ -1666,7 +1666,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								ToolType toolType = toolResults.get(i)
 										.getToolType();
 
-								if (toolType == ToolType.AUDIT) {
+								if (toolType == ToolType.AUDIT) {  // TODO: For AV3, AUDIT was removed (now uses only REPORT)
 									auditCount++;
 									statuses += getToolStatusHtmlDisplay(toolResults
 											.get(i));

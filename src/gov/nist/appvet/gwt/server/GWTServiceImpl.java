@@ -320,6 +320,11 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					if (toolInfo.requiresAuthentication()) {
 						toolInfo.setAuthenticationParameterNames(androidTool.authenticationParams);
 					}
+					if (androidTool.reportTemplateURL == null) {
+						log.error("Report template for " + androidTool.toolId + " is null!");
+					} else {
+						log.debug("Report template for " + androidTool.toolId + " is good!");
+					}
 					toolInfo.setReportTemplateURL(androidTool.reportTemplateURL);
 					toolInfo.setIconURL(androidTool.iconURL);
 					toolInfo.setIconAltText(androidTool.iconAltText);

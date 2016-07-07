@@ -133,9 +133,9 @@ public class ToolAdapter implements Runnable {
 		// Report template download URL (optional)
 		reportTemplateURL = xml.getXPathValue("/ToolAdapter/Description/ReportTemplateURL"); 
 		if (reportTemplateURL != null) {
-			//log.debug("Report template URL: " + reportTemplateURL);
+			log.debug("Report template URL: " + reportTemplateURL);
 		} else {
-			//log.warn("Report template URL for tool '" + toolId + "' is null");
+			log.warn("Report template URL for tool '" + toolId + "' is null");
 		}
 		
 		// Report icon (optional
