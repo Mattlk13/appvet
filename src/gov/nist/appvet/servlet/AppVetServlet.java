@@ -1057,7 +1057,7 @@ public class AppVetServlet extends HttpServlet {
 					// Only ADMINs are permitted to submit summary reports
 				} else {
 					// No other users are permitted to submit summary reports
-					appInfo.log.error("Submitter " + submitterUserName + " is not authorized to submit " + tool.toolType.name() + " reports");
+					appInfo.log.debug("Submitter " + submitterUserName + " is not authorized to submit " + tool.toolType.name() + " reports");
 					return;
 				}
 			} else if (tool.toolId.equals("golive")) {
@@ -1069,12 +1069,12 @@ public class AppVetServlet extends HttpServlet {
 						// Approved ANALYSTs are permitted to submit GoLive reports
 					} else {
 						// Unapproved ANALYSTs are not permitted to submit GoLive reports
-						appInfo.log.error("Submitter " + submitterUserName + " is not authorized to submit " + tool.toolType.name() + " reports");
+						appInfo.log.debug("Submitter " + submitterUserName + " is not authorized to submit " + tool.toolType.name() + " reports");
 						return;
 					}
 				} else {
 					// No other users can submit GoLive reports
-					appInfo.log.error("Submitter " + submitterUserName + " is not authorized to submit " + tool.toolType.name() + " reports");
+					appInfo.log.debug("Submitter " + submitterUserName + " is not authorized to submit " + tool.toolType.name() + " reports");
 					return;
 				}
 			} else if (tool.toolId.equals("approval")) {

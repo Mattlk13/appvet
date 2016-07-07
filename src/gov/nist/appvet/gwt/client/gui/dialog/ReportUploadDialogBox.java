@@ -71,7 +71,6 @@ public class ReportUploadDialogBox extends DialogBox {
 			String appid, String servletURL, DeviceOS os,
 			final ArrayList<ToolInfoGwt> tools) {
 		super(false, true);
-		log.warning("ReportUploadDialogBox");
 		setWidth("100%");
 		setAnimationEnabled(false);
 		final VerticalPanel dialogVPanel = new VerticalPanel();
@@ -195,7 +194,6 @@ public class ReportUploadDialogBox extends DialogBox {
 		Role submitterRole = null;
 		try {
 			submitterRole = Role.getRole(submitterRoleStr);
-			log.info("Submitter role: " + submitterRole.name());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -225,7 +223,6 @@ public class ReportUploadDialogBox extends DialogBox {
 						}
 					} else if (tool.getId().equals("approval")) {
 						// All users are permitted to submit Approval reports
-						log.warning("ADDING THIRD-PARTY TOOL!");
 						permittedToolReports.add(tool);
 					} 
 				} else if (tool.getType() == ToolType.AUDIT) {  // TODO: For AV3, AUDIT was removed (now uses only REPORT)
@@ -245,7 +242,6 @@ public class ReportUploadDialogBox extends DialogBox {
 		for (int i = 0; i < permittedToolReports.size(); i++) {
 			ToolInfoGwt tool = permittedToolReports.get(i);
 			if (tool.getOs().equals(os.name())) {
-				log.info("Tool " + tool.getId() + " added to toolbox");
 				toolNamesComboBox.addItem(tool.getName());
 			}
 		}
@@ -253,7 +249,6 @@ public class ReportUploadDialogBox extends DialogBox {
 		toolNamesComboBox.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent arg0) {
-				log.info("OnChange executed");
 				int i = toolNamesComboBox.getSelectedIndex();
 				String selectedToolName = toolNamesComboBox.getItemText(i);
 				
@@ -263,7 +258,7 @@ public class ReportUploadDialogBox extends DialogBox {
 						String reportFileType = selectedTool
 								.getReportFileType();
 						if (reportFileType == null) {
-							log.warning("Report file type is null");
+							log.warning("Report file type for " + selectedTool.getId() + " is null");
 						} 
 						
 						String filter = "." + reportFileType;
@@ -282,7 +277,7 @@ public class ReportUploadDialogBox extends DialogBox {
 								toolRiskComboBox.setVisible(false);
 								riskLabel.setVisible(false);
 							} else {
-								log.warning("toolRiskComboBox is null");
+								log.warning("toolRiskComboBox for "  + selectedTool.getId() + " is null");
 								if (riskLabel != null) {
 									riskLabel.setVisible(false);
 								}
@@ -293,7 +288,7 @@ public class ReportUploadDialogBox extends DialogBox {
 								toolRiskComboBox.setVisible(true);
 								riskLabel.setVisible(true);
 							} else {
-								log.warning("toolRiskComboBox is null");
+								log.warning("toolRiskComboBox for "  + selectedTool.getId() +  " is null");
 								if (riskLabel != null) {
 									riskLabel.setVisible(false);
 								}
@@ -302,7 +297,6 @@ public class ReportUploadDialogBox extends DialogBox {
 						
 						String reportTemplateURL = selectedTool.getReportTemplateURL();
 						if (reportTemplateURL != null) {
-							log.info("Report template for " + selectedTool.getId() + " is good");
 							// There is a report template available for download
 							statusLabel.setHTML(selectedToolName
 									+ " requires a " + reportFileType
@@ -419,7 +413,7 @@ public class ReportUploadDialogBox extends DialogBox {
 						toolRiskComboBox.setVisible(false);
 						riskLabel.setVisible(false);
 					} else {
-						log.warning("toolRiskComboBox is null");
+						log.warning("toolRiskComboBox for "  + tool3.getId() +  " is null");
 						if (riskLabel != null) {
 							riskLabel.setVisible(false);
 						}
@@ -430,7 +424,7 @@ public class ReportUploadDialogBox extends DialogBox {
 						toolRiskComboBox.setVisible(true);
 						riskLabel.setVisible(true);
 					} else {
-						log.warning("toolRiskComboBox is null");
+						log.warning("toolRiskComboBox for "  + tool3.getId() +  " is null");
 						if (riskLabel != null) {
 							riskLabel.setVisible(false);
 						}
