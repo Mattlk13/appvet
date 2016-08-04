@@ -266,6 +266,11 @@ public class Registration {
 			}
 			Database.cleanUpPreparedStatement(preparedStatement);
 			Database.cleanUpConnection(connection);
+			
+			
+			// EXIT 
+			//log.debug("EXIT");
+			//System.exit(0);
 		}
 	}
 

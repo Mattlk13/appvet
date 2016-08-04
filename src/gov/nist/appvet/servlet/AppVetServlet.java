@@ -28,6 +28,7 @@ import gov.nist.appvet.shared.all.AppStatus;
 import gov.nist.appvet.shared.all.AppVetParameter;
 import gov.nist.appvet.shared.all.AppVetServletCommand;
 import gov.nist.appvet.shared.all.DeviceOS;
+import gov.nist.appvet.shared.all.HttpBasicAuthentication;
 import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.ToolType;
 import gov.nist.appvet.shared.all.UserInfo;
@@ -94,6 +95,40 @@ public class AppVetServlet extends HttpServlet {
 	/** Handler for HTTP GET messages.*/
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) {
+		
+		String authHeaderValue = request.getHeader("Authorization");
+		if (authHeaderValue != null) {
+			// Requester is attempting to authenticate
+			String[] usernameAndPassword = HttpBasicAuthentication.getUsernameAndPassword(authHeaderValue);
+			String username = usernameAndPassword[0];
+			String password = usernameAndPassword[1];
+			if (!authenticateUserNameAndPassword(username, password)) {
+				// Authentication error
+				sendHttpResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
+						ErrorMessage.AUTHENTICATION_ERROR.getDescription(),
+						true);
+				return;
+			} else {
+				// Username and password authenticated so return session ID
+
+				// Client IP address of the request.
+				String clientIpAddress = request.getRemoteAddr();
+				// On CentOS, clientIpAddress will be '0:0:0:0:0:0:0:1' if on
+				// localhost, so change to '127.0.0.1'
+				if (clientIpAddress.equals("0:0:0:0:0:0:0:1")) {
+					clientIpAddress = "127.0.0.1";
+				}
+				// Clear all expired sessions
+				Database.clearExpiredSessions();
+				final String sessionId = Database.createNewSession(username,
+						clientIpAddress);
+				
+				sendHttpResponse(response, HttpServletResponse.SC_OK,
+						sessionId, false);
+				return;
+			}
+		}		
+		
 		// AppVet-generated session ID.
 		String sessionId = request
 				.getParameter(AppVetParameter.SESSIONID.value);
@@ -111,19 +146,31 @@ public class AppVetServlet extends HttpServlet {
 		String requesterPassword = request
 				.getParameter(AppVetParameter.PASSWORD.value);
 		
-		// Authenticate
+		// Authenticate session
 		if (!authenticateSession(sessionId, clientIpAddress)) {
-			if (!authenticateUserNameAndPassword(requesterUserName,
-					requesterPassword)) {
-				log.debug("Authentication error for user '"
-						+ requesterUserName + "'");
-				sendHttpResponse(response, HttpServletResponse.SC_BAD_REQUEST,
-						ErrorMessage.AUTHENTICATION_ERROR.getDescription(),
-						true);
-				return;
-			} else {
-				// Username and password authenticated
-			}
+			
+			// Authentication error
+			sendHttpResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
+					ErrorMessage.AUTHENTICATION_ERROR.getDescription(),
+					true);
+			return;
+			
+			// Authenticate session failed, try username and password
+			
+			// TODO: REmove the following since authentication should only
+			// occur above
+//			
+//			if (!authenticateUserNameAndPassword(requesterUserName,
+//					requesterPassword)) {
+//				log.debug("Authentication error for user '"
+//						+ requesterUserName + "'");
+//				sendHttpResponse(response, HttpServletResponse.SC_BAD_REQUEST,
+//						ErrorMessage.AUTHENTICATION_ERROR.getDescription(),
+//						true);
+//				return;
+//			} else {
+//				// Username and password authenticated
+//			}
 		} else {
 			// Session authenticated
 			requesterUserName = Database.getSessionUser(sessionId);
@@ -131,6 +178,8 @@ public class AppVetServlet extends HttpServlet {
 		
 		// Validate AppVet command
 		String commandStr = request.getParameter(AppVetParameter.COMMAND.value);
+		
+		log.debug("COMMAND: " + commandStr);
 		AppVetServletCommand command = AppVetServletCommand
 				.getCommand(commandStr);
 		if (command == null) {
@@ -264,7 +313,6 @@ public class AppVetServlet extends HttpServlet {
 				}
 				break;
 			case DOWNLOAD_LOG:
-				// Download AppVet log. Used by GUI and non-GUI clients.
 				downloadAppVetLog(response);
 				break;
 			case DOWNLOAD_APP:
@@ -354,6 +402,7 @@ public class AppVetServlet extends HttpServlet {
 				} else {
 					// item should now hold the received file.
 					fileItem = item;
+					log.debug("Received file " + fileItem.getName());
 				}
 			}
 /*
@@ -366,6 +415,7 @@ public class AppVetServlet extends HttpServlet {
 
 			// Authenticate
 			if (!authenticateSession(sessionId, clientIpAddress)) {
+				// Allow username/password authentication for test tools only
 				if (!authenticateUserNameAndPassword(requesterUserName,
 						requesterPassword)) {
 					log.debug("Authentication error for user '"
@@ -920,7 +970,7 @@ public class AppVetServlet extends HttpServlet {
 				String androidToolId = toolAdapter.toolId;
 				ToolStatus toolStatus = ToolStatusManager.getToolStatus(appOS,
 						appId, androidToolId);
-				toolStatuses += androidToolId + "=" + toolStatus + "\n";
+				toolStatuses += androidToolId + "=" + toolStatus + ",";
 			}
 		} else if (appOS == DeviceOS.IOS) {
 			for (int i = 0; i < AppVetProperties.iosTools.size(); i++) {
@@ -928,7 +978,7 @@ public class AppVetServlet extends HttpServlet {
 				String iosToolId = toolAdapter.toolId;
 				ToolStatus toolStatus = ToolStatusManager.getToolStatus(appOS,
 						appId, iosToolId);
-				toolStatuses += iosToolId + "=" + toolStatus + "\n";
+				toolStatuses += iosToolId + "=" + toolStatus + ",";
 			}
 		}
 		return toolStatuses;
@@ -943,13 +993,13 @@ public class AppVetServlet extends HttpServlet {
 			ArrayList<ToolAdapter> androidTools = AppVetProperties.androidTools;
 			for (int i = 0; i < androidTools.size(); i++) {
 				ToolAdapter androidTool = androidTools.get(i);
-				payload.append(androidTool.toolId + "\n");
+				payload.append(androidTool.toolId + ",");
 			}
 		} else if (appOS == DeviceOS.IOS) {
 			ArrayList<ToolAdapter> iosTools = AppVetProperties.iosTools;
 			for (int i = 0; i < iosTools.size(); i++) {
 				ToolAdapter iosTool = iosTools.get(i);
-				payload.append(iosTool.toolId + "\n");
+				payload.append(iosTool.toolId + ",");
 			}
 		} else {
 			log.error("Unknown device OS");

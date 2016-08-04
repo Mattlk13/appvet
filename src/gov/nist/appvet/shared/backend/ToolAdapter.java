@@ -65,7 +65,8 @@ public class ToolAdapter implements Runnable {
 	// Tool ID (and tools database table column name)
 	public String toolId = null; 
 	public ToolType toolType = null;
-	public RestrictionType restrictionType = null;
+	
+	// public RestrictionType restrictionType = null; // Not used
 	public DeviceOS os = null;
 	public String vendorName = null;
 	public String webSite = null;
@@ -121,9 +122,9 @@ public class ToolAdapter implements Runnable {
 
 		webSite = xml.getXPathValue("/ToolAdapter/Description/VendorWebsite");
 		
-		String restrictionValue = xml
-				.getXPathValue("/ToolAdapter/Description/Restriction");
-		restrictionType = RestrictionType.getRestrictionType(restrictionValue);
+		// String restrictionValue = xml
+		//		.getXPathValue("/ToolAdapter/Description/Restriction"); // Not used
+		// restrictionType = RestrictionType.getRestrictionType(restrictionValue); // Not used
 
 		// Authorization requirements
 		final String booleanStringValue = xml
@@ -209,7 +210,7 @@ public class ToolAdapter implements Runnable {
 				+ "-Report File Type: " + reportFileType.name() + "\n"
 				+ "-Report template URL: " + reportTemplateURL + "\n"
 				+ "-OS: " + os.name() + "\n" 
-				+ "-Restriction Type: " + restrictionType + "\n"
+				//+ "-Restriction Type: " + restrictionType + "\n" // Not used
 				+ "-Vendor: " + vendorName + "\n" 
 				+ "-Website: " + webSite + "\n" 
 				+ "-App Submit Type: " + appSubmitType.name() + "\n"
@@ -466,6 +467,13 @@ public class ToolAdapter implements Runnable {
 							
 							paramValue = appInfo.appId;
 							
+						} else if (paramValue.equals("APP_PACKAGE")) {
+							appInfo.log.debug("Found " + paramName + " = "
+									+ "'APP_PACKAGE' for tool '" + toolId
+									+ "'. Setting to appid = '"
+									+ appInfo.packageName + "'");
+							
+							paramValue = appInfo.packageName;
 						}
 						
 						if ((paramName == null) || paramName.isEmpty()) {

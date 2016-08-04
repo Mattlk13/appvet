@@ -314,8 +314,8 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					toolInfo.setName(androidTool.name);
 					toolInfo.setId(androidTool.toolId);
 					toolInfo.setType(androidTool.toolType);
-					toolInfo.setRestrictionType(androidTool.restrictionType
-							.name());
+					//toolInfo.setRestrictionType(androidTool.restrictionType
+					//		.name()); // Not used
 					toolInfo.setAuthenticationRequired(androidTool.authenticationRequired);
 					if (toolInfo.requiresAuthentication()) {
 						toolInfo.setAuthenticationParameterNames(androidTool.authenticationParams);
@@ -522,7 +522,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			websiteHrefTag = tool.name;
 		}
 		toolStatusGwt.setToolType(tool.toolType);
-		toolStatusGwt.setRestrictionType(tool.restrictionType);
+		// toolStatusGwt.setRestrictionType(tool.restrictionType); // Not used
 		toolStatusGwt.setIconURL(tool.iconURL);
 		toolStatusGwt.setIconAltText(tool.iconAltText);
 		toolStatusGwt.setToolDisplayName(websiteHrefTag);

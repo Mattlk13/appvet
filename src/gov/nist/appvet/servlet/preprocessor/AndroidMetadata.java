@@ -263,6 +263,10 @@ public class AndroidMetadata {
 		}
 	}
 	
+	/** IMPORTANT: Make sure that apktool is in a user-owned directory
+	 * with executable permissions for root. Otherwise, apktool will not 
+	 * execute properly.
+	 */
 	private boolean execute(String command, StringBuffer output) {
 		List<String> commandArgs = Arrays.asList(command.split("\\s+"));
 		ProcessBuilder pb = new ProcessBuilder(commandArgs);
@@ -282,18 +286,18 @@ public class AndroidMetadata {
 				if (exitValue == 0) {
 					StringBuilder resultOut = outputHandler.getOutput();
 					output.append(resultOut);
+					return true;
 				} else {
 					StringBuilder resultError = errorHandler.getOutput();
 					output.append(resultError);
+					return false;
 				}
-				return true;
 			} else {
 				// Process exceed timeout or was interrupted
 				StringBuilder resultOutput = outputHandler.getOutput();
 				StringBuilder resultError = errorHandler.getOutput();
 				if (resultOutput != null) {
 					output.append(resultOutput);
-					return false;
 				} else if (resultError != null) {
 					output.append(resultError);
 				} else {

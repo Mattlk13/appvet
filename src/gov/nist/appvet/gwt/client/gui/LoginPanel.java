@@ -298,8 +298,7 @@ public class LoginPanel extends DockLayoutPanel {
 		final String userName = configInfo.getUserInfo().getUserName();
 
 		if ((userName == null) || userName.isEmpty()) {
-			log.warning("Error retrieving apps list: "
-			+ "username is null or empty");
+			log.warning("Error retrieving user config info");
 			return;
 		}
 
