@@ -106,7 +106,7 @@
 		<ul>
 		<li><code>command=SUBMIT_APP</code></li>
 		<li><code>sessionid=[session_id]</code></li>
-		<li><code>fileupload=[file]</code></li>
+		<li><code>fileupload=[app_file]</code></li>
 		</ul>
 	<br><br>
 	
@@ -161,7 +161,7 @@
 		</ul>
 	<br><br>
 	
-	<li>Data Parameters</li>
+	<li>Form Parameters</li>
 	<br><br>
 	N/A
 	<br><br>
@@ -230,7 +230,7 @@
 		</ul>
 	<br><br>
 	
-	<li>Data Parameters</li>
+	<li>Form Parameters</li>
 	<br><br>
 	N/A
 	<br><br>
@@ -300,7 +300,7 @@
 		</ul>
 	<br><br>
 	
-	<li>Data Parameters</li>
+	<li>Form Parameters</li>
 	<br><br>
 	N/A
 	<br><br>
@@ -329,8 +329,77 @@
 	
 	The AppVet tool API is intended for use by third-party tools to submit analysis reports and risk assessments back to AppVet.
 	<br><br>
-	TBD
+		<h3 id="SUBMIT_REPORT">SUBMIT_REPORT</h3>
+	
+	
+		The
+	<code>SUBMIT_REPORT</code>
+	service submits an app analysis report for a specific tool.
+	
+		<ul>
+	
+	<li>URL</li>
 	<br><br>
+	<code>/appvet/AppVetServlet</code>
+	<br><br>
+	
+	<li>Method</li>
+	<br><br>
+	<code>PUT</code>
+	<br><br>
+	
+    <li>HTTP Headers</li>
+	<br><br>
+	N/A
+	<br><br>
+
+	<li>URL Parameters</li>
+	<br><br>
+	N/A
+	<br><br>
+	
+	<li>Form Parameters</li>
+	<br><br>
+		<ul>
+		<li><code>command=SUBMIT_REPORT</code></li>
+		<li><code>username=[username]</code></li>
+		<li><code>password=[password]</code></li>
+		<li><code>sessionid=[session_id]</code> (Optional in lieu of username/password)</li>
+		<li><code>appid=[app_id]</code></li>
+		<li><code>toolid=[tool_id]</code></li>	
+		<li><code>toolrisk=[tool_risk]</code></li>	
+		<li><code>fileupload=[report_file]</code></li>
+		</ul>
+			<br><br> 
+		where <code>tool_risk</code> will be one of:
+		<br><br>
+		<ul>
+		<li><code>ERROR</code>: The tool has failed to analyze the app.</li>
+		<li><code>LOW</code>: The tool has assessed the app as low risk.</li>
+		<li><code>MODERATE</code>: The tool has assessed the app as moderate risk.</li>
+		<li><code>HIGH</code>: The tool has assessed the app as high risk.</li>
+		</ul>
+			<br><br>
+		
+	<li>Success Response</li>
+	<br><br>
+
+		<ul>
+		<li>HTTP Code: <code>200 OK</code>
+		<li>Payload: <code>[app_reports]</code></li>
+		</ul>
+	<br><br>
+		A returned <code>app_reports</code> will be a binary zip file containing all available reports for the app.
+	<br><br>
+	<li>Error Response</li>
+	<br><br>
+		<ul>
+		<li>HTTP Code: <code>400 BAD REQUEST</code>
+		<li>Payload: <code>[error_message]</code></li>
+		</ul>
+	<br><br>
+	
+	</ul>
 
 </body>
 
