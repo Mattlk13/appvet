@@ -96,6 +96,7 @@ public class AppVetServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) {
 		
+		// 
 		String authHeaderValue = request.getHeader("Authorization");
 		if (authHeaderValue != null) {
 			// Requester is attempting to authenticate
@@ -415,7 +416,6 @@ public class AppVetServlet extends HttpServlet {
 
 			// Authenticate
 			if (!authenticateSession(sessionId, clientIpAddress)) {
-				// Allow username/password authentication for test tools only
 				if (!authenticateUserNameAndPassword(requesterUserName,
 						requesterPassword)) {
 					log.debug("Authentication error for user '"
@@ -439,8 +439,12 @@ public class AppVetServlet extends HttpServlet {
 				return;
 			}
 
-			// Validate AppVet app ID. Required only for SUBMIT_APP_REPORT.
+			// TODO: Note that any user can submit a report for any tool. 
+			// Need to determine if only the owner of the tool should be able to submit
+			// a report for that tool, or filter based on type (TEST_TOOL vs REPORT)
 			if (command == AppVetServletCommand.SUBMIT_REPORT) {
+				
+				// Validate AppVet app ID. Required only for SUBMIT_APP_REPORT.
 				if (!isValidAppId(appId, command)) {
 					log.error("Invalid app ID: " + appId);
 					sendHttpResponse(response,
@@ -448,10 +452,8 @@ public class AppVetServlet extends HttpServlet {
 							ErrorMessage.INVALID_APPID.getDescription(), true);
 					return;
 				}
-			}
-			
-			// Validate tool ID. Required only for GET_TOOL_REPORT command.
-			if (command == AppVetServletCommand.GET_TOOL_REPORT) {
+				
+				// Validate tool ID. Required only for SUBMIT_REPORT command.
 				if (!ToolAdapter.isValidToolId(toolId)) {
 					log.error("Invalid tool ID: " + toolId);
 					sendHttpResponse(response,
