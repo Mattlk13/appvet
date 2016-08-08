@@ -448,8 +448,7 @@ searchPanel {
 
 .gwt-PushButton {
 	color: darkslategrey;
-	background-color: #ffffff;
-	background-image: none;
+	background: white;
 }
 
 .seeLogTxt {
