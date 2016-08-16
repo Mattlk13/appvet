@@ -92,7 +92,7 @@ public class AppVet implements EntryPoint {
 	
 	public void displayLogin() {
 		// Display main AppVet login page
-		final LoginPanel loginPanel = new LoginPanel(Unit.PX);
+		final LoginPanel loginPanel = new LoginPanel();
 		// loginPanel.setTitle("Login panel");
 		final RootLayoutPanel rootPanel = RootLayoutPanel.get();
 		// rootPanel.setTitle("Root panel");
@@ -121,7 +121,7 @@ public class AppVet implements EntryPoint {
 							true);
 					return;
 				} else {
-					final AppVetPanel appVetPanel = new AppVetPanel(Unit.PX,
+					final AppVetPanel appVetPanel = new AppVetPanel(
 							configInfoGwt, appsList);
 					// appVetPanel.setTitle("AppVet Panel");
 					final RootLayoutPanel rootLayoutPanel = RootLayoutPanel

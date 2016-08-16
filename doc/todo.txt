@@ -7,4 +7,8 @@ The following are designated as to-do:
 - Remove PROXY_URL
   
 - Redesign ToolAdapter.xsd schema
+
+- Verify session expiration code:
+	- Database.getSessionExpiration() returns java.util.Date but inner code returns java.sql.Timestamp?
+	- Database.clearExpiredSessions() seems to remove sessions that are not yet expired.
   
