@@ -446,10 +446,7 @@ searchPanel {
 	font-size: 16px;
 }
 
-.gwt-PushButton {
-	color: darkslategrey;
-	background: white;
-}
+
 
 .seeLogTxt {
 	color: darkslategray;
@@ -940,4 +937,15 @@ Maroon
 
 .hovertable tr:hover {
 	background: #F2F2F2;
+}
+
+.gwt-PushButton {
+	color: darkslategrey;
+	background: white;
+}
+.gwt-HTML {
+	margin-left: 5px;
+color: darkslategrey;
+}
+.appVetMenuBar {
 }

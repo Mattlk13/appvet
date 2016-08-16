@@ -43,4 +43,14 @@
 	<extend-property name="locale" values="en" />
 	<set-property-fallback name="locale" value="en" />
 
+	<!-- Use default xsdiframe linker. This linker generates an iFrame that is visible when CSS is turned off. 
+	To remove this iFrame, use xs linker (which may increase risk of Javascript security issues) -->
+	<add-linker name="xsiframe" />
+	
+	<!-- THE FOLLOWING DOES NOT WORK! IT GIVES AN ERROR THAT SSO MUST HAVE EXACTLY 
+		ONE DISTINCT PERMUTATION, BUT THIS HAS MORE THAN 4. -->
+	<!-- <add-linker name="sso"/> -->
+	<!-- THE FOLLOWING WORKS TO REMOVE HIDDEN BOX BUT REBUILDING WORKSPACE TAKES LONGER 
+	AND CAN RUN OUT OF MEMORY -->
+	<!-- <add-linker name="xs"/> -->
 </module>

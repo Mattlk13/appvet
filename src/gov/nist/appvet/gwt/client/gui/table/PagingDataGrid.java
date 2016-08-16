@@ -24,8 +24,15 @@ import gov.nist.appvet.shared.all.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Node;
+
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.SimplePager;
@@ -43,8 +50,11 @@ import com.google.gwt.view.client.ListDataProvider;
  * 
  */
 public abstract class PagingDataGrid<T> extends Composite {
+
+	private Logger log = Logger.getLogger("PagingDataGrid");
+
 	public DataGrid<T> dataGrid;
-	private final SimplePager pager;
+	public final SimplePager pager;
 	private String height;
 	public ListDataProvider<T> dataProvider;
 	private final DockPanel dock = new DockPanel();
@@ -57,8 +67,12 @@ public abstract class PagingDataGrid<T> extends Composite {
 		dataGrid.setWidth("100%");
 		final SimplePager.Resources pagerResources = GWT
 				.create(SimplePager.Resources.class);
+
+
 		pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0,
 				true);
+		setPagerImageAltAndTitle();
+
 		pager.setDisplay(dataGrid);
 		dataProvider = new ListDataProvider<T>();
 		dataProvider.setList(new ArrayList<T>());
@@ -75,6 +89,32 @@ public abstract class PagingDataGrid<T> extends Composite {
 		dock.setWidth("100%");
 		dock.setCellWidth(dataGrid, "100%");
 		dock.setCellWidth(pager, "100%");
+	}
+
+	public void setPagerImageAltAndTitle() {
+		final NodeList<Element> tdElems = pager.getElement().getElementsByTagName("img");
+
+		for (int i = 0; i < tdElems.getLength(); i++) {
+			final String altText;
+			if (i == 0)
+				altText = "First page";
+			else if (i == 1)
+				altText = "Previous page";
+			else if (i == 2)
+				altText = "Next page";
+			else if (i == 3)
+				altText = "Last page";
+			else
+				continue;
+
+			Element e = tdElems.getItem(i);
+
+			// Set ALT attribute
+			e.setAttribute("ALT", altText);
+			
+			// Set title
+			e.setTitle(altText);			
+		}
 	}
 
 	public void add(int index, T element) {

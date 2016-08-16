@@ -107,7 +107,6 @@ public class Database {
 		Timestamp currentTime = new Timestamp(new Date().getTime());
 		String sql = "DELETE FROM sessions WHERE expiretime < '" + currentTime
 				+ "'";
-		log.debug("Clearing sessions with SQL: " + sql);
 		return update(sql);
 	}
 
@@ -740,13 +739,14 @@ public class Database {
 	 */
 	public static Date getSessionExpiration(String sessionId,
 			String clientIpAddress) {
+		//log.debug("CLIENT IP IN SESS EXPIR: " + clientIpAddress);
 		if (clientIpAddress.equals("0:0:0:0:0:0:0:1")) {
 			clientIpAddress = "127.0.0.1";
 		}
 		String sql = "SELECT expiretime FROM sessions "
 				+ "WHERE (clientaddress='" + clientIpAddress + "') "
 				+ "AND sessionid='" + sessionId + "'";
-		// log.debug("Getting session expiration using: " + sql);
+		//log.debug("Getting session expiration using: " + sql);
 		return getTimestamp(sql);
 	}
 
@@ -1047,6 +1047,7 @@ public class Database {
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
+				// This returns an MySql Timestamp which is a subclass of Java Date.
 				return resultSet.getTimestamp(1);
 			}
 		} catch (final SQLException e) {

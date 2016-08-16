@@ -51,6 +51,12 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 	@Override
 	public void initTableColumns(DataGrid<T> dataGrid,
 			ListHandler<T> sortHandler) {
+		
+		// TEST GETTING WIDGET ITEMS
+		this.getElement();
+		
+		
+		
 		// App ID
 		final Column<T, String> appIdColumn = new Column<T, String>(
 				new TextCell()) {
