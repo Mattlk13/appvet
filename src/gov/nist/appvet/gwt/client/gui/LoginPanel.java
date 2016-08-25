@@ -76,7 +76,6 @@ public class LoginPanel extends DockLayoutPanel {
 
 	public LoginPanel() {
 		super(Unit.PX);
-		setStyleName("backgroundImage");
 
 		// WARNING! DO NOT CALL AppVetProperties ELSE CODE WILL NOT
 		// COMPILE WITH GOOGLE COMPILER!
