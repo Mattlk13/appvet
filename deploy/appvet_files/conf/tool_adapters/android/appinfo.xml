@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://appvet.github.io/appvet/schemas/ToolAdapter.xsd ">
 	<appvet:Description>
-		<appvet:Name>App Metadata</appvet:Name>
+		<appvet:Name>APP METADATA</appvet:Name>
 		<!-- App info preprocessor will always have Id = 'appinfo' -->
 		<appvet:Id>appinfo</appvet:Id>
 		<appvet:Category>PREPROCESSOR</appvet:Category>

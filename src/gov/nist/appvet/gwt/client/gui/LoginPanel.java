@@ -33,9 +33,13 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.ErrorEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.thirdparty.javascript.jscomp.CheckLevel;
+import com.google.gwt.thirdparty.javascript.jscomp.ErrorHandler;
+import com.google.gwt.thirdparty.javascript.jscomp.JSError;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -72,6 +76,7 @@ public class LoginPanel extends DockLayoutPanel {
 
 	public LoginPanel() {
 		super(Unit.PX);
+		setStyleName("backgroundImage");
 
 		// WARNING! DO NOT CALL AppVetProperties ELSE CODE WILL NOT
 		// COMPILE WITH GOOGLE COMPILER!
@@ -79,171 +84,175 @@ public class LoginPanel extends DockLayoutPanel {
 		setSize("100%", "");
 
 		SimplePanel simplePanel_2 = new SimplePanel();
+		
 		addNorth(simplePanel_2, 132.0);
 		simplePanel_2.setHeight("100px");
-		
-				HorizontalPanel horizontalPanel = new HorizontalPanel();
-				simplePanel_2.setWidget(horizontalPanel);
-				horizontalPanel.setSize("100%", "100%");
-						
-								// Your org_logo.png should be placed in $CATALINA_HOME/webapps/appvet_images directory.
-								Image orgLogo = new Image("../appvet_images/org_logo.png");
-								horizontalPanel.add(orgLogo);
-								horizontalPanel.setCellHorizontalAlignment(orgLogo, HasHorizontalAlignment.ALIGN_RIGHT);
-								orgLogo.setAltText("Organizational logo");
-								//orgLogo.setTitle("Organizational logo");
-								orgLogo.setStyleName("nistLoginLogo");
-		
-				final VerticalPanel centerVerticalPanel = new VerticalPanel();
-				centerVerticalPanel
-				.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
-				centerVerticalPanel
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-				add(centerVerticalPanel);
-				centerVerticalPanel.setSize("100%", "80%");
-				
-						final DecoratorPanel decoratorPanel = new DecoratorPanel();
-						centerVerticalPanel.add(decoratorPanel);
-						centerVerticalPanel.setCellWidth(decoratorPanel, "100%");
-						decoratorPanel.setSize("", "");
-						centerVerticalPanel.setCellHorizontalAlignment(decoratorPanel,
-								HasHorizontalAlignment.ALIGN_CENTER);
-						centerVerticalPanel.setCellVerticalAlignment(decoratorPanel,
-								HasVerticalAlignment.ALIGN_MIDDLE);
-						
-								final DockPanel dockPanel = new DockPanel();
-								dockPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-								dockPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-								decoratorPanel.setWidget(dockPanel);
-								dockPanel.setSize("100%", "200px");
-								
-										final VerticalPanel verticalPanel = new VerticalPanel();
-										verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-										verticalPanel
-										.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-										dockPanel.add(verticalPanel, DockPanel.NORTH);
-										dockPanel.setCellWidth(verticalPanel, "100%");
-										dockPanel.setCellVerticalAlignment(verticalPanel,
-												HasVerticalAlignment.ALIGN_MIDDLE);
-										dockPanel.setCellHorizontalAlignment(verticalPanel,
-												HasHorizontalAlignment.ALIGN_CENTER);
-										verticalPanel.setSize("300px", "90px");
-										
-												final Image appVetImage = new Image("images/appvet_logo.png");
-												//appVetImage.setTitle("AppVet Mobile App Vetting System");
-												appVetImage.setAltText("AppVet Mobile App Vetting System");
-												appVetImage.setStyleName("loginPanelLogo");
-												verticalPanel.add(appVetImage);
-												verticalPanel.setCellHorizontalAlignment(appVetImage,
-														HasHorizontalAlignment.ALIGN_CENTER);
-												verticalPanel.setCellVerticalAlignment(appVetImage,
-														HasVerticalAlignment.ALIGN_MIDDLE);
-												appVetImage.setSize("192px", "73px");
-												loginStatusLabel.setStyleName("submissionRequirementsLabel");
-												verticalPanel.add(loginStatusLabel);
-												loginStatusLabel.setVisible(true);
-												loginStatusLabel.setSize("200px", "20px");
-												verticalPanel.setCellHorizontalAlignment(loginStatusLabel,
-														HasHorizontalAlignment.ALIGN_CENTER);
-												
-														final Grid grid = new Grid(2, 2);
-														grid.setStyleName("loginGrid");
-														dockPanel.add(grid, DockPanel.CENTER);
-														dockPanel.setCellWidth(grid, "100%");
-														grid.setHeight("");
-														dockPanel.setCellVerticalAlignment(grid,
-																HasVerticalAlignment.ALIGN_MIDDLE);
-														dockPanel.setCellHorizontalAlignment(grid,
-																HasHorizontalAlignment.ALIGN_CENTER);
-														
-																final Label usernameLabel = new Label("USERNAME");
-																usernameLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-																grid.setWidget(0, 0, usernameLabel);
-																usernameLabel.setSize("100px", "20px");
-																grid.getCellFormatter().setHorizontalAlignment(0, 0,
-																		HasHorizontalAlignment.ALIGN_LEFT);
-																grid.getCellFormatter().setVerticalAlignment(0, 0,
-																		HasVerticalAlignment.ALIGN_MIDDLE);
-																grid.setWidget(0, 1, userNameTextBox);
-																userNameTextBox.setSize("180px", "15px");
-																grid.getCellFormatter().setHorizontalAlignment(0, 1,
-																		HasHorizontalAlignment.ALIGN_RIGHT);
-																grid.getCellFormatter().setVerticalAlignment(0, 1,
-																		HasVerticalAlignment.ALIGN_MIDDLE);
-																
-																		final Label passwordLabel = new Label("PASSWORD");
-																		passwordLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-																		grid.setWidget(1, 0, passwordLabel);
-																		passwordLabel.setSize("100px", "20px");
-																		grid.getCellFormatter().setHorizontalAlignment(1, 0,
-																				HasHorizontalAlignment.ALIGN_LEFT);
-																		grid.getCellFormatter().setVerticalAlignment(1, 0,
-																				HasVerticalAlignment.ALIGN_MIDDLE);
-																		
-																				grid.setWidget(1, 1, passwordTextBox);
-																				passwordTextBox.setSize("180px", "15px");
-																				grid.getCellFormatter().setHorizontalAlignment(1, 1,
-																						HasHorizontalAlignment.ALIGN_RIGHT);
-																				grid.getCellFormatter().setVerticalAlignment(1, 1,
-																						HasVerticalAlignment.ALIGN_MIDDLE);
-																				passwordTextBox.addKeyPressHandler(new KeyPressHandler() {
 
-																					@Override
-																					public void onKeyPress(KeyPressEvent event_) {
-																						final boolean enterPressed = KeyCodes.KEY_ENTER == event_
-																								.getNativeEvent().getKeyCode();
+		HorizontalPanel horizontalPanel = new HorizontalPanel();
+		simplePanel_2.setWidget(horizontalPanel);
 
-																						if (enterPressed) {
-																							doLogin();
-																						}
-																					}
+		horizontalPanel.setSize("100%", "100%");
 
-																				});
-																				
-																						final SimplePanel simplePanel_3 = new SimplePanel();
-																						simplePanel_3.setStyleName("buttonPanel");
-																						dockPanel.add(simplePanel_3, DockPanel.SOUTH);
-																						simplePanel_3.setHeight("28px");
-																						dockPanel.setCellVerticalAlignment(simplePanel_3,
-																								HasVerticalAlignment.ALIGN_MIDDLE);
-																						dockPanel.setCellHorizontalAlignment(simplePanel_3,
-																								HasHorizontalAlignment.ALIGN_CENTER);
-																						loginButton.setStyleName("sendButton");
-																						//		loginButton.getUpFace().setHTML("");
-																						//		loginButton.getUpDisabledFace().setText("");
-																						//		loginButton.getUpHoveringFace().setText("");
-																						//		loginButton.getDownFace().setText("");
-																						//		loginButton.getDownDisabledFace().setText("");
-																						//		loginButton.getDownHoveringFace().setText("");
-																						//		loginButton.setHTML("");
-																						//loginButton.setStyleName("gwt-PushButton");
-																						loginButton.addClickHandler(new ClickHandler() {
+		// Your org_logo.png should be placed in $CATALINA_HOME/webapps/appvet_images directory.
+		Image orgLogo = new Image("../appvet_images/org_logo.png");
+		horizontalPanel.add(orgLogo);
+		horizontalPanel.setCellHorizontalAlignment(orgLogo, HasHorizontalAlignment.ALIGN_RIGHT);
+		orgLogo.setAltText("Organizational logo");
+		//orgLogo.setTitle("Organizational logo");
+		orgLogo.setStyleName("nistLoginLogo");
 
-																							@Override
-																							public void onClick(ClickEvent event) {
-																								doLogin();
-																							}
+		final VerticalPanel centerVerticalPanel = new VerticalPanel();
+		centerVerticalPanel
+		.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
+		centerVerticalPanel
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		add(centerVerticalPanel);
+		centerVerticalPanel.setSize("100%", "80%");
 
-																						});
-																						
-																								simplePanel_3.setWidget(loginButton);
-																								loginButton.setText("LOGIN");
-																								loginButton.setSize("78px", "");
+		final DecoratorPanel decoratorPanel = new DecoratorPanel();
+		decoratorPanel.setStyleName("transparent90Panel");
+		centerVerticalPanel.add(decoratorPanel);
+		centerVerticalPanel.setCellWidth(decoratorPanel, "100%");
+		decoratorPanel.setSize("", "");
+		centerVerticalPanel.setCellHorizontalAlignment(decoratorPanel,
+				HasHorizontalAlignment.ALIGN_CENTER);
+		centerVerticalPanel.setCellVerticalAlignment(decoratorPanel,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+
+		final DockPanel dockPanel = new DockPanel();
+		dockPanel.setStyleName("transparentNonePanel");
+		dockPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		dockPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		decoratorPanel.setWidget(dockPanel);
+		dockPanel.setSize("100%", "200px");
+
+		final VerticalPanel verticalPanel = new VerticalPanel();
+		verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		verticalPanel
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		dockPanel.add(verticalPanel, DockPanel.NORTH);
+		dockPanel.setCellWidth(verticalPanel, "100%");
+		dockPanel.setCellVerticalAlignment(verticalPanel,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		dockPanel.setCellHorizontalAlignment(verticalPanel,
+				HasHorizontalAlignment.ALIGN_CENTER);
+		verticalPanel.setSize("300px", "90px");
+
+		final Image appVetImage = new Image("images/appvet_logo.png");
+		//appVetImage.setTitle("AppVet Mobile App Vetting System");
+		appVetImage.setAltText("AppVet Mobile App Vetting System");
+		appVetImage.setStyleName("transparentPanel");
+		verticalPanel.add(appVetImage);
+		verticalPanel.setCellHorizontalAlignment(appVetImage,
+				HasHorizontalAlignment.ALIGN_CENTER);
+		verticalPanel.setCellVerticalAlignment(appVetImage,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		appVetImage.setSize("192px", "73px");
+		loginStatusLabel.setStyleName("submissionRequirementsLabel");
+		verticalPanel.add(loginStatusLabel);
+		loginStatusLabel.setVisible(true);
+		loginStatusLabel.setSize("200px", "20px");
+		verticalPanel.setCellHorizontalAlignment(loginStatusLabel,
+				HasHorizontalAlignment.ALIGN_CENTER);
+
+		final Grid grid = new Grid(2, 2);
+		grid.setStyleName("loginGrid");
+		dockPanel.add(grid, DockPanel.CENTER);
+		dockPanel.setCellWidth(grid, "100%");
+		grid.setHeight("");
+		dockPanel.setCellVerticalAlignment(grid,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		dockPanel.setCellHorizontalAlignment(grid,
+				HasHorizontalAlignment.ALIGN_CENTER);
+
+		final Label usernameLabel = new Label("USERNAME");
+		usernameLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		grid.setWidget(0, 0, usernameLabel);
+		usernameLabel.setSize("100px", "20px");
+		grid.getCellFormatter().setHorizontalAlignment(0, 0,
+				HasHorizontalAlignment.ALIGN_LEFT);
+		grid.getCellFormatter().setVerticalAlignment(0, 0,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		grid.setWidget(0, 1, userNameTextBox);
+		userNameTextBox.setSize("180px", "15px");
+		grid.getCellFormatter().setHorizontalAlignment(0, 1,
+				HasHorizontalAlignment.ALIGN_RIGHT);
+		grid.getCellFormatter().setVerticalAlignment(0, 1,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+
+		final Label passwordLabel = new Label("PASSWORD");
+		passwordLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		grid.setWidget(1, 0, passwordLabel);
+		passwordLabel.setSize("100px", "20px");
+		grid.getCellFormatter().setHorizontalAlignment(1, 0,
+				HasHorizontalAlignment.ALIGN_LEFT);
+		grid.getCellFormatter().setVerticalAlignment(1, 0,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+
+		grid.setWidget(1, 1, passwordTextBox);
+		passwordTextBox.setSize("180px", "15px");
+		grid.getCellFormatter().setHorizontalAlignment(1, 1,
+				HasHorizontalAlignment.ALIGN_RIGHT);
+		grid.getCellFormatter().setVerticalAlignment(1, 1,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		passwordTextBox.addKeyPressHandler(new KeyPressHandler() {
+
+			@Override
+			public void onKeyPress(KeyPressEvent event_) {
+				final boolean enterPressed = KeyCodes.KEY_ENTER == event_
+						.getNativeEvent().getKeyCode();
+
+				if (enterPressed) {
+					doLogin();
+				}
+			}
+
+		});
+
+		final SimplePanel simplePanel_3 = new SimplePanel();
+		simplePanel_3.setStyleName("buttonPanel");
+		dockPanel.add(simplePanel_3, DockPanel.SOUTH);
+		simplePanel_3.setHeight("28px");
+		dockPanel.setCellVerticalAlignment(simplePanel_3,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		dockPanel.setCellHorizontalAlignment(simplePanel_3,
+				HasHorizontalAlignment.ALIGN_CENTER);
+		loginButton.setStyleName("sendButton");
+		//		loginButton.getUpFace().setHTML("");
+		//		loginButton.getUpDisabledFace().setText("");
+		//		loginButton.getUpHoveringFace().setText("");
+		//		loginButton.getDownFace().setText("");
+		//		loginButton.getDownDisabledFace().setText("");
+		//		loginButton.getDownHoveringFace().setText("");
+		//		loginButton.setHTML("");
+		//loginButton.setStyleName("gwt-PushButton");
+		loginButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				doLogin();
+			}
+
+		});
+
+		simplePanel_3.setWidget(loginButton);
+		loginButton.setText("LOGIN");
+		loginButton.setSize("78px", "");
 
 		SimplePanel simplePanel = new SimplePanel();
 		addSouth(simplePanel, 23.0);
 		simplePanel.setHeight("100%");
-		
-				HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
-				horizontalPanel_1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-				simplePanel.setWidget(horizontalPanel_1);
-				horizontalPanel_1.setSize("100%", "");
-				
-						Image image = new Image("images/nist_logo_darkgrey.png");
-						horizontalPanel_1.add(image);
-						horizontalPanel_1.setCellHorizontalAlignment(image, HasHorizontalAlignment.ALIGN_RIGHT);
-						image.setWidth("50px");
-						image.setAltText("NIST logo");
+
+		HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
+		horizontalPanel_1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+		simplePanel.setWidget(horizontalPanel_1);
+		horizontalPanel_1.setSize("100%", "");
+
+		Image image = new Image("images/nist_logo_darkgrey.png");
+		horizontalPanel_1.add(image);
+		horizontalPanel_1.setCellHorizontalAlignment(image, HasHorizontalAlignment.ALIGN_RIGHT);
+		image.setWidth("50px");
+		image.setAltText("NIST logo");
 
 	}
 

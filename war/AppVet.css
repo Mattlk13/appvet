@@ -5,6 +5,14 @@ redirect {
 	vertical-align: middle;
 }
 
+.backgroundImage {
+	background-image: url("images/black_white_background_photo.jpg");
+	background-repeat: no-repeat;
+	background-position: right top;
+	background-attachment: fixed;
+	background-size: cover;
+}
+
 /** Example rules used by the template application (remove for your app) */
 h1 {
 	margin-right: 0px;
@@ -21,6 +29,7 @@ h3 {
 }
 
 .sendButton {
+	background: white;
 	display: block;
 	font-size: 16pt;
 }
@@ -236,18 +245,16 @@ searchPanel {
 }
 
 #appInfoSectionHeader {
-	background-color: #E6E6E6;
-	color: black;
-	font-size: 14px;
+	background-color: #015289;
+	color: white;
+	font: Sans-Serif;
+	font-size: 12px;
 	font-weight: bold;
 	padding-left: 5px;
 	padding-top: 2px;
 	padding-bottom: 2px;
 	margin-top: 5px;
 	margin-bottom: 5px;
-	/* 	padding-top: 5px; */
-/* 	padding-botton: 5px; */
-/* 	vertical-align: middle; */
 }
 
 .appInfoRow {
@@ -300,9 +307,16 @@ searchPanel {
 
 .gwt-MenuItem {
 	color: darkslategray;
-	padding-right: 5px;
-	border: 1px solid White;
+	background: #015289;
 	font-size: 14px;
+}
+
+.gwt-MenuItem:hover {
+	background: #002e4c;
+}
+
+.gwt-MenuItem:focus {
+	color: #002e4c;
 }
 
 .statusLabel {
@@ -347,6 +361,7 @@ searchPanel {
 }
 
 .submissionRequirementsLabel {
+	background: White;
 	color: blue;
 	border: solid White;
 	font-size: 12px;
@@ -446,8 +461,6 @@ searchPanel {
 	font-size: 16px;
 }
 
-
-
 .seeLogTxt {
 	color: darkslategray;
 	margin-left: 5px;
@@ -514,15 +527,14 @@ searchPanel {
 	border: 1px dotted Green;
 }
 
-.userMenuBar {
-	color: White;
-}
 
-.gwt-MenuBar gwt-MenuBar-vertical {
+
+.gwt-MenuBar {
 	
 }
 
 .buttonPanel {
+	background: white;
 	margin-top: 10px;
 	margin-bottom: 5px;
 	border: 0px;
@@ -538,7 +550,6 @@ searchPanel {
 }
 
 .gwt-Image {
-	margin-top: 5px;
 	margin-right: 5px;
 	margin-left: 5px;
 }
@@ -567,11 +578,9 @@ searchPanel {
 }
 
 .AccountMenuItem {
-	color: Blue;
-	padding-right: 5px;
-	border: 1px solid White;
-	font-size: 14px;
-	font-style: italic;
+	position: absolute;
+	right: 0px;
+	background-image: images/delete-app-up-hover.png;
 }
 
 .appsGrid {
@@ -625,6 +634,7 @@ searchPanel {
 }
 
 .gwt-Label {
+	background: White;
 	color: Black;
 	border: solid White;
 	vertical-align: middle;
@@ -780,7 +790,6 @@ searchPanel {
 border-top
 :
  
-1
 px
  
 solid
@@ -792,7 +801,6 @@ Background
 border-right
 :
  
-1
 px
  
 solid
@@ -804,7 +812,6 @@ Maroon
 border-bottom
 :
  
-1
 px
  
 solid
@@ -816,7 +823,6 @@ Maroon
 border-left
 :
  
-1
 px
  
 solid
@@ -824,6 +830,16 @@ solid
 Maroon
 ;
 
+	
+background-color
+:
+ 
+White
+;
+
+	
+	
+	
 
 }
 .appInfoHtml2 {
@@ -943,9 +959,275 @@ Maroon
 	color: darkslategrey;
 	background: white;
 }
+
 .gwt-HTML {
 	margin-left: 5px;
-color: darkslategrey;
+	color: darkslategrey;
 }
+
 .appVetMenuBar {
+	
 }
+
+.transparentFullPanel {
+	z-index: 2;
+	opacity: 0;
+}
+
+.transparentHalfPanel {
+	z-index: 2;
+	opacity: 0.5;
+}
+
+.transparentNonePanel {
+	z-index: 2;
+	opacity: 1;
+	background-color: White;
+}
+
+.transparent90Panel {
+	z-index: 2;
+	opacity: .9;
+	background-color: #015289;
+}
+
+.myButtonTest {
+	border-top: 1px solid #96d1f8;
+	background: #65a9d7;
+	background: -webkit-gradient(linear, left top, left bottom, from(#3e779d),
+		to(#65a9d7));
+	background: -webkit-linear-gradient(top, #3e779d, #65a9d7);
+	background: -moz-linear-gradient(top, #3e779d, #65a9d7);
+	background: -ms-linear-gradient(top, #3e779d, #65a9d7);
+	background: -o-linear-gradient(top, #3e779d, #65a9d7);
+	padding: 6.5px 13px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
+	-moz-box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
+	box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
+	text-shadow: rgba(0, 0, 0, .4) 0 1px 0;
+	color: white;
+	font-size: 14px;
+	font-family: Georgia, serif;
+	text-decoration: none;
+	vertical-align: middle;
+}
+
+.myButtonTest:hover {
+	border-top-color: #28597a;
+	background: #28597a;
+	color: #ccc;
+}
+
+.myButtonTest:active {
+	border-top-color: #1b435e;
+	background: #1b435e;
+}
+
+.accountMenuItem {
+	position: absolute;
+	right: 0px;
+}
+
+.accountMenuItem:hover {
+	color: red;
+	background: green;
+}
+
+.helpMenuItem {
+	padding-top: 5px;
+	padding-right: 5px;
+	padding-left: 5px;
+	
+}
+
+
+
+/*-------------- User Menu ------------------*/
+
+/* User Menu Item */
+.userMenuItem {
+	background: #015289;
+	color: darkslategray;
+	padding-top: 5px;
+	padding-right: 5px;
+	padding-left: 5px;
+	font-size: 14px;
+}
+.userMenuItem:hover {
+	background: #002e4c;
+}
+.userMenuItem:focus {
+	color: #002e4c;
+}
+
+.userMenuBar {
+	position: absolute;
+	right: 0px;
+	top: -5px;
+	cursor: default;
+	text-align: left;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #808080;
+	color: white;
+	background: white;
+	font-size: 14px;
+	width: 113px;
+}
+.userMenuItem:hover {
+	background: #002e4c;
+}
+.userMenuItem:focus {
+	color: #002e4c;
+}
+
+.userSubMenuItem {
+	color: #015289;
+	background: white;
+	font-size: 14px;
+}
+.userSubMenuItem:hover {
+	color: white;
+	background: #015289;
+}
+.userSubMenuItem:focus {
+	color: #015289;
+}
+
+/*-------------- Help Menu ------------------*/
+
+.helpMenuItem {
+	color: darkslategray;
+	background: #015289;
+	font-size: 14px;
+}
+.helpMenuItem:hover {
+	background: #002e4c;
+}
+.helpMenuItem:focus {
+	color: #002e4c;
+}
+
+.helpMenuBar {
+	position: absolute;
+	right: 0px;
+	top: -5px;
+	cursor: default;
+	text-align: left;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #808080;
+	color: white;
+	background: white;
+	font-size: 14px;
+	width: 103px;
+}
+
+.helpSubMenuItem {
+	color: #015289;
+	background: white;
+	font-size: 14px;
+}
+.helpSubMenuItem:hover {
+	color: white;
+	background: #015289;
+}
+.helpSubMenuItem:focus {
+	color: #015289;
+}
+
+/*-------------- Admin Menu ------------------*/
+
+.adminMenuItem {
+	background: #015289;
+	color: darkslategray;
+	padding-top: 5px;
+	padding-right: 5px;
+	padding-left: 5px;
+	font-size: 14px;
+}
+.adminMenuItem:hover {
+	background: #002e4c;
+}
+.adminMenuItem:focus {
+	color: #002e4c;
+}
+
+.adminMenuBar {
+	position: absolute;
+	right: 0px;
+	top: -5px;
+	cursor: default;
+	text-align: left;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #808080;
+	color: white;
+	background: white;
+	font-size: 14px;
+	width: 147px;
+}
+
+.adminSubMenuItem {
+	color: #015289;
+	background: white;
+	font-size: 14px;
+}
+.adminSubMenuItem:hover {
+	color: white;
+	background: #015289;
+}
+.adminSubMenuItem:focus {
+	color: #015289;
+}
+
+/* Menu Item Separator */
+
+.gwt-MenuItemSeparator {
+  width: 1px;
+  background: white;
+	margin: 0px;
+	padding: 0px;
+	background-color: #808080;
+}
+
+/* Search Button */
+.searchButton {
+	background: #015289;
+	color: darkslategray;
+	padding-top: 5px;
+	padding-right: 5px;
+	padding-left: 5px;
+	font-size: 14px;
+}
+.searchButton:hover {
+	color: white;
+	background: #023d64;
+}
+
+/* Main panel buttons */
+.appvetButton {
+	background: #2d8659;
+	margin: 4px;
+}
+.appvetButton:hover {
+	background: #015289;
+}
+.shadow {
+-webkit-box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
+-moz-box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
+box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
+}
+.appvetButton shadow {
+}
+
+/* White Cancel buttons */
+
+
+
+/* Green OK buttons */
+
+
