@@ -324,10 +324,12 @@ public class UserAcctDialogBox extends DialogBox {
 		horizontalPanel.setSize("200px", "50px");
 		
 		cancelButton = new PushButton("Cancel");
+		cancelButton.setStyleName("grayButton shadow");
 		horizontalPanel.add(cancelButton);
 		cancelButton.setSize("70px", "18px");
 		
 		okButton = new PushButton("Ok");
+		okButton.setStyleName("greenButton shadow");
 		okButton.setHTML("Ok");
 		horizontalPanel.add(okButton);
 		horizontalPanel.setCellHorizontalAlignment(okButton,

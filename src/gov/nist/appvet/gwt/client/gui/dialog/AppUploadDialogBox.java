@@ -135,6 +135,7 @@ public class AppUploadDialogBox extends DialogBox {
 		horizontalButtonPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		cancelButton = new PushButton("Cancel");
+		cancelButton.setStyleName("grayButton shadow");
 		cancelButton.setHTML("Cancel");
 		horizontalButtonPanel.add(cancelButton);
 		horizontalButtonPanel.setCellHorizontalAlignment(cancelButton,
@@ -144,6 +145,7 @@ public class AppUploadDialogBox extends DialogBox {
 		horizontalButtonPanel.add(label);
 		label.setSize("30px", "");
 		submitButton = new PushButton("Submit");
+		submitButton.setStyleName("greenButton shadow");
 		submitButton.setEnabled(false);
 		horizontalButtonPanel.add(submitButton);
 		horizontalButtonPanel.setCellHorizontalAlignment(submitButton,

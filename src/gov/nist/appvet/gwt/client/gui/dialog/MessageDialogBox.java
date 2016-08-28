@@ -105,6 +105,7 @@ public class MessageDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel.setWidth("320px");
 		closeButton = new PushButton("Ok");
+		closeButton.setStyleName("greenButton shadow");
 		horizontalPanel.add(closeButton);
 		dialogVPanel.setCellWidth(closeButton, "100%");
 		closeButton.setSize("70px", "18px");

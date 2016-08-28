@@ -106,6 +106,7 @@ public class AboutDialogBox extends DialogBox {
 		dialogVPanel.setCellWidth(simplePanel, "100%");
 		simplePanel.setWidth("340px");
 		closeButton = new PushButton("Close");
+		closeButton.setStyleName("greenButton shadow");
 		simplePanel.setWidget(closeButton);
 		dialogVPanel.setCellVerticalAlignment(closeButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);

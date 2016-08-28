@@ -125,6 +125,7 @@ public class SetAlertDialogBox extends DialogBox {
 		horizontalButtonPanel.setWidth("320px");
 		verticalPanel.setCellWidth(horizontalButtonPanel, "100%");
 		cancelButton = new PushButton("No");
+		cancelButton.setStyleName("grayButton shadow");
 		cancelButton.setHTML("Cancel");
 		horizontalButtonPanel.add(cancelButton);
 		cancelButton.setSize("70px", "18px");
@@ -133,6 +134,7 @@ public class SetAlertDialogBox extends DialogBox {
 		horizontalButtonPanel.setCellHorizontalAlignment(cancelButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		okButton = new PushButton("Yes");
+		okButton.setStyleName("greenButton shadow");
 		okButton.setHTML("Ok");
 		horizontalButtonPanel.add(okButton);
 		horizontalButtonPanel.setCellHorizontalAlignment(okButton,

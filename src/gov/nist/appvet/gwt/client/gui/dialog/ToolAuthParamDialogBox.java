@@ -66,7 +66,9 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		super(false, true);
 		setSize("400px", "438px");
 		setAnimationEnabled(false);
+		saveButton.setStyleName("grayButton shadow");
 		saveButton.setEnabled(false);
+		editButton.setStyleName("grayButton shadow");
 		editButton.setEnabled(false);
 		final VerticalPanel verticalPanel = new VerticalPanel();
 		verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
@@ -243,6 +245,7 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		verticalPanel.add(horizontalPanel);
 		horizontalPanel.setWidth("338px");
 		okButton = new PushButton("Ok");
+		okButton.setStyleName("greenButton shadow");
 		horizontalPanel.add(okButton);
 		okButton.setWidth("70px");
 		horizontalPanel.setCellVerticalAlignment(okButton,

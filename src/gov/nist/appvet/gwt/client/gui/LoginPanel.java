@@ -216,7 +216,7 @@ public class LoginPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		dockPanel.setCellHorizontalAlignment(simplePanel_3,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		loginButton.setStyleName("sendButton");
+		loginButton.setStyleName("greenButton shadow");
 		//		loginButton.getUpFace().setHTML("");
 		//		loginButton.getUpDisabledFace().setText("");
 		//		loginButton.getUpHoveringFace().setText("");

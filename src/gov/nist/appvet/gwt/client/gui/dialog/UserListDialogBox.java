@@ -188,6 +188,7 @@ public class UserListDialogBox extends DialogBox {
 		verticalPanel.setCellHorizontalAlignment(horizontalPanel_2,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		addUserButton = new PushButton("Add");
+		addUserButton.setStyleName("grayButton shadow");
 		addUserButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -202,6 +203,7 @@ public class UserListDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		addUserButton.setSize("70px", "18px");
 		final PushButton editUserButton = new PushButton("Edit");
+		editUserButton.setStyleName("grayButton shadow");
 		editUserButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -209,6 +211,7 @@ public class UserListDialogBox extends DialogBox {
 			}
 		});
 		final PushButton deleteUserButton = new PushButton("Delete");
+		deleteUserButton.setStyleName("grayButton shadow");
 		deleteUserButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -255,6 +258,7 @@ public class UserListDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		editUserButton.setSize("70px", "18px");
 		doneButton = new PushButton("Done");
+		doneButton.setStyleName("greenButton shadow");
 		doneButton.setHTML("Done");
 		horizontalPanel_2.add(doneButton);
 		horizontalPanel_2.setCellHorizontalAlignment(doneButton,

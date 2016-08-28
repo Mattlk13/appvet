@@ -81,6 +81,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
@@ -137,7 +138,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	private YesNoConfirmDialog deleteConfirmDialogBox = null;
 	private ReportUploadDialogBox reportUploadDialogBox = null;
 	private UserAcctDialogBox userAcctDialogBox = null;
-	public final Label statusMessageLabel = new Label("");
+	public final InlineHTML statusMessageHtml = new InlineHTML("");
 	private String SERVLET_URL = null;
 	private ArrayList<ToolInfoGwt> tools = null;
 	private HTML appsLabelHtml = null;
@@ -516,7 +517,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel_5.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_5
 		.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_5.setStyleName("transparent90Panel");
+		horizontalPanel_5.setStyleName("mainBanner");
 		northAppVetPanel.add(horizontalPanel_5);
 		northAppVetPanel.setCellVerticalAlignment(horizontalPanel_5,
 				HasVerticalAlignment.ALIGN_MIDDLE);
@@ -748,6 +749,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		aboutMenuItem.setHeight("");
 		
 		final HorizontalPanel horizontalPanel_3 = new HorizontalPanel();
+		horizontalPanel_3.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_3.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		northAppVetPanel.add(horizontalPanel_3);
 		northAppVetPanel.setCellVerticalAlignment(horizontalPanel_3,
 				HasVerticalAlignment.ALIGN_MIDDLE);
@@ -755,18 +758,18 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_3.setSize("100%", "");
 		northAppVetPanel.setCellWidth(horizontalPanel_3, "100%");
-
-		horizontalPanel_3.add(statusMessageLabel);
-		horizontalPanel_3.setCellVerticalAlignment(statusMessageLabel,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_3.setCellHorizontalAlignment(statusMessageLabel,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_3.setCellWidth(statusMessageLabel, "50%");
-		statusMessageLabel.setStyleName("statusError");
-		statusMessageLabel
-		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		statusMessageLabel.setSize("90%", "20px");
 		
+		horizontalPanel_3.add(statusMessageHtml);
+		horizontalPanel_3.setCellHeight(statusMessageHtml, "30px");
+		horizontalPanel_3.setCellVerticalAlignment(statusMessageHtml,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_3.setCellHorizontalAlignment(statusMessageHtml,
+				HasHorizontalAlignment.ALIGN_CENTER);
+		horizontalPanel_3.setCellWidth(statusMessageHtml, "100%");
+		statusMessageHtml.setStyleName("statusMessage");
+		statusMessageHtml
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		statusMessageHtml.setSize("90%", "20px");
 		
 		final MenuBar adminMenuBar = new MenuBar(true);
 		adminMenuBar.setStyleName("adminMenuBar");
@@ -2087,21 +2090,23 @@ public class AppVetPanel extends DockLayoutPanel {
 
 			@Override
 			public void onSuccess(SystemAlert systemAlert) {
+				
 				if (systemAlert != null) {
 					// log.info("system alert is not null. Setting message: " +
-					// systemAlert.message);
+					// systemAlert.message);	
+					String systemMessage = systemAlert.message;
+					
 					if (systemAlert.type == SystemAlertType.NORMAL) {
-						statusMessageLabel.setStyleName("statusOk");
+						statusMessageHtml.setHTML("<img width=\"18px\" height=\"18px\" src=\"images/icon-metadata.png\" alt=\"Message\" /> " + systemMessage);						
 					} else if (systemAlert.type == SystemAlertType.WARNING) {
-						statusMessageLabel.setStyleName("statusWarning");
+						statusMessageHtml.setHTML("<img width=\"18px\" height=\"18px\" src=\"images/icon-warning.png\" alt=\"Warning\" /> " + systemMessage);						
 					} else if (systemAlert.type == SystemAlertType.CRITICAL) {
-						statusMessageLabel.setStyleName("statusError");
+						statusMessageHtml.setHTML("<img width=\"18px\" height=\"18px\" src=\"images/icon-error.png\" alt=\"Error\" /> " + systemMessage);						
 					}
-
-					statusMessageLabel.setText(systemAlert.message);
+					
 				} else {
 					// log.info("system alert is null. Setting message to ''");
-					statusMessageLabel.setText("");
+					statusMessageHtml.setHTML("");						
 				}
 			}
 		});

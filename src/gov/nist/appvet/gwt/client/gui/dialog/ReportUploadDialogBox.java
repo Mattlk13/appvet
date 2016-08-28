@@ -470,6 +470,7 @@ public class ReportUploadDialogBox extends DialogBox {
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalButtonPanel.setSize("210px", "");
 		cancelButton = new PushButton("Cancel");
+		cancelButton.setStyleName("grayButton shadow");
 		cancelButton.setHTML("Cancel");
 		horizontalButtonPanel.add(cancelButton);
 		cancelButton.setSize("70px", "18px");
@@ -482,6 +483,7 @@ public class ReportUploadDialogBox extends DialogBox {
 		horizontalButtonPanel.add(lblNewLabel);
 		lblNewLabel.setWidth("50px");
 		submitButton = new PushButton("Submit");
+		submitButton.setStyleName("greenButton shadow");
 		submitButton.setEnabled(false);
 		horizontalButtonPanel.add(submitButton);
 		horizontalButtonPanel.setCellHorizontalAlignment(submitButton,

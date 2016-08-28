@@ -35,6 +35,7 @@ public class NameValueDialogBox extends DialogBox {
 		simplePanel.setWidget(horizontalPanel);
 		horizontalPanel.setSize("100%", "100%");
 		okButton = new PushButton("Ok");
+		okButton.setStyleName("greenButton shadow");
 		okButton.setHTML("Ok");
 		horizontalPanel.add(okButton);
 		okButton.setWidth("70px");

@@ -445,6 +445,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		horizontalPanel.setSize("200px", "50px");
 		horizontalPanel.setStyleName("buttonPanelStyle");
 		cancelButton = new PushButton("Cancel");
+		cancelButton.setStyleName("grayButton shadow");
 		cancelButton.setHTML("Cancel");
 		horizontalPanel.add(cancelButton);
 		final Label buttonSpacerLabel = new Label("");
@@ -460,6 +461,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		cancelButton.setSize("70px", "18px");
 		submitButton = new PushButton("Submit");
+		submitButton.setStyleName("greenButton shadow");
 		submitButton.setEnabled(true);
 		horizontalPanel.add(submitButton);
 		horizontalPanel.setCellHorizontalAlignment(submitButton,

@@ -59,8 +59,10 @@ h3 {
 }
 
 .statusMessage {
-	color: Yellow;
-	background-color: Black;
+   vertical-align: top;
+	color: black;
+	font: sans;
+	font-weight: bold;
 }
 
 .userStatus {
@@ -255,6 +257,10 @@ searchPanel {
 	padding-bottom: 2px;
 	margin-top: 5px;
 	margin-bottom: 5px;
+	
+	-webkit-box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
+-moz-box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
+box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 }
 
 .appInfoRow {
@@ -949,6 +955,7 @@ White
 
 .appvetTextArea {
 	margin-right: 5px;
+	font: sans;
 }
 
 .hovertable tr:hover {
@@ -988,7 +995,7 @@ White
 .transparent90Panel {
 	z-index: 2;
 	opacity: .9;
-	background-color: #015289;
+	border: 1px solid Silver;
 }
 
 .myButtonTest {
@@ -1221,13 +1228,43 @@ White
 -moz-box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 }
-.appvetButton shadow {
-}
 
 /* White Cancel buttons */
-
-
+.grayButton {
+	color: black;
+	background: #d9e1e4;
+	margin: 4px;
+}
+.grayButton:hover {
+	color: white;
+	background: #015289;
+}
 
 /* Green OK buttons */
+.greenButton {
+	color: white;
+	background: #2d8659;
+	margin: 4px;
+}
+.greenButton:hover {
+	color: white;
+	background: #015289;
+}
+.whiteButton shadow {
+}
+.greenButton shadow {
+}
+.grayButton shadow {
+}
+.gwt-FileUpload greenButton {
+}
+.greenbutton shadow {
+}
+
+/* Main banner */
+
+.mainBanner {
+		background: #015289;
+}
 
 
