@@ -17,7 +17,7 @@
  * Permission to use this software is contingent upon your acceptance
  * of the terms of this agreement.
  */
-package gov.nist.appvet.shared.backend;
+package gov.nist.appvet.properties;
 
 /**
  * @author steveq@nist.gov
@@ -27,6 +27,10 @@ import gov.nist.appvet.servlet.toolmgr.ToolMgr;
 import gov.nist.appvet.shared.all.DeviceOS;
 import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.Validate;
+import gov.nist.appvet.shared.backend.Database;
+import gov.nist.appvet.shared.backend.Logger;
+import gov.nist.appvet.shared.backend.ToolAdapter;
+import gov.nist.appvet.shared.backend.XmlUtil;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -37,7 +41,7 @@ import java.util.ArrayList;
 public class AppVetProperties {
 	public static boolean error = false;
 	/** AppVet Github release version number. */
-	public static final String APPVET_VERSION = "2.2.5"; 
+	public static final String APPVET_VERSION = "2.2.6"; 
 	// Logging
 	public static Logger log = null;
 	private static String APPVET_LOG_NAME = "appvet_log.txt";

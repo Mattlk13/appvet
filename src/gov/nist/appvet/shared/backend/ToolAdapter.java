@@ -19,6 +19,7 @@
  */
 package gov.nist.appvet.shared.backend;
 
+import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.servlet.shared.ErrorMessage;
 import gov.nist.appvet.servlet.shared.ReportFileType;
 import gov.nist.appvet.servlet.toolmgr.AppSubmitType;

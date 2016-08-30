@@ -1,8 +1,8 @@
 package gov.nist.appvet.servlet.shared;
 
+import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.UserInfo;
-import gov.nist.appvet.shared.backend.AppVetProperties;
 import gov.nist.appvet.shared.backend.Database;
 import gov.nist.appvet.shared.backend.Logger;
 

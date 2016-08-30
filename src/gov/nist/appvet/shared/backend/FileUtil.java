@@ -19,6 +19,8 @@
  */
 package gov.nist.appvet.shared.backend;
 
+import gov.nist.appvet.properties.AppVetProperties;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

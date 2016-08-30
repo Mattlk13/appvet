@@ -1,5 +1,7 @@
 package gov.nist.appvet.shared.backend;
 
+import gov.nist.appvet.properties.AppVetProperties;
+
 import java.util.ArrayList;
 
 /**

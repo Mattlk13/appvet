@@ -19,7 +19,7 @@
  */
 package gov.nist.appvet.servlet.toolmgr;
 
-import gov.nist.appvet.shared.backend.AppVetProperties;
+import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.shared.backend.Logger;
 
 import java.security.cert.CertificateException;

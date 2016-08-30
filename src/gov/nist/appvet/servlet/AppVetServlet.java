@@ -19,6 +19,7 @@
  */
 package gov.nist.appvet.servlet;
 
+import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.servlet.preprocessor.Registration;
 import gov.nist.appvet.servlet.shared.Emailer;
 import gov.nist.appvet.servlet.shared.ErrorMessage;
@@ -35,7 +36,6 @@ import gov.nist.appvet.shared.all.UserInfo;
 import gov.nist.appvet.shared.all.Validate;
 import gov.nist.appvet.shared.backend.AppInfo;
 import gov.nist.appvet.shared.backend.AppStatusManager;
-import gov.nist.appvet.shared.backend.AppVetProperties;
 import gov.nist.appvet.shared.backend.Authenticate;
 import gov.nist.appvet.shared.backend.Database;
 import gov.nist.appvet.shared.backend.FileUtil;

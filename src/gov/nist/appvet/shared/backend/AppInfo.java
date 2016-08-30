@@ -20,6 +20,7 @@
 package gov.nist.appvet.shared.backend;
 
 import gov.nist.appvet.gwt.shared.AppInfoGwt;
+import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.shared.all.DeviceOS;
 
 import java.io.File;

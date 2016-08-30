@@ -19,6 +19,7 @@
  */
 package gov.nist.appvet.shared.backend;
 
+import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.shared.all.AppStatus;
 import gov.nist.appvet.shared.all.DeviceOS;
 import gov.nist.appvet.shared.all.ToolType;

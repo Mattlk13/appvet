@@ -142,7 +142,8 @@ public class AppVetPanel extends DockLayoutPanel {
 	private String SERVLET_URL = null;
 	private ArrayList<ToolInfoGwt> tools = null;
 	private HTML appsLabelHtml = null;
-	private double NORTH_PANEL_HEIGHT = 110.0;
+	private SimplePanel centerPanel = null;
+	private double NORTH_PANEL_HEIGHT = 65.0;
 	private double SOUTH_PANEL_HEIGHT = 47.0;
 	private boolean searchMode = false;
 	private MenuItem userMenuItem = null;
@@ -472,11 +473,12 @@ public class AppVetPanel extends DockLayoutPanel {
 	public AppVetPanel(final ConfigInfoGwt configInfo,
 			AppsListGwt initialApps) {
 		super(Unit.PX);
+
 		Window.addResizeHandler(new ResizeHandler() {
 			Timer resizeTimer = new Timer() {
 				@Override
 				public void run() {
-					resizeComponents();
+					adjustComponentSizes();
 				}
 			};
 
@@ -486,6 +488,8 @@ public class AppVetPanel extends DockLayoutPanel {
 				resizeTimer.schedule(250);
 			}
 		});
+
+
 		userInfo = configInfo.getUserInfo();
 		userName = userInfo.getUserName();
 		lastAppsListUpdate = initialApps.appsLastChecked;
@@ -507,270 +511,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		documentationURL = configInfo.getDocumentationURL();
 		ssoActive = configInfo.getSSOActive();
 		ssoLogoutURL = configInfo.getSsoLogoutURL();
-		final VerticalPanel northAppVetPanel = new VerticalPanel();
-		northAppVetPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		northAppVetPanel
-		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		addNorth(northAppVetPanel, 56.0);
-		northAppVetPanel.setSize("100%", "");
-		final HorizontalPanel horizontalPanel_5 = new HorizontalPanel();
-		horizontalPanel_5.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_5
-		.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_5.setStyleName("mainBanner");
-		northAppVetPanel.add(horizontalPanel_5);
-		northAppVetPanel.setCellVerticalAlignment(horizontalPanel_5,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_5.setSize("100%", "");
-		northAppVetPanel.setCellWidth(horizontalPanel_5, "100%");
-
-		Image image = new Image("images/appvet_logo2.png");
-		image.setAltText("AppVet");
-		horizontalPanel_5.add(image);
-		image.setWidth("200px");
-		horizontalPanel_5.setCellVerticalAlignment(image, HasVerticalAlignment.ALIGN_MIDDLE);
-		final HorizontalPanel horizontalPanel_6 = new HorizontalPanel();
-		horizontalPanel_6
-		.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_5.add(horizontalPanel_6);
-		horizontalPanel_6.setWidth("");
-		horizontalPanel_5.setCellWidth(horizontalPanel_6, "100%");
-		horizontalPanel_5.setCellHorizontalAlignment(horizontalPanel_6,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_5.setCellVerticalAlignment(horizontalPanel_6,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		searchTextBox = new TextBox();
-		searchTextBox.setText("Search");
-		searchTextBox.setStyleName("searchTextBox");
-		searchTextBox.setTitle("Search by app ID, name, release kit, etc.");
-		searchTextBox.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				searchTextBox.setText("");
-			}
-		});
-		searchTextBox.addKeyPressHandler(new KeyPressHandler() {
-			@Override
-			public void onKeyPress(KeyPressEvent event_) {
-				final boolean enterPressed = KeyCodes.KEY_ENTER == event_
-						.getNativeEvent().getKeyCode();
-				final String searchString = searchTextBox.getText();
-				if (enterPressed) {
-					final int numFound = search();
-					if (numFound > 0) {
-						final SafeHtmlBuilder sb = new SafeHtmlBuilder();
-						sb.appendHtmlConstant("<h3>Found " + numFound + " results for \"" + searchString + "\"</h3>");						
-						appsLabelHtml.setHTML(sb.toSafeHtml());
-					}
-				}
-			}
-		});
-		searchTextBox.setSize("240px", "15px");
-		horizontalPanel_6.add(searchTextBox);
-		horizontalPanel_6.setCellVerticalAlignment(searchTextBox,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		final PushButton searchButton = new PushButton("Search");
-		searchButton.setStyleName("searchButton");
-		searchButton.setTitle("Search by app ID, name, release kit, etc.");
-		searchButton.setSize("", "");
-		searchButton
-		.setHTML("<img width=\"18px\" height=\"18px\" src=\"images/icon-search.png\" alt=\"search\" />");
-		searchButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				final String searchString = searchTextBox.getText();
-				final int numFound = search();
-				if (numFound > 0) {
-				final SafeHtmlBuilder sb = new SafeHtmlBuilder();
-				sb.appendHtmlConstant("<h3>Found " + numFound + " results for \"" + searchString + "\"</h3>");						
-				appsLabelHtml.setHTML(sb.toSafeHtml());
-				}
-			}
-		});
-		horizontalPanel_6.add(searchButton);
-		horizontalPanel_6.setCellHorizontalAlignment(searchButton,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_6.setCellVerticalAlignment(searchButton,
-				HasVerticalAlignment.ALIGN_MIDDLE);
 		String orgLogoAltText = configInfo.getOrgLogoAltText();
 
-		HorizontalPanel horizontalPanel_4 = new HorizontalPanel();
-		horizontalPanel_4.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_4.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-		horizontalPanel_5.add(horizontalPanel_4);
-		horizontalPanel_5.setCellVerticalAlignment(horizontalPanel_4, HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_5.setCellHorizontalAlignment(horizontalPanel_4, HasHorizontalAlignment.ALIGN_RIGHT);
-		
-		final MenuBar appVetMenuBar = new MenuBar(false);
-		Roles.getMenubarRole().setTabindexExtraAttribute(appVetMenuBar.getElement(), -1);
-		horizontalPanel_4.add(appVetMenuBar);
-		horizontalPanel_4.setCellVerticalAlignment(appVetMenuBar, HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_4.setCellHorizontalAlignment(appVetMenuBar, HasHorizontalAlignment.ALIGN_RIGHT);
-		appVetMenuBar.setStyleName("gwt-MenuBar");
-		appVetMenuBar.setAutoOpen(false);
-		appVetMenuBar.setSize("250px", "");
-		appVetMenuBar.setAnimationEnabled(false);
-		appVetMenuBar.setFocusOnHoverEnabled(false);
-
-
-		final MenuBar userMenuBar = new MenuBar(true);
-		userMenuBar.setStyleName("userMenuBar");
-		userMenuBar.setFocusOnHoverEnabled(false);
-		// Set tab-able for 508 compliance
-		Roles.getMenubarRole().setTabindexExtraAttribute(userMenuBar.getElement(), -1);
-
-		userMenuItem = new MenuItem("User", true,
-				userMenuBar);
-		userMenuItem.setStyleName("userMenuItem");
-		userMenuItem.setTitle("User Preferences");
-		userMenuItem.setHTML("<img src=\"images/icon-user.png\" width=\"16px\" height=\"16px\" alt=\"User Preferences\">");
-		userMenuBar.setHeight("");
-		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(userMenuItem.getElement(), 0);
-
-		final MenuItem accountSettingsMenuItem = new MenuItem(
-				"Account Settings", false, new Command() {
-					@Override
-					public void execute() {
-						openUserAccount(configInfo);
-					}
-				});
-		accountSettingsMenuItem.setStyleName("userSubMenuItem");
-		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(accountSettingsMenuItem.getElement(), 0);
-		userMenuBar.addItem(accountSettingsMenuItem);
-
-		final MenuItem toolCredentialsMenuItem = new MenuItem(
-				"Tool Credentials", false, new Command() {
-					@Override
-					public void execute() {
-						openToolCredentials(configInfo);
-					}
-				});
-		toolCredentialsMenuItem.setStyleName("userSubMenuItem");
-		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(toolCredentialsMenuItem.getElement(), 0);
-		
-		userMenuBar.addItem(toolCredentialsMenuItem);
-		accountSettingsMenuItem.setHeight("");
-		
-		final MenuItem myAppsMenuItem = new MenuItem("My Apps", false,
-				new Command() {
-			@Override
-			public void execute() {
-				searchTextBox.setText(userInfo.getUserName());
-				final int numFound = search();
-				if (numFound > 0) {
-					final SafeHtmlBuilder sb = new SafeHtmlBuilder();
-					sb.appendHtmlConstant("<h3>My Apps</h3>");						
-					appsLabelHtml.setHTML(sb.toSafeHtml());
-				}
-			}
-		});
-		myAppsMenuItem.setStyleName("userSubMenuItem");
-		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(myAppsMenuItem.getElement(), 0);
-		userMenuBar.addItem(myAppsMenuItem);
-		myAppsMenuItem.setHeight("");
-		
-		final MenuItemSeparator separator = new MenuItemSeparator();
-		userMenuBar.addSeparator(separator);
-		separator.setSize("100%", "1px");
-		final MenuItem logoutMenuItem = new MenuItem("Logout", false,
-				new Command() {
-			@Override
-			public void execute() {
-				removeSession(false);
-			}
-		});
-		logoutMenuItem.setStyleName("userSubMenuItem");
-		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(logoutMenuItem.getElement(), 0);
-		userMenuBar.addItem(logoutMenuItem);
-		logoutMenuItem.setHeight("");
-
-		appVetMenuBar.addItem(userMenuItem);
-		userMenuItem.setHeight("");
-		
-		
-		final MenuBar helpMenuBar = new MenuBar(true);
-		helpMenuBar.setStyleName("helpMenuBar");
-		// Set tab-able for 508 compliance
-		Roles.getMenubarRole().setTabindexExtraAttribute(helpMenuBar.getElement(), -1);
-		helpMenuBar.setFocusOnHoverEnabled(false);
-
-		final MenuItem helpMenuItem = new MenuItem("Help", true, helpMenuBar);
-		helpMenuItem.setTitle("Help");
-		helpMenuItem.setHTML("<img src=\"images/icon-white-question-mark.png\"  width=\"16px\" height=\"16px\" alt=\"Settings\">");
-		helpMenuItem.setStyleName("helpMenuItem");
-		helpMenuBar.setHeight("");
-		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(helpMenuItem.getElement(), 0);
-		
-		final MenuItem aboutMenuItem = new MenuItem("About", false,
-				new Command() {
-			@Override
-			public void execute() {
-				aboutDialogBox = new AboutDialogBox(configInfo
-						.getAppVetVersion());
-				aboutDialogBox.setText("About");
-				aboutDialogBox.center();
-				aboutDialogBox.closeButton.setFocus(true);
-				aboutDialogBox.closeButton
-				.addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						killDialogBox(aboutDialogBox);
-					}
-				});
-			}
-		});
-		aboutMenuItem.setStyleName("helpSubMenuItem");
-		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(aboutMenuItem.getElement(), 0);
-		
-		final MenuItem documentationMenuItem = new MenuItem("Documentation",
-				false, new Command() {
-			@Override
-			public void execute() {
-				Window.open(documentationURL, "_blank", null);
-			}
-		});
-		documentationMenuItem.setStyleName("helpSubMenuItem");
-		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(documentationMenuItem.getElement(), 0);
-		
-		helpMenuBar.addItem(documentationMenuItem);
-		documentationMenuItem.setHeight("");
-		
-		appVetMenuBar.addItem(helpMenuItem);
-		helpMenuItem.setHeight("");
-		helpMenuBar.addItem(aboutMenuItem);
-		aboutMenuItem.setHeight("");
-		
-		final HorizontalPanel horizontalPanel_3 = new HorizontalPanel();
-		horizontalPanel_3.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_3.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		northAppVetPanel.add(horizontalPanel_3);
-		northAppVetPanel.setCellVerticalAlignment(horizontalPanel_3,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		northAppVetPanel.setCellHorizontalAlignment(horizontalPanel_3,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_3.setSize("100%", "");
-		northAppVetPanel.setCellWidth(horizontalPanel_3, "100%");
-		
-		horizontalPanel_3.add(statusMessageHtml);
-		horizontalPanel_3.setCellHeight(statusMessageHtml, "30px");
-		horizontalPanel_3.setCellVerticalAlignment(statusMessageHtml,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_3.setCellHorizontalAlignment(statusMessageHtml,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_3.setCellWidth(statusMessageHtml, "100%");
-		statusMessageHtml.setStyleName("statusMessage");
-		statusMessageHtml
-		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		statusMessageHtml.setSize("90%", "20px");
-		
 		final MenuBar adminMenuBar = new MenuBar(true);
 		adminMenuBar.setStyleName("adminMenuBar");
 
@@ -875,14 +617,14 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		// Set tab-able for 508 compliance
 		Roles.getMenuitemRole().setTabindexExtraAttribute(setAlertMenuItem.getElement(), 0);
-				
+
 		adminMenuBar.addItem(setAlertMenuItem);
 		setAlertMenuItem.setStyleName("adminSubMenuItem");
 
 		MenuItemSeparator separator_2 = new MenuItemSeparator();
 		adminMenuBar.addSeparator(separator_2);
 		separator_2.setSize("100%", "1px");
-		
+
 		final MenuItem mntmAppVetLog = new MenuItem("View Log", false,
 				new Command() {
 			@Override
@@ -903,7 +645,7 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		// Set tab-able for 508 compliance
 		Roles.getMenuitemRole().setTabindexExtraAttribute(mntmAppVetLog.getElement(), 0);
-		
+
 		final MenuItem clearAppVetLogMenuItem = new MenuItem("Clear Log", false,
 				new Command() {
 			@Override
@@ -935,7 +677,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		Roles.getMenuitemRole().setTabindexExtraAttribute(clearAppVetLogMenuItem.getElement(), 0);
 		adminMenuBar.addItem(clearAppVetLogMenuItem);
 		clearAppVetLogMenuItem.setStyleName("adminSubMenuItem");
-		
+
 		final MenuItem downloadAppVetLogMenuItem = new MenuItem("Download Log",
 				false, new Command() {
 			@Override
@@ -960,6 +702,8 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		adminMenuItem.setHTML("<img src=\"images/icon-gear.png\" width=\"16px\" height=\"16px\" alt=\"Admin\">");
 
+		final MenuBar appVetMenuBar = new MenuBar(false);
+
 		// TODO REMOVE FOR TESTING ONLY
 		//appVetMenuBar.addItem(adminMenuItem);
 
@@ -977,16 +721,339 @@ public class AppVetPanel extends DockLayoutPanel {
 			downloadAppButton.setVisible(false);
 		}
 
+		/* The appsListTable must be set to a height in pixels (not percent) and must be 
+		 * adjusted during run-time using the resizeComponent() method.
+		 */
+		appsListTable = new AppsListPagingDataGrid<AppInfoGwt>();
+		appsListTable.pager.setHeight("");
+		appsListTable.dataGrid
+		.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
+		appsListTable.dataGrid.setFocus(false);
+		appsListTable.setPageSize(configInfo.getNumRowsAppsList());
+		appsListTable.dataGrid.setStyleName("dataGrid");
+		appsListTable.dataGrid.setSize("100%", "");
+		appsListTable.setDataList(initialApps.apps);
+		appsListTable.setSize("100%", "200px");
+		appsListTable.dataGrid.setSelectionModel(appSelectionModel);
+
+
+
+		SimplePanel southPanel = new SimplePanel();
+		southPanel.setSize("100%", "");
+
+		HorizontalPanel horizontalPanel_2 = new HorizontalPanel();
+		horizontalPanel_2
+		.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_2
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		southPanel.setWidget(horizontalPanel_2);
+		horizontalPanel_2.setSize("100%", "");
+
+		Image nistLogo = new Image("images/nist_logo_darkgrey.png");
+		nistLogo.setAltText("NIST logo");
+		// nistLogo.setTitle("NIST logo");
+		horizontalPanel_2.add(nistLogo);
+		horizontalPanel_2.setCellVerticalAlignment(nistLogo,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_2.setCellHorizontalAlignment(nistLogo,
+				HasHorizontalAlignment.ALIGN_RIGHT);
+		nistLogo.setSize("50px", "13px");
+		if ((initialApps != null) && (initialApps.apps.size() > 0)) {
+			appSelectionModel.setSelected(initialApps.apps.get(0), true);
+		} else {
+			logButton.setEnabled(false);
+			uploadReportButton.setEnabled(false);
+			deleteButton.setEnabled(false);
+			downloadReportsButton.setEnabled(false);
+			downloadAppButton.setEnabled(false);
+		}
+
+		pollServer(userName);
+
+		SimplePanel northPanel = new SimplePanel();
+		addNorth(northPanel, NORTH_PANEL_HEIGHT);
+		northPanel.setHeight("");
+		final VerticalPanel northAppVetPanel = new VerticalPanel();
+		northPanel.setWidget(northAppVetPanel);
+		northAppVetPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		northAppVetPanel
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		northAppVetPanel.setSize("100%", "");
+		final HorizontalPanel horizontalPanel_5 = new HorizontalPanel();
+		horizontalPanel_5.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		horizontalPanel_5
+		.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_5.setStyleName("mainBanner");
+		northAppVetPanel.add(horizontalPanel_5);
+		northAppVetPanel.setCellVerticalAlignment(horizontalPanel_5,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_5.setSize("100%", "");
+		northAppVetPanel.setCellWidth(horizontalPanel_5, "100%");
+
+		Image image = new Image("images/appvet_logo2.png");
+		image.setAltText("AppVet");
+		horizontalPanel_5.add(image);
+		image.setWidth("200px");
+		horizontalPanel_5.setCellVerticalAlignment(image, HasVerticalAlignment.ALIGN_MIDDLE);
+		final HorizontalPanel horizontalPanel_6 = new HorizontalPanel();
+		horizontalPanel_6
+		.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_5.add(horizontalPanel_6);
+		horizontalPanel_6.setWidth("");
+		horizontalPanel_5.setCellWidth(horizontalPanel_6, "100%");
+		horizontalPanel_5.setCellHorizontalAlignment(horizontalPanel_6,
+				HasHorizontalAlignment.ALIGN_CENTER);
+		horizontalPanel_5.setCellVerticalAlignment(horizontalPanel_6,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		searchTextBox = new TextBox();
+		searchTextBox.setText("Search");
+		searchTextBox.setStyleName("searchTextBox");
+		searchTextBox.setTitle("Search by app ID, name, release kit, etc.");
+		searchTextBox.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				searchTextBox.setText("");
+			}
+		});
+		searchTextBox.addKeyPressHandler(new KeyPressHandler() {
+			@Override
+			public void onKeyPress(KeyPressEvent event_) {
+				final boolean enterPressed = KeyCodes.KEY_ENTER == event_
+						.getNativeEvent().getKeyCode();
+				final String searchString = searchTextBox.getText();
+				if (enterPressed) {
+					final int numFound = search();
+					if (numFound > 0) {
+						final SafeHtmlBuilder sb = new SafeHtmlBuilder();
+						sb.appendHtmlConstant("<h3>Found " + numFound + " results for \"" + searchString + "\"</h3>");						
+						appsLabelHtml.setHTML(sb.toSafeHtml());
+					}
+				}
+			}
+		});
+		searchTextBox.setSize("240px", "15px");
+		horizontalPanel_6.add(searchTextBox);
+		horizontalPanel_6.setCellVerticalAlignment(searchTextBox,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		final PushButton searchButton = new PushButton("Search");
+		searchButton.setStyleName("searchButton");
+		searchButton.setTitle("Search by app ID, name, release kit, etc.");
+		searchButton.setSize("", "");
+		searchButton
+		.setHTML("<img width=\"18px\" height=\"18px\" src=\"images/icon-search.png\" alt=\"search\" />");
+		searchButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				final String searchString = searchTextBox.getText();
+				final int numFound = search();
+				if (numFound > 0) {
+					final SafeHtmlBuilder sb = new SafeHtmlBuilder();
+					sb.appendHtmlConstant("<h3>Found " + numFound + " results for \"" + searchString + "\"</h3>");						
+					appsLabelHtml.setHTML(sb.toSafeHtml());
+				}
+			}
+		});
+		horizontalPanel_6.add(searchButton);
+		horizontalPanel_6.setCellHorizontalAlignment(searchButton,
+				HasHorizontalAlignment.ALIGN_CENTER);
+		horizontalPanel_6.setCellVerticalAlignment(searchButton,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+
+		HorizontalPanel horizontalPanel_4 = new HorizontalPanel();
+		horizontalPanel_4.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_4.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+		horizontalPanel_5.add(horizontalPanel_4);
+		horizontalPanel_5.setCellVerticalAlignment(horizontalPanel_4, HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_5.setCellHorizontalAlignment(horizontalPanel_4, HasHorizontalAlignment.ALIGN_RIGHT);
+
+		Roles.getMenubarRole().setTabindexExtraAttribute(appVetMenuBar.getElement(), -1);
+		horizontalPanel_4.add(appVetMenuBar);
+		horizontalPanel_4.setCellVerticalAlignment(appVetMenuBar, HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_4.setCellHorizontalAlignment(appVetMenuBar, HasHorizontalAlignment.ALIGN_RIGHT);
+		appVetMenuBar.setStyleName("gwt-MenuBar");
+		appVetMenuBar.setAutoOpen(false);
+		appVetMenuBar.setSize("250px", "");
+		appVetMenuBar.setAnimationEnabled(false);
+		appVetMenuBar.setFocusOnHoverEnabled(false);
+
+
+		final MenuBar userMenuBar = new MenuBar(true);
+		userMenuBar.setStyleName("userMenuBar");
+		userMenuBar.setFocusOnHoverEnabled(false);
+		// Set tab-able for 508 compliance
+		Roles.getMenubarRole().setTabindexExtraAttribute(userMenuBar.getElement(), -1);
+
+		userMenuItem = new MenuItem("User", true,
+				userMenuBar);
+		userMenuItem.setStyleName("userMenuItem");
+		userMenuItem.setTitle("User Preferences");
+		userMenuItem.setHTML("<img src=\"images/icon-user.png\" width=\"16px\" height=\"16px\" alt=\"User Preferences\">");
+		userMenuBar.setHeight("");
+		// Set tab-able for 508 compliance
+		Roles.getMenuitemRole().setTabindexExtraAttribute(userMenuItem.getElement(), 0);
+
+		final MenuItem accountSettingsMenuItem = new MenuItem(
+				"Account Settings", false, new Command() {
+					@Override
+					public void execute() {
+						openUserAccount(configInfo);
+					}
+				});
+		accountSettingsMenuItem.setStyleName("userSubMenuItem");
+		// Set tab-able for 508 compliance
+		Roles.getMenuitemRole().setTabindexExtraAttribute(accountSettingsMenuItem.getElement(), 0);
+		userMenuBar.addItem(accountSettingsMenuItem);
+
+		final MenuItem toolCredentialsMenuItem = new MenuItem(
+				"Tool Credentials", false, new Command() {
+					@Override
+					public void execute() {
+						openToolCredentials(configInfo);
+					}
+				});
+		toolCredentialsMenuItem.setStyleName("userSubMenuItem");
+		// Set tab-able for 508 compliance
+		Roles.getMenuitemRole().setTabindexExtraAttribute(toolCredentialsMenuItem.getElement(), 0);
+
+		userMenuBar.addItem(toolCredentialsMenuItem);
+		accountSettingsMenuItem.setHeight("");
+
+		final MenuItem myAppsMenuItem = new MenuItem("My Apps", false,
+				new Command() {
+			@Override
+			public void execute() {
+				searchTextBox.setText(userInfo.getUserName());
+				final int numFound = search();
+				if (numFound > 0) {
+					final SafeHtmlBuilder sb = new SafeHtmlBuilder();
+					sb.appendHtmlConstant("<h3>My Apps</h3>");						
+					appsLabelHtml.setHTML(sb.toSafeHtml());
+				}
+			}
+		});
+		myAppsMenuItem.setStyleName("userSubMenuItem");
+		// Set tab-able for 508 compliance
+		Roles.getMenuitemRole().setTabindexExtraAttribute(myAppsMenuItem.getElement(), 0);
+		userMenuBar.addItem(myAppsMenuItem);
+		myAppsMenuItem.setHeight("");
+
+		final MenuItemSeparator separator = new MenuItemSeparator();
+		userMenuBar.addSeparator(separator);
+		separator.setSize("100%", "1px");
+		final MenuItem logoutMenuItem = new MenuItem("Logout", false,
+				new Command() {
+			@Override
+			public void execute() {
+				removeSession(false);
+			}
+		});
+		logoutMenuItem.setStyleName("userSubMenuItem");
+		// Set tab-able for 508 compliance
+		Roles.getMenuitemRole().setTabindexExtraAttribute(logoutMenuItem.getElement(), 0);
+		userMenuBar.addItem(logoutMenuItem);
+		logoutMenuItem.setHeight("");
+
+		appVetMenuBar.addItem(userMenuItem);
+		userMenuItem.setHeight("");
+
+
+		final MenuBar helpMenuBar = new MenuBar(true);
+		helpMenuBar.setStyleName("helpMenuBar");
+		// Set tab-able for 508 compliance
+		Roles.getMenubarRole().setTabindexExtraAttribute(helpMenuBar.getElement(), -1);
+		helpMenuBar.setFocusOnHoverEnabled(false);
+
+		final MenuItem helpMenuItem = new MenuItem("Help", true, helpMenuBar);
+		helpMenuItem.setTitle("Help");
+		helpMenuItem.setHTML("<img src=\"images/icon-white-question-mark.png\"  width=\"16px\" height=\"16px\" alt=\"Settings\">");
+		helpMenuItem.setStyleName("helpMenuItem");
+		helpMenuBar.setHeight("");
+		// Set tab-able for 508 compliance
+		Roles.getMenuitemRole().setTabindexExtraAttribute(helpMenuItem.getElement(), 0);
+
+		final MenuItem aboutMenuItem = new MenuItem("About", false,
+				new Command() {
+			@Override
+			public void execute() {
+				aboutDialogBox = new AboutDialogBox(configInfo
+						.getAppVetVersion());
+				aboutDialogBox.setText("About");
+				aboutDialogBox.center();
+				aboutDialogBox.closeButton.setFocus(true);
+				aboutDialogBox.closeButton
+				.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						killDialogBox(aboutDialogBox);
+					}
+				});
+			}
+		});
+		aboutMenuItem.setStyleName("helpSubMenuItem");
+		// Set tab-able for 508 compliance
+		Roles.getMenuitemRole().setTabindexExtraAttribute(aboutMenuItem.getElement(), 0);
+
+		final MenuItem documentationMenuItem = new MenuItem("Documentation",
+				false, new Command() {
+			@Override
+			public void execute() {
+				Window.open(documentationURL, "_blank", null);
+			}
+		});
+		documentationMenuItem.setStyleName("helpSubMenuItem");
+		// Set tab-able for 508 compliance
+		Roles.getMenuitemRole().setTabindexExtraAttribute(documentationMenuItem.getElement(), 0);
+
+		helpMenuBar.addItem(documentationMenuItem);
+		documentationMenuItem.setHeight("");
+
+		appVetMenuBar.addItem(helpMenuItem);
+		helpMenuItem.setHeight("");
+		helpMenuBar.addItem(aboutMenuItem);
+		aboutMenuItem.setHeight("");
+
+		final HorizontalPanel horizontalPanel_3 = new HorizontalPanel();
+		horizontalPanel_3.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_3.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		northAppVetPanel.add(horizontalPanel_3);
+		northAppVetPanel.setCellVerticalAlignment(horizontalPanel_3,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		northAppVetPanel.setCellHorizontalAlignment(horizontalPanel_3,
+				HasHorizontalAlignment.ALIGN_CENTER);
+		horizontalPanel_3.setSize("100%", "");
+		northAppVetPanel.setCellWidth(horizontalPanel_3, "100%");
+
+		horizontalPanel_3.add(statusMessageHtml);
+		horizontalPanel_3.setCellHeight(statusMessageHtml, "30px");
+		horizontalPanel_3.setCellVerticalAlignment(statusMessageHtml,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_3.setCellHorizontalAlignment(statusMessageHtml,
+				HasHorizontalAlignment.ALIGN_CENTER);
+		horizontalPanel_3.setCellWidth(statusMessageHtml, "100%");
+		statusMessageHtml.setStyleName("statusMessage");
+		statusMessageHtml
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		statusMessageHtml.setSize("90%", "20px");
+
+		centerPanel = new SimplePanel();
+		add(centerPanel);
+		centerPanel.setHeight("");
+
 		final HorizontalSplitPanel centerAppVetSplitPanel = new HorizontalSplitPanel();
+		centerPanel.setWidget(centerAppVetSplitPanel);
 		// centerAppVetSplitPanel.setTitle("AppVet split pane");
 		centerAppVetSplitPanel.setSplitPosition("65%");
-		centerAppVetSplitPanel.setSize("100%", "");
+		centerAppVetSplitPanel.setSize("100%", "100%");
 		final SimplePanel leftCenterPanel = new SimplePanel();
 		// leftCenterPanel.setTitle("AppVet apps list pane");
 
 		centerAppVetSplitPanel.setLeftWidget(leftCenterPanel);
-		leftCenterPanel.setSize("100%", "");
+		leftCenterPanel.setSize("100%", "232px");
 		final DockPanel dockPanel_1 = new DockPanel();
+		dockPanel_1.add(appsListTable, DockPanel.CENTER);
+		dockPanel_1.setCellWidth(appsListTable, "100%");
+		dockPanel_1.setCellHorizontalAlignment(appsListTable,
+				HasHorizontalAlignment.ALIGN_CENTER);
 		dockPanel_1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		dockPanel_1.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		leftCenterPanel.setWidget(dockPanel_1);
@@ -997,15 +1064,11 @@ public class AppVetPanel extends DockLayoutPanel {
 		centerAppVetSplitPanel.setRightWidget(rightCenterPanel);
 		rightCenterPanel.setSize("", "");
 		final VerticalPanel appInfoVerticalPanel = new VerticalPanel();
-		appInfoVerticalPanel
-		.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		rightCenterPanel.setWidget(appInfoVerticalPanel);
 		appInfoVerticalPanel.setSize("", "");
 		final HorizontalPanel appInfoPanel = new HorizontalPanel();
-		appInfoPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		appInfoPanel.setStyleName("iconPanel");
 		appInfoVerticalPanel.add(appInfoPanel);
-		appInfoVerticalPanel.setCellVerticalAlignment(appInfoPanel, HasVerticalAlignment.ALIGN_MIDDLE);
 		appInfoVerticalPanel.setCellWidth(appInfoPanel, "100%");
 		appInfoPanel.setSize("", "");
 		appInfoIcon = new Image("");
@@ -1014,14 +1077,14 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoPanel.add(appInfoIcon);
 		appInfoPanel.setCellVerticalAlignment(appInfoIcon,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		appInfoIcon.setSize("75px", "75px");
+		appInfoIcon.setSize("78px", "78px");
 		final VerticalPanel verticalPanel = new VerticalPanel();
 		appInfoPanel.add(verticalPanel);
-		appInfoName = new HTML("", true);
+		appInfoName = new HTML("", false);
 		appInfoName.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		verticalPanel.add(appInfoName);
 		appInfoName.setStyleName("appInfoName");
-		appInfoName.setWidth("");
+		appInfoName.setSize("", "33px");
 		appInfoPanel.setCellVerticalAlignment(appInfoName,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appInfoPackage = new HTML("", true);
@@ -1133,26 +1196,9 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel.setCellHorizontalAlignment(submitButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		submitButton.setSize("100px", "25px");
-		appsListTable = new AppsListPagingDataGrid<AppInfoGwt>();
-		appsListTable.dataGrid
-		.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
-		appsListTable.dataGrid.setFocus(false);
-		appsListTable.setPageSize(configInfo.getNumRowsAppsList());
-		appsListTable.dataGrid.setStyleName("dataGrid");
-		dockPanel_1.add(appsListTable, DockPanel.CENTER);
-		dockPanel_1.setCellWidth(appsListTable, "100%");
-		dockPanel_1.setCellHorizontalAlignment(appsListTable,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		dockPanel_1.setCellVerticalAlignment(appsListTable,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		appsListTable.dataGrid.setSize("100%", "");
-		appsListTable.setDataList(initialApps.apps);
-		appsListTable.setSize("100%", "");
-		appsListTable.dataGrid.setSelectionModel(appSelectionModel);
 
 		HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
 		appInfoVerticalPanel.add(horizontalPanel_1);
-		appInfoVerticalPanel.setCellVerticalAlignment(horizontalPanel_1, HasVerticalAlignment.ALIGN_MIDDLE);
 
 		Label label = new Label("");
 		horizontalPanel_1.add(label);
@@ -1323,6 +1369,15 @@ public class AppVetPanel extends DockLayoutPanel {
 		.setHTML("<img width=\"82px\" src=\"images/icon-download-app.png\" alt=\"Download App\" />");
 		downloadAppButton.setTitle("Download App");
 		downloadAppButton.setSize("82px", "24px");
+		toolResultsHtml = new HTML("", true);
+		
+				//TODO
+				//		appInfoVerticalPanel.setCellWidth(toolResultsHtml, "100%");
+				toolResultsHtml.setSize("100%", "");
+				toolResultsHtml
+				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+				toolResultsHtml.setStyleName("toolResultsHtml");
+				appInfoVerticalPanel.add(toolResultsHtml);
 		downloadAppButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1347,47 +1402,10 @@ public class AppVetPanel extends DockLayoutPanel {
 		logButton.setVisible(true);
 
 		uploadReportButton.setVisible(true);
-		toolResultsHtml = new HTML("", true);
-		appInfoVerticalPanel.add(toolResultsHtml);
-		appInfoVerticalPanel.setCellWidth(toolResultsHtml, "100%");
-		toolResultsHtml.setWidth("100%");
-		toolResultsHtml
-		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		toolResultsHtml.setStyleName("toolResultsHtml");
-		add(centerAppVetSplitPanel);
 
-		SimplePanel simplePanel = new SimplePanel();
-		addSouth(simplePanel, 21.0);
-		simplePanel.setSize("100%", "");
+		addSouth(southPanel, SOUTH_PANEL_HEIGHT);
 
-		HorizontalPanel horizontalPanel_2 = new HorizontalPanel();
-		horizontalPanel_2
-		.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_2
-		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		simplePanel.setWidget(horizontalPanel_2);
-		horizontalPanel_2.setSize("100%", "100%");
 
-		Image nistLogo = new Image("images/nist_logo_darkgrey.png");
-		nistLogo.setAltText("NIST logo");
-		// nistLogo.setTitle("NIST logo");
-		horizontalPanel_2.add(nistLogo);
-		horizontalPanel_2.setCellVerticalAlignment(nistLogo,
-				HasVerticalAlignment.ALIGN_BOTTOM);
-		horizontalPanel_2.setCellHorizontalAlignment(nistLogo,
-				HasHorizontalAlignment.ALIGN_RIGHT);
-		nistLogo.setSize("50px", "13px");
-		if ((initialApps != null) && (initialApps.apps.size() > 0)) {
-			appSelectionModel.setSelected(initialApps.apps.get(0), true);
-		} else {
-			logButton.setEnabled(false);
-			uploadReportButton.setEnabled(false);
-			deleteButton.setEnabled(false);
-			downloadReportsButton.setEnabled(false);
-			downloadAppButton.setEnabled(false);
-		}
-
-		pollServer(userName);
 		scheduleResize();
 
 		// Note that SSO users can manually refresh the page but non-SSO users
@@ -1396,45 +1414,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		if (!ssoActive) {
 			showDontRefreshWarning();
 		}
-	}
-
-	public void setAria(MenuItem menuItem) {
-
-		//Roles.getHeadingRole().setTabindexExtraAttribute(menuItem.getElement(), 0);
-
-		/*		final NodeList<Element> tdElems = menuItem.getElement().getElementsByTagName("Steve");
-		if (tdElems.getLength() == 0) {
-			log.info("menu item is empty");
-		} else {
-			log.info("menu item is: " + tdElems.getLength());
-			Element e = tdElems.getItem(0);
-			log.info("Menu item: " + e.getNodeName());
-			log.info("Inner: " + e.getInnerHTML());
-
-		}*/
-		//for (int i = 0; i < tdElems.getLength(); i++) {
-		//	final String altText;
-		//			if (i == 0)
-		//				altText = "First page";
-		//			else if (i == 1)
-		//				altText = "Previous page";
-		//			else if (i == 2)
-		//				altText = "Next page";
-		//			else if (i == 3)
-		//				altText = "Last page";
-		//			else
-		//				continue;
-
-		//Element e = tdElems.getItem(i);
-
-		//log.info("Menu item: " + e.getNodeName());
-
-		// Set ALT attribute
-		//e.setAttribute("ALT", altText);
-
-		// Set title
-		//e.setTitle(altText);			
-		//}
 	}
 
 	public void removeSession(final boolean sessionExpired) {
@@ -1949,7 +1928,9 @@ public class AppVetPanel extends DockLayoutPanel {
 		warningTimer.schedule(1000);
 	}
 
-	public void resizeComponents() {
+	/** This method resizes the center panel and appsListTable.
+	 */
+	public void adjustComponentSizes() {
 		/**
 		 * The following variable is the main variable to adjust when changing
 		 * the size of the org_logo.png image. The larger this image, the larger
@@ -1957,18 +1938,18 @@ public class AppVetPanel extends DockLayoutPanel {
 		 * differently on Firefox, Chrome and IE, with Firefox being the most
 		 * problematic, so check all three browsers!
 		 */
-		final int MARGIN_HEIGHT = 75;
-		final int appVetPanelHeight = getOffsetHeight();
-
-		// First adjust apps list table
-		final int appsListButtonPanelHeight = appsListButtonPanel
-				.getOffsetHeight();
-
-		final int appsListTableHeight = appVetPanelHeight
-				- (int) NORTH_PANEL_HEIGHT - (int) SOUTH_PANEL_HEIGHT
-				- appsListButtonPanelHeight - MARGIN_HEIGHT;
-
-		appsListTable.setSize("100%", appsListTableHeight + "px");
+		final int appVetPanelHeight = this.getOffsetHeight(); // Total height including decoration and padding, but not margin
+		
+		// Set center panel height
+		final int MARGIN_HEIGHT = 0;
+		final int centerPanelHeight = appVetPanelHeight - (int) NORTH_PANEL_HEIGHT - (int) SOUTH_PANEL_HEIGHT - MARGIN_HEIGHT;
+		centerPanel.setHeight(centerPanelHeight + "px");
+		
+		// Set appsListTable height inside center panel
+		int PAGER_HEIGHT = 80;
+		final int appsListTableHeight = centerPanelHeight - PAGER_HEIGHT;
+		appsListTable.setHeight(appsListTableHeight + "px");
+		
 		appsListTable.dataGrid.redraw();
 	}
 
@@ -1977,7 +1958,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		final Timer resizeTimer = new Timer() {
 			@Override
 			public void run() {
-				resizeComponents();
+				adjustComponentSizes();
 			}
 		};
 		resizeTimer.schedule(250);
@@ -2090,12 +2071,12 @@ public class AppVetPanel extends DockLayoutPanel {
 
 			@Override
 			public void onSuccess(SystemAlert systemAlert) {
-				
+
 				if (systemAlert != null) {
 					// log.info("system alert is not null. Setting message: " +
 					// systemAlert.message);	
 					String systemMessage = systemAlert.message;
-					
+
 					if (systemAlert.type == SystemAlertType.NORMAL) {
 						statusMessageHtml.setHTML("<img width=\"18px\" height=\"18px\" src=\"images/icon-metadata.png\" alt=\"Message\" /> " + systemMessage);						
 					} else if (systemAlert.type == SystemAlertType.WARNING) {
@@ -2103,7 +2084,7 @@ public class AppVetPanel extends DockLayoutPanel {
 					} else if (systemAlert.type == SystemAlertType.CRITICAL) {
 						statusMessageHtml.setHTML("<img width=\"18px\" height=\"18px\" src=\"images/icon-error.png\" alt=\"Error\" /> " + systemMessage);						
 					}
-					
+
 				} else {
 					// log.info("system alert is null. Setting message to ''");
 					statusMessageHtml.setHTML("");						

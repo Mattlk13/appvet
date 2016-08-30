@@ -380,13 +380,13 @@ box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 
 .appInfoName {
 	color: darkslategray;
-	margin-left: 10px;
+	margin-left: 7px;
 	font-weight: bold font-size: 24px;
 }
 
 .appInfoVersion {
 	color: darkslategray;
-	margin-left: 10px;
+	margin-left: 7px;
 	font-size: 14px;
 }
 
@@ -420,7 +420,6 @@ box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 .iconPanel {
 	color: darkslategray;
 	margin-top: 5px;
-	margin-bottom: 10px;
 }
 
 .resultsPanel {
@@ -556,6 +555,7 @@ box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 }
 
 .gwt-Image {
+	margin-top: 10px;
 	margin-right: 5px;
 	margin-left: 5px;
 }
@@ -793,55 +793,15 @@ box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 
 .
 {
-border-top
-:
- 
-px
- 
-solid
- 
-Background
-;
-
 	
-border-right
-:
- 
-px
- 
-solid
- 
-Maroon
-;
-
 	
-border-bottom
-:
- 
-px
- 
-solid
- 
-Maroon
-;
-
 	
-border-left
-:
- 
-px
- 
-solid
- 
-Maroon
-;
-
 	
-background-color
-:
- 
-White
-;
+	border-top: Background;
+	border-right: Maroon;
+	border-bottom: Maroon;
+	border-left: Maroon;
+	background-color: White;
 
 	
 	

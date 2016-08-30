@@ -19,6 +19,8 @@
  */
 package gov.nist.appvet.shared.backend;
 
+import gov.nist.appvet.properties.AppVetProperties;
+
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;

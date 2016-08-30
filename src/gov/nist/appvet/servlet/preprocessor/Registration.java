@@ -19,6 +19,7 @@
  */
 package gov.nist.appvet.servlet.preprocessor;
 
+import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.servlet.shared.Emailer;
 import gov.nist.appvet.servlet.shared.ErrorMessage;
 import gov.nist.appvet.shared.all.AppStatus;
@@ -26,7 +27,6 @@ import gov.nist.appvet.shared.all.DeviceOS;
 import gov.nist.appvet.shared.all.UserInfo;
 import gov.nist.appvet.shared.backend.AppInfo;
 import gov.nist.appvet.shared.backend.AppStatusManager;
-import gov.nist.appvet.shared.backend.AppVetProperties;
 import gov.nist.appvet.shared.backend.Database;
 import gov.nist.appvet.shared.backend.FileUtil;
 import gov.nist.appvet.shared.backend.Logger;

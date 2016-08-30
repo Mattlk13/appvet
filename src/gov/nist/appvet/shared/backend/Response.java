@@ -1,5 +1,7 @@
 package gov.nist.appvet.shared.backend;
 
+import gov.nist.appvet.properties.AppVetProperties;
+
 
 /**
  * This class defines an HTTP response message received by AppVet from a tool 
