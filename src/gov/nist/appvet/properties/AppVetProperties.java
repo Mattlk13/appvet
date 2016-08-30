@@ -37,7 +37,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-
 public class AppVetProperties {
 	public static boolean error = false;
 	/** AppVet Github release version number. */
