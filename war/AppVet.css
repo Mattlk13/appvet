@@ -61,7 +61,7 @@ h3 {
 .statusMessage {
    vertical-align: top;
 	color: black;
-	font: sans;
+	font: arial;
 	font-weight: bold;
 }
 
@@ -555,7 +555,6 @@ box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 }
 
 .gwt-Image {
-	margin-top: 10px;
 	margin-right: 5px;
 	margin-left: 5px;
 }
