@@ -720,7 +720,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 		
 		downloadAppButton = new PushButton("Download App");
-		downloadAppButton.setHTML("<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/download-black.png\" alt=\"Download App\" /> <span style=\"\">App</span></div>");
+		downloadAppButton.setHTML("<div><img style=\"vertical-align:middle\" width=\"16px\" height=\"16px\" src=\"images/download-black.png\" alt=\"Download App\" /> <span style=\"vertical-align:middle\">APP</span></div>");
 
 		if (!configInfo.isKeepApps()) {
 			// Hide download app button if KEEP_APPS is false
@@ -1148,7 +1148,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		horizontalPanel.setSize("", "");
 		final PushButton submitButton = new PushButton("UPLOAD APP");
-		submitButton.setHTML("<div><img style=\"vertical-align:middle\" width=\"16px\" height=\"16px\" src=\"images/upload-white.png\" alt=\"Upload APP\"/> <span style=\"\">UPLOAD APP\r\n</span></div>");
+		submitButton.setHTML("<div><img style=\"vertical-align:middle\" width=\"16px\" height=\"16px\" src=\"images/upload-white.png\" alt=\"Upload APP\"/> <span style=\"vertical-align:middle\">UPLOAD APP\r\n</span></div>");
 		submitButton.setStyleName("greenButton shadow");
 		submitButton.setTitle("Upload app");
 
@@ -1230,7 +1230,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel_1.setCellVerticalAlignment(label, HasVerticalAlignment.ALIGN_MIDDLE);
 		label.setSize("0", "0");
 		uploadReportButton = new PushButton("Upload Report");
-		uploadReportButton.setHTML("<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/upload-black.png\" alt=\"Upload Report\" /> <span style=\"\">REPORT\r\n</span></div>");
+		uploadReportButton.setHTML("<div><img style=\"vertical-align:middle\" width=\"16px\" height=\"16px\" src=\"images/upload-black.png\" alt=\"Upload Report\" /> <span style=\"vertical-align:middle\">REPORT\r\n</span></div>");
 		uploadReportButton.setStyleName("grayButton shadow");
 		horizontalPanel_1.add(uploadReportButton);
 		horizontalPanel_1.setCellVerticalAlignment(uploadReportButton, HasVerticalAlignment.ALIGN_MIDDLE);
@@ -1273,7 +1273,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		uploadReportButton.setSize("82px", "20px");
 		logButton = new PushButton("View Log");
-		logButton.setHTML("<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/magnifying-glass-black.png\" alt=\"Upload Report\" /> <span style=\"\">LOG\r\n</span></div>");
+		logButton.setHTML("<div><img style=\"vertical-align:middle\" width=\"16px\" height=\"16px\" src=\"images/magnifying-glass-black.png\" alt=\"Upload Report\" /> <span style=\"vertical-align:middle\">LOG\r\n</span></div>");
 		logButton.setStyleName("grayButton shadow");
 		horizontalPanel_1.add(logButton);
 		horizontalPanel_1.setCellVerticalAlignment(logButton, HasVerticalAlignment.ALIGN_MIDDLE);
@@ -1346,7 +1346,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		deleteButton.setSize("82px", "20px");
 		downloadReportsButton = new PushButton("Download Reports");
-		downloadReportsButton.setHTML("<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/download-black.png\" alt=\"Download Reports\" /> <span style=\"\">Reports</span></div>");
+		downloadReportsButton.setHTML("<div><img style=\"vertical-align:middle\" width=\"16px\" height=\"16px\" src=\"images/download-black.png\" alt=\"Download Reports\" /> <span style=\"vertical-align:middle\">REPORTS</span></div>");
 		downloadReportsButton.setStyleName("grayButton shadow");
 		horizontalPanel_1.add(downloadReportsButton);
 		horizontalPanel_1.setCellVerticalAlignment(downloadReportsButton, HasVerticalAlignment.ALIGN_MIDDLE);
