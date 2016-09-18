@@ -23,7 +23,6 @@ import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.UserInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -35,7 +34,6 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -45,22 +43,22 @@ import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.RadioButton;
-import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.SimpleCheckBox;
 
 /**
  * @author steveq@nist.gov
  */
-public class UserAcctAdminDialogBox extends DialogBox {
-	private Logger log = Logger.getLogger("UserAcctAdminDialogBox");
+public class AdminUserAcctDialogBox extends DialogBox {
+	private Logger log = Logger.getLogger("AdminUserAcctDialogBox");
 	public PushButton cancelButton = null;
 	public PushButton submitButton = null;
 	public TextBox lastNameTextBox = null;
 	public TextBox firstNameTextBox = null;
 	public TextBox userIdTextBox = null;
+	public SimpleCheckBox changePasswordCheckBox = null;
 	public PasswordTextBox password1TextBox = null;
 	public PasswordTextBox password2TextBox = null;
 	public TextBox emailTextBox = null;
-	public SimplePanel orgUnitPanel = null;
 	public boolean newUser = false;
 	public Label passwordLabel = null;
 	public Label passwordAgainLabel = null;
@@ -71,26 +69,26 @@ public class UserAcctAdminDialogBox extends DialogBox {
 	public RadioButton toolRadioButton = null;
 	public RadioButton analystRadioButton = null;
 	public RadioButton userRadioButton = null;
-	public SuggestBox level1SuggestBox = null;
-	public SuggestBox level2SuggestBox = null;
-	public SuggestBox level3SuggestBox = null;
-	public SuggestBox level4SuggestBox = null;
-	public List<String> hierarchies = null;
+	public PushButton editLevelsButton = null;
+	public OrgLevelsDialogBox orgLevelsDialogBox = null;
+	public TextBox orgMembershipTextBox = null;
+	public List<String> allUsersOrgMemberships = null;
 	public ConfigInfoGwt confInfo = null;
 
 	@SuppressWarnings("deprecation")
-	public UserAcctAdminDialogBox(final ConfigInfoGwt configInfo,
-			final UserInfo userInfo, boolean useSSO, List<String> orgHierarchies) {
+	public AdminUserAcctDialogBox(final ConfigInfoGwt configInfo,
+			final UserInfo selectedUser, boolean useSSO, List<String> allUsersOrgLevels) {
+		log.info("TRACY 1");
 		confInfo = configInfo;
-		if (userInfo == null) {
+		if (selectedUser == null) {
 			newUser = true;
 		}
 
 		// Get orgs hierarchies
-		if (orgHierarchies == null) {
+		if (allUsersOrgLevels == null) {
 			log.warning("org hierarchies is null in acct");
 		} else {
-			hierarchies = orgHierarchies;
+			allUsersOrgMemberships = allUsersOrgLevels;
 		}
 
 		setWidth("386px");
@@ -113,7 +111,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_1.setCellVerticalAlignment(lblNewLabel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		lblNewLabel.setWidth("170px");
+		lblNewLabel.setWidth("115px");
 		horizontalPanel_1.setCellWidth(lblNewLabel, "50%");
 		lblNewLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		lastNameTextBox = new TextBox();
@@ -125,7 +123,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		horizontalPanel_1.setCellVerticalAlignment(lastNameTextBox,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_1.setCellWidth(lastNameTextBox, "50%");
-		lastNameTextBox.setWidth("180px");
+		lastNameTextBox.setWidth("234px");
 		final HorizontalPanel horizontalPanel_2 = new HorizontalPanel();
 		verticalPanel_1.add(horizontalPanel_2);
 		horizontalPanel_2
@@ -134,7 +132,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		final Label lblNewLabel_1 = new Label("First Name: ");
 		horizontalPanel_2.add(lblNewLabel_1);
-		lblNewLabel_1.setWidth("170px");
+		lblNewLabel_1.setWidth("115px");
 		horizontalPanel_2.setCellWidth(lblNewLabel_1, "50%");
 		horizontalPanel_2.setCellVerticalAlignment(lblNewLabel_1,
 				HasVerticalAlignment.ALIGN_MIDDLE);
@@ -150,7 +148,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_2.setCellHorizontalAlignment(firstNameTextBox,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		firstNameTextBox.setWidth("180px");
+		firstNameTextBox.setWidth("234px");
 		final HorizontalPanel horizontalPanel_3 = new HorizontalPanel();
 		verticalPanel_1.add(horizontalPanel_3);
 		horizontalPanel_3
@@ -159,7 +157,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		final Label lblUserId = new Label("User ID:");
 		horizontalPanel_3.add(lblUserId);
-		lblUserId.setWidth("170px");
+		lblUserId.setWidth("115px");
 		horizontalPanel_3.setCellVerticalAlignment(lblUserId,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_3.setCellHorizontalAlignment(lblUserId,
@@ -175,7 +173,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_3.setCellHorizontalAlignment(userIdTextBox,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		userIdTextBox.setWidth("180px");
+		userIdTextBox.setWidth("234px");
 
 		final HorizontalPanel horizontalPanel_7 = new HorizontalPanel();
 		verticalPanel_1.add(horizontalPanel_7);
@@ -185,11 +183,9 @@ public class UserAcctAdminDialogBox extends DialogBox {
 				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		final Label lblEmail = new Label("Email: ");
 		horizontalPanel_7.add(lblEmail);
-		lblEmail.setWidth("170px");
+		lblEmail.setWidth("115px");
 		horizontalPanel_7.setCellVerticalAlignment(lblEmail,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_7.setCellHorizontalAlignment(lblEmail,
-				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_7.setCellWidth(lblEmail, "50%");
 		lblEmail.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		emailTextBox = new TextBox();
@@ -201,7 +197,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		horizontalPanel_7.setCellHorizontalAlignment(emailTextBox,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_7.setCellWidth(emailTextBox, "50%");
-		emailTextBox.setWidth("180px");
+		emailTextBox.setWidth("234px");
 		final HorizontalPanel horizontalPanel_8 = new HorizontalPanel();
 		verticalPanel_1.add(horizontalPanel_8);
 		verticalPanel_1.setCellHorizontalAlignment(horizontalPanel_8,
@@ -227,10 +223,12 @@ public class UserAcctAdminDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		adminRadioButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
-				orgUnitPanel.setVisible(false);
+				editLevelsButton.setEnabled(false);
+				orgMembershipTextBox.setText("");
 			}
 		});
 		adminRadioButton.setWidth("140px");
+		log.info("TRACY 2");
 
 		toolRadioButton = new RadioButton("buttonGroup", "Tool");
 		horizontalPanel_8.add(toolRadioButton);
@@ -250,94 +248,148 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		horizontalPanel_8.add(userRadioButton);
 		userRadioButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
-				orgUnitPanel.setVisible(true);
+				editLevelsButton.setEnabled(true);
+				if (newUser) {
+					orgMembershipTextBox.setText("");
+				} else {
+					String orgMembershipLevels;
+					try {
+						orgMembershipLevels = Role.getOrgMembershipLevelsStr(selectedUser.getRoleAndOrgMembership());
+						orgMembershipTextBox.setText(orgMembershipLevels);
+					} catch (Exception e) {
+						log.severe(e.getMessage());
+					}
+				}
+
 			}
 		});
 
 		analystRadioButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
-				orgUnitPanel.setVisible(true);
+				editLevelsButton.setEnabled(true);
+				if (newUser) {
+					orgMembershipTextBox.setText("");
+				} else {
+					String orgMembershipLevels;
+					try {
+						orgMembershipLevels = Role.getOrgMembershipLevelsStr(selectedUser.getRoleAndOrgMembership());
+						orgMembershipTextBox.setText(orgMembershipLevels);
+					} catch (Exception e) {
+						log.severe(e.getMessage());
+					}
+				}
+
 			}
 		});
 		toolRadioButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
-				orgUnitPanel.setVisible(false);
+				editLevelsButton.setEnabled(false);
+				orgMembershipTextBox.setText("");
 			}
 		});
+		
+		HorizontalPanel horizontalPanel_14 = new HorizontalPanel();
+		verticalPanel_1.add(horizontalPanel_14);
+		
+		Label lblNewLabel_2 = new Label("Organization: ");
+		lblNewLabel_2.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		horizontalPanel_14.add(lblNewLabel_2);
+		lblNewLabel_2.setWidth("115px");
+		horizontalPanel_14.setCellWidth(lblNewLabel_2, "298px");
+		horizontalPanel_14.setCellVerticalAlignment(lblNewLabel_2, HasVerticalAlignment.ALIGN_MIDDLE);
+		
+		editLevelsButton = new PushButton("Edit");
+		editLevelsButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent arg0) {
+				String orgMembership = orgMembershipTextBox.getText();
+				if (newUser) {
+					orgLevelsDialogBox = new OrgLevelsDialogBox(configInfo, allUsersOrgMemberships, orgMembership);
+				} else {
+					orgLevelsDialogBox = new OrgLevelsDialogBox(configInfo, allUsersOrgMemberships, orgMembership);
+				}
+				orgLevelsDialogBox.setText("Organization Membership");
+				orgLevelsDialogBox.center();
+				
+				orgLevelsDialogBox.cancelButton
+				.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						killDialogBox(orgLevelsDialogBox);
+					}
+				});
+				
+				orgLevelsDialogBox.okButton
+				.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						int numLevels = orgLevelsDialogBox.listBox.getItemCount();
+						String levelsStr = "";
+						for (int i = 0; i < numLevels; i++) {
+							// Extract just the level name
+							String[] levelDisplay = orgLevelsDialogBox.listBox.getItemText(i).split(": ");
+							String levelName = levelDisplay[1];
+							
+							if (levelName != null) {
+								if (i > 0) {
+									levelsStr += ",";
+								}
+								levelsStr += levelName;
 
-		orgUnitPanel = new SimplePanel();
-		orgUnitPanel.setStyleName("usersDockPanel");
-		verticalPanel_1.add(orgUnitPanel);
+							} else if (levelName == null) {
+								break;
+							}
+						}
+						// Check if minimum number of levels were set:
+						String[] definedLevels = levelsStr.split(",");
+						if (definedLevels.length < configInfo.getMinOrgLevelsRequired()) {
+							showMessageDialog("AppVet Error", "Must specify all required levels", true);
+						} else {
+							orgMembershipTextBox.setText(levelsStr);
+							killDialogBox(orgLevelsDialogBox);	
+						}
 
-		VerticalPanel verticalPanel = new VerticalPanel();
-		orgUnitPanel.setWidget(verticalPanel);
-		verticalPanel.setSize("100%", "100%");
+					}
+				});
 
+			}
+		});
+		
+		orgMembershipTextBox = new TextBox();
+		orgMembershipTextBox.setReadOnly(true);
+		horizontalPanel_14.add(orgMembershipTextBox);
+		orgMembershipTextBox.setWidth("167");
+		editLevelsButton.setStyleName("grayButton shadow");
+		horizontalPanel_14.add(editLevelsButton);
+		horizontalPanel_14.setCellVerticalAlignment(editLevelsButton, HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel_14.setCellHorizontalAlignment(editLevelsButton, HasHorizontalAlignment.ALIGN_CENTER);
+		editLevelsButton.setSize("70px", "18px");
+		editLevelsButton.setEnabled(false);
+		
 		HorizontalPanel horizontalPanel_5 = new HorizontalPanel();
-		verticalPanel.add(horizontalPanel_5);
-
-		Label level1Label = new Label(configInfo.getOrgLevel1Name() + " (Required): ");
-		horizontalPanel_5.add(level1Label);
-		horizontalPanel_5.setCellVerticalAlignment(level1Label,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_5.setCellWidth(level1Label, "50%");
-		level1Label.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		level1Label.setWidth("170px");
-
-		// Note: GWT is limited in its ability to set suggestions after the
-		// SuggestBox is created. Since users will enter data in real-time,
-		// it is unknown what oracle values should be set in level2, level3, 
-		// and level4 SuggestBoxes. There, we simply set oracle values to 
-		// known hierarchy level names.
-		MultiWordSuggestOracle level1Oracle = getOracle(0);
-		level1SuggestBox = new SuggestBox(level1Oracle);
-		horizontalPanel_5.add(level1SuggestBox);
-		level1SuggestBox.setWidth("180px");
-
-		HorizontalPanel horizontalPanel_6 = new HorizontalPanel();
-		verticalPanel.add(horizontalPanel_6);
-
-		Label level2Label = new Label(configInfo.getOrgLevel2Name() + " (Required): ");
-		horizontalPanel_6.add(level2Label);
-		horizontalPanel_6.setCellVerticalAlignment(level2Label,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		level2Label.setWidth("170px");
-		level2Label.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-
-		MultiWordSuggestOracle level2Oracle = getOracle(1);
-		level2SuggestBox = new SuggestBox(level2Oracle);
-		horizontalPanel_6.add(level2SuggestBox);
-		level2SuggestBox.setWidth("180px");
-
-		HorizontalPanel horizontalPanel_9 = new HorizontalPanel();
-		verticalPanel.add(horizontalPanel_9);
-
-		Label level3Label = new Label(configInfo.getOrgLevel3Name() + ": ");
-		horizontalPanel_9.add(level3Label);
-		level3Label.setWidth("170px");
-		horizontalPanel_9.setCellVerticalAlignment(level3Label,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		level3Label.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-
-		MultiWordSuggestOracle level3Oracle = getOracle(2);
-		level3SuggestBox = new SuggestBox(level3Oracle);
-		horizontalPanel_9.add(level3SuggestBox);
-		level3SuggestBox.setWidth("180px");
-
-		HorizontalPanel horizontalPanel_12 = new HorizontalPanel();
-		verticalPanel.add(horizontalPanel_12);
-
-		Label level4Label = new Label(configInfo.getOrgLevel4Name() + ": ");
-		horizontalPanel_12.add(level4Label);
-		level4Label.setWidth("170px");
-		horizontalPanel_12.setCellVerticalAlignment(level4Label,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		level4Label.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-
-		MultiWordSuggestOracle level4Oracle = getOracle(3);
-		level4SuggestBox = new SuggestBox(level4Oracle);
-		horizontalPanel_12.add(level4SuggestBox);
-		level4SuggestBox.setWidth("180px");
+		horizontalPanel_5.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		verticalPanel_1.add(horizontalPanel_5);
+		verticalPanel_1.setCellVerticalAlignment(horizontalPanel_5, HasVerticalAlignment.ALIGN_MIDDLE);
+		
+		changePasswordCheckBox = new SimpleCheckBox();
+		changePasswordCheckBox.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent arg0) {
+				boolean changePassword = changePasswordCheckBox.isChecked();
+				if (changePassword) {
+					enableChangePassword(true);
+				} else {
+					enableChangePassword(false);
+				}
+			}
+		});
+		changePasswordCheckBox.setName("Change Password");
+		horizontalPanel_5.add(changePasswordCheckBox);
+		horizontalPanel_5.setCellVerticalAlignment(changePasswordCheckBox, HasVerticalAlignment.ALIGN_MIDDLE);
+		
+		Label lblNewLabel_3 = new Label("Change Password");
+		lblNewLabel_3.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		horizontalPanel_5.add(lblNewLabel_3);
+		horizontalPanel_5.setCellVerticalAlignment(lblNewLabel_3, HasVerticalAlignment.ALIGN_MIDDLE);
+		lblNewLabel_3.setWidth("345px");
 
 		final HorizontalPanel horizontalPanel_13 = new HorizontalPanel();
 		verticalPanel_1.add(horizontalPanel_13);
@@ -353,13 +405,13 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		horizontalPanel_13.add(passwordLabel);
 		horizontalPanel_13.setCellVerticalAlignment(passwordLabel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		passwordLabel.setWidth("170px");
+		passwordLabel.setWidth("115px");
 		password1TextBox = new PasswordTextBox();
 		horizontalPanel_13.add(password1TextBox);
 
 		password1TextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		password1TextBox.setAlignment(TextAlignment.LEFT);
-		password1TextBox.setSize("180px", "");
+		password1TextBox.setSize("234px", "");
 
 		final HorizontalPanel horizontalPanel_4 = new HorizontalPanel();
 		verticalPanel_1.add(horizontalPanel_4);
@@ -373,71 +425,18 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		passwordLabel3
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		horizontalPanel_4.add(passwordLabel3);
-		passwordLabel3.setWidth("170px");
+		passwordLabel3.setWidth("115px");
 		password2TextBox = new PasswordTextBox();
 		horizontalPanel_4.add(password2TextBox);
 
 		password2TextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		password2TextBox.setAlignment(TextAlignment.LEFT);
-		password2TextBox.setSize("180px", "");
+		password2TextBox.setSize("234px", "");
 
 		passwordAgainLabel.setWidth("170px");
 		passwordAgainLabel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		final HorizontalPanel horizontalPanel_10 = new HorizontalPanel();
-		verticalPanel_1.add(horizontalPanel_10);
-		horizontalPanel_10
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_10
-				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		final Label lblLastLogon = new Label("Last Logon: ");
-		horizontalPanel_10.add(lblLastLogon);
-		lblLastLogon.setWidth("170px");
-		horizontalPanel_10.setCellVerticalAlignment(lblLastLogon,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_10.setCellHorizontalAlignment(lblLastLogon,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_10.setCellWidth(lblLastLogon, "50%");
-		lblLastLogon.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		final TextBox lastLogonTextBox = new TextBox();
-		lastLogonTextBox.setEnabled(false);
-		lastLogonTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
-		lastLogonTextBox.setAlignment(TextAlignment.LEFT);
-		horizontalPanel_10.add(lastLogonTextBox);
-		horizontalPanel_10.setCellVerticalAlignment(lastLogonTextBox,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_10.setCellHorizontalAlignment(lastLogonTextBox,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_10.setCellWidth(lastLogonTextBox, "50%");
-		lastLogonTextBox.setReadOnly(true);
-		lastLogonTextBox.setWidth("180px");
-		final HorizontalPanel horizontalPanel_11 = new HorizontalPanel();
-		verticalPanel_1.add(horizontalPanel_11);
-		horizontalPanel_11
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_11
-				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		final Label lblFromHost = new Label("From Host: ");
-		horizontalPanel_11.add(lblFromHost);
-		lblFromHost.setWidth("170px");
-		horizontalPanel_11.setCellWidth(lblFromHost, "50%");
-		horizontalPanel_11.setCellVerticalAlignment(lblFromHost,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_11.setCellHorizontalAlignment(lblFromHost,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		lblFromHost.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		final TextBox fromHostTextBox = new TextBox();
-		fromHostTextBox.setEnabled(false);
-		fromHostTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
-		fromHostTextBox.setAlignment(TextAlignment.LEFT);
-		horizontalPanel_11.add(fromHostTextBox);
-		horizontalPanel_11.setCellVerticalAlignment(fromHostTextBox,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_11.setCellHorizontalAlignment(fromHostTextBox,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_11.setCellWidth(fromHostTextBox, "50%");
-		fromHostTextBox.setReadOnly(true);
-		fromHostTextBox.setWidth("180px");
+		
 		final HorizontalPanel horizontalPanel = new HorizontalPanel();
 		horizontalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel
@@ -462,7 +461,6 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		cancelButton.setSize("70px", "18px");
 		submitButton = new PushButton("Submit");
 		submitButton.setStyleName("greenButton shadow");
-		submitButton.setEnabled(true);
 		horizontalPanel.add(submitButton);
 		horizontalPanel.setCellHorizontalAlignment(submitButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
@@ -483,56 +481,64 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		dockPanel.setCellHorizontalAlignment(horizontalPanel,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		dockPanel.add(simplePanel, DockPanel.CENTER);
+		log.info("TRACY 3");
 
 		/* Set all data at the end of constructor */
 		if (newUser) {
+			log.info("TRACY 4");
+
 			// Initialize some UI objects
 			adminRadioButton.setValue(false);
 			toolRadioButton.setValue(false);
 			analystRadioButton.setValue(false);
 			userRadioButton.setValue(false);
-			orgUnitPanel.setVisible(false);
+			// Since admin radio button is selected for new user
+			orgMembershipTextBox.setText("");
+			// Disable password checkbox here
+			changePasswordCheckBox.setEnabled(false);
 
 		} else {
+			log.info("TRACY 5");
+
 			Role userRole = null;
 			try {
-				userRole = Role.getRole(userInfo.getRoleStr());
+				userRole = Role.getRole(selectedUser.getRoleAndOrgMembership());
 				// Initialize some UI objects
-				lastNameTextBox.setText(userInfo.getLastName());
-				firstNameTextBox.setText(userInfo.getFirstName());
-				userIdTextBox.setText(userInfo.getUserName());
+				lastNameTextBox.setText(selectedUser.getLastName());
+				firstNameTextBox.setText(selectedUser.getFirstName());
+				userIdTextBox.setText(selectedUser.getUserName());
 				userIdTextBox.setReadOnly(true);
-				String lastLoginStr = dateTimeFormat.format(userInfo
+				String lastLoginStr = dateTimeFormat.format(selectedUser
 						.getLastLogon());
-				lastLogonTextBox.setText(lastLoginStr);
-				fromHostTextBox.setText(userInfo.getFromHost());
-				emailTextBox.setText(userInfo.getEmail());
+				emailTextBox.setText(selectedUser.getEmail());
 				if (userRole == Role.ADMIN) {
 					adminRadioButton.setValue(true);
-					orgUnitPanel.setVisible(false);
+					editLevelsButton.setEnabled(false);
+					orgMembershipTextBox.setText("");
 				} else if (userRole == Role.TOOL_PROVIDER) {
 					toolRadioButton.setValue(true);
-					orgUnitPanel.setVisible(false);
+					editLevelsButton.setEnabled(false);
+					orgMembershipTextBox.setText("");
 				} else if (userRole == Role.ANALYST) {
 					analystRadioButton.setValue(true);
-					orgUnitPanel.setVisible(true);
-					// Set the org hierarchy list box
-					ArrayList<String> orgUnitHierarchy = Role
-							.getOrgHierarchy(userInfo.getRoleStr());
-					setLevelsSuggestBox(orgUnitHierarchy);
+					editLevelsButton.setEnabled(true);
+					String orgMembershipLevels = Role.getOrgMembershipLevelsStr(selectedUser.getRoleAndOrgMembership());
+					orgMembershipTextBox.setText(orgMembershipLevels);
 				} else if (userRole == Role.USER) {
 					userRadioButton.setValue(true);
-					orgUnitPanel.setVisible(true);
-					// Set the org hierarchy list box
-					ArrayList<String> orgUnitHierarchy = Role
-							.getOrgHierarchy(userInfo.getRoleStr());
-					setLevelsSuggestBox(orgUnitHierarchy);
+					editLevelsButton.setEnabled(true);
+					String orgMembershipLevels = Role.getOrgMembershipLevelsStr(selectedUser.getRoleAndOrgMembership());
+					orgMembershipTextBox.setText(orgMembershipLevels);
 				} else if (userRole == Role.NEW) {
-					orgUnitPanel.setVisible(false);
+					//orgUnitPanel.setVisible(false);
 				}
+
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			log.info("TRACY 6");
+
 		}
 		if (useSSO) {
 			// SSO is used so disable password fields
@@ -544,50 +550,27 @@ public class UserAcctAdminDialogBox extends DialogBox {
 			passwordLabel.setVisible(false);
 			passwordLabel3.setVisible(false);
 		} else {
-			password1TextBox.setEnabled(true);
-			password1TextBox.setVisible(true);
-			password2TextBox.setEnabled(true);
-			password2TextBox.setVisible(true);
-			passwordAgainLabel.setVisible(true);
-			passwordLabel.setVisible(true);
-			passwordLabel3.setVisible(true);
+			if (newUser) {
+				enableChangePassword(true);
+			} else {
+				enableChangePassword(false);
+			}
 		}
+		log.info("TRACY 7");
+
 	}
 	
-	public MultiWordSuggestOracle getOracle(int levelIndex) {
-		MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
-		if (hierarchies == null) {
-			log.warning("Hierarchies is null");
-			return null;
-		}
-		for (int i = 0; i < hierarchies.size(); i++) {
-			String hierarchy = hierarchies.get(i);
-			String[] levels = hierarchy.split(",");
-			if (levels[levelIndex] != null) {
-				oracle.add(levels[levelIndex]);
-			}
-		}
-		return oracle;
-	}
-
-	public void setLevelsSuggestBox(ArrayList<String> orgUnitHierarchy) {
-		if (orgUnitHierarchy != null && !orgUnitHierarchy.isEmpty()) {
-			// Add org units to list box
-			for (int i = 0; i < orgUnitHierarchy.size(); i++) {
-				String orgUnitHierarchyStr = orgUnitHierarchy.get(i);
-				if (orgUnitHierarchyStr != null
-						&& !orgUnitHierarchyStr.isEmpty()) {
-					if (i == 0) {
-						level1SuggestBox.setText(orgUnitHierarchyStr);
-					} else if (i == 1) {
-						level2SuggestBox.setText(orgUnitHierarchyStr);
-					} else if (i == 2) {
-						level3SuggestBox.setText(orgUnitHierarchyStr);
-					} else if (i == 3) {
-						level4SuggestBox.setText(orgUnitHierarchyStr);
-					}
-				}
-			}
+	public void enableChangePassword(boolean enable) {
+		if (enable) {
+			log.info("change password = " + enable);
+			changePasswordCheckBox.setChecked(true);
+			password1TextBox.setEnabled(true);
+			password2TextBox.setEnabled(true);
+		} else {
+			log.info("change password = " + enable);
+			changePasswordCheckBox.setChecked(false);
+			password1TextBox.setEnabled(false);
+			password2TextBox.setEnabled(false);
 		}
 	}
 
@@ -607,8 +590,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 	}
 
 	/** Get database representation of role. */
-	public String getRoleStr() {
-		String roleStr = "";
+	public String getRoleAndMembership(String orgMembership) {
 		boolean adminRadioSelected = adminRadioButton.getValue();
 		boolean toolRadioSelected = toolRadioButton.getValue();
 		boolean analystRadioSelected = analystRadioButton.getValue();
@@ -619,51 +601,18 @@ public class UserAcctAdminDialogBox extends DialogBox {
 					true);
 		}
 		if (adminRadioSelected) {
-			roleStr += Role.ADMIN.name();
-			return roleStr;
+			return Role.ADMIN.name();
 		} else if (toolRadioSelected) {
-			roleStr += Role.TOOL_PROVIDER.name();
-			return roleStr;
+			return Role.TOOL_PROVIDER.name();
 		} else if (analystRadioSelected) {
-			roleStr += Role.ANALYST.name() + ":";
+			return Role.ANALYST.name() + ":" + orgMembership;
 		} else if (userRadioSelected) {
-			roleStr += Role.USER.name() + ":";
+			return Role.USER.name() + ":" + orgMembership;
 		} else {
 			log.severe("Invalid role");
 			return null;
 		}
-		String level1 = level1SuggestBox.getValue();
-		if (level1 == null || level1.isEmpty()) {
-			// Level1 is required
-			//log.severe("Invalid " + confInfo.getOrgLevel1Name());
-			return null;
-		} else {
-			roleStr += level1;
-		}
-		String level2 = level2SuggestBox.getValue();
-		if (level2 == null || level2.isEmpty()) {
-			// Level2 is required
-			//log.severe("Invalid " + confInfo.getOrgLevel2Name());
-			return null;
-		} else {
-			roleStr += "," + level2;
-		}
 
-		String level3 = level3SuggestBox.getValue();
-		if (level3 == null || level3.isEmpty()) {
-			// Check if level 4 is not null
-		} else {
-			roleStr += "," + level3;
-		}
-		
-		String level4 = level4SuggestBox.getValue();
-		if (level4 == null || level4.isEmpty()) {
-			// Level4 is not required. Do nothing.
-		} else {
-			roleStr += "," + level4;
-		}
-
-		return roleStr;
 	}
 	
 	/** Get database representation of role. */
@@ -682,36 +631,7 @@ public class UserAcctAdminDialogBox extends DialogBox {
 		if (adminRadioSelected || toolRadioSelected) {
 			return true;
 		}
-		
-		// Check the following if user is ANALYST or USER
-		String level1 = level1SuggestBox.getValue();
-		if (level1 == null || level1.isEmpty()) {
-			// Level1 is required
-			log.severe("Invalid " + confInfo.getOrgLevel1Name());
-			showMessageDialog("AppVet User Account", "Invalid " + confInfo.getOrgLevel1Name(),
-					true);
-			return false;
-		}
-		String level2 = level2SuggestBox.getValue();
-		if (level2 == null || level2.isEmpty()) {
-			// Level2 is required
-			showMessageDialog("AppVet User Account", "Invalid " + confInfo.getOrgLevel2Name(),
-					true);
-			return false;
-		}
-		
-		String level3 = level3SuggestBox.getValue();
-		if (level3 == null || level3.isEmpty()) {
-			// Check if level 4 is not null and not empty
-			String level4 = level4SuggestBox.getValue();
-			if (level4 != null && !level4.isEmpty()) {
-				// Level 3 is invalid
-				showMessageDialog("AppVet User Account", confInfo.getOrgLevel3Name() + " cannot be null if " + 
-						confInfo.getOrgLevel4Name() + " is not null.",
-						true);
-				return false;
-			}
-		}
+
 		return true;
 	}
 

@@ -81,7 +81,7 @@ public interface GWTService extends RemoteService {
 	AppsListGwt getUpdatedApps(Date lastClientUpdate, String username)
 			throws IllegalArgumentException;
 
-	List<UserInfo> getUsersList() throws IllegalArgumentException;
+	List<UserInfo> getAllUsers() throws IllegalArgumentException;
 
 	Boolean removeSession(String sessionId) throws IllegalArgumentException;
 

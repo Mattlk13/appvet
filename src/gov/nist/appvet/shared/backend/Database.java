@@ -161,7 +161,7 @@ public class Database {
 			userInfo.setLastName(resultSet.getString(3));
 			userInfo.setFirstName(resultSet.getString(4));
 			userInfo.setEmail(resultSet.getString(5));
-			userInfo.setRoleStr(resultSet.getString(6));
+			userInfo.setRoleAndOrgMembership(resultSet.getString(6));
 			userInfo.setLastLogon(resultSet.getTimestamp(7));
 			userInfo.setFromHost(resultSet.getString(8));
 			// Check if default admin
@@ -281,8 +281,8 @@ public class Database {
 			preparedStatement.setString(3, userInfo.getFirstName());
 			// log.debug("Admin Adding email: " + userInfo.getEmail());
 			preparedStatement.setString(4, userInfo.getEmail());
-			log.debug("Admin Adding role: " + userInfo.getRoleStr());
-			preparedStatement.setString(5, userInfo.getRoleStr());
+			log.debug("Admin Adding role: " + userInfo.getRoleAndOrgMembership());
+			preparedStatement.setString(5, userInfo.getRoleAndOrgMembership());
 			preparedStatement.executeUpdate();
 			final String password = userInfo.getPassword();
 			final String passwordAgain = userInfo.getPasswordAgain();
@@ -323,7 +323,7 @@ public class Database {
 			// userInfo.getOrganization());
 			// log.debug("Admin Updating dept: " + userInfo.getDepartment());
 			// log.debug("Admin Updating email: " + userInfo.getEmail());
-			log.debug("Admin Updating role: " + userInfo.getRoleStr());
+			log.debug("Admin Updating role: " + userInfo.getRoleAndOrgMembership());
 			connection = getConnection();
 			statement = connection.createStatement();
 			statement.executeUpdate("UPDATE users SET "
@@ -331,7 +331,7 @@ public class Database {
 					+ "lastName='" + userInfo.getLastName() + "', "
 					+ "firstName='" + userInfo.getFirstName() + "', "
 					+ "email='" + userInfo.getEmail() + "', "
-					+ "role='" + userInfo.getRoleStr() + "' "
+					+ "role='" + userInfo.getRoleAndOrgMembership() + "' "
 					+ "WHERE username='" + userInfo.getUserName() + "'");
 			if (userInfo.isChangePassword()) {
 				final String userName = userInfo.getUserName();
@@ -374,7 +374,7 @@ public class Database {
 	 *            If null, select all users.
 	 * @return
 	 */
-	public static List<UserInfo> getUsers(Role role) {
+	public static List<UserInfo> getAllUsers(Role role) {
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -399,7 +399,7 @@ public class Database {
 				userInfo.setLastName(resultSet.getString(3));
 				userInfo.setFirstName(resultSet.getString(4));
 				userInfo.setEmail(resultSet.getString(5));
-				userInfo.setRoleStr(resultSet.getString(6));
+				userInfo.setRoleAndOrgMembership(resultSet.getString(6));
 				userInfo.setLastLogon(resultSet.getTimestamp(7));
 				userInfo.setFromHost(resultSet.getString(8));
 				// Check if default admin
@@ -424,7 +424,7 @@ public class Database {
 		return arrayList;
 	}
 	
-	public static List<String> getOrgHierarchies() {
+	public static List<String> getUserOrgMemberships() {
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -437,10 +437,10 @@ public class Database {
 			resultSet = statement.executeQuery(sql);
 			arrayList = new ArrayList<String>();
 			while (resultSet.next()) {
-				String roleStr = resultSet.getString(6);
-				String heirarchy = Role.getOrgHierarchyStr(roleStr);
-				if (heirarchy != null) {
-					arrayList.add(heirarchy);
+				String userRoleAndOrgMembership = resultSet.getString(6);
+				String[] roleAndMembership = userRoleAndOrgMembership.split(":");
+				if (roleAndMembership != null && roleAndMembership[1] != null) {
+					arrayList.add(roleAndMembership[1]);
 				}
 			}
 		} catch (final Exception e) {
@@ -661,7 +661,7 @@ public class Database {
 		// Check if owner's hierarchy is null
 		String appOwnerHierarchyStr = null;
 		try {
-			appOwnerHierarchyStr = Role.getOrgHierarchyStr(appOwnerRoleStr);
+			appOwnerHierarchyStr = Role.getOrgMembershipLevelsStr(appOwnerRoleStr);
 			if (appOwnerHierarchyStr == null || appOwnerHierarchyStr.isEmpty()) {
 				log.warn("App owner's hierarchy string is null or empty");
 				return false;
@@ -673,7 +673,7 @@ public class Database {
 		// Check if user's hierarchy is null
 		String userHierarchyStr = null;
 		try {
-			userHierarchyStr = Role.getOrgHierarchyStr(userRoleStr);
+			userHierarchyStr = Role.getOrgMembershipLevelsStr(userRoleStr);
 			if (userHierarchyStr == null || userHierarchyStr.isEmpty()) {
 				log.warn("User's hierarchy string is null or empty");
 				return false;

@@ -84,7 +84,7 @@ public interface GWTServiceAsync {
 			AsyncCallback<AppsListGwt> callback)
 			throws IllegalArgumentException;
 
-	void getUsersList(AsyncCallback<List<UserInfo>> callback)
+	void getAllUsers(AsyncCallback<List<UserInfo>> callback)
 			throws IllegalArgumentException;
 	
 //	void getOrgDeptsList(AsyncCallback<List<OrgDepts>> callback)

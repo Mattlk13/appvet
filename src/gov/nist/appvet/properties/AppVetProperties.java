@@ -33,8 +33,6 @@ import gov.nist.appvet.shared.backend.ToolAdapter;
 import gov.nist.appvet.shared.backend.XmlUtil;
 
 import java.io.File;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class AppVetProperties {
@@ -166,10 +164,15 @@ public class AppVetProperties {
 	public static String DOCUMENTATION_URL = null;
 	public static String DEFAULT_DOCUMENTATION_URL = "http://appvet.github.io/appvet/";
 	/* Org hierarchy level names */
-	public static String ORG_LEVEL1_NAME = null;
-	public static String ORG_LEVEL2_NAME = null;
-	public static String ORG_LEVEL3_NAME = null;
-	public static String ORG_LEVEL4_NAME = null;
+	//public static String ORG_LEVEL1_NAME = null;
+	//public static String ORG_LEVEL2_NAME = null;
+	//public static String ORG_LEVEL3_NAME = null;
+	//public static String ORG_LEVEL4_NAME = null;
+	/** The minimum number of organizational levels that must be specified for a USER or ANALYST.
+	 */
+	public static int minOrgLevelsRequired = -1;
+	/** The maximum number of organizational levels that may be specified for a USER or ANALYST.*/
+	public static int maxOrgLevels = -1;
 
 	// Tools
 	public static ArrayList<ToolAdapter> androidTools = null;
@@ -218,6 +221,11 @@ public class AppVetProperties {
 		TOOLS_CONF_ROOT = CONF_ROOT + "/tool_adapters";
 		printVal("TOOLS_CONF_ROOT", TOOLS_CONF_ROOT);
 		APP_IMAGES_PATH = CATALINA_HOME + "/webapps/appvet_images";
+		File appvetImagesFile = new File(APP_IMAGES_PATH);
+		if (!appvetImagesFile.exists()) {
+			log.warn("Directory appvet_images not found in CATALINA webapps directory. Creating directory...");
+			appvetImagesFile.mkdir();
+		}
 		printVal("APP_IMAGES_PATH", APP_IMAGES_PATH);
 		
 		// Database properties
@@ -376,14 +384,20 @@ public class AppVetProperties {
 			DOCUMENTATION_URL = DEFAULT_DOCUMENTATION_URL;
 		}
 		
-		ORG_LEVEL1_NAME = xml.getXPathValue("/AppVet/OrgHierarchyLevels/Level1");
-		printVal("ORG_LEVEL1_NAME", ORG_LEVEL1_NAME);
-		ORG_LEVEL2_NAME = xml.getXPathValue("/AppVet/OrgHierarchyLevels/Level2");
-		printVal("ORG_LEVEL2_NAME", ORG_LEVEL2_NAME);
-		ORG_LEVEL3_NAME = xml.getXPathValue("/AppVet/OrgHierarchyLevels/Level3");
-		printVal("ORG_LEVEL3_NAME", ORG_LEVEL3_NAME);
-		ORG_LEVEL4_NAME = xml.getXPathValue("/AppVet/OrgHierarchyLevels/Level4");
-		printVal("ORG_LEVEL4_NAME", ORG_LEVEL4_NAME);
+		
+		minOrgLevelsRequired = new Integer(xml.getXPathValue("/AppVet/OrgHierarchy/MinOrgLevelsRequired")).intValue();
+		printVal("minOrgLevelsRequired", minOrgLevelsRequired);
+		maxOrgLevels = new Integer(xml.getXPathValue("/AppVet/OrgHierarchy/MaxOrgLevels")).intValue();
+		printVal("maxOrgLevels", maxOrgLevels);
+		
+//		ORG_LEVEL1_NAME = xml.getXPathValue("/AppVet/OrgHierarchyLevels/Level1");
+//		printVal("ORG_LEVEL1_NAME", ORG_LEVEL1_NAME);
+//		ORG_LEVEL2_NAME = xml.getXPathValue("/AppVet/OrgHierarchyLevels/Level2");
+//		printVal("ORG_LEVEL2_NAME", ORG_LEVEL2_NAME);
+//		ORG_LEVEL3_NAME = xml.getXPathValue("/AppVet/OrgHierarchyLevels/Level3");
+//		printVal("ORG_LEVEL3_NAME", ORG_LEVEL3_NAME);
+//		ORG_LEVEL4_NAME = xml.getXPathValue("/AppVet/OrgHierarchyLevels/Level4");
+//		printVal("ORG_LEVEL4_NAME", ORG_LEVEL4_NAME);
 
 		// Apache logging
 		System.setProperty("org.apache.commons.logging.Log",

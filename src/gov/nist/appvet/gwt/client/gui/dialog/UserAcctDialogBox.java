@@ -44,7 +44,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author steveq@nist.gov
  */
 public class UserAcctDialogBox extends DialogBox {
-	public UserInfo userInfoGwt = null;
+	public UserInfo userInfo = null;
 	public PushButton okButton = null;
 	public PushButton cancelButton = null;
 	public TextBox lastNameTextBox = null;
@@ -59,9 +59,9 @@ public class UserAcctDialogBox extends DialogBox {
 	private Logger log = Logger.getLogger("UserAcctDialogBox");
 	public MessageDialogBox messageDialogBox = null;
 	
-	public UserAcctDialogBox(final ConfigInfoGwt configInfoGwt, final boolean ssoActive) {
+	public UserAcctDialogBox(final ConfigInfoGwt configInfo, final boolean ssoActive) {
 		setSize("400px", "406px");
-		this.userInfoGwt = configInfoGwt.getUserInfo();
+		this.userInfo = configInfo.getUserInfo();
 		final VerticalPanel verticalPanel = new VerticalPanel();
 		verticalPanel.setSize("100%", "100%");
 		verticalPanel
@@ -91,7 +91,7 @@ public class UserAcctDialogBox extends DialogBox {
 		final TextBox userIdTextBox_1 = new TextBox();
 		userIdTextBox_1.setEnabled(false);
 		userIdTextBox_1.setAlignment(TextAlignment.LEFT);
-		userIdTextBox_1.setText(userInfoGwt.getUserName());
+		userIdTextBox_1.setText(userInfo.getUserName());
 		userIdTextBox_1.setReadOnly(true);
 		horizontalPanel_1.add(userIdTextBox_1);
 		horizontalPanel_1.setCellHorizontalAlignment(userIdTextBox_1,
@@ -128,7 +128,7 @@ public class UserAcctDialogBox extends DialogBox {
 		horizontalPanel_2.setCellVerticalAlignment(lastNameTextBox,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_2.setCellWidth(lastNameTextBox, "50%");
-		lastNameTextBox.setText(userInfoGwt.getLastName());
+		lastNameTextBox.setText(userInfo.getLastName());
 		lastNameTextBox.setSize("180px", "20px");
 		final HorizontalPanel horizontalPanel_3 = new HorizontalPanel();
 		horizontalPanel_3
@@ -157,7 +157,7 @@ public class UserAcctDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_3.setCellVerticalAlignment(firstNameTextBox,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		firstNameTextBox.setText(userInfoGwt.getFirstName());
+		firstNameTextBox.setText(userInfo.getFirstName());
 		firstNameTextBox.setSize("180px", "20px");
 		
 		HorizontalPanel horizontalPanel_10 = new HorizontalPanel();
@@ -171,7 +171,7 @@ public class UserAcctDialogBox extends DialogBox {
 		label_1.setWidth("170px");
 		
 		roleTextBox = new TextBox();
-		String roleStr = userInfoGwt.getRoleStr();
+		String roleStr = userInfo.getRoleAndOrgMembership();
 		Role role = null;
 		try {
 			role = Role.getRole(roleStr);
@@ -211,8 +211,10 @@ public class UserAcctDialogBox extends DialogBox {
 			if (role == Role.ADMIN) {
 				orgTextBox.setText("ALL");
 			} else {
-				String orgHierarchy = Role.getOrgHierarchyDisplayStr(roleStr);
-				orgTextBox.setText(orgHierarchy);
+				String orgMemberships = Role.getOrgMembershipLevelsStr(userInfo.getRoleAndOrgMembership());
+				if (orgMemberships != null) {
+					orgTextBox.setText(orgMemberships);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -253,7 +255,7 @@ public class UserAcctDialogBox extends DialogBox {
 		horizontalPanel_5.setCellVerticalAlignment(emailTextBox,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_5.setCellWidth(emailTextBox, "50%");
-		emailTextBox.setText(userInfoGwt.getEmail());
+		emailTextBox.setText(userInfo.getEmail());
 		emailTextBox.setSize("180px", "20px");
 		final Label passwordLabel1 = new Label("Change Password");
 		passwordLabel1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
@@ -367,7 +369,7 @@ public class UserAcctDialogBox extends DialogBox {
 		
 		
 		// Don't allow password entry if user is using SSO
-		if (!configInfoGwt.getSSOActive()) {
+		if (!configInfo.getSSOActive()) {
 			passwordLabel1.setVisible(true);
 			password1TextBox.setVisible(true);
 			password1TextBox.setEnabled(true);

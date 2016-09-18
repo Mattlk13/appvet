@@ -49,10 +49,10 @@ public class ConfigInfoGwt implements IsSerializable {
 	private boolean ssoActive = false;
 	private String ssoUnauthorizedURL = null;
 	private String ssoLogoutURL = null;
-	private String orgLevel1Name = null;
-	private String orgLevel2Name = null;
-	private String orgLevel3Name = null;
-	private String orgLevel4Name = null;
+	
+	private int minOrgLevelsRequired = 0;
+	private int maxOrgLevels = 0;
+
 	private boolean keepApps = true;
 
 	public ConfigInfoGwt() {
@@ -215,44 +215,44 @@ public class ConfigInfoGwt implements IsSerializable {
 	}
 
 
-	public String getOrgLevel1Name() {
-		return orgLevel1Name;
-	}
-
-
-	public void setOrgLevel1Name(String orgLevel1Name) {
-		this.orgLevel1Name = orgLevel1Name;
-	}
-
-
-	public String getOrgLevel2Name() {
-		return orgLevel2Name;
-	}
-
-
-	public void setOrgLevel2Name(String orgLevel2Name) {
-		this.orgLevel2Name = orgLevel2Name;
-	}
-
-
-	public String getOrgLevel3Name() {
-		return orgLevel3Name;
-	}
-
-
-	public void setOrgLevel3Name(String orgLevel3Name) {
-		this.orgLevel3Name = orgLevel3Name;
-	}
-
-
-	public String getOrgLevel4Name() {
-		return orgLevel4Name;
-	}
-
-
-	public void setOrgLevel4Name(String orgLevel4Name) {
-		this.orgLevel4Name = orgLevel4Name;
-	}
+//	public String getOrgLevel1Name() {
+//		return orgLevel1Name;
+//	}
+//
+//
+//	public void setOrgLevel1Name(String orgLevel1Name) {
+//		this.orgLevel1Name = orgLevel1Name;
+//	}
+//
+//
+//	public String getOrgLevel2Name() {
+//		return orgLevel2Name;
+//	}
+//
+//
+//	public void setOrgLevel2Name(String orgLevel2Name) {
+//		this.orgLevel2Name = orgLevel2Name;
+//	}
+//
+//
+//	public String getOrgLevel3Name() {
+//		return orgLevel3Name;
+//	}
+//
+//
+//	public void setOrgLevel3Name(String orgLevel3Name) {
+//		this.orgLevel3Name = orgLevel3Name;
+//	}
+//
+//
+//	public String getOrgLevel4Name() {
+//		return orgLevel4Name;
+//	}
+//
+//
+//	public void setOrgLevel4Name(String orgLevel4Name) {
+//		this.orgLevel4Name = orgLevel4Name;
+//	}
 
 	public boolean isKeepApps() {
 		return keepApps;
@@ -260,5 +260,21 @@ public class ConfigInfoGwt implements IsSerializable {
 
 	public void setKeepApps(boolean keepApps) {
 		this.keepApps = keepApps;
+	}
+
+	public int getMinOrgLevelsRequired() {
+		return minOrgLevelsRequired;
+	}
+
+	public void setMinOrgLevelsRequired(int minOrgLevelsRequired) {
+		this.minOrgLevelsRequired = minOrgLevelsRequired;
+	}
+
+	public int getMaxOrgLevels() {
+		return maxOrgLevels;
+	}
+
+	public void setMaxOrgLevels(int maxOrgLevels) {
+		this.maxOrgLevels = maxOrgLevels;
 	}
 }

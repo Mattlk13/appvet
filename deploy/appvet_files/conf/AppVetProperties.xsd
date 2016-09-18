@@ -35,13 +35,12 @@
 					minOccurs="0">
 				</xs:element>
 
-				<xs:element name="Logging" type="LoggingType" maxOccurs="1"
-					minOccurs="1">
+				<xs:element name="Logging" type="LoggingType"
+					maxOccurs="1" minOccurs="1">
 					<xs:annotation>
 						<xs:documentation>
 							The Logging element defines properties of
-							the
-							AppVet logger.
+							the AppVet logger.
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
@@ -52,13 +51,12 @@
 				<xs:element name="OrgLogoAltText" type="xs:string"
 					maxOccurs="1" minOccurs="0">
 				</xs:element>
-				<xs:element name="Sessions" type="SessionType" maxOccurs="1"
-					minOccurs="1">
+				<xs:element name="Sessions" type="SessionType"
+					maxOccurs="1" minOccurs="1">
 					<xs:annotation>
 						<xs:documentation>
 							The Sessions defines properties of AppVet
-							user
-							sessions.
+							user sessions.
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
@@ -69,8 +67,7 @@
 					<xs:annotation>
 						<xs:documentation>
 							The Database element defines properties of
-							the
-							AppVet database.
+							the AppVet database.
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
@@ -92,19 +89,17 @@
 					<xs:annotation>
 						<xs:documentation>
 							The Apps element defines properties of
-							AppVet
-							apps.
+							AppVet apps.
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-				<xs:element name="Display" type="DisplayType" maxOccurs="1"
-					minOccurs="0">
+				<xs:element name="Display" type="DisplayType"
+					maxOccurs="1" minOccurs="0">
 				</xs:element>
 				<xs:element name="DocumentationURL" type="xs:string"
 					maxOccurs="1" minOccurs="0">
-				</xs:element>
-				<xs:element name="OrgHierarchyLevels" type="OrgHierarchyLevelsType"
-					maxOccurs="1" minOccurs="1"></xs:element>
+				</xs:element>
+				<xs:element name="OrgHierarchy" type="OrgHierarchyType" maxOccurs="1" minOccurs="1"></xs:element>
 			</xs:sequence>
 
 		</xs:complexType>
@@ -377,21 +372,21 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:complexType name="OrgHierarchyLevelsType">
-		<xs:sequence>
-			<!-- Default admin username and password. -->
-			<xs:element name="Level1" type="xs:string" maxOccurs="1"
-				minOccurs="1">
+	
+	<xs:complexType name="OrgHierarchyType">
+
+        <xs:sequence>
+			<xs:element name="MinOrgLevelsRequired" maxOccurs="1"
+				minOccurs="1" type="xs:int">
+                <xs:annotation>
+                	<xs:documentation>MinNumOrgLevels defines the minimum number of organizational levels that MUST be specified for a USER or ANALYST. </xs:documentation>
+                </xs:annotation>
+
 			</xs:element>
-			<xs:element name="Level2" type="xs:string" maxOccurs="1"
-				minOccurs="1">
-			</xs:element>
-			<xs:element name="Level3" type="xs:string" maxOccurs="1"
-				minOccurs="1">
-			</xs:element>
-			<xs:element name="Level4" type="xs:string" maxOccurs="1"
-				minOccurs="1">
-			</xs:element>
+			<xs:element name="MaxOrgLevels" type="xs:int" maxOccurs="1" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>MaxNumOrgLevels is the maximum number of organizational levels that MAY be specified for a USER or ANALYST. </xs:documentation>
+				</xs:annotation></xs:element>
 		</xs:sequence>
 	</xs:complexType>
 

@@ -182,7 +182,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 				log.error("Could not update user " + userInfo.getFullName());
 			}
 		}
-		return getUsersList();
+		return getAllUsers();
 	}
 
 	/**
@@ -295,10 +295,8 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		configInfo.setDocumentationURL(AppVetProperties.DOCUMENTATION_URL);
 		configInfo.setSSOActive(AppVetProperties.SSO_ACTIVE);
 		configInfo.setSSOLogoutURL(AppVetProperties.SSO_LOGOUT_URL);
-		configInfo.setOrgLevel1Name(AppVetProperties.ORG_LEVEL1_NAME);
-		configInfo.setOrgLevel2Name(AppVetProperties.ORG_LEVEL2_NAME);
-		configInfo.setOrgLevel3Name(AppVetProperties.ORG_LEVEL3_NAME);
-		configInfo.setOrgLevel4Name(AppVetProperties.ORG_LEVEL4_NAME);
+		configInfo.setMinOrgLevelsRequired(AppVetProperties.minOrgLevelsRequired);
+		configInfo.setMaxOrgLevels(AppVetProperties.maxOrgLevels);
 		configInfo.setKeepApps(AppVetProperties.KEEP_APPS);
 
 		final ArrayList<ToolInfoGwt> tools = new ArrayList<ToolInfoGwt>();
@@ -420,7 +418,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 	}
 	
 	public List<String> getOrgHierarchies() {
-		return Database.getOrgHierarchies();
+		return Database.getUserOrgMemberships();
 	}
 
 	public List<ToolStatusGwt> getToolsResults(DeviceOS os, String sessionId,
@@ -433,8 +431,8 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		return Database.getApps(username, lastClientUpdate);
 	}
 
-	public List<UserInfo> getUsersList() throws IllegalArgumentException {
-		return Database.getUsers(null);
+	public List<UserInfo> getAllUsers() throws IllegalArgumentException {
+		return Database.getAllUsers(null);
 	}
 
 	public Boolean removeSession(String sessionId)

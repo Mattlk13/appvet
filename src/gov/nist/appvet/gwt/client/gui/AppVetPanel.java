@@ -28,7 +28,7 @@ import gov.nist.appvet.gwt.client.gui.dialog.ReportUploadDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.SetAlertDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.ToolAuthParamDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.UserAcctDialogBox;
-import gov.nist.appvet.gwt.client.gui.dialog.UserListDialogBox;
+import gov.nist.appvet.gwt.client.gui.dialog.AdminUserListDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.YesNoConfirmDialog;
 import gov.nist.appvet.gwt.client.gui.table.appslist.AppsListPagingDataGrid;
 import gov.nist.appvet.gwt.shared.AppInfoGwt;
@@ -134,7 +134,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	private AppUploadDialogBox appUploadDialogBox = null;
 	private MessageDialogBox messageDialogBox = null;
 	private AboutDialogBox aboutDialogBox = null;
-	private UserListDialogBox usersDialogBox = null;
+	private AdminUserListDialogBox usersDialogBox = null;
 	private YesNoConfirmDialog deleteConfirmDialogBox = null;
 	private ReportUploadDialogBox reportUploadDialogBox = null;
 	private UserAcctDialogBox userAcctDialogBox = null;
@@ -474,6 +474,7 @@ public class AppVetPanel extends DockLayoutPanel {
 			AppsListGwt initialApps) {
 		super(Unit.PX);
 
+		log.info("Trace 1");
 		Window.addResizeHandler(new ResizeHandler() {
 			Timer resizeTimer = new Timer() {
 				@Override
@@ -530,7 +531,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				new Command() {
 			@Override
 			public void execute() {
-				usersDialogBox = new UserListDialogBox(configInfo,
+				usersDialogBox = new AdminUserListDialogBox(configInfo,
 						ssoActive);
 				usersDialogBox.setText("Users");
 				usersDialogBox.center();
@@ -706,16 +707,21 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		// TODO REMOVE FOR TESTING ONLY
 		//appVetMenuBar.addItem(adminMenuItem);
+		log.info("Trace 2");
 
 		Role role;
 		try {
-			role = Role.getRole(userInfo.getRoleStr());
+			role = Role.getRole(userInfo.getRoleAndOrgMembership());
 			if (role == Role.ADMIN) {
 				appVetMenuBar.addItem(adminMenuItem);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		downloadAppButton = new PushButton("Download App");
+		downloadAppButton.setHTML("<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/download-black.png\" alt=\"Download App\" /> <span style=\"\">App</span></div>");
+
 		if (!configInfo.isKeepApps()) {
 			// Hide download app button if KEEP_APPS is false
 			downloadAppButton.setVisible(false);
@@ -736,7 +742,9 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsListTable.setSize("100%", "200px");
 		appsListTable.dataGrid.setSelectionModel(appSelectionModel);
 
+		log.info("Trace 3");
 
+		log.info("Trace 3a");
 
 		SimplePanel southPanel = new SimplePanel();
 		southPanel.setSize("100%", "");
@@ -748,27 +756,34 @@ public class AppVetPanel extends DockLayoutPanel {
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		southPanel.setWidget(horizontalPanel_2);
 		horizontalPanel_2.setSize("100%", "");
+		log.info("Trace 3b");
 
 		Image nistLogo = new Image("images/nist_logo_darkgrey.png");
+		log.info("Trace 3b1");
+
 		nistLogo.setAltText("NIST logo");
+		log.info("Trace 3b2");
+
 		// nistLogo.setTitle("NIST logo");
 		horizontalPanel_2.add(nistLogo);
+		log.info("Trace 3b3");
+
 		horizontalPanel_2.setCellVerticalAlignment(nistLogo,
 				HasVerticalAlignment.ALIGN_MIDDLE);
+		log.info("Trace 3b4");
+
 		horizontalPanel_2.setCellHorizontalAlignment(nistLogo,
 				HasHorizontalAlignment.ALIGN_RIGHT);
+		log.info("Trace 3b5");
+
 		nistLogo.setSize("50px", "13px");
-		if ((initialApps != null) && (initialApps.apps.size() > 0)) {
-			appSelectionModel.setSelected(initialApps.apps.get(0), true);
-		} else {
-			logButton.setEnabled(false);
-			uploadReportButton.setEnabled(false);
-			deleteButton.setEnabled(false);
-			downloadReportsButton.setEnabled(false);
-			downloadAppButton.setEnabled(false);
-		}
+		log.info("Trace 3b6");
+
+
+		log.info("Trace 3c");
 
 		pollServer(userName);
+		log.info("Trace 3d");
 
 		SimplePanel northPanel = new SimplePanel();
 		addNorth(northPanel, NORTH_PANEL_HEIGHT);
@@ -789,6 +804,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_5.setSize("100%", "");
 		northAppVetPanel.setCellWidth(horizontalPanel_5, "100%");
+		log.info("Trace 3e");
 
 		Image image = new Image("images/appvet_logo2.png");
 		image.setAltText("AppVet");
@@ -815,6 +831,8 @@ public class AppVetPanel extends DockLayoutPanel {
 				searchTextBox.setText("");
 			}
 		});
+		log.info("Trace 3f");
+
 		searchTextBox.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event_) {
@@ -831,6 +849,8 @@ public class AppVetPanel extends DockLayoutPanel {
 				}
 			}
 		});
+		log.info("Trace 3g");
+
 		searchTextBox.setSize("240px", "15px");
 		horizontalPanel_6.add(searchTextBox);
 		horizontalPanel_6.setCellVerticalAlignment(searchTextBox,
@@ -865,6 +885,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel_5.add(horizontalPanel_4);
 		horizontalPanel_5.setCellVerticalAlignment(horizontalPanel_4, HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_5.setCellHorizontalAlignment(horizontalPanel_4, HasHorizontalAlignment.ALIGN_RIGHT);
+		log.info("Trace 3h");
 
 		Roles.getMenubarRole().setTabindexExtraAttribute(appVetMenuBar.getElement(), -1);
 		horizontalPanel_4.add(appVetMenuBar);
@@ -875,7 +896,9 @@ public class AppVetPanel extends DockLayoutPanel {
 		appVetMenuBar.setSize("250px", "");
 		appVetMenuBar.setAnimationEnabled(false);
 		appVetMenuBar.setFocusOnHoverEnabled(false);
+		log.info("Trace 3i");
 
+		log.info("Trace 4");
 
 		final MenuBar userMenuBar = new MenuBar(true);
 		userMenuBar.setStyleName("userMenuBar");
@@ -1011,6 +1034,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		helpMenuItem.setHeight("");
 		helpMenuBar.addItem(aboutMenuItem);
 		aboutMenuItem.setHeight("");
+		log.info("Trace 5");
 
 		final HorizontalPanel horizontalPanel_3 = new HorizontalPanel();
 		horizontalPanel_3.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
@@ -1123,11 +1147,11 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsListButtonPanel.setCellHorizontalAlignment(horizontalPanel,
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		horizontalPanel.setSize("", "");
-		final PushButton submitButton = new PushButton("Upload App");
-		submitButton.setStyleName("appvetButton shadow");
-		submitButton.setTitle("Upload App");
-		submitButton
-		.setHTML("<img width=\"100px\" src=\"images/icon-upload-app.png\" alt=\"Upload App\" />");
+		final PushButton submitButton = new PushButton("UPLOAD APP");
+		submitButton.setHTML("<div><img style=\"vertical-align:middle\" width=\"16px\" height=\"16px\" src=\"images/upload-white.png\" alt=\"Upload APP\"/> <span style=\"\">UPLOAD APP\r\n</span></div>");
+		submitButton.setStyleName("greenButton shadow");
+		submitButton.setTitle("Upload app");
+
 		submitButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1170,10 +1194,10 @@ public class AppVetPanel extends DockLayoutPanel {
 				});
 			}
 		});
-		viewAllButton = new PushButton("View All Apps");
-		viewAllButton.setStyleName("appvetButton shadow");
-		viewAllButton
-		.setHTML("<img width=\"100px\" src=\"images/icon-view-all.png\" alt=\"View All Apps\" />");
+		viewAllButton = new PushButton("VIEW ALL");
+		viewAllButton.setStyleName("grayButton shadow");
+//		viewAllButton.setHTML("<img width=\"100px\" src=\"images/icon-view-all.png\" alt=\"View All Apps\" />");
+		viewAllButton.setHTML("VIEW ALL");
 		viewAllButton.setTitle("View All Apps");
 		viewAllButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -1188,14 +1212,14 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel.setCellVerticalAlignment(viewAllButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		viewAllButton.setSize("100px", "25px");
+		viewAllButton.setSize("100px", "18px");
 		viewAllButton.setVisible(false);
 		horizontalPanel.add(submitButton);
 		horizontalPanel.setCellVerticalAlignment(submitButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel.setCellHorizontalAlignment(submitButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		submitButton.setSize("100px", "25px");
+		submitButton.setSize("120px", "20px");
 
 		HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
 		appInfoVerticalPanel.add(horizontalPanel_1);
@@ -1206,12 +1230,12 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel_1.setCellVerticalAlignment(label, HasVerticalAlignment.ALIGN_MIDDLE);
 		label.setSize("0", "0");
 		uploadReportButton = new PushButton("Upload Report");
-		uploadReportButton.setStyleName("appvetButton shadow");
+		uploadReportButton.setHTML("<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/upload-black.png\" alt=\"Upload Report\" /> <span style=\"\">REPORT\r\n</span></div>");
+		uploadReportButton.setStyleName("grayButton shadow");
 		horizontalPanel_1.add(uploadReportButton);
 		horizontalPanel_1.setCellVerticalAlignment(uploadReportButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_1.setCellHorizontalAlignment(uploadReportButton, HasHorizontalAlignment.ALIGN_CENTER);
-		uploadReportButton
-		.setHTML("<img width=\"82px\" src=\"images/icon-upload-report.png\" alt=\"Upload Report\" />");
+
 		horizontalPanel.setCellVerticalAlignment(uploadReportButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		uploadReportButton.setTitle("Upload Report");
@@ -1247,14 +1271,14 @@ public class AppVetPanel extends DockLayoutPanel {
 				}
 			}
 		});
-		uploadReportButton.setSize("82px", "24px");
+		uploadReportButton.setSize("82px", "20px");
 		logButton = new PushButton("View Log");
-		logButton.setStyleName("appvetButton shadow");
+		logButton.setHTML("<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/magnifying-glass-black.png\" alt=\"Upload Report\" /> <span style=\"\">LOG\r\n</span></div>");
+		logButton.setStyleName("grayButton shadow");
 		horizontalPanel_1.add(logButton);
 		horizontalPanel_1.setCellVerticalAlignment(logButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_1.setCellHorizontalAlignment(logButton, HasHorizontalAlignment.ALIGN_CENTER);
-		logButton
-		.setHTML("<img width=\"82px\" src=\"images/icon-view-log.png\" alt=\"View Log\" />");
+
 		horizontalPanel.setCellVerticalAlignment(logButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		logButton.setTitle("View Log");
@@ -1275,14 +1299,14 @@ public class AppVetPanel extends DockLayoutPanel {
 				}
 			}
 		});
-		logButton.setSize("82px", "24px");
+		logButton.setSize("82px", "20px");
 		deleteButton = new PushButton("Delete App");
-		deleteButton.setStyleName("appvetButton shadow");
+		deleteButton.setHTML("Delete Appp");
+		deleteButton.setStyleName("grayButton shadow");
 		horizontalPanel_1.add(deleteButton);
 		horizontalPanel_1.setCellVerticalAlignment(deleteButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_1.setCellHorizontalAlignment(deleteButton, HasHorizontalAlignment.ALIGN_CENTER);
-		deleteButton
-		.setHTML("<img width=\"82px\" src=\"images/icon-delete-app.png\" alt=\"Delete App\" />");
+
 		horizontalPanel.setCellVerticalAlignment(deleteButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		deleteButton.setTitle("Delete App");
@@ -1320,14 +1344,14 @@ public class AppVetPanel extends DockLayoutPanel {
 				});
 			}
 		});
-		deleteButton.setSize("82px", "24px");
+		deleteButton.setSize("82px", "20px");
 		downloadReportsButton = new PushButton("Download Reports");
-		downloadReportsButton.setStyleName("appvetButton shadow");
+		downloadReportsButton.setHTML("<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/download-black.png\" alt=\"Download Reports\" /> <span style=\"\">Reports</span></div>");
+		downloadReportsButton.setStyleName("grayButton shadow");
 		horizontalPanel_1.add(downloadReportsButton);
 		horizontalPanel_1.setCellVerticalAlignment(downloadReportsButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_1.setCellHorizontalAlignment(downloadReportsButton, HasHorizontalAlignment.ALIGN_CENTER);
-		downloadReportsButton
-		.setHTML("<img width=\"82px\" src=\"images/icon-download-reports.png\" alt=\"Download Reports\" />");
+
 		downloadReportsButton.setTitle("Download Reports");
 		downloadReportsButton.setEnabled(true);
 		downloadReportsButton.addClickHandler(new ClickHandler() {
@@ -1358,17 +1382,15 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appsListButtonPanel.setCellHorizontalAlignment(downloadReportsButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		downloadReportsButton.setSize("82px", "24px");
+		downloadReportsButton.setSize("82px", "20px");
 
-		downloadAppButton = new PushButton("Download App");
-		downloadAppButton.setStyleName("appvetButton shadow");
+		downloadAppButton.setStyleName("grayButton shadow");
 		horizontalPanel_1.add(downloadAppButton);
 		horizontalPanel_1.setCellVerticalAlignment(downloadAppButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_1.setCellHorizontalAlignment(downloadAppButton, HasHorizontalAlignment.ALIGN_CENTER);
-		downloadAppButton
-		.setHTML("<img width=\"82px\" src=\"images/icon-download-app.png\" alt=\"Download App\" />");
+
 		downloadAppButton.setTitle("Download App");
-		downloadAppButton.setSize("82px", "24px");
+		downloadAppButton.setSize("82px", "20px");
 		toolResultsHtml = new HTML("", true);
 		
 				//TODO
@@ -1404,9 +1426,36 @@ public class AppVetPanel extends DockLayoutPanel {
 		uploadReportButton.setVisible(true);
 
 		addSouth(southPanel, SOUTH_PANEL_HEIGHT);
+		log.info("Trace 6");
 
+		if ((initialApps != null) && (initialApps.apps.size() > 0)) {
+			log.info("Trace 3b7");
 
+			appSelectionModel.setSelected(initialApps.apps.get(0), true);
+			log.info("Trace 3b8");
+
+		} else {
+			log.info("Trace 3b9");
+
+			logButton.setEnabled(false);
+			log.info("Trace 3b9a");
+
+			uploadReportButton.setEnabled(false);
+			log.info("Trace 3b9b");
+
+			deleteButton.setEnabled(false);
+			log.info("Trace 3b9c");
+
+			downloadReportsButton.setEnabled(false);
+			log.info("Trace 3b9d");
+
+			downloadAppButton.setEnabled(false);
+			log.info("Trace 3b10");
+
+		}
+		
 		scheduleResize();
+		log.info("Trace 7");
 
 		// Note that SSO users can manually refresh the page but non-SSO users
 		// will
@@ -1414,6 +1463,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		if (!ssoActive) {
 			showDontRefreshWarning();
 		}
+		log.info("Trace 8");
+
 	}
 
 	public void removeSession(final boolean sessionExpired) {
@@ -2078,11 +2129,11 @@ public class AppVetPanel extends DockLayoutPanel {
 					String systemMessage = systemAlert.message;
 
 					if (systemAlert.type == SystemAlertType.NORMAL) {
-						statusMessageHtml.setHTML("<img width=\"18px\" height=\"18px\" src=\"images/icon-metadata.png\" alt=\"Message\" /> " + systemMessage);						
+						statusMessageHtml.setHTML("<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/icon-metadata.png\" alt=\"System Message\" /> <span style=\"\">" + systemMessage + "</span></div>");						
 					} else if (systemAlert.type == SystemAlertType.WARNING) {
-						statusMessageHtml.setHTML("<img width=\"18px\" height=\"18px\" src=\"images/icon-warning.png\" alt=\"Warning\" /> " + systemMessage);						
+						statusMessageHtml.setHTML("<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/icon-warning.png\" alt=\"Warning\" /> <span style=\"\">"  + systemMessage + "</span></div>");						
 					} else if (systemAlert.type == SystemAlertType.CRITICAL) {
-						statusMessageHtml.setHTML("<img width=\"18px\" height=\"18px\" src=\"images/icon-error.png\" alt=\"Error\" /> " + systemMessage);						
+						statusMessageHtml.setHTML("<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/icon-error.png\" alt=\"Error\" /> <span style=\"\">"  + systemMessage + "</span></div>");						
 					}
 
 				} else {
@@ -2154,15 +2205,15 @@ public class AppVetPanel extends DockLayoutPanel {
 	 * time the user is logged in then the change is not visible to the user
 	 * until the user's next log in.
 	 */
-	public void openUserAccount(final ConfigInfoGwt configInfoGwt) {
+	public void openUserAccount(final ConfigInfoGwt configInfo) {
 
-		if (configInfoGwt.getUserInfo().isDefaultAdmin()) {
+		if (configInfo.getUserInfo().isDefaultAdmin()) {
 			showMessageDialog("Account Info", "Cannot change info for "
 					+ "default AppVet administrator", false);
 			return;
 		}
 
-		userAcctDialogBox = new UserAcctDialogBox(configInfoGwt, ssoActive);
+		userAcctDialogBox = new UserAcctDialogBox(configInfo, ssoActive);
 		userAcctDialogBox.setText("Account Settings");
 		userAcctDialogBox.center();
 		userAcctDialogBox.password1TextBox.setFocus(true);
@@ -2181,12 +2232,6 @@ public class AppVetPanel extends DockLayoutPanel {
 						.getText();
 				final String newFirstName = userAcctDialogBox.firstNameTextBox
 						.getText();
-				// final String newOrganization =
-				// userAcctDialogBox.organizationTextBox
-				// .getText();
-				// final String newDepartment =
-				// userAcctDialogBox.departmentTextBox
-				// .getText();
 				final String newEmail = userAcctDialogBox.emailTextBox
 						.getText();
 				final String newPassword1 = userAcctDialogBox.password1TextBox
@@ -2199,7 +2244,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				updatedUserInfo.setFirstName(newFirstName);
 				updatedUserInfo.setEmail(newEmail);
 				updatedUserInfo.setPasswords(newPassword1, newPassword2);
-				updatedUserInfo.setRoleStr(userInfo.getRoleStr());
+				updatedUserInfo.setRoleAndOrgMembership(userInfo.getRoleAndOrgMembership());
 				// Validate updated user info
 				if (!userInfoIsValid(updatedUserInfo, ssoActive)) {
 					return;
@@ -2226,14 +2271,9 @@ public class AppVetPanel extends DockLayoutPanel {
 									.getLastName());
 							userInfo.setFirstName(updatedUserInfo
 									.getFirstName());
-							// userInfo.setOrganization(updatedUserInfo
-							// .getOrganization());
-							// userInfo.setDepartment(updatedUserInfo
-							// .getDepartment());
 							userInfo.setEmail(updatedUserInfo
 									.getEmail());
 							updatedUserInfo.setPassword("");
-							// userInfo.setRole(updatedUserInfo.getRole());
 
 							killDialogBox(userAcctDialogBox);
 							showMessageDialog("Account Update",

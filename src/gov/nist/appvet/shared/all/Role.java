@@ -1,10 +1,12 @@
 package gov.nist.appvet.shared.all;
 
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 
-
+/** This class currently contains both role and the user's organizational membership hierarchy. 
+ * @author Stephen Quirolgico
+ */
+// TODO: Future versions of AppVet may want to separate role from the user's organizational membership hierarchy.
 public enum Role {
 	// An ADMIN is an administrator of the AppVet system. An ADMIN
 	// has complete access and control of all accounts and apps.
@@ -31,7 +33,7 @@ public enum Role {
 	}
 	
 	/** Get a role given a roleStr. A roleStr is a String that defines a 
-	 * role and its related org hierarchy (if available) and has the following 
+	 * role and the user's related organizational membership hierarchy (if available) and has the following 
 	 * forms: 
 	 * <ul>
 	 * <li>ADMIN
@@ -82,7 +84,7 @@ public enum Role {
 	 * <li>USER:level1,level2[,level3[,level4]]
 	 * </ul>
 	 */
-	public static ArrayList<String> getOrgHierarchy(String roleStr) throws Exception {
+/*	public static ArrayList<String> getOrgHierarchy(String roleStr) throws Exception {
 		if (roleStr != null && !roleStr.isEmpty()) {
 			if (roleStr.equals(Role.ADMIN.name())) {
 				return null;
@@ -121,9 +123,9 @@ public enum Role {
 		} else {
 			throw new Exception("Emptry roleStr");
 		}
-	}
+	}*/
 	
-	/** Get a String representation of org hierarchies given a roleStr. 
+	/** Get the user's organizational memberships. 
 	 * A roleStr is a String 
 	 * that defines a role and its related org hierarchy (if available) and 
 	 * has the following 
@@ -135,53 +137,46 @@ public enum Role {
 	 * <li>USER:level1,level2[,level3[,level4]]
 	 * </ul>
 	 */
-	public static String getOrgHierarchyStr(String roleStr) throws Exception {
+	public static String getOrgMembershipLevelsStr(String roleStr) throws Exception {
 		if (roleStr != null && !roleStr.isEmpty()) {
 			if (roleStr.equals(Role.ADMIN.name())) {
+				// ADMINs have no associated org memberships.
 				return null;
 			} else if (roleStr.equals(Role.TOOL_PROVIDER.name())) {
+				// TOOL_PROVIDERs have no associated org memberships.
 				return null;
 			} else if (roleStr.equals(Role.NEW.name())) {
+				// New users have no associated org memberships.
 				return null;
 			} else {
-				String[] roleAndHierarchy = roleStr.split(":");
-				if (roleAndHierarchy == null) {
-					throw new Exception("Invalid roleAndHierarchy format.");
-				} else if (roleAndHierarchy.length != 2) {
+				String[] roleAndMembership = roleStr.split(":");
+				if (roleAndMembership == null) {
+					throw new Exception("Invalid roleAndMembership format.");
+				} else if (roleAndMembership.length != 2) {
 					throw new Exception(
-							"Role and hierarchy string must contain exactly two elements.");
+							"Role and membership string must contain exactly two elements.");
 				}
-				String rolePart = roleAndHierarchy[0];
+				String rolePart = roleAndMembership[0];
 				if (!rolePart.equals(Role.USER.name()) && !rolePart.equals(Role.ANALYST.name())) {
 					throw new Exception("Invalid role");
 				} 
-				String hierarchyPart = roleAndHierarchy[1];
-				if (hierarchyPart == null) {
-					throw new Exception("hierarchyPart is null");
+				String membershipPart = roleAndMembership[1];
+				if (membershipPart == null) {
+					throw new Exception("membershipPart should not be null");
+				} else {
+					return membershipPart;
 				}
-				String[] orgLevels = hierarchyPart.split(",");
-				if (orgLevels.length <= 0 || orgLevels.length > 4) {
-					throw new Exception("Invalid number of org levels" + orgLevels.length);
-				}
-				String orgHierarchyStr = "";
-				for (int i = 0; i < orgLevels.length; i++) {
-					String orgLevel = orgLevels[i];
-					String trimmedOrgLevel = orgLevel.trim();
-					orgHierarchyStr += trimmedOrgLevel;
-					if (i < orgLevels.length - 1) {
-						orgHierarchyStr += ",";
-					}
-				}
-				return orgHierarchyStr;
 			}
 		} else {
 			throw new Exception("Emptry roleStr");
 		}
 	}
 	
-	/** Get a String representation of org hierarchies for display purposes
-	 * given a roleStr. A roleStr is a String that defines a role and its 
-	 * related org hierarchy (if available) and has the following forms: 
+	/** Get the user's organizational memberships as an array.
+	 * A roleStr is a String 
+	 * that defines a role and its related org hierarchy (if available) and 
+	 * has the following 
+	 * forms: 
 	 * <ul>
 	 * <li>ADMIN
 	 * <li>TOOL_PROVIDER
@@ -189,44 +184,35 @@ public enum Role {
 	 * <li>USER:level1,level2[,level3[,level4]]
 	 * </ul>
 	 */
-	public static String getOrgHierarchyDisplayStr(String roleStr) throws Exception {
+	public static String[] getOrgMembership(String roleStr) throws Exception {
 		if (roleStr != null && !roleStr.isEmpty()) {
 			if (roleStr.equals(Role.ADMIN.name())) {
+				// ADMINs have no associated org memberships.
 				return null;
 			} else if (roleStr.equals(Role.TOOL_PROVIDER.name())) {
+				// TOOL_PROVIDERs have no associated org memberships.
 				return null;
 			} else if (roleStr.equals(Role.NEW.name())) {
+				// New users have no associated org memberships.
 				return null;
 			} else {
-				String[] roleAndHierarchy = roleStr.split(":");
-				if (roleAndHierarchy == null) {
-					throw new Exception("Invalid roleAndHierarchy format.");
-				} else if (roleAndHierarchy.length != 2) {
+				String[] roleAndMembership = roleStr.split(":");
+				if (roleAndMembership == null) {
+					throw new Exception("Invalid roleAndMembership format.");
+				} else if (roleAndMembership.length != 2) {
 					throw new Exception(
-							"Role and hierarchy string must contain exactly two elements.");
+							"Role and membership string must contain exactly two elements.");
 				}
-				String rolePart = roleAndHierarchy[0];
+				String rolePart = roleAndMembership[0];
 				if (!rolePart.equals(Role.USER.name()) && !rolePart.equals(Role.ANALYST.name())) {
 					throw new Exception("Invalid role");
 				} 
-				String hierarchyPart = roleAndHierarchy[1];
-				if (hierarchyPart == null) {
-					throw new Exception("hierarchyPart is null");
+				String membershipPart = roleAndMembership[1];
+				if (membershipPart == null) {
+					throw new Exception("membershipPart should not be null");
+				} else {
+					return membershipPart.split(",");
 				}
-				String[] orgLevels = hierarchyPart.split(",");
-				if (orgLevels.length <= 0 || orgLevels.length > 4) {
-					throw new Exception("Invalid number of org levels" + orgLevels.length);
-				}
-				String orgHierarchyStr = "";
-				for (int i = 0; i < orgLevels.length; i++) {
-					String orgLevel = orgLevels[i];
-					String trimmedOrgLevel = orgLevel.trim();
-					orgHierarchyStr += trimmedOrgLevel;
-					if (i < orgLevels.length - 1) {
-						orgHierarchyStr += "/";
-					}
-				}
-				return orgHierarchyStr;
 			}
 		} else {
 			throw new Exception("Emptry roleStr");

@@ -40,10 +40,8 @@ public class UserInfo implements IsSerializable {
 	private String email = null;
 	private ArrayList<UserToolCredentials> toolCredentials = null;
 	private boolean defaultAdmin = false;
-	/* The string representation of a UserRoleInfo object which can be read from or written
-	 * to the database.
-	 */
-	private String roleStr = null;
+	/** The string representation of the user's role and associated organizational membership hierarchy.*/
+	private String roleAndOrgMembership = null;
 	
 	// --------------- Updated only by AppVet --------------
 	private Date lastLogon = null;
@@ -190,11 +188,11 @@ public class UserInfo implements IsSerializable {
 		this.defaultAdmin = defaultAdmin;
 	}
 
-	public String getRoleStr() {
-		return roleStr;
+	public String getRoleAndOrgMembership() {
+		return roleAndOrgMembership;
 	}
 
-	public void setRoleStr(String roleStr) {
-		this.roleStr = roleStr;
+	public void setRoleAndOrgMembership(String roleAndOrgMembership) {
+		this.roleAndOrgMembership = roleAndOrgMembership;
 	}
 }

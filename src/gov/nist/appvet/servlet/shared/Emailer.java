@@ -25,7 +25,7 @@ public class Emailer {
 	static List<UserInfo> adminUsers = null;
 
 	static {
-		adminUsers = Database.getUsers(Role.ADMIN);
+		adminUsers = Database.getAllUsers(Role.ADMIN);
 	}
 
 	public static void sendEmail(String recipient, String subject, 

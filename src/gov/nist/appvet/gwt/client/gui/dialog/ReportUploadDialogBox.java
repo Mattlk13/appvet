@@ -190,7 +190,7 @@ public class ReportUploadDialogBox extends DialogBox {
 		statusLabel = new HTML("");
 		
 		// Add tools to toolNamesComboBox
-		String submitterRoleStr = userInfo.getRoleStr();
+		String submitterRoleStr = userInfo.getRoleAndOrgMembership();
 		Role submitterRole = null;
 		try {
 			submitterRole = Role.getRole(submitterRoleStr);

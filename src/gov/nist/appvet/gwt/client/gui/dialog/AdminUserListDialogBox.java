@@ -51,18 +51,20 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
+import com.google.gwt.user.client.ui.TextBoxBase;
 
 /**
  * @author steveq@nist.gov
  */
-public class UserListDialogBox extends DialogBox {
-	private Logger log = Logger.getLogger("UserListDialogBox");
+public class AdminUserListDialogBox extends DialogBox {
+	private Logger log = Logger.getLogger("AdminUserListDialogBox");
 
 	public PushButton doneButton = null;
 	private final GWTServiceAsync appVetServiceAsync = GWT
 			.create(GWTService.class);
 	public MessageDialogBox messageDialogBox = null;
-	public UserAcctAdminDialogBox userAcctAdminDialogBox = null;
+	public AdminUserAcctDialogBox userAcctAdminDialogBox = null;
 	public List<UserInfo> allUsers = null;
 	public SingleSelectionModel<UserInfo> usersSelectionModel = null;
 	public UsersListPagingDataGrid<UserInfo> usersListTable = null;
@@ -70,15 +72,15 @@ public class UserListDialogBox extends DialogBox {
 	public boolean searchMode = true;
 	public TextBox searchTextBox = null;
 	public PushButton addUserButton = null;
-	public List<String> orgHierarchies = new ArrayList<String>();
+	public List<String> allUsersOrgMemberships = new ArrayList<String>();
 
-	public UserListDialogBox(final ConfigInfoGwt configInfo, final boolean useSSO) {
+	public AdminUserListDialogBox(final ConfigInfoGwt configInfo, final boolean useSSO) {
 		super(false, true);
 		setSize("", "450px");
 		setAnimationEnabled(false);
 		usersSelectionModel = new SingleSelectionModel<UserInfo>();
 		usersSelectionModel
-				.addSelectionChangeHandler(new UserListHandler(this));
+		.addSelectionChangeHandler(new UserListHandler(this));
 		final DockPanel dockPanel = new DockPanel();
 		dockPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		dockPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
@@ -87,7 +89,7 @@ public class UserListDialogBox extends DialogBox {
 		final VerticalPanel verticalPanel = new VerticalPanel();
 		verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.setStyleName("usersCenterPanel");
 		dockPanel.add(verticalPanel, DockPanel.CENTER);
 		dockPanel.setCellVerticalAlignment(verticalPanel,
@@ -98,15 +100,18 @@ public class UserListDialogBox extends DialogBox {
 		final HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
 		horizontalPanel_1.setStyleName("usersHorizPanel");
 		horizontalPanel_1
-				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_1
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.add(horizontalPanel_1);
+		horizontalPanel_1.setWidth("365px");
 		verticalPanel.setCellVerticalAlignment(horizontalPanel_1,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel.setCellHorizontalAlignment(horizontalPanel_1,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		searchTextBox = new TextBox();
+		searchTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
+		searchTextBox.setAlignment(TextAlignment.LEFT);
 		searchTextBox.addKeyDownHandler(new KeyDownHandler() {
 			@Override
 			public void onKeyDown(KeyDownEvent event) {
@@ -119,16 +124,15 @@ public class UserListDialogBox extends DialogBox {
 		horizontalPanel_1.add(searchTextBox);
 		horizontalPanel_1.setCellVerticalAlignment(searchTextBox,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		searchTextBox.setSize("260px", "18px");
+		searchTextBox.setSize("220px", "18px");
 		final PushButton searchButton = new PushButton("Search");
+		searchButton.setStyleName("grayButton shadow");
 		searchButton.setTitle("Search Users");
 		searchButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 			}
 		});
-		searchButton
-				.setHTML("<img width=\"18px\" src=\"images/icon-search-up.png\" alt=\"Search\" />");
 		searchButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -141,8 +145,9 @@ public class UserListDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_1.setCellHorizontalAlignment(searchButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		searchButton.setSize("18px", "18px");
+		searchButton.setSize("55px", "18px");
 		final PushButton viewAllButton = new PushButton("View All");
+		viewAllButton.setStyleName("grayButton shadow");
 		viewAllButton.setTitle("View All Users");
 		viewAllButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -151,14 +156,12 @@ public class UserListDialogBox extends DialogBox {
 				setAllUsers(allUsers);
 			}
 		});
-		viewAllButton
-				.setHTML("<img width=\"18px\" src=\"images/icon-view-all-up.png\" alt=\"View All\" />");
 		horizontalPanel_1.add(viewAllButton);
 		horizontalPanel_1.setCellHorizontalAlignment(viewAllButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_1.setCellVerticalAlignment(viewAllButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		viewAllButton.setSize("18px", "18px");
+		viewAllButton.setSize("55px", "18px");
 		final DockLayoutPanel dockLayoutPanel = new DockLayoutPanel(Unit.EM);
 		dockLayoutPanel.setStyleName("usersDockPanel");
 		verticalPanel.add(dockLayoutPanel);
@@ -170,17 +173,17 @@ public class UserListDialogBox extends DialogBox {
 		usersListTable = new UsersListPagingDataGrid<UserInfo>();
 		usersListTable.dataGrid.setFocus(false);
 		usersListTable.setPageSize(configInfo.getNumRowsUsersList());
-		usersListTable.dataGrid.setSize("342px", "342px");
+		usersListTable.dataGrid.setSize("370px", "342px");
 		usersListTable.dataGrid
-				.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
+		.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 		usersListTable.dataGrid.setSelectionModel(usersSelectionModel);
 		dockLayoutPanel.add(usersListTable);
 		usersListTable.setWidth("");
 		final HorizontalPanel horizontalPanel_2 = new HorizontalPanel();
 		horizontalPanel_2
-				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_2
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_2.setStyleName("buttonPanel");
 		verticalPanel.add(horizontalPanel_2);
 		verticalPanel.setCellVerticalAlignment(horizontalPanel_2,
@@ -224,23 +227,23 @@ public class UserListDialogBox extends DialogBox {
 				deleteConfirmDialogBox.center();
 				deleteConfirmDialogBox.cancelButton.setFocus(true);
 				deleteConfirmDialogBox.cancelButton
-						.addClickHandler(new ClickHandler() {
-							@Override
-							public void onClick(ClickEvent event) {
-								killDialogBox(deleteConfirmDialogBox);
-								return;
-							}
-						});
+				.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						killDialogBox(deleteConfirmDialogBox);
+						return;
+					}
+				});
 				deleteConfirmDialogBox.okButton
-						.addClickHandler(new ClickHandler() {
-							@Override
-							public void onClick(ClickEvent event) {
-								killDialogBox(deleteConfirmDialogBox);
-								if (selected != null) {
-									deleteUser(selectedUser.getUserName());
-								}
-							}
-						});
+				.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						killDialogBox(deleteConfirmDialogBox);
+						if (selected != null) {
+							deleteUser(selectedUser.getUserName());
+						}
+					}
+				});
 			}
 		});
 		deleteUserButton.setHTML("Delete");
@@ -290,14 +293,17 @@ public class UserListDialogBox extends DialogBox {
 
 	public void editUser(final ConfigInfoGwt configInfo, 
 			final boolean newUser, final boolean ssoActive) {
-		
+
+		log.info("In editUser");
 		if (newUser) {
+			log.info("new user");
 			userAcctAdminDialogBox = 
-					new UserAcctAdminDialogBox(configInfo, null, ssoActive, orgHierarchies);
+					new AdminUserAcctDialogBox(configInfo, null, ssoActive, allUsersOrgMemberships);
 			userAcctAdminDialogBox.setText("Add User");
 			userAcctAdminDialogBox.lastNameTextBox.setFocus(true);
-			
+
 		} else {
+			log.info("existing user");
 			selectedUser = usersSelectionModel.getSelectedObject();
 			if (selectedUser.isDefaultAdmin()) {
 				showMessageDialog("Account Info", "Cannot change info for "
@@ -305,7 +311,7 @@ public class UserListDialogBox extends DialogBox {
 				return;
 			}
 			userAcctAdminDialogBox = 
-					new UserAcctAdminDialogBox(configInfo, selectedUser, ssoActive, orgHierarchies);
+					new AdminUserAcctDialogBox(configInfo, selectedUser, ssoActive, allUsersOrgMemberships);
 			userAcctAdminDialogBox.setText(selectedUser.getFirstName() + " "
 					+ selectedUser.getLastName());
 			userAcctAdminDialogBox.lastNameTextBox.setFocus(true);
@@ -318,10 +324,11 @@ public class UserListDialogBox extends DialogBox {
 				userAcctAdminDialogBox = null;
 			}
 		});
+
 		userAcctAdminDialogBox.submitButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				
+
 				final String newPassword1 = userAcctAdminDialogBox.password1TextBox
 						.getValue();
 				final String newPassword2 = userAcctAdminDialogBox.password2TextBox
@@ -330,9 +337,10 @@ public class UserListDialogBox extends DialogBox {
 				final String newLastName = userAcctAdminDialogBox.lastNameTextBox.getText();
 				final String newFirstName = userAcctAdminDialogBox.firstNameTextBox.getText();
 				final String newEmail = userAcctAdminDialogBox.emailTextBox.getText();
-				final String newRoleStr = userAcctAdminDialogBox.getRoleStr();
-				
-				// First make sure that the information has changed if this
+				final String orgMembership = userAcctAdminDialogBox.orgMembershipTextBox.getText();
+				final String newRoleAndMembership = userAcctAdminDialogBox.getRoleAndMembership(orgMembership);
+
+				/*				// First make sure that the information has changed if this
 				// is not for a new user. If it hasn't changed, cancel the 
 				// update request.
 				if (!newUser) {
@@ -357,7 +365,7 @@ public class UserListDialogBox extends DialogBox {
 					if (!selectedUser.getEmail().equals(newEmail)) {
 						selectedUserChanged = true;
 					}
-					if (!selectedUser.getRoleStr().equals(newRoleStr)) {
+					if (!selectedUser.getRoleAndOrgMembership().equals(newRoleStr)) {
 						selectedUserChanged = true;
 					}
 					if (!selectedUserChanged) {
@@ -366,7 +374,7 @@ public class UserListDialogBox extends DialogBox {
 								true);
 						return;
 					}
-				} 
+				} */
 
 				// Check that all values are valid
 				final UserInfo userInfo = new UserInfo();
@@ -375,7 +383,7 @@ public class UserListDialogBox extends DialogBox {
 				userInfo.setLastName(newLastName);
 				userInfo.setFirstName(newFirstName);
 				userInfo.setEmail(newEmail);
-				userInfo.setRoleStr(newRoleStr);
+				userInfo.setRoleAndOrgMembership(newRoleAndMembership);
 				if (newUser) {
 					userInfo.setNewUser(true);
 				}
@@ -414,7 +422,7 @@ public class UserListDialogBox extends DialogBox {
 	}
 
 	public void getUsersList() {
-		appVetServiceAsync.getUsersList(new AsyncCallback<List<UserInfo>>() {
+		appVetServiceAsync.getAllUsers(new AsyncCallback<List<UserInfo>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				showMessageDialog("AppVet Error", "Could not retrieve users",
@@ -431,15 +439,14 @@ public class UserListDialogBox extends DialogBox {
 				} else if ((usersList != null) && (usersList.size() > 0)) {
 					setAllUsers(usersList);
 				}
-				// Set org hierarchies list
+				// Set org membership list
 				try {
-					orgHierarchies.clear();
+					allUsersOrgMemberships.clear();
 					for (int i = 0; i < usersList.size(); i++) {
 						UserInfo userInfo = usersList.get(i);
-						String hierarchyStr = 
-								Role.getOrgHierarchyStr(userInfo.getRoleStr());
-						if (hierarchyStr != null) {
-							orgHierarchies.add(hierarchyStr);
+						String orgMembershipString = Role.getOrgMembershipLevelsStr(userInfo.getRoleAndOrgMembership());
+						if (orgMembershipString != null) {
+							allUsersOrgMemberships.add(orgMembershipString);
 						}
 					}
 				} catch (Exception e) {
@@ -485,54 +492,53 @@ public class UserListDialogBox extends DialogBox {
 		appVetServiceAsync.adminSetUser(userInfo,
 				new AsyncCallback<List<UserInfo>>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						log.severe(caught.getMessage());
-						showMessageDialog("AppVet Error",
-								"User update retrieval error", true);
+			@Override
+			public void onFailure(Throwable caught) {
+				log.severe(caught.getMessage());
+				showMessageDialog("AppVet Error",
+						"User update retrieval error", true);
+			}
+
+			@Override
+			public void onSuccess(List<UserInfo> result) {
+				if (result.size() == 0) {
+					showMessageDialog("Update Error",
+							"Error adding or updating user", true);
+				} else {
+					if (newUser) {
+						showMessageDialog("Update Status", "User '"
+								+ userInfo.getUserName()
+								+ "' added successfully", false);
+					} else {
+						showMessageDialog("Update Status", "User '"
+								+ userInfo.getUserName()
+								+ "' updated successfully", false);
 					}
 
-					@Override
-					public void onSuccess(List<UserInfo> result) {
-						if (result.size() == 0) {
-							showMessageDialog("Update Error",
-									"Error adding or updating user", true);
-						} else {
-							if (newUser) {
-								showMessageDialog("Update Status", "User '"
-										+ userInfo.getUserName()
-										+ "' added successfully", false);
-							} else {
-								showMessageDialog("Update Status", "User '"
-										+ userInfo.getUserName()
-										+ "' updated successfully", false);
-							}
-
-							allUsers = result;
-							setAllUsers(allUsers);
-							// Set org hierarchies list
-							try {
-								orgHierarchies.clear();
-								for (int i = 0; i < result.size(); i++) {
-									UserInfo userInfo = result.get(i);
-									String hierarchyStr = 
-											Role.getOrgHierarchyStr(userInfo.getRoleStr());
-									if (hierarchyStr != null) {
-										orgHierarchies.add(hierarchyStr);
-									}
-								}
-							} catch (Exception e) {
-								e.printStackTrace();
+					allUsers = result;
+					setAllUsers(allUsers);
+					// Set org hierarchies list
+					try {
+						allUsersOrgMemberships.clear();
+						for (int i = 0; i < result.size(); i++) {
+							UserInfo userInfo = result.get(i);
+							String orgMembershipString = Role.getOrgMembershipLevelsStr(userInfo.getRoleAndOrgMembership());
+							if (orgMembershipString != null) {
+								allUsersOrgMemberships.add(orgMembershipString);
 							}
 						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-				});
+				}
+			}
+		});
 	}
-	
-	class UserListHandler implements SelectionChangeEvent.Handler {
-		UserListDialogBox usersDialogBox = null;
 
-		public UserListHandler(UserListDialogBox usersDialogBox) {
+	class UserListHandler implements SelectionChangeEvent.Handler {
+		AdminUserListDialogBox usersDialogBox = null;
+
+		public UserListHandler(AdminUserListDialogBox usersDialogBox) {
 			this.usersDialogBox = usersDialogBox;
 		}
 
@@ -548,7 +554,7 @@ public class UserListDialogBox extends DialogBox {
 			dialogBox = null;
 		}
 	}
-	
+
 	public boolean userInfoIsValid(UserInfo userInfo, boolean ssoActive) {
 
 		if (!Validate.isValidUserName(userInfo.getUserName())) {
@@ -598,9 +604,13 @@ public class UserListDialogBox extends DialogBox {
 					return false;
 				}
 			} else {
-				showMessageDialog("Account Setting Error",
-						"Password is empty or null", true);
-				return false;
+				if (userInfo.isNewUser()) {
+					showMessageDialog("Account Setting Error",
+							"Password is empty or null", true);
+					return false;
+				} else {
+					return true;
+				}
 			}
 		} else {
 			// SSO is active so we ignore password fields (since passwords

@@ -59,7 +59,7 @@ h3 {
 }
 
 .statusMessage {
-   vertical-align: top;
+   vertical-align: middle;
 	color: black;
 	font: arial;
 	font-weight: bold;
@@ -1174,41 +1174,151 @@ box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 	background: #023d64;
 }
 
-/* Main panel buttons */
-.appvetButton {
-	background: #2d8659;
-	margin: 4px;
-}
-.appvetButton:hover {
-	background: #015289;
-}
+/*---------------------- For ALL buttons ----------------------*/
 .shadow {
 -webkit-box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 -moz-box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 }
 
-/* White Cancel buttons */
+/*---------------------- Main panel buttons ----------------------*/
+.appvetButton {
+	color: white;
+	background: #2d8659;
+	margin: 4px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #2d8659;
+}
+.appvetButton:hover {
+	border-style: solid;
+	border-width: 1px;
+	border-color: black;
+}
+.appvetButton-up-disabled {
+	color: white;
+	background: #BBE8D1;
+	margin: 4px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #BBE8D1;
+}
+.appvetButton-up-disabled:hover {
+	color: white;
+	background: #BBE8D1;
+	margin: 4px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #939393;
+}
+
+/*---------------------- APP UPLOAD button ----------------------*/
+
+.appUploadButton {
+	color: white;
+	background: #2d8659;
+	margin-left: 4px;
+	margin-right: 8px;
+	margin-top: 4px;
+	margin-bottom: 4px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #2d8659;
+}
+.appUploadButton:hover {
+	border-style: solid;
+	border-width: 1px;
+	border-color: black;
+}
+.appUploadButton-up-disabled {
+	color: white;
+	background: #BBE8D1;
+	margin-left: 4px;
+	margin-right: 8px;
+	margin-top: 4px;
+	margin-bottom: 4px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #BBE8D1;
+}
+.appUploadButton-up-disabled:hover {
+	color: white;
+	background: #BBE8D1;
+	margin-left: 4px;
+	margin-right: 8px;
+	margin-top: 4px;
+	margin-bottom: 4px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #939393;
+}
+
+/*---------------------- Gray Cancel buttons ----------------------*/
 .grayButton {
 	color: black;
 	background: #d9e1e4;
 	margin: 4px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #d9e1e4;
+	vertical-align: middle;
 }
 .grayButton:hover {
+	border-style: solid;
+	border-width: 1px;
+	border-color: black;
+}
+.grayButton-up-disabled {
 	color: white;
-	background: #015289;
+	background: #d9e1e4;
+	margin: 4px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #d9e1e4;
+}
+.grayButton-up-disabled:hover {
+	color: white;
+	background: #d9e1e4;
+	margin: 4px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #939393;
 }
 
-/* Green OK buttons */
+/*---------------------- Green OK buttons ----------------------*/
 .greenButton {
 	color: white;
 	background: #2d8659;
 	margin: 4px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #2d8659;
+	vertical-align: middle;
 }
 .greenButton:hover {
-	color: white;
-	background: #015289;
+	border-style: solid;
+	border-width: 1px;
+	border-color: black;
 }
+.greenButton-up-disabled {
+	color: white;
+	background: #BBE8D1;
+	margin: 4px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #BBE8D1;
+}
+.greenButton-up-disabled:hover {
+	color: white;
+	background: #BBE8D1;
+	margin: 4px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #939393;
+}
+
+/*----------------------  buttons ----------------------*/
+
 .whiteButton shadow {
 }
 .greenButton shadow {
@@ -1224,6 +1334,8 @@ box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 
 .mainBanner {
 		background: #015289;
+}
+.appUploadButton shadow {
 }
 
 

@@ -33,13 +33,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.ErrorEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.thirdparty.javascript.jscomp.CheckLevel;
-import com.google.gwt.thirdparty.javascript.jscomp.ErrorHandler;
-import com.google.gwt.thirdparty.javascript.jscomp.JSError;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -281,6 +277,7 @@ public class LoginPanel extends DockLayoutPanel {
 
 			@Override
 			public void onFailure(Throwable caught) {
+				log.warning("Authenticate failed");
 				showMessageDialog("AppVet Error",
 						"Authentication system error", true);
 				return;
@@ -290,11 +287,12 @@ public class LoginPanel extends DockLayoutPanel {
 			public void onSuccess(final ConfigInfoGwt configInfo) {
 
 				if (configInfo == null) {
+					log.warning("unknown username or password");
 					showMessageDialog("AppVet Login Error",
 							"Unknown username or password", true);
 					return;
 				} else {
-					//loginStatusLabel.setText("Retrieving data...");
+					log.warning("Got data!");
 					displayAppVet(configInfo);
 				}
 
@@ -306,6 +304,7 @@ public class LoginPanel extends DockLayoutPanel {
 
 	public void displayAppVet(final ConfigInfoGwt configInfo) {
 		final String userName = configInfo.getUserInfo().getUserName();
+		log.info("Login Got config info");
 
 		if ((userName == null) || userName.isEmpty()) {
 			log.warning("Error retrieving user config info");
@@ -317,6 +316,7 @@ public class LoginPanel extends DockLayoutPanel {
 
 			@Override
 			public void onFailure(Throwable caught) {
+				log.warning("Error retrieving user config info");
 				caught.printStackTrace();
 				showMessageDialog(
 						"AppVet Error",
@@ -328,10 +328,12 @@ public class LoginPanel extends DockLayoutPanel {
 			@Override
 			public void onSuccess(AppsListGwt appsList) {
 				if (appsList == null) {
+					log.warning("list is null");
 					showMessageDialog("AppVet Error",
 							"Apps list could not be retrieved", true);
 					return;
 				} else {
+					log.info("list is good");
 					final AppVetPanel appVetPanel = new AppVetPanel(configInfo, appsList);
 					//appVetPanel.setTitle("AppVet panel");
 					final RootLayoutPanel rootLayoutPanel = 

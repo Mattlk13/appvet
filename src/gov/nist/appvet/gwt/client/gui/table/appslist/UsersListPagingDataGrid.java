@@ -84,7 +84,7 @@ public class UsersListPagingDataGrid<T> extends PagingDataGrid<T> {
 				new TextCell()) {
 			@Override
 			public String getValue(T object) {
-				String roleStr = ((UserInfo)object).getRoleStr();
+				String roleStr = ((UserInfo)object).getRoleAndOrgMembership();
 				if (roleStr.equals("NEW")) {
 					// A role of NEW indicates that a new role and org unit
 					// must be set for the user

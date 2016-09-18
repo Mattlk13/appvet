@@ -7,7 +7,7 @@ import gov.nist.appvet.shared.all.Role;
 public class RoleTester {
 	
 	public void testIt() {
-		try{
+/*		try{
 			String roleStr = "ADMIN";
 			Role role = Role.getRole(roleStr);
 			System.out.println("Test 1: Role role: :" + role.name());
@@ -21,12 +21,12 @@ public class RoleTester {
 			
 			roleStr = "USER: test, test2 ,test3 ";
 			role = Role.getRole(roleStr);
-			ArrayList<String> hierarchy = Role.getOrgHierarchy(roleStr);
+			ArrayList<String> hierarchy = Role.getUserOrgMembershipLevelsArray(roleStr);
 			System.out.println("Test 4: Role role: :" + role.name());
 			for (int i = 0; i < hierarchy.size(); i++) {
 				System.out.println("level: " + hierarchy.get(i));
 			}
-			String hierarchyStr = Role.getOrgHierarchyStr(roleStr);
+			String hierarchyStr = Role.getUserOrgMembershipLevelsStr(roleStr);
 			System.out.println("hierarchyStr: " + hierarchyStr);
 			
 //			String dbStr = Role.getDbStr(Role.USER, hierarchy);
@@ -34,7 +34,7 @@ public class RoleTester {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+*/
 	}
 
 	public static void main(String[] args) {
