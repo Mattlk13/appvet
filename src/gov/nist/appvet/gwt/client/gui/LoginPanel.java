@@ -81,7 +81,7 @@ public class LoginPanel extends DockLayoutPanel {
 		SimplePanel simplePanel_2 = new SimplePanel();
 		
 		addNorth(simplePanel_2, 132.0);
-		simplePanel_2.setHeight("100px");
+		simplePanel_2.setHeight("150px");
 
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		simplePanel_2.setWidget(horizontalPanel);
@@ -89,12 +89,13 @@ public class LoginPanel extends DockLayoutPanel {
 		horizontalPanel.setSize("100%", "100%");
 
 		// Your org_logo.png should be placed in $CATALINA_HOME/webapps/appvet_images directory.
-		Image orgLogo = new Image("../appvet_images/org_logo.png");
-		horizontalPanel.add(orgLogo);
-		horizontalPanel.setCellHorizontalAlignment(orgLogo, HasHorizontalAlignment.ALIGN_RIGHT);
-		orgLogo.setAltText("Organizational logo");
+		Image orgLogoLogin = new Image("../appvet_images/org_logo_login.png");
+		horizontalPanel.add(orgLogoLogin);
+		orgLogoLogin.setSize("125px", "125px");
+		horizontalPanel.setCellHorizontalAlignment(orgLogoLogin, HasHorizontalAlignment.ALIGN_RIGHT);
+		orgLogoLogin.setAltText("Organizational logo");
 		//orgLogo.setTitle("Organizational logo");
-		orgLogo.setStyleName("nistLoginLogo");
+		orgLogoLogin.setStyleName("nistLoginLogo");
 
 		final VerticalPanel centerVerticalPanel = new VerticalPanel();
 		centerVerticalPanel
@@ -133,16 +134,16 @@ public class LoginPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.setSize("300px", "90px");
 
-		final Image appVetImage = new Image("images/appvet_logo.png");
+		final Image appvetLogoLogin = new Image("../appvet_images/appvet_logo_login.png");
 		//appVetImage.setTitle("AppVet Mobile App Vetting System");
-		appVetImage.setAltText("AppVet Mobile App Vetting System");
-		appVetImage.setStyleName("transparentPanel");
-		verticalPanel.add(appVetImage);
-		verticalPanel.setCellHorizontalAlignment(appVetImage,
+		appvetLogoLogin.setAltText("AppVet Mobile App Vetting System");
+		appvetLogoLogin.setStyleName("transparentPanel");
+		verticalPanel.add(appvetLogoLogin);
+		verticalPanel.setCellHorizontalAlignment(appvetLogoLogin,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		verticalPanel.setCellVerticalAlignment(appVetImage,
+		verticalPanel.setCellVerticalAlignment(appvetLogoLogin,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		appVetImage.setSize("192px", "73px");
+		appvetLogoLogin.setSize("192px", "73px");
 		loginStatusLabel.setStyleName("submissionRequirementsLabel");
 		verticalPanel.add(loginStatusLabel);
 		loginStatusLabel.setVisible(true);

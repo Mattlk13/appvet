@@ -57,13 +57,13 @@ public class AboutDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		dialogVPanel.setCellWidth(verticalPanel, "100%");
 		verticalPanel.setWidth("350px");
-		final Image image = new Image("images/appvet_logo.png");
+		final Image appvetLogoAbout = new Image("../appvet_images/appvet_logo_login.png");
 		//image.setTitle("AppVet Mobile App Vetting System");
-		image.setAltText("AppVet Mobile App Vetting System");
-		verticalPanel.add(image);
-		verticalPanel.setCellHorizontalAlignment(image,
+		appvetLogoAbout.setAltText("AppVet Mobile App Vetting System");
+		verticalPanel.add(appvetLogoAbout);
+		verticalPanel.setCellHorizontalAlignment(appvetLogoAbout,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		image.setSize("192px", "73px");
+		appvetLogoAbout.setSize("192px", "73px");
 		final String message = "Version " + version;
 		final HorizontalPanel horizontalPanel = new HorizontalPanel();
 		verticalPanel.add(horizontalPanel);

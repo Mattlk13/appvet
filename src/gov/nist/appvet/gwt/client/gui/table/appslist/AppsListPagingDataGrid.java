@@ -203,9 +203,9 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 				} else if (appStatus == AppStatus.HIGH) {
 					statusHtml = "<div id=\"error\" style='color: red'>HIGH</div>";
 				} else if (appStatus == AppStatus.NA) {
-					statusHtml = "<div id=\"error\" style='color: gray'>N/A</div>";
+					statusHtml = "<div id=\"error\">N/A</div>";
 				} else {
-					statusHtml = "<div id=\"error\" style='color: black'>"
+					statusHtml = "<div id=\"error\">"
 							+ appStatus.name() + "</div>";
 				}
 				sb.appendHtmlConstant(statusHtml);

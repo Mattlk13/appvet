@@ -533,11 +533,11 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			// we return an NA status.
 			toolCompleted = true;
 			toolStatusGwt
-					.setStatusHtml("<div id=\"tabledim\" style='color: gray'>N/A</div>");
+					.setStatusHtml("<div id=\"tabledim\">N/A</div>");
 		} else if (toolStatus == ToolStatus.NA) {
 			toolCompleted = true;
 			toolStatusGwt
-					.setStatusHtml("<div id=\"tabledim\" style='color: gray'>N/A</div>");
+					.setStatusHtml("<div id=\"tabledim\">N/A</div>");
 
 		} else if (toolStatus == ToolStatus.AVAILABLE) {
 			toolCompleted = true;

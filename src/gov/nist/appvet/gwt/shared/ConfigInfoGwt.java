@@ -214,46 +214,6 @@ public class ConfigInfoGwt implements IsSerializable {
 		this.ssoLogoutURL = ssoLogoutURL;
 	}
 
-
-//	public String getOrgLevel1Name() {
-//		return orgLevel1Name;
-//	}
-//
-//
-//	public void setOrgLevel1Name(String orgLevel1Name) {
-//		this.orgLevel1Name = orgLevel1Name;
-//	}
-//
-//
-//	public String getOrgLevel2Name() {
-//		return orgLevel2Name;
-//	}
-//
-//
-//	public void setOrgLevel2Name(String orgLevel2Name) {
-//		this.orgLevel2Name = orgLevel2Name;
-//	}
-//
-//
-//	public String getOrgLevel3Name() {
-//		return orgLevel3Name;
-//	}
-//
-//
-//	public void setOrgLevel3Name(String orgLevel3Name) {
-//		this.orgLevel3Name = orgLevel3Name;
-//	}
-//
-//
-//	public String getOrgLevel4Name() {
-//		return orgLevel4Name;
-//	}
-//
-//
-//	public void setOrgLevel4Name(String orgLevel4Name) {
-//		this.orgLevel4Name = orgLevel4Name;
-//	}
-
 	public boolean isKeepApps() {
 		return keepApps;
 	}
