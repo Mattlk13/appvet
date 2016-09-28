@@ -21,6 +21,7 @@ package gov.nist.appvet.gwt.client;
 
 import gov.nist.appvet.gwt.shared.AppsListGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
+import gov.nist.appvet.gwt.shared.ServerPacket;
 import gov.nist.appvet.gwt.shared.SystemAlert;
 import gov.nist.appvet.gwt.shared.ToolStatusGwt;
 import gov.nist.appvet.shared.all.DeviceOS;
@@ -44,9 +45,6 @@ public interface GWTServiceAsync {
 	
 	void clearAlertMessage(String username,
 			AsyncCallback<Boolean> callback)
-			throws IllegalArgumentException;
-	
-	void getAlertMessage(AsyncCallback<SystemAlert> callback)
 			throws IllegalArgumentException;
 	
 	void adminSetUser(UserInfo userInfo,
@@ -80,21 +78,11 @@ public interface GWTServiceAsync {
 			AsyncCallback<List<ToolStatusGwt>> callback)
 			throws IllegalArgumentException;
 
-	void getUpdatedApps(Date lastClientUpdate, String username,
-			AsyncCallback<AppsListGwt> callback)
-			throws IllegalArgumentException;
-
 	void getAllUsers(AsyncCallback<List<UserInfo>> callback)
 			throws IllegalArgumentException;
-	
-//	void getOrgDeptsList(AsyncCallback<List<OrgDepts>> callback)
-//			throws IllegalArgumentException;
 
 	void removeSession(String sessionId, AsyncCallback<Boolean> callback)
 			throws IllegalArgumentException;
-
-	void updateSessionExpiration(String sessionId, Date sessionExpiration,
-			AsyncCallback<Date> callback) throws IllegalArgumentException;
 
 	void selfUpdatePassword(UserInfo userInfo, AsyncCallback<Boolean> callback)
 			throws IllegalArgumentException;
@@ -102,5 +90,9 @@ public interface GWTServiceAsync {
 	void updateUserToolCredentials(String username,
 			ArrayList<UserToolCredentials> credentialsList,
 			AsyncCallback<Boolean> callback) throws IllegalArgumentException;
+	
+	void getServerUpdates(String username, String sessionId, 
+			Date sessionExpiration, Date lastAppsListUpdate, AsyncCallback<ServerPacket> serverPacket)
+		throws IllegalArgumentException;
 	
 }

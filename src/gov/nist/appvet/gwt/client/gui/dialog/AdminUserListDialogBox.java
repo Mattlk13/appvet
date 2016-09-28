@@ -294,16 +294,13 @@ public class AdminUserListDialogBox extends DialogBox {
 	public void editUser(final ConfigInfoGwt configInfo, 
 			final boolean newUser, final boolean ssoActive) {
 
-		log.info("In editUser");
 		if (newUser) {
-			log.info("new user");
 			userAcctAdminDialogBox = 
 					new AdminUserAcctDialogBox(configInfo, null, ssoActive, allUsersOrgMemberships);
 			userAcctAdminDialogBox.setText("Add User");
 			userAcctAdminDialogBox.lastNameTextBox.setFocus(true);
 
 		} else {
-			log.info("existing user");
 			selectedUser = usersSelectionModel.getSelectedObject();
 			if (selectedUser.isDefaultAdmin()) {
 				showMessageDialog("Account Info", "Cannot change info for "
@@ -578,14 +575,6 @@ public class AdminUserListDialogBox extends DialogBox {
 			showMessageDialog("Account Setting Error", "Invalid email", true);
 			return false;
 		}
-
-		// We validate role in the calling program.
-		// if (!Validate.isValidRole(roleStr)) {
-		// log.info("Validating roleStr: " + roleStr);
-		// AppVetPanel.showMessageDialog("Account Setting Error",
-		// "Invalid role or org hierarchy", true);
-		// return false;
-		// }
 
 		if (!ssoActive) {
 			// Password is required for NON-SSO mode

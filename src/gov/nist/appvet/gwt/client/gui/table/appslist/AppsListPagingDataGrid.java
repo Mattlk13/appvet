@@ -113,7 +113,6 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 				final DeviceOS os = ((AppInfoGwt) object).os;
 				String iconURL = null;
 				String altText = null;
-				//log.info("selectedIconURL: " + selectedIconURL);
 				if (selectedIconURL == null) {
 					if (os == DeviceOS.ANDROID) {
 						iconURL = "images/android-icon-gray.png";

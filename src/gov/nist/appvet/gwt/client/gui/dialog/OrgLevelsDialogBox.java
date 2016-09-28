@@ -108,9 +108,7 @@ public class OrgLevelsDialogBox extends DialogBox {
 		editButton = new PushButton("Edit");
 		editButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
-				log.info("tra 1");
 				final int selectedIndex = listBox.getSelectedIndex();
-				log.info("tra 2");
 
 				String selectedLevelDisplay = listBox.getItemText(selectedIndex);
 				String[] selectedLevelDisplayArray = selectedLevelDisplay.split(": ");
@@ -121,13 +119,10 @@ public class OrgLevelsDialogBox extends DialogBox {
 					selectedLevelName = "";
 				}
 				levelNameDialogBox = new OrgLevelNameEditDialogBox(allUserOrgLevels, orgMembership, selectedIndex, selectedLevelName);
-				log.info("tra 3");
 
 				levelNameDialogBox.setText("Organization Level");
-				log.info("tra 4");
 
 				levelNameDialogBox.center();
-				log.info("tra 5");
 
 				levelNameDialogBox.cancelButton
 				.addClickHandler(new ClickHandler() {
@@ -151,7 +146,6 @@ public class OrgLevelsDialogBox extends DialogBox {
 							// Set in list 
 							int index = selectedIndex + 1; // index starts at 1, not 0
 							String displayStr = "Level ";
-							log.info("index: " + index + ", minOrgLevelsRequired: " + minOrgLevelsRequired);
 							if (index >= 0 && index <= minOrgLevelsRequired) {
 								displayStr += index + " (Required): ";
 							} else {

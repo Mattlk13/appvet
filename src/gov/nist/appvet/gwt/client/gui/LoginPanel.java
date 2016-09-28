@@ -293,7 +293,6 @@ public class LoginPanel extends DockLayoutPanel {
 							"Unknown username or password", true);
 					return;
 				} else {
-					log.warning("Got data!");
 					displayAppVet(configInfo);
 				}
 
@@ -305,7 +304,6 @@ public class LoginPanel extends DockLayoutPanel {
 
 	public void displayAppVet(final ConfigInfoGwt configInfo) {
 		final String userName = configInfo.getUserInfo().getUserName();
-		log.info("Login Got config info");
 
 		if ((userName == null) || userName.isEmpty()) {
 			log.warning("Error retrieving user config info");
@@ -334,12 +332,9 @@ public class LoginPanel extends DockLayoutPanel {
 							"Apps list could not be retrieved", true);
 					return;
 				} else {
-					log.info("list is good");
 					final AppVetPanel appVetPanel = new AppVetPanel(configInfo, appsList);
-					//appVetPanel.setTitle("AppVet panel");
 					final RootLayoutPanel rootLayoutPanel = 
 							RootLayoutPanel.get();
-					//rootLayoutPanel.setTitle("Root panel");
 					rootLayoutPanel.clear();
 					rootLayoutPanel.add(appVetPanel);
 				}

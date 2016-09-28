@@ -22,6 +22,7 @@ package gov.nist.appvet.gwt.server;
 import gov.nist.appvet.gwt.client.GWTService;
 import gov.nist.appvet.gwt.shared.AppsListGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
+import gov.nist.appvet.gwt.shared.ServerPacket;
 import gov.nist.appvet.gwt.shared.SystemAlert;
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolStatusGwt;
@@ -147,25 +148,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		}
 	}
 
-	public Boolean setAlertMessage(String username, SystemAlert alert) {
-		if (Database.setAlertMessage(username, alert)) {
-			return new Boolean(true);
-		} else {
-			return new Boolean(false);
-		}
-	}
 
-	public Boolean clearAlertMessage(String username) {
-		if (Database.update("DELETE FROM alerts")) {
-			return new Boolean(true);
-		} else {
-			return new Boolean(false);
-		}
-	}
-
-	public SystemAlert getAlertMessage() {
-		return Database.getAlertMessage();
-	}
 
 	public List<UserInfo> adminSetUser(UserInfo userInfo)
 			throws IllegalArgumentException {
@@ -425,9 +408,36 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			String appId) throws IllegalArgumentException {
 		return getToolsStatuses(os, sessionId, appId);
 	}
+	
+	public Boolean setAlertMessage(String username, SystemAlert alert) {
+		if (Database.setAlertMessage(username, alert)) {
+			return new Boolean(true);
+		} else {
+			return new Boolean(false);
+		}
+	}
 
-	public AppsListGwt getUpdatedApps(Date lastClientUpdate, String username)
-			throws IllegalArgumentException {
+	public Boolean clearAlertMessage(String username) {
+		if (Database.update("DELETE FROM alerts")) {
+			return new Boolean(true);
+		} else {
+			return new Boolean(false);
+		}
+	}
+	
+	// TODO //////////////////////////////////////////////////////////////////
+	public ServerPacket getServerUpdates(String username, String sessionId, 
+			Date newSessionExpiration, Date lastAppsListUpdate) 
+		throws IllegalArgumentException {
+		
+		ServerPacket serverPacket = new ServerPacket();
+		serverPacket.setSystemAlert(Database.getAlertMessage());
+		serverPacket.setSessionExpiration(updateSessionExpiration(sessionId, newSessionExpiration));
+		serverPacket.setUpdatedAppsList(getUpdatedApps(lastAppsListUpdate, username));
+		return serverPacket;
+	}
+
+	private AppsListGwt getUpdatedApps(Date lastClientUpdate, String username) {
 		return Database.getApps(username, lastClientUpdate);
 	}
 
@@ -448,8 +458,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		}
 	}
 
-	public Date updateSessionExpiration(String sessionId, Date newSessionTimeout)
-			throws IllegalArgumentException {
+	private Date updateSessionExpiration(String sessionId, Date newSessionTimeout) {
 		final String clientIpAddress = getThreadLocalRequest().getRemoteAddr();
 		// First check if session has already expired
 		if (!Database.sessionIsGood(sessionId, clientIpAddress)) {

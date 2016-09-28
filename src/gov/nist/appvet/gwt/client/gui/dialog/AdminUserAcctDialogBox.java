@@ -78,7 +78,6 @@ public class AdminUserAcctDialogBox extends DialogBox {
 	@SuppressWarnings("deprecation")
 	public AdminUserAcctDialogBox(final ConfigInfoGwt configInfo,
 			final UserInfo selectedUser, boolean useSSO, List<String> allUsersOrgLevels) {
-		log.info("TRACY 1");
 		confInfo = configInfo;
 		if (selectedUser == null) {
 			newUser = true;
@@ -228,7 +227,6 @@ public class AdminUserAcctDialogBox extends DialogBox {
 			}
 		});
 		adminRadioButton.setWidth("140px");
-		log.info("TRACY 2");
 
 		toolRadioButton = new RadioButton("buttonGroup", "Tool");
 		horizontalPanel_8.add(toolRadioButton);
@@ -481,11 +479,9 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		dockPanel.setCellHorizontalAlignment(horizontalPanel,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		dockPanel.add(simplePanel, DockPanel.CENTER);
-		log.info("TRACY 3");
 
 		/* Set all data at the end of constructor */
 		if (newUser) {
-			log.info("TRACY 4");
 
 			// Initialize some UI objects
 			adminRadioButton.setValue(false);
@@ -498,8 +494,6 @@ public class AdminUserAcctDialogBox extends DialogBox {
 			changePasswordCheckBox.setEnabled(false);
 
 		} else {
-			log.info("TRACY 5");
-
 			Role userRole = null;
 			try {
 				userRole = Role.getRole(selectedUser.getRoleAndOrgMembership());
@@ -537,7 +531,6 @@ public class AdminUserAcctDialogBox extends DialogBox {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			log.info("TRACY 6");
 
 		}
 		if (useSSO) {
@@ -556,18 +549,15 @@ public class AdminUserAcctDialogBox extends DialogBox {
 				enableChangePassword(false);
 			}
 		}
-		log.info("TRACY 7");
 
 	}
 	
 	public void enableChangePassword(boolean enable) {
 		if (enable) {
-			log.info("change password = " + enable);
 			changePasswordCheckBox.setChecked(true);
 			password1TextBox.setEnabled(true);
 			password2TextBox.setEnabled(true);
 		} else {
-			log.info("change password = " + enable);
 			changePasswordCheckBox.setChecked(false);
 			password1TextBox.setEnabled(false);
 			password2TextBox.setEnabled(false);

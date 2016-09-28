@@ -58,7 +58,6 @@ public class OrgLevelNameEditDialogBox extends DialogBox {
 	public OrgLevelNameEditDialogBox(List<String> allUserOrgLevels, final String orgMembership, 
 			int selectedIndex, String selectedLevelName) {
 		super(false, true);
-		log.info("tra a");
 		this.orgMembership = orgMembership;
 		setWidth("100%");
 		setAnimationEnabled(false);
@@ -68,7 +67,6 @@ public class OrgLevelNameEditDialogBox extends DialogBox {
 		mainPanel.addStyleName("mainPanel");
 		this.setWidget(mainPanel);
 		mainPanel.setSize("114px", "100px");
-		log.info("tra b");
 
 		// Set label
 		int index = selectedIndex + 1; // Index must start at 1, not 0
@@ -79,7 +77,6 @@ public class OrgLevelNameEditDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		mainLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		mainLabel.setSize("366px", "32px");
-		log.info("tra c");
 
 		MultiWordSuggestOracle suggestOracle = getOracle(selectedIndex);
 		suggestBox = new SuggestBox(suggestOracle);
@@ -88,7 +85,6 @@ public class OrgLevelNameEditDialogBox extends DialogBox {
 		mainPanel.add(suggestBox);
 		suggestBox.setSize("370px", "36px");
 		suggestBox.setFocus(true);
-		log.info("tra d");
 
 		final HorizontalPanel horizontalButtonPanel = new HorizontalPanel();
 		horizontalButtonPanel.setStyleName("buttonPanel");
@@ -103,7 +99,6 @@ public class OrgLevelNameEditDialogBox extends DialogBox {
 		horizontalButtonPanel.setSpacing(10);
 		horizontalButtonPanel
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		log.info("tra e");
 
 		cancelButton = new PushButton("Cancel");
 		cancelButton.setStyleName("grayButton shadow");
@@ -112,7 +107,6 @@ public class OrgLevelNameEditDialogBox extends DialogBox {
 		horizontalButtonPanel.setCellHorizontalAlignment(cancelButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		cancelButton.setSize("70px", "18px");
-		log.info("tra f");
 
 		Label label = new Label("");
 		horizontalButtonPanel.add(label);
@@ -123,7 +117,6 @@ public class OrgLevelNameEditDialogBox extends DialogBox {
 		horizontalButtonPanel.setCellHorizontalAlignment(okButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		okButton.setSize("70px", "18px");
-		log.info("tra g");
 
 	}
 
@@ -132,37 +125,27 @@ public class OrgLevelNameEditDialogBox extends DialogBox {
 		MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
 
 		try {
-			log.info("tra c1");
 			String[] selectedUserMembership = orgMembership.split(",");
 			if (allUserOrgLevels == null) {
-				log.info("tra c2");
-
 				log.warning("Hierarchies is null");
 				return oracle;
 			}
-			log.info("tra c3");
 
 			for (int i = 0; i < allUserOrgLevels.size(); i++) {
-				log.info("tra c4");
 
 				boolean onHeirarchyPath = true;
 				String otherUserMembershipStr = allUserOrgLevels.get(i);
 				String[] otherUserMembership = otherUserMembershipStr.split(",");
-				log.info("tra c5");
 
 				for (int j = 0; j < selectedIndex; j++) {
-					log.info("tra c6");
 
 					if (orgMembership == null || orgMembership.isEmpty()) {
-						log.info("tra c7");
 
 						break;
 					} else if (selectedUserMembership[j].equals(otherUserMembership[j])) {
-						log.info("tra c8");
 
 						// Do nothing
 					} else {
-						log.info("tra c9");
 
 						onHeirarchyPath = false;
 						break;
@@ -170,15 +153,12 @@ public class OrgLevelNameEditDialogBox extends DialogBox {
 				}
 				
 				if (onHeirarchyPath) {
-					log.info("tra c10");
 
 					oracle.add(otherUserMembership[selectedIndex]);
 				}
 			}
-			log.info("tra c11");
 
 		} catch (Exception e) {
-			log.info("tra c12");
 
 			log.severe(e.getMessage());
 		}
