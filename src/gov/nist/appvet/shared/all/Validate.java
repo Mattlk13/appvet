@@ -151,6 +151,7 @@ public class Validate {
 				|| fileNameUpperCase.endsWith(".JSON")
 				|| fileNameUpperCase.endsWith(".HTML")
 				|| fileNameUpperCase.endsWith(".TXT")
+				|| fileNameUpperCase.endsWith(".DOCX")
 				|| fileNameUpperCase.endsWith(".RTF")
 				|| fileNameUpperCase.endsWith(".XML");
 	}

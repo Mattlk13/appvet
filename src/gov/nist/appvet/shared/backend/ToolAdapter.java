@@ -536,6 +536,8 @@ public class ToolAdapter implements Runnable {
 			return toolId + reportSuffix + "." + ReportFileType.HTML.value;
 		case PDF:
 			return toolId + reportSuffix + "." + ReportFileType.PDF.value;
+		case DOCX:
+			return toolId + reportSuffix + "." + ReportFileType.DOCX.value;	
 		case RTF:
 			return toolId + reportSuffix + "." + ReportFileType.RTF.value;
 		case XML:
@@ -554,7 +556,7 @@ public class ToolAdapter implements Runnable {
 
 	@Override
 	public void run() {
-		log.debug("CALLING RUN METHOD FOR " + toolId);
+		log.debug("Starting tool adapter for " + toolId);
 
 		if ((protocol == Protocol.PUSH) || (protocol == Protocol.INTERNAL)) {
 			// PUSH/INTERNAL adapters do not send requests to a service.

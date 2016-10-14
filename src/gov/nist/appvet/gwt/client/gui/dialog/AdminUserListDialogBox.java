@@ -336,44 +336,10 @@ public class AdminUserListDialogBox extends DialogBox {
 				final String newEmail = userAcctAdminDialogBox.emailTextBox.getText();
 				final String orgMembership = userAcctAdminDialogBox.orgMembershipTextBox.getText();
 				final String newRoleAndMembership = userAcctAdminDialogBox.getRoleAndMembership(orgMembership);
+				if (newRoleAndMembership == null || newRoleAndMembership.isEmpty()) {
+					return;
+				}
 
-				/*				// First make sure that the information has changed if this
-				// is not for a new user. If it hasn't changed, cancel the 
-				// update request.
-				if (!newUser) {
-					// Make sure a change was made. If not, don't update
-					// database.
-					boolean selectedUserChanged = false;
-					if (newPassword1 != null && !newPassword1.isEmpty()) {
-						selectedUserChanged = true;
-					}
-					if (newPassword2 != null && !newPassword2.isEmpty()) {
-						selectedUserChanged = true;
-					}
-					if (!selectedUser.getUserName().equals(newUserName)) {
-						selectedUserChanged = true;
-					}
-					if (!selectedUser.getLastName().equals(newLastName)) {
-						selectedUserChanged = true;
-					}
-					if (!selectedUser.getFirstName().equals(newFirstName)) {
-						selectedUserChanged = true;
-					}
-					if (!selectedUser.getEmail().equals(newEmail)) {
-						selectedUserChanged = true;
-					}
-					if (!selectedUser.getRoleAndOrgMembership().equals(newRoleStr)) {
-						selectedUserChanged = true;
-					}
-					if (!selectedUserChanged) {
-						showMessageDialog("AppVet User Account",
-								"No information changed. Cancelling update.",
-								true);
-						return;
-					}
-				} */
-
-				// Check that all values are valid
 				final UserInfo userInfo = new UserInfo();
 				userInfo.setUserName(newUserName);
 				userInfo.setPasswords(newPassword1, newPassword2);
@@ -388,11 +354,6 @@ public class AdminUserListDialogBox extends DialogBox {
 				// Validate new user info
 				if (!userInfoIsValid(userInfo, ssoActive)) {
 					return;
-				} else {
-					// Validate roles and hierarchies
-					if (!userAcctAdminDialogBox.validateRoleAndHierarchies()) {
-						return;
-					}
 				}
 
 				// Send updated user info to server

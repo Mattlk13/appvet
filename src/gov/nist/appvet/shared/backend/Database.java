@@ -574,6 +574,9 @@ public class Database {
 							+ "' ORDER BY submittime DESC";
 				}
 				break;
+			case NEW:
+				log.error("User " + username + " role is set to NEW. Administrator must set role to ADMIN, TOOL, ANALYST, or USER");
+				return null;
 			default:
 				log.error("Unknown user role: " + userRole);
 				return null;
@@ -891,7 +894,7 @@ public class Database {
 	public synchronized static boolean killStuckApp(String appId) {
 		AppInfo appInfo = new AppInfo(appId);
 		appInfo.log.info("One or more tools exceeded timeout. "
-				+ "Setting app status to " + ToolStatus.ERROR);
+				+ "Setting app " + appId + " status to " + ToolStatus.ERROR);
 		AppStatusManager.setAppStatus(appId, AppStatus.ERROR);
 		return true;
 	}

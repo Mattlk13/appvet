@@ -23,7 +23,7 @@ package gov.nist.appvet.servlet.shared;
  * @author steveq@nist.gov
  */
 public enum ReportFileType {
-	PDF("pdf"), HTML("html"), TXT("txt"), RTF("rtf"), XML("xml"), JSON("json");
+	PDF("pdf"), HTML("html"), DOCX("docx"), TXT("txt"), RTF("rtf"), XML("xml"), JSON("json");
 	public String value;
 
 	private ReportFileType(String value) {

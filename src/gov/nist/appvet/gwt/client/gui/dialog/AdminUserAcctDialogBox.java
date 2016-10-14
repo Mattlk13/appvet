@@ -573,8 +573,10 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				log.info("clicked close");
 				messageDialogBox.hide();
 				messageDialogBox = null;
+				log.info("out of closed button");
 			}
 		});
 	}
@@ -589,7 +591,17 @@ public class AdminUserAcctDialogBox extends DialogBox {
 				&& !userRadioSelected) {
 			showMessageDialog("AppVet User Account", "No user role selected",
 					true);
+			return null;
 		}
+		
+		if (analystRadioSelected || userRadioSelected) {
+			if (orgMembership == null || orgMembership.isEmpty()) {
+				showMessageDialog("AppVet User Account", "Organization cannot be empty",
+						true);
+				return null;
+			}
+		}
+		
 		if (adminRadioSelected) {
 			return Role.ADMIN.name();
 		} else if (toolRadioSelected) {
@@ -605,25 +617,25 @@ public class AdminUserAcctDialogBox extends DialogBox {
 
 	}
 	
-	/** Get database representation of role. */
-	public boolean validateRoleAndHierarchies() {
-		boolean adminRadioSelected = adminRadioButton.getValue();
-		boolean toolRadioSelected = toolRadioButton.getValue();
-		boolean analystRadioSelected = analystRadioButton.getValue();
-		boolean userRadioSelected = userRadioButton.getValue();
-		if (!adminRadioSelected && !toolRadioSelected && !analystRadioSelected
-				&& !userRadioSelected) {
-			showMessageDialog("AppVet User Account", "No user role selected",
-					true);
-			return false;
-		}
-
-		if (adminRadioSelected || toolRadioSelected) {
-			return true;
-		}
-
-		return true;
-	}
+//	/** Get database representation of role. */
+//	public boolean validateRoleAndHierarchies() {
+//		boolean adminRadioSelected = adminRadioButton.getValue();
+//		boolean toolRadioSelected = toolRadioButton.getValue();
+//		boolean analystRadioSelected = analystRadioButton.getValue();
+//		boolean userRadioSelected = userRadioButton.getValue();
+//		if (!adminRadioSelected && !toolRadioSelected && !analystRadioSelected
+//				&& !userRadioSelected) {
+//			showMessageDialog("AppVet User Account", "No user role selected",
+//					true);
+//			return false;
+//		}
+//
+//		if (adminRadioSelected || toolRadioSelected) {
+//			return true;
+//		}
+//
+//		return true;
+//	}
 
 	public void killDialogBox(DialogBox dialogBox) {
 		if (dialogBox != null) {
