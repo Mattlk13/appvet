@@ -148,8 +148,6 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		}
 	}
 
-
-
 	public List<UserInfo> adminSetUser(UserInfo userInfo)
 			throws IllegalArgumentException {
 		if (userInfo.isNewUser()) {
@@ -617,67 +615,4 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		Database.saveUserToolCredentials(username, credentialsList);
 		return true;
 	}
-
-	/**
-	 * This method gets the organizations and departments for users. Note that
-	 * this method is inefficient and should be optimized.
-	 */
-	// public List<OrgDepts> getOrgDeptsList() throws IllegalArgumentException {
-	// Hashtable<String, List<String>> orgDeptHashtable = new Hashtable<String,
-	// List<String>>();
-	// List<UserInfo> users = Database.getUsers(null);
-	// for (int i = 0; i < users.size(); i++) {
-	// UserInfo user = users.get(i);
-	// // log.debug("Adding org/dept for user: " + user.getUserName());
-	// String userOrg = user.getOrganization();
-	// String userDept = user.getDepartment();
-	// if (!orgDeptHashtable.containsKey(userOrg)) {
-	// // log.debug("Adding new org " + userOrg);
-	// // Add this org to the hashtable
-	// List<String> deptList = new ArrayList<String>();
-	// deptList.add(userDept);
-	// // log.debug("Adding new dept " + userDept + " for new org " +
-	// // userOrg);
-	// orgDeptHashtable.put(userOrg, deptList);
-	// } else {
-	// // Org is already in hashtable so check if dept is in its list
-	// List<String> deptList = orgDeptHashtable.get(userOrg);
-	// if (!listContains(deptList, userDept)) {
-	// // Add it to the list
-	// deptList.add(userDept);
-	// // log.debug("Adding new dept " + userDept +
-	// // " to existing org " + userOrg);
-	// }
-	// }
-	// }
-	// List<OrgDepts> orgDeptsList = new ArrayList<OrgDepts>();
-	// Set<String> keys = orgDeptHashtable.keySet();
-	// for (String key : keys) {
-	// List<String> deptList = orgDeptHashtable.get(key);
-	// // log.debug("key: " + key);
-	// for (int i = 0; i < deptList.size(); i++) {
-	// // log.debug("depts: " + deptList.get(i));
-	// }
-	// OrgDepts orgDepts = new OrgDepts();
-	// orgDepts.orgName = key;
-	// orgDepts.deptNames = deptList.toArray(new String[deptList.size()]);
-	// orgDeptsList.add(orgDepts);
-	// }
-	// return orgDeptsList;
-	// }
-
-//	private boolean listContains(List<String> list, String item) {
-//		for (int i = 0; i < list.size(); i++) {
-//			if (item.equals(list.get(i))) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-	//
-	// @Override
-	// public List<OrgDepts> getOrgDeptsList() throws IllegalArgumentException {
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
 }

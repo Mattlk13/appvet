@@ -1,8 +1,6 @@
 package gov.nist.appvet.gwt.client.gui.dialog;
 
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
-import gov.nist.appvet.shared.all.Role;
-import gov.nist.appvet.shared.all.UserInfo;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -174,9 +172,7 @@ public class OrgLevelsDialogBox extends DialogBox {
 		horizontalPanel.add(okButton);
 		horizontalPanel.setCellVerticalAlignment(okButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel.setCellHorizontalAlignment(okButton, HasHorizontalAlignment.ALIGN_CENTER);
-		okButton.setSize("70px", "18px");
-		
-		
+		okButton.setSize("70px", "18px");		
 	}
 	
 	public void killDialogBox(DialogBox dialogBox) {

@@ -76,7 +76,6 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		appIdColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dataGrid.addColumn(appIdColumn, "ID");
 		dataGrid.setColumnWidth(appIdColumn, "43px");
-		//dataGrid.setTitle("Apps list");
 
 		// Platform/OS Icon 
 		final SafeHtmlCell osIconCell = new SafeHtmlCell();

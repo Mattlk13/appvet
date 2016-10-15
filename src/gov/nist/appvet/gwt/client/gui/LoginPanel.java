@@ -57,7 +57,6 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
  * 
  * @author steveq@nist.gov
  */
-
 public class LoginPanel extends DockLayoutPanel {
 
 	// See appvet.gwt.xml
@@ -214,14 +213,6 @@ public class LoginPanel extends DockLayoutPanel {
 		dockPanel.setCellHorizontalAlignment(simplePanel_3,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		loginButton.setStyleName("greenButton shadow");
-		//		loginButton.getUpFace().setHTML("");
-		//		loginButton.getUpDisabledFace().setText("");
-		//		loginButton.getUpHoveringFace().setText("");
-		//		loginButton.getDownFace().setText("");
-		//		loginButton.getDownDisabledFace().setText("");
-		//		loginButton.getDownHoveringFace().setText("");
-		//		loginButton.setHTML("");
-		//loginButton.setStyleName("gwt-PushButton");
 		loginButton.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -252,7 +243,6 @@ public class LoginPanel extends DockLayoutPanel {
 
 	}
 
-
 	public void doLogin() {
 		loginButton.setEnabled(false);
 		final String userName = userNameTextBox.getText();
@@ -267,7 +257,6 @@ public class LoginPanel extends DockLayoutPanel {
 
 		authenticate(userName, password);
 	}
-
 
 	public void authenticate(final String username, final String password) {
 
@@ -300,7 +289,6 @@ public class LoginPanel extends DockLayoutPanel {
 
 		});
 	}
-
 
 	public void displayAppVet(final ConfigInfoGwt configInfo) {
 		final String userName = configInfo.getUserInfo().getUserName();
@@ -344,7 +332,6 @@ public class LoginPanel extends DockLayoutPanel {
 		});
 	}
 
-
 	private void showMessageDialog(String windowTitle, String message,
 			boolean isError) {
 		messageDialogBox = new MessageDialogBox(message, isError);
@@ -364,7 +351,5 @@ public class LoginPanel extends DockLayoutPanel {
 			}
 		});
 	}
-
-
 
 }

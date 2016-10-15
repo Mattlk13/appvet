@@ -63,9 +63,6 @@ public class YesNoConfirmDialog extends DialogBox {
 		verticalPanel_1.setCellHorizontalAlignment(simplePanel_1,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		simplePanel_1.setSize("300px", "60px");
-		//HTML htmlNewHtml = new HTML(
-		//		"<p align=\"center\">\r\nAre you sure you want to delete app #"
-		//				+ appId + " '" + appName + "'?\r\n</p>", true);
 		HTML htmlNewHtml = new HTML(htmlMessage, true);
 		htmlNewHtml.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		simplePanel_1.setWidget(htmlNewHtml);

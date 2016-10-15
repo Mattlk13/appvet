@@ -27,7 +27,6 @@ import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -136,7 +135,6 @@ public class AppVet implements EntryPoint {
 		});
 		
 	}
-	
 
 	private void showMessageDialog(String windowTitle, String message,
 			boolean isError) {

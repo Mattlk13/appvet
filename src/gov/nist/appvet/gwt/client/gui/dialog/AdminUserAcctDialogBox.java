@@ -616,26 +616,6 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		}
 
 	}
-	
-//	/** Get database representation of role. */
-//	public boolean validateRoleAndHierarchies() {
-//		boolean adminRadioSelected = adminRadioButton.getValue();
-//		boolean toolRadioSelected = toolRadioButton.getValue();
-//		boolean analystRadioSelected = analystRadioButton.getValue();
-//		boolean userRadioSelected = userRadioButton.getValue();
-//		if (!adminRadioSelected && !toolRadioSelected && !analystRadioSelected
-//				&& !userRadioSelected) {
-//			showMessageDialog("AppVet User Account", "No user role selected",
-//					true);
-//			return false;
-//		}
-//
-//		if (adminRadioSelected || toolRadioSelected) {
-//			return true;
-//		}
-//
-//		return true;
-//	}
 
 	public void killDialogBox(DialogBox dialogBox) {
 		if (dialogBox != null) {

@@ -123,10 +123,6 @@ public class ToolAdapter implements Runnable {
 
 		webSite = xml.getXPathValue("/ToolAdapter/Description/VendorWebsite");
 		
-		// String restrictionValue = xml
-		//		.getXPathValue("/ToolAdapter/Description/Restriction"); // Not used
-		// restrictionType = RestrictionType.getRestrictionType(restrictionValue); // Not used
-
 		// Authorization requirements
 		final String booleanStringValue = xml
 				.getXPathValue("/ToolAdapter/Description/AuthenticationRequired");

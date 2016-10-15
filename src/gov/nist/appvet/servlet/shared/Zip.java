@@ -47,12 +47,6 @@ public class Zip {
 		return zipIt(zipFilePath);
 	}
 
-//	public static void main(String[] args) {
-//		Zip appZip = new Zip();
-//		appZip.generateFileList(new File(SOURCE_FOLDER));
-//		appZip.zipIt(OUTPUT_ZIP_FILE);
-//	}
-
 	public boolean zipIt(String zipFile) {
 		byte[] buffer = new byte[1024];
 		FileOutputStream fos = null;

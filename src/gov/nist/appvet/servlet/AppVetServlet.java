@@ -77,20 +77,6 @@ public class AppVetServlet extends HttpServlet {
 	/** Server logger. */
 	private static final Logger log = AppVetProperties.log;
 
-	
-//	@Override
-//	/** This method launches the tool manager when the initial servlet is
-//	 * launched.*/
-//	public void init(ServletConfig config) throws ServletException {
-//		super.init(config);
-//		log.info("*** Starting AppVet service "
-//				+ AppVetProperties.APPVET_VERSION + " on "
-//				+ AppVetProperties.SERVLET_URL);
-//		toolMgr = new ToolMgr();
-//		toolMgrThread = new Thread(toolMgr);
-//		toolMgrThread.start();
-//	}
-
 	@Override
 	/** Handler for HTTP GET messages.*/
 	protected void doGet(HttpServletRequest request,
@@ -156,23 +142,6 @@ public class AppVetServlet extends HttpServlet {
 					ErrorMessage.AUTHENTICATION_ERROR.getDescription(),
 					true);
 			return;
-			
-			// Authenticate session failed, try username and password
-			
-			// TODO: REmove the following since authentication should only
-			// occur above
-//			
-//			if (!authenticateUserNameAndPassword(requesterUserName,
-//					requesterPassword)) {
-//				log.debug("Authentication error for user '"
-//						+ requesterUserName + "'");
-//				sendHttpResponse(response, HttpServletResponse.SC_BAD_REQUEST,
-//						ErrorMessage.AUTHENTICATION_ERROR.getDescription(),
-//						true);
-//				return;
-//			} else {
-//				// Username and password authenticated
-//			}
 		} else {
 			// Session authenticated
 			requesterUserName = Database.getSessionUser(sessionId);

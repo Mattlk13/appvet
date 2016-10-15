@@ -163,11 +163,6 @@ public class AppVetProperties {
 	/* Documentation URL */
 	public static String DOCUMENTATION_URL = null;
 	public static String DEFAULT_DOCUMENTATION_URL = "http://appvet.github.io/appvet/";
-	/* Org hierarchy level names */
-	//public static String ORG_LEVEL1_NAME = null;
-	//public static String ORG_LEVEL2_NAME = null;
-	//public static String ORG_LEVEL3_NAME = null;
-	//public static String ORG_LEVEL4_NAME = null;
 	/** The minimum number of organizational levels that must be specified for a USER or ANALYST.
 	 */
 	public static int minOrgLevelsRequired = -1;
@@ -332,15 +327,6 @@ public class AppVetProperties {
 		}
 		HOST = xml.getXPathValue("/AppVet/Host/Hostname");
 		printVal("HOST (Static)", HOST);
-//		if (HOST.equals("DHCP")) {
-//			try {
-//				InetAddress addr = InetAddress.getLocalHost();
-//				HOST = addr.getHostAddress();
-//				printVal("HOST (DHCP)", HOST);
-//			} catch (UnknownHostException e) {
-//				System.err.println(e.toString());
-//			}
-//		} 
 		SSL = new Boolean(xml.getXPathValue("/AppVet/Host/SSL")).booleanValue();
 		printVal("SSL", SSL);
 		PORT = xml.getXPathValue("/AppVet/Host/Port");
@@ -389,15 +375,6 @@ public class AppVetProperties {
 		printVal("minOrgLevelsRequired", minOrgLevelsRequired);
 		maxOrgLevels = new Integer(xml.getXPathValue("/AppVet/OrgHierarchy/MaxOrgLevels")).intValue();
 		printVal("maxOrgLevels", maxOrgLevels);
-		
-//		ORG_LEVEL1_NAME = xml.getXPathValue("/AppVet/OrgHierarchyLevels/Level1");
-//		printVal("ORG_LEVEL1_NAME", ORG_LEVEL1_NAME);
-//		ORG_LEVEL2_NAME = xml.getXPathValue("/AppVet/OrgHierarchyLevels/Level2");
-//		printVal("ORG_LEVEL2_NAME", ORG_LEVEL2_NAME);
-//		ORG_LEVEL3_NAME = xml.getXPathValue("/AppVet/OrgHierarchyLevels/Level3");
-//		printVal("ORG_LEVEL3_NAME", ORG_LEVEL3_NAME);
-//		ORG_LEVEL4_NAME = xml.getXPathValue("/AppVet/OrgHierarchyLevels/Level4");
-//		printVal("ORG_LEVEL4_NAME", ORG_LEVEL4_NAME);
 
 		// Apache logging
 		System.setProperty("org.apache.commons.logging.Log",
