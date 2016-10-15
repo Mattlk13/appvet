@@ -130,6 +130,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	private Date sessionExpiration = null;
 	private Timer pollingTimer = null;
 	private Timer warningTimer = null;
+	private HorizontalSplitPanel centerAppVetSplitPanel = null;
 	private HorizontalPanel appsListButtonPanel = null;
 	private SimplePanel rightCenterPanel = null;
 	private AppUploadDialogBox appUploadDialogBox = null;
@@ -989,14 +990,14 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsListTable.dataGrid.setStyleName("dataGrid");
 		appsListTable.dataGrid.setSize("100%", "");
 		appsListTable.setDataList(initialApps.apps);
-		appsListTable.setSize("100%", "210px");
+		appsListTable.setSize("100%", "200px");
 		appsListTable.dataGrid.setSelectionModel(appSelectionModel);
 
 		centerPanel = new SimplePanel();
 		add(centerPanel);
 		centerPanel.setHeight("");
 
-		final HorizontalSplitPanel centerAppVetSplitPanel = new HorizontalSplitPanel();
+		centerAppVetSplitPanel = new HorizontalSplitPanel();
 		centerPanel.setWidget(centerAppVetSplitPanel);
 		// centerAppVetSplitPanel.setTitle("AppVet split pane");
 		centerAppVetSplitPanel.setSplitPosition("65%");
@@ -1005,7 +1006,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		// leftCenterPanel.setTitle("AppVet apps list pane");
 
 		centerAppVetSplitPanel.setLeftWidget(leftCenterPanel);
-		leftCenterPanel.setSize("100%", "200px");
+		leftCenterPanel.setSize("100%", "220px");
 		final DockPanel dockPanel_1 = new DockPanel();
 		dockPanel_1.add(appsListTable, DockPanel.CENTER);
 		dockPanel_1.setCellWidth(appsListTable, "100%");
@@ -1347,18 +1348,18 @@ public class AppVetPanel extends DockLayoutPanel {
 		uploadReportButton.setVisible(true);
 
 		SimplePanel simplePanel = new SimplePanel();
-		addSouth(simplePanel, 50.0);
+		addSouth(simplePanel, 40.0);
 		simplePanel.setSize("", "");
 
 		VerticalPanel verticalPanel_1 = new VerticalPanel();
 		verticalPanel_1.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel_1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		simplePanel.setWidget(verticalPanel_1);
-		verticalPanel_1.setSize("100%", "50px");
+		verticalPanel_1.setSize("100%", "");
 
 		HorizontalPanel horizontalPanel_2 = new HorizontalPanel();
 		verticalPanel_1.add(horizontalPanel_2);
-		horizontalPanel_2.setSize("100%", "50px");
+		horizontalPanel_2.setSize("100%", "");
 		verticalPanel_1.setCellVerticalAlignment(horizontalPanel_2, HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel_1.setCellWidth(horizontalPanel_2, "100%");
 		horizontalPanel_2
@@ -1992,14 +1993,15 @@ public class AppVetPanel extends DockLayoutPanel {
 		// Set center panel height
 		final int MARGIN_HEIGHT = 0;
 		final int centerPanelHeight = appVetPanelHeight - (int) NORTH_PANEL_HEIGHT - (int) SOUTH_PANEL_HEIGHT - MARGIN_HEIGHT;
-		centerPanel.setHeight(centerPanelHeight + "px");
+		int adjustedCenterPanelHeight = centerPanelHeight + 12;  // Adjust center panel height 
+		centerPanel.setHeight(adjustedCenterPanelHeight + "px");
 
 		// Set pager height to adjust appsListTable height inside center panel
-		int PAGER_HEIGHT = 60;
+		int PAGER_HEIGHT = 52;
 		final int appsListTableHeight = centerPanelHeight - PAGER_HEIGHT;
 		appsListTable.setHeight(appsListTableHeight + "px");
-
 		appsListTable.dataGrid.redraw();
+				
 	}
 
 	// The size of the AppVet panel is 0 until displayed in rootlayoutpanel.
