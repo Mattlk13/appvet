@@ -42,7 +42,7 @@ import java.util.Date;
  */
 public class ToolMgr implements Runnable {
 	private static final Logger log = AppVetProperties.log;
-	private static final long TOOL_ADAPTER_SHUTDOWN_TIMEOUT = 10000;
+	//private static final long TOOL_ADAPTER_SHUTDOWN_TIMEOUT = 10000;
 
 	public ToolMgr() {
 	}
@@ -197,11 +197,12 @@ public class ToolMgr implements Runnable {
 	public void wait(AppInfo appInfo, ToolAdapter tool) {
 		try {
 			// Wait for tool adapter thread to shut down.
-			tool.thread.join(TOOL_ADAPTER_SHUTDOWN_TIMEOUT);
+			tool.thread.join(AppVetProperties.APP_PROCESSING_TIMEOUT);
 			//appInfo.log.info(tool.toolId + " shutting down.");
 		} catch (final InterruptedException e) {
-			appInfo.log.warn(tool.toolId + " shut down after "
-					+ AppVetProperties.APP_PROCESSING_TIMEOUT + "ms timeout");
+			appInfo.log.warn(tool.toolId + " shut down prematurely after " + 
+					"AppVetProperties.APP_PROCESSING_TIMEOUT = " + 
+					+ AppVetProperties.APP_PROCESSING_TIMEOUT + "ms");
 			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId, tool.toolId,
 					ToolStatus.ERROR);
 		}

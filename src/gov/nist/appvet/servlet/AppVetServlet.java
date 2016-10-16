@@ -82,7 +82,8 @@ public class AppVetServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) {
 		
-		// 
+		String cmd = request.getParameter(AppVetParameter.COMMAND.value);
+		
 		String authHeaderValue = request.getHeader("Authorization");
 		if (authHeaderValue != null) {
 			// Requester is attempting to authenticate
@@ -110,7 +111,7 @@ public class AppVetServlet extends HttpServlet {
 				Database.clearExpiredSessions();
 				final String sessionId = Database.createNewSession(username,
 						clientIpAddress);
-				
+				log.debug("AUTHENTICATION SESSIONID: " + sessionId);
 				sendHttpResponse(response, HttpServletResponse.SC_OK,
 						sessionId, false);
 				return;
@@ -319,6 +320,8 @@ public class AppVetServlet extends HttpServlet {
 		String appId = null;
 		FileItem fileItem = null;
 		String clientIpAddress = request.getRemoteAddr();
+		
+		String cmd = request.getParameter(AppVetParameter.COMMAND.value);
 
 		// On CentOS, clientIpAddress will be '0:0:0:0:0:0:0:1' if on
 		// localhost, so change to '127.0.0.1'
