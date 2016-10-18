@@ -35,13 +35,22 @@ public enum AppStatus {
 	// All tools assessed the app as low-risk.
 	//PASS,
 	LOW,
+	// All tools assesed the app as low-risk but at least one app
+	// experienced an error.
+	LOW_WITH_ERROR,
 	// At least one tool has assessed the app as moderate-risk but no tool
 	// has assessed the app as high-risk.
 	//WARNING,
 	MODERATE,
+	// At least one tool as assess the app as moderate but at least one tool
+	// experienced an ERROR.
+	MODERATE_WITH_ERROR,
 	// At least one tool has assessed the app as high-risk.
 	//FAIL,
 	HIGH,
+	// At least one tool as assessed the app as high-risk and at least one
+	// app experienced an error.
+	HIGH_WITH_ERROR,
 	// App experienced an error or could not be processed by at least one
 	// tool.
 	ERROR,

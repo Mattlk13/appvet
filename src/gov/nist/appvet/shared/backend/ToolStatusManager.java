@@ -206,18 +206,38 @@ public class ToolStatusManager {
 			}
 
 		}
+		
+		// If a tool has an ERROR but other tools have HIGH, MODERATE, or
+		// LOW statuses, display the highest of these statuses with an 
+		// asterisk (e.g., LOW*).
+		boolean toolErrorExists = false;
+		if (numToolErrors > 0) {
+			toolErrorExists = true;
+		}
 
 		// Set app status based on TESTTOOL and REPORT statuses
 	    if (numToolSubmitted > 0) {
 	    	AppStatusManager.setAppStatus(appId, AppStatus.PROCESSING);
+		} else if (numToolHighs > 0) {
+			if (toolErrorExists) {
+				AppStatusManager.setAppStatus(appId, AppStatus.HIGH_WITH_ERROR);
+			} else {
+				AppStatusManager.setAppStatus(appId, AppStatus.HIGH);
+			}
+		} else if (numToolModerates > 0) {
+			if (toolErrorExists) {
+				AppStatusManager.setAppStatus(appId, AppStatus.MODERATE_WITH_ERROR);
+			} else {
+				AppStatusManager.setAppStatus(appId, AppStatus.MODERATE);
+			}			
+		} else if (numToolLows > 0) {
+			if (toolErrorExists) {
+				AppStatusManager.setAppStatus(appId, AppStatus.LOW_WITH_ERROR);
+			} else {
+				AppStatusManager.setAppStatus(appId, AppStatus.LOW);
+			}			
 	    } else if (numToolErrors > 0) {
 			AppStatusManager.setAppStatus(appId, AppStatus.ERROR);
-		} else if (numToolHighs > 0) {
-			AppStatusManager.setAppStatus(appId, AppStatus.HIGH);
-		} else if (numToolModerates > 0) {
-			AppStatusManager.setAppStatus(appId, AppStatus.MODERATE);
-		} else if (numToolLows > 0) {
-			AppStatusManager.setAppStatus(appId, AppStatus.LOW);	
 		} else {
 			// Note that if no TESTTOOL has started (SUBMITTED), the 
 			// app status may change temporarily to NA state until

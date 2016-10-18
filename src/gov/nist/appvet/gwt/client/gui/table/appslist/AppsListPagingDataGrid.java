@@ -192,12 +192,20 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 				
 				if (appStatus == AppStatus.ERROR) {
 					statusHtml = "<div id=\"error\" style='color: black'>ERROR</div>";
+				} else if (appStatus == AppStatus.MODERATE_WITH_ERROR) {
+					statusHtml = "<div id=\"warning\" style='color: orange'>"
+							+ "MODERATE*" + "</div>";	
 				} else if (appStatus == AppStatus.MODERATE) {
 					statusHtml = "<div id=\"warning\" style='color: orange'>"
-							+ "MODERATE" + "</div>";					
+							+ "MODERATE" + "</div>";	
+				} else if (appStatus == AppStatus.LOW_WITH_ERROR) {
+					statusHtml = "<div id=\"endorsed\" style='color: green'>"
+							+ "LOW*" + "</div>";		
 				} else if (appStatus == AppStatus.LOW) {
 					statusHtml = "<div id=\"endorsed\" style='color: green'>"
-							+ "LOW" + "</div>";					
+							+ "LOW" + "</div>";		
+				} else if (appStatus == AppStatus.HIGH_WITH_ERROR) {
+					statusHtml = "<div id=\"error\" style='color: red'>HIGH*</div>";	
 				} else if (appStatus == AppStatus.HIGH) {
 					statusHtml = "<div id=\"error\" style='color: red'>HIGH</div>";
 				} else if (appStatus == AppStatus.NA) {

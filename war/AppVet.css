@@ -1183,7 +1183,7 @@ box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 .appvetButton {
 	font-family: Sans-Serif;
 	font-size: x-small;
-	font-weight: 700;
+	font-weight: 500;
 	vertical-align: bottom;
 	margin-top: 5px;
 	margin-bottom: 5px;
@@ -1221,7 +1221,7 @@ box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 .appUploadButton {
 	font-family: Sans-Serif;
 	font-size: x-small;
-	font-weight: 700;
+	font-weight: 500;
 	vertical-align: bottom;
 	margin-top: 5px;
 	margin-bottom: 5px;
