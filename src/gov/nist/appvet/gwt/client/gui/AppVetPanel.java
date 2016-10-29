@@ -1375,7 +1375,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel_2.setCellVerticalAlignment(orgLogoMain, HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_2.setCellHorizontalAlignment(orgLogoMain,
 				HasHorizontalAlignment.ALIGN_LEFT);
-		
+
 		Image nistLogo = new Image("images/nist_logo_darkgrey.png");
 
 		nistLogo.setAltText("NIST logo");
@@ -1412,7 +1412,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		button.setHTML("<div><img style=\"vertical-align:middle;right-margin:5px\" width=\"12px\" height=\"12px\" src=\"images/" + imageName + "\" alt=\"" + alt + "\"/> <span style=\"vertical-align:middle\">" + text + "\r\n</span></div>");
 		button.setTitle(title);
 	}
-	
+
 	public void enableAllButtons() {
 		enableButton(logButton, "LOG", "View log", "View log", "magnifying-glass-black.png");
 		enableButton(uploadReportButton, "REPORT", "Upload report", "Upload report", "upload-black.png");
@@ -1420,7 +1420,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		enableButton(downloadReportsButton, "REPORTS", "Download reports", "Download reports", "download-black.png");
 		enableButton(downloadAppButton, "APP", "Download app", "Download app", "download-black.png");
 	}
-	
+
 	public void disableAllButtons() {
 		disableButton(logButton, "LOG", "View log", "View log", "magnifying-glass-white.png");
 		disableButton(uploadReportButton, "REPORT", "Upload report", "Upload report", "upload-white.png");
@@ -1609,7 +1609,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 		return 0;
 	}
-	
+
 	public void getServerUpdates(String username) {
 		// Get (1) session expiration, (2) updated apps, and (3) alert updates
 		appVetServiceAsync.getServerUpdates(username, sessionId, sessionExpiration, lastAppsListUpdate, new AsyncCallback<ServerPacket>() {
@@ -1629,30 +1629,62 @@ public class AppVetPanel extends DockLayoutPanel {
 					// Get session expiration
 					Date newSessionExpiration = serverPacket.getSessionExpiration();
 					if (newSessionExpiration == null) {
-						log.severe("Error updating session expiration. Session probably expired.");
+						//log.severe("Error updating session expiration. Session probably expired.");
 						removeSession(true);
 					} else {
 						sessionTimeLeft(newSessionExpiration);
 					}
-					
+
 					// Get alert message
 					SystemAlert systemAlert = serverPacket.getSystemAlert();
 					if (systemAlert != null) {
 						// log.info("system alert is not null. Setting message: " +
 						// systemAlert.message);	
-						String systemMessage = systemAlert.message;
+
+						String newSpanValue = systemAlert.message;
+						//log.info("newSpanValue: " + newSpanValue);
+						String newAlertMessage = null;
+						String newAltValue = null;
+						
+						String currentAlertMessage = statusMessageHtml.getHTML();
+						int startSpanIndex = currentAlertMessage.indexOf("<span style=\"\">");
+						int endSpanIndex = currentAlertMessage.indexOf("</span>", startSpanIndex+15);
+						String currentSpanValue = currentAlertMessage.substring(startSpanIndex+15, endSpanIndex);
+						//log.info("currentSpanValue: " + currentSpanValue);
+
+						int startAltIndex = currentAlertMessage.indexOf("alt=\"");
+						int endAltIndex = currentAlertMessage.indexOf("\"", startAltIndex+5);
+						String currentAltValue = currentAlertMessage.substring(startAltIndex+5, endAltIndex);
+						//log.info("currentAltValue: " + currentAltValue);
+						
+						//log.info("--------- checking messages ---------------");
 						if (systemAlert.type == SystemAlertType.NORMAL) {
-							statusMessageHtml.setHTML("<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/icon-metadata.png\" alt=\"System Message\" /> <span style=\"\">" + systemMessage + "</span></div>");						
+							newAlertMessage = "<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/icon-metadata.png\" alt=\"System Message\" /> <span style=\"\">" + newSpanValue + "</span></div>";
+							newAltValue = "System Message";
+							//log.info("newAltValue: " + newAltValue);
+
 						} else if (systemAlert.type == SystemAlertType.WARNING) {
-							statusMessageHtml.setHTML("<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/icon-warning.png\" alt=\"Warning\" /> <span style=\"\">"  + systemMessage + "</span></div>");						
+							newAlertMessage = "<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/icon-warning.png\" alt=\"Warning Message\" /> <span style=\"\">"  + newSpanValue + "</span></div>";
+							newAltValue = "Warning Message";
+							//log.info("newAltValue: " + newAltValue);
+							
 						} else if (systemAlert.type == SystemAlertType.CRITICAL) {
-							statusMessageHtml.setHTML("<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/icon-error.png\" alt=\"Error\" /> <span style=\"\">"  + systemMessage + "</span></div>");						
+							newAlertMessage = "<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/icon-error.png\" alt=\"Error Message\" /> <span style=\"\">"  + newSpanValue + "</span></div>";
+							newAltValue = "Error Message";
+							//log.info("newAltValue: " + newAltValue);
 						}
+
+						// Only set if new message is different from current message
+						if (currentSpanValue.equals(newSpanValue) && currentAltValue.equals(newAltValue)) {
+							//log.info("New message is same as current message");
+						} else {
+							statusMessageHtml.setHTML(newAlertMessage);						
+						}	
 					} else {
 						// log.info("system alert is null. Setting message to ''");
 						statusMessageHtml.setHTML("");						
 					}
-					
+
 					// Get updated apps
 					AppsListGwt updatedAppsList = serverPacket.getUpdatedAppsList();
 					if (updatedAppsList == null) {
@@ -1664,15 +1696,14 @@ public class AppVetPanel extends DockLayoutPanel {
 						lastAppsListUpdate = updatedAppsList.appsLastChecked;
 						if (updatedAppsList.apps.size() > 0) {
 							setUpdatedApps(updatedAppsList.apps);
-
 						}
 					}
-					
-					
+
+
 				}
 			}
 		});
-		
+
 	}
 
 
@@ -2001,7 +2032,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		final int appsListTableHeight = centerPanelHeight - PAGER_HEIGHT;
 		appsListTable.setHeight(appsListTableHeight + "px");
 		appsListTable.dataGrid.redraw();
-				
+
 	}
 
 	// The size of the AppVet panel is 0 until displayed in rootlayoutpanel.
@@ -2071,6 +2102,18 @@ public class AppVetPanel extends DockLayoutPanel {
 				allApps.set(matchIndex, updatedAppInfo);
 				if (!searchMode) {
 					appsListTable.set(matchIndex, updatedAppInfo);
+				}
+				// Check if updated app status indicates an error with a tool
+				if (updatedAppInfo.appStatus == AppStatus.LOW_WITH_ERROR || 
+						updatedAppInfo.appStatus == AppStatus.MODERATE_WITH_ERROR ||
+						updatedAppInfo.appStatus == AppStatus.HIGH_WITH_ERROR) {
+					// A tool must have encountered an error, so alert the user
+					showMessageDialog("Tool Error",
+							"An error with a tool was detected for app " + updatedAppInfo.appId 
+							+ ". The report for this tool may or may not arrive at a later time. "
+							+ "The tool has been disabled and the administrator has been notified.",
+							true);
+				
 				}
 			} else {
 				// adds new app

@@ -818,44 +818,7 @@ public class Database {
 		return exists("SELECT * FROM apps " + "WHERE appid='" + appid + "'");
 	}
 
-	/**
-	 * If AppVet is shutdown while an app is in the PROCESSING state, set the
-	 * status of the app from PROCESSING to ERROR upon the next startup of
-	 * AppVet.
-	 */
-	public synchronized static void setProcessingStatusToError() {
-		Connection connection = null;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		String sql = null;
-		try {
-			connection = getConnection();
-			sql = "SELECT * FROM apps WHERE appstatus='"
-					+ AppStatus.PROCESSING.name() + "'";
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()) {
-				String appId = resultSet.getString(1);
-				Database.killStuckApp(appId);
-//				AppStatusManager.setAppStatus(appId, AppStatus.ERROR);
-//
-//				AppInfo appInfo = new AppInfo(appId);
-//				appInfo.log
-//						.warn("Found app "
-//								+ appId
-//								+ " in interrupted PROCESSING state. Changing status to ERROR.");
-//				update("UPDATE apps SET appstatus='" + AppStatus.ERROR.name()
-//						+ "' " + "WHERE appId='" + appId + "'");
-			}
-		} catch (final SQLException e) {
-			log.error(e.toString());
-		} finally {
-			sql = null;
-			cleanUpResultSet(resultSet);
-			cleanUpStatement(statement);
-			cleanUpConnection(connection);
-		}
-	}
+
 
 	private synchronized static ArrayList<UserToolCredentials> createToolCredentialsList(
 			String username, ArrayList<ToolInfoGwt> tools) {
@@ -888,16 +851,7 @@ public class Database {
 		return toolCredentialsList;
 	}
 
-	/**
-	 * Kill timed-out app and set app state to ERROR.
-	 */
-	public synchronized static boolean killStuckApp(String appId) {
-		AppInfo appInfo = new AppInfo(appId);
-		appInfo.log.info("One or more tools exceeded timeout. "
-				+ "Setting app " + appId + " status to " + ToolStatus.ERROR);
-		AppStatusManager.setAppStatus(appId, AppStatus.ERROR);
-		return true;
-	}
+
 
 	public static ArrayList<UserToolCredentials> getUserToolCredentials(
 			String username) {
@@ -1093,6 +1047,7 @@ public class Database {
 		Connection connection = null;
 		Statement statement = null;
 		try {
+			//log.debug("Trying to execute: " + sql);
 			connection = getConnection();
 			statement = connection.createStatement();
 			statement.executeUpdate(sql);

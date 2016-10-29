@@ -38,7 +38,7 @@ import java.util.ArrayList;
 public class AppVetProperties {
 	public static boolean error = false;
 	/** AppVet Github release version number. */
-	public static final String APPVET_VERSION = "2.2.9"; 
+	public static final String APPVET_VERSION = "2.3.1"; 
 	// Logging
 	public static Logger log = null;
 	private static String APPVET_LOG_NAME = "appvet_log.txt";
@@ -138,7 +138,7 @@ public class AppVetProperties {
 	public static int GET_UPDATES_DELAY = 0;
 	// The max timeout from the time an app begins its PROCESSING state (after registration) to 
 	// the time that all tool reports have been received.
-	public static int APP_PROCESSING_TIMEOUT = 0;
+	public static int ToolServiceProcessingTimeout = 0;
 	// Delay when polling for pending APKs to process (in ms)
 	public static int TOOL_MGR_POLLING_INTERVAL = 0;
 	// Max delay between starting each test (in ms)
@@ -286,9 +286,9 @@ public class AppVetProperties {
 				xml.getXPathValue("/AppVet/ToolServices/StaggerInterval"))
 				.intValue();
 		printVal("TOOL_MGR_STAGGER_INTERVAL", TOOL_MGR_STAGGER_INTERVAL);
-		APP_PROCESSING_TIMEOUT = new Integer(
+		ToolServiceProcessingTimeout = new Integer(
 				xml.getXPathValue("/AppVet/ToolServices/Timeout")).intValue();
-		printVal("TOOL_TIMEOUT", APP_PROCESSING_TIMEOUT);
+		printVal("TOOL_TIMEOUT", ToolServiceProcessingTimeout);
 		
 		// SSO parameters
 		SSO_ACTIVE = new Boolean(xml.getXPathValue("/AppVet/SSO/Active")).booleanValue();
@@ -394,7 +394,7 @@ public class AppVetProperties {
 		}
 		setupTools(DeviceOS.ANDROID);
 		setupTools(DeviceOS.IOS);
-		checkForProcessingApps();
+		checkApps();
 		startToolMgr();
 		log.debug("---------- END AppVet PROPERTIES -------------------", false);
 	}
@@ -501,8 +501,8 @@ public class AppVetProperties {
 	 * status of the app should be changed to an ERROR state after AppVet
 	 * restarts.
 	 */
-	public static void checkForProcessingApps() {
-		Database.setProcessingStatusToError();
+	public static void checkApps() {
+		ToolMgr.handleToolAdapterTimeout();
 	}
 	
 	/** This method launches the tool manager.*/

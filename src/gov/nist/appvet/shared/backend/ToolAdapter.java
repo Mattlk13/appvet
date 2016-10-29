@@ -25,7 +25,6 @@ import gov.nist.appvet.servlet.shared.ReportFileType;
 import gov.nist.appvet.servlet.toolmgr.AppSubmitType;
 import gov.nist.appvet.servlet.toolmgr.SSLWrapper;
 import gov.nist.appvet.shared.all.DeviceOS;
-import gov.nist.appvet.shared.all.RestrictionType;
 import gov.nist.appvet.shared.all.ToolType;
 import gov.nist.appvet.shared.all.UserToolCredentials;
 
@@ -60,6 +59,12 @@ import org.apache.pdfbox.util.PDFTextStripper;
  */
 public class ToolAdapter implements Runnable {
 
+	/** This flag is set to true if AppVet times-out waiting for a report
+	 * from this tool. This flag is then used to determine if subsequent apps
+	 * should be sent to this tool.
+	 */
+	public boolean serviceSuspended = false;
+	
 	private static final Logger log = AppVetProperties.log;
 	// Display Name (e.g., Androwarn (Maaaaz))
 	public String name = null; 
