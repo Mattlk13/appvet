@@ -225,7 +225,6 @@ public class AdminUserListDialogBox extends DialogBox {
 								+ " '" + selected.getUserName() + "'?\r\n</p>");
 				deleteConfirmDialogBox.setText("Confirm Delete");
 				deleteConfirmDialogBox.center();
-				deleteConfirmDialogBox.cancelButton.setFocus(true);
 				deleteConfirmDialogBox.cancelButton
 				.addClickHandler(new ClickHandler() {
 					@Override
@@ -574,7 +573,6 @@ public class AdminUserListDialogBox extends DialogBox {
 		messageDialogBox = new MessageDialogBox(message, isError);
 		messageDialogBox.setText(windowTitle);
 		messageDialogBox.center();
-		messageDialogBox.closeButton.setFocus(true);
 		messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

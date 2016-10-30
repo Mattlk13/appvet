@@ -100,6 +100,7 @@ public class AboutDialogBox extends DialogBox {
 		dialogVPanel.setSize("360px", "125px");
 		final SimplePanel simplePanel = new SimplePanel();
 		dockPanel.add(simplePanel, DockPanel.SOUTH);
+		dockPanel.setCellHorizontalAlignment(simplePanel, HasHorizontalAlignment.ALIGN_CENTER);
 		dockPanel.setCellVerticalAlignment(simplePanel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		simplePanel.setStyleName("aboutDialogButtonPanel");

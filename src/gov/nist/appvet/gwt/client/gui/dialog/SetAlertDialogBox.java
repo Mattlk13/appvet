@@ -103,7 +103,6 @@ public class SetAlertDialogBox extends DialogBox {
 		grid.getCellFormatter().setVerticalAlignment(1, 0, HasVerticalAlignment.ALIGN_TOP);
 		
 		alertTextArea = new TextArea();
-		alertTextArea.setStyleName("appvetTextArea");
 		dockPanel.add(alertTextArea, DockPanel.CENTER);
 		alertTextArea.setSize("233px", "100%");
 		final SimplePanel simplePanel_2 = new SimplePanel();

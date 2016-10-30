@@ -141,7 +141,6 @@ public class AppVet implements EntryPoint {
 		messageDialogBox = new MessageDialogBox(message, isError);
 		messageDialogBox.setText(windowTitle);
 		messageDialogBox.center();
-		messageDialogBox.closeButton.setFocus(true);
 		messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
 
 			@Override

@@ -131,7 +131,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 			}
 		};
 		
-		iconColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		iconColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		iconColumn.setSortable(SORTING_ON);
 		dataGrid.addColumn(iconColumn, "App");
 		dataGrid.setColumnWidth(iconColumn, "20px");

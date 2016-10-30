@@ -261,7 +261,6 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		messageDialogBox = new MessageDialogBox(message, isError);
 		messageDialogBox.setText(windowTitle);
 		messageDialogBox.center();
-		messageDialogBox.closeButton.setFocus(true);
 		messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

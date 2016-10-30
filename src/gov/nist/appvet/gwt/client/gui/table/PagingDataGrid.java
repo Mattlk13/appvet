@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
-
+import com.google.gwt.resources.client.CssResource.ImportedWithPrefix;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.SimplePager;
@@ -56,10 +56,23 @@ public abstract class PagingDataGrid<T> extends Composite {
 	public ListDataProvider<T> dataProvider;
 	private final DockPanel dock = new DockPanel();
 	public int iconVersion = 0;
+	
+	@ImportedWithPrefix("gwt-DataGrid")
+	public interface CustomDataGridResource extends DataGrid.Resources {
+		@Source({DataGrid.Style.DEFAULT_CSS, "DataGridOverride.css" })
+		DataGrid.Style dataGridStyle();
+		
+		interface CustomStyle extends DataGrid.Style {
+			
+		}
+	}
 
 	public PagingDataGrid() {
 		initWidget(dock);
-		dataGrid = new DataGrid<T>();
+		//dataGrid = new DataGrid<T>();
+		DataGrid.Resources resource = GWT.create(CustomDataGridResource.class);
+	    dataGrid = new DataGrid<T>(3, resource);
+	    		
 		dataGrid.setPageSize(3);
 		dataGrid.setWidth("100%");
 		final SimplePager.Resources pagerResources = GWT
@@ -86,6 +99,7 @@ public abstract class PagingDataGrid<T> extends Composite {
 		dock.setWidth("100%");
 		dock.setCellWidth(dataGrid, "100%");
 		dock.setCellWidth(pager, "100%");
+		
 	}
 
 	public void setPagerImageAltAndTitle() {
