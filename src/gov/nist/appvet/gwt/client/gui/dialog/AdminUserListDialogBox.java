@@ -419,34 +419,47 @@ public class AdminUserListDialogBox extends DialogBox {
 
 	public void search() {
 		if (searchTextBox.getValue() == null || searchTextBox.getValue().isEmpty()) {
-			//log.info("Search box is empty");
+			log.info("Search box is empty");
 		} else {
+			log.info("Searching");
 			final String[] tokens = searchTextBox.getValue().split("\\s+");
 			if (tokens != null) {
+				log.info("trace 1");
 				final ArrayList<UserInfo> searchList = new ArrayList<UserInfo>();
+				log.info("trace 2");
 
 				for (int i = 0; i < tokens.length; i++) {
+					log.info("trace 3");
 
 					if (Validate.isLegalSearchString(tokens[i])) {
+						log.info("trace 4");
 
 						for (int j = 0; j < allUsers.size(); j++) {
+							log.info("trace 5");
 
 							final UserInfo userInfo = allUsers.get(j);
+							log.info("trace 6");
 
 							if (userInfo.tokenMatch(tokens[i])) {
+								log.info("trace 7");
 
 								searchList.add(userInfo);
+								log.info("trace 8");
 
 							}
 						}
 					}
 				}
+				log.info("trace 9");
 
 				usersListTable.setDataList(searchList);
+				log.info("trace 10");
 
 				if (searchList.size() > 0) {
+					log.info("trace 11");
 
 					usersSelectionModel.setSelected(searchList.get(0), true);
+					log.info("trace 12");
 
 				}
 			}

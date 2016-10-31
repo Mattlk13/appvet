@@ -707,8 +707,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		if (!configInfo.isKeepApps()) {
 			// Hide download app button if KEEP_APPS is false
 			downloadAppButton.setVisible(false);
-		} else {
-			downloadAppButton.setVisible(true);
 		}
 
 		/*
