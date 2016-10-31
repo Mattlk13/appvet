@@ -1306,7 +1306,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appsListButtonPanel.setCellHorizontalAlignment(downloadReportsButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		downloadReportsButton.setSize("110px", "18px");
+		downloadReportsButton.setSize("130px", "18px");
 
 		//downloadAppButton.setStyleName("appvetButton shadow");
 		downloadAppButton.setStyleName("blueButton shadow");
@@ -1316,7 +1316,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel_1.setCellHorizontalAlignment(downloadAppButton, HasHorizontalAlignment.ALIGN_CENTER);
 		downloadAppButton.setSize("100px", "18px");
 		toolResultsHtml = new HTML("", true);
-		toolResultsHtml.setSize("556px", "");
+		toolResultsHtml.setSize("561px", "");
 		toolResultsHtml
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		toolResultsHtml.setStyleName("toolResultsHtml");

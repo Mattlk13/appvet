@@ -21,7 +21,7 @@ package gov.nist.appvet.shared.all;
 
 import java.util.ArrayList;
 import java.util.Date;
-
+import java.util.logging.Logger;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
@@ -150,24 +150,31 @@ public class UserInfo implements IsSerializable {
 
 	public boolean tokenMatch(String token) {
 		String lowerCaseToken = token.toLowerCase();
+
 		if (userName.toLowerCase().indexOf(lowerCaseToken) > -1) {
 			return true;
 		}
+
 		if (email.toLowerCase().indexOf(lowerCaseToken) > -1) {
 			return true;
 		}
+
 		if (lastLogon.toString().toLowerCase().indexOf(lowerCaseToken) > -1) {
 			return true;
 		}
+
 		if (fromHost.toLowerCase().indexOf(lowerCaseToken) > -1) {
 			return true;
 		}
+
 		if (lastName.toLowerCase().indexOf(lowerCaseToken) > -1) {
 			return true;
 		}
+
 		if (firstName.toLowerCase().indexOf(lowerCaseToken) > -1) {
 			return true;
 		}
+
 		return false;
 	}
 

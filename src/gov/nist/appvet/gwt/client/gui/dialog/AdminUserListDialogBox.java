@@ -35,9 +35,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -112,15 +109,15 @@ public class AdminUserListDialogBox extends DialogBox {
 		searchTextBox = new TextBox();
 		searchTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		searchTextBox.setAlignment(TextAlignment.LEFT);
-		searchTextBox.addKeyDownHandler(new KeyDownHandler() {
-			@Override
-			public void onKeyDown(KeyDownEvent event) {
-				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					searchMode = true;
-					search();
-				}
-			}
-		});
+//		searchTextBox.addKeyDownHandler(new KeyDownHandler() {
+//			@Override
+//			public void onKeyDown(KeyDownEvent event) {
+//				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+//					searchMode = true;
+//					search();
+//				}
+//			}
+//		});
 		horizontalPanel_1.add(searchTextBox);
 		horizontalPanel_1.setCellVerticalAlignment(searchTextBox,
 				HasVerticalAlignment.ALIGN_MIDDLE);
@@ -131,11 +128,7 @@ public class AdminUserListDialogBox extends DialogBox {
 		searchButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-			}
-		});
-		searchButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
+				log.info("Clicked search button");
 				searchMode = true;
 				search();
 			}
@@ -425,24 +418,53 @@ public class AdminUserListDialogBox extends DialogBox {
 	}
 
 	public void search() {
-		final String[] tokens = searchTextBox.getValue().split("\\s+");
-		if (tokens != null) {
-			final ArrayList<UserInfo> searchList = new ArrayList<UserInfo>();
-			for (int i = 0; i < tokens.length; i++) {
-				if (Validate.isLegalSearchString(tokens[i])) {
-					for (int j = 0; j < allUsers.size(); j++) {
-						final UserInfo userInfo = allUsers.get(j);
-						if (userInfo.tokenMatch(tokens[i])) {
-							searchList.add(userInfo);
+		if (searchTextBox.getValue() == null || searchTextBox.getValue().isEmpty()) {
+			log.info("Search box is empty");
+		} else {
+			log.info("Searching");
+			final String[] tokens = searchTextBox.getValue().split("\\s+");
+			if (tokens != null) {
+				log.info("trace 1");
+				final ArrayList<UserInfo> searchList = new ArrayList<UserInfo>();
+				log.info("trace 2");
+
+				for (int i = 0; i < tokens.length; i++) {
+					log.info("trace 3");
+
+					if (Validate.isLegalSearchString(tokens[i])) {
+						log.info("trace 4");
+
+						for (int j = 0; j < allUsers.size(); j++) {
+							log.info("trace 5");
+
+							final UserInfo userInfo = allUsers.get(j);
+							log.info("trace 6");
+
+							if (userInfo.tokenMatch(tokens[i])) {
+								log.info("trace 7");
+
+								searchList.add(userInfo);
+								log.info("trace 8");
+
+							}
 						}
 					}
 				}
-			}
-			usersListTable.setDataList(searchList);
-			if (searchList.size() > 0) {
-				usersSelectionModel.setSelected(searchList.get(0), true);
+				log.info("trace 9");
+
+				usersListTable.setDataList(searchList);
+				log.info("trace 10");
+
+				if (searchList.size() > 0) {
+					log.info("trace 11");
+
+					usersSelectionModel.setSelected(searchList.get(0), true);
+					log.info("trace 12");
+
+				}
 			}
 		}
+
 	}
 
 	public void submitUserInfo(final boolean newUser, final UserInfo userInfo) {

@@ -1167,7 +1167,7 @@ box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 	color: black;
 	background: #d9e1e4;
 	vertical-align: middle;
-	padding: 3px 0px 0px 3px;
+	padding: 3px 0px 3px 0px;
 }
 .grayButton:hover {
 	background: #efefef;
@@ -1186,7 +1186,7 @@ box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 	color: white;
 	background: #2d8659;
 	vertical-align: middle;
-	padding: 3px 0px 0px 3px;
+	padding: 3px 0px 3px 0px;
 }
 .greenButton:hover {
 	background: #40bf80;
@@ -1208,7 +1208,7 @@ box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 	color: white;
 	background: #2d8659;
 	margin: 6px 6px 6px 0px;
-	padding: 5px 0px 0px 5px;
+	padding: 5px 0px 5px 0px;
 	vertical-align: middle;
 }
 .greenAppUploadButton:hover {
@@ -1230,10 +1230,9 @@ box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 	color: white;
 	background: #015289;
 	margin: 4px;
-	padding: 3px 0px 0px 3px;
+	padding: 3px 0px 3px 0px;
 	vertical-align: middle;
 }
-
 .blueButton:hover {
 	background: #0189e4;
 }
@@ -1241,11 +1240,9 @@ box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 	background: #0189e4;
 }
 .blueButton-up-disabled {
-	color: white;
 	background: #9ad6fe;
 }
 .blueButton-up-disabled:hover {
-	color: white;
 	background: #9ad6fe;
 }
 
