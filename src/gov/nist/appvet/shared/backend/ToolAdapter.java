@@ -63,7 +63,7 @@ public class ToolAdapter implements Runnable {
 	 * from this tool. This flag is then used to determine if subsequent apps
 	 * should be sent to this tool.
 	 */
-	public boolean serviceSuspended = false;
+	private boolean serviceSuspended = false;
 	
 	private static final Logger log = AppVetProperties.log;
 	// Display Name (e.g., Androwarn (Maaaaz))
@@ -426,12 +426,15 @@ public class ToolAdapter implements Runnable {
 		}
 		
 		if (thread.isAlive()) {
-			appInfo.log.debug("Thread for " + name
-					+ " is still alive.  Interrupting...");
+			appInfo.log.error("Thread for tool adapter '" + name
+					+ "' is still alive.  Interrupting...");
 			thread.interrupt();
 			appInfo.log.error(ErrorMessage.TOOL_TIMEOUT_ERROR.getDescription());
-			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId, this.toolId,
-					ToolStatus.ERROR);
+			// Keep this in SUBMITTED state and let ToolMgr handle it.
+			/*ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId, this.toolId,
+					ToolStatus.ERROR);*/
+		} else {
+			log.debug("Tool adapter '" + name + "' is shutting down.");
 		}
 		
 		thread = null;
@@ -640,8 +643,9 @@ public class ToolAdapter implements Runnable {
 				if (entity == null) {
 					appInfo.log.error("MultipartEntity is null. Aborting "
 							+ name);
-					ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-							this.toolId, ToolStatus.ERROR);
+					// Keep this in SUBMITTED state and let ToolMgr handle it.
+					/*ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+							this.toolId, ToolStatus.ERROR);*/
 					return;
 				}
 				
@@ -703,8 +707,9 @@ public class ToolAdapter implements Runnable {
 
 					if (toolStatus == null) {
 						appInfo.log.error("Tool status is null!");
-						ToolStatusManager.setToolStatus(appInfo.os,
-								appInfo.appId, this.toolId, ToolStatus.ERROR);
+						// Keep this in SUBMITTED state and let ToolMgr handle it.
+						/*ToolStatusManager.setToolStatus(appInfo.os,
+								appInfo.appId, this.toolId, ToolStatus.ERROR);*/
 						return;
 					} else {
 						ToolStatusManager.setToolStatus(appInfo.os,
@@ -715,27 +720,32 @@ public class ToolAdapter implements Runnable {
 
 					final String httpResponseVal = httpResponse.getStatusLine()
 							.toString();
-					if ((httpResponseVal.indexOf("HTTP/1.1 202 Accepted") > -1)
+					if ((httpResponseVal.indexOf("HTTP/1.1 202") > -1)
 							|| (httpResponseVal.indexOf("HTTP/1.1 200 OK") > -1)) {
 						// Received 200 OK
-					} else if (httpResponseVal.indexOf("HTTP/1.1 404 Not Found") > -1) {
+					} else if (httpResponseVal.indexOf("HTTP/1.1 404") > -1) {
 						appInfo.log.error("Received from " + toolId + ": "
 								+ httpResponseVal
 								+ ". Make sure tool service is running at: " + targetURL);
-						ToolStatusManager.setToolStatus(appInfo.os,
-								appInfo.appId, this.toolId, ToolStatus.ERROR);
+						
+						// Let this tool remain in Submitted state until handled by the ToolMgr
+						/*ToolStatusManager.setToolStatus(appInfo.os,
+								appInfo.appId, this.toolId, ToolStatus.ERROR);*/
+						
 					} else if (httpResponseVal.indexOf("HTTP/1.1 400") > -1) {
 						appInfo.log.error("Received from " + toolId + ": "
 								+ httpResponseVal
 								+ ". Make sure parameters sent to " + this.toolId + " are correct.");
-						ToolStatusManager.setToolStatus(appInfo.os,
-								appInfo.appId, this.toolId, ToolStatus.ERROR);
+						// Let this tool remain in Submitted state until handled by the ToolMgr
+						/*ToolStatusManager.setToolStatus(appInfo.os,
+								appInfo.appId, this.toolId, ToolStatus.ERROR);*/
 					} else {
 						appInfo.log.error("Tool '" + toolId + "' received: "
 								+ httpResponseVal
 								+ ". Could not process app.");
-						ToolStatusManager.setToolStatus(appInfo.os,
-								appInfo.appId, this.toolId, ToolStatus.ERROR);
+						// Let this tool remain in Submitted state until handled by the ToolMgr
+						/*ToolStatusManager.setToolStatus(appInfo.os,
+								appInfo.appId, this.toolId, ToolStatus.ERROR);*/
 					}
 				}
 
@@ -750,8 +760,9 @@ public class ToolAdapter implements Runnable {
 //						+ Logger.formatElapsed(elapsedTime));
 			} catch (final Exception e) {
 				appInfo.log.error(e.toString());
-				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-						this.toolId, ToolStatus.ERROR);
+				// Keep this in SUBMITTED state and let ToolMgr handle it.
+				/*ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+						this.toolId, ToolStatus.ERROR);*/
 			} finally {
 				if (inputStream != null) {
 					try {
@@ -772,6 +783,15 @@ public class ToolAdapter implements Runnable {
 				fileOut = null;
 			}
 		}
+	}
+
+	public boolean isServiceSuspended() {
+		return serviceSuspended;
+	}
+
+	public void setServiceSuspended(boolean serviceSuspended) {
+		log.error("SETTING SERVICE SUSPENDED TO TRUE");
+		this.serviceSuspended = serviceSuspended;
 	}
 
 }

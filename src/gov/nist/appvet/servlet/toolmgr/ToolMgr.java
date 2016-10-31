@@ -112,6 +112,8 @@ public class ToolMgr implements Runnable {
 						for (int i = 0; i < availableTools.size(); i++) {
 							//staggerStart(AppVetProperties.TOOL_MGR_STAGGER_INTERVAL);
 							final ToolAdapter toolAdapter = availableTools.get(i);
+							log.info("TOOL " + toolAdapter.toolId + " is suspended: " + toolAdapter.isServiceSuspended());
+							
 							// Only process test tools (not preprocessors,
 							// audit, or
 							// manual reports).
@@ -128,10 +130,9 @@ public class ToolMgr implements Runnable {
 									// If app file available, we run through
 									// tools that
 									// require either app file or metadata
-									if (toolAdapter.serviceSuspended) {
+									if (toolAdapter.isServiceSuspended()) {
 										// Do not start the tool adapter if it was suspended
-										log.warn("Access to tool '" + 
-												toolAdapter.name + "' has been disabled. First ensure that the tool is operating properly and restart the AppVet web server.");
+										log.warn("Not starting tool '" + toolAdapter.toolId + "' as it has been suspended.");
 									} else {
 										// If the tool adapter was not disabled.
 										toolAdapter.setApp(appInfo);
@@ -155,8 +156,8 @@ public class ToolMgr implements Runnable {
 									// required but
 									// not available
 								} else {
-									if (toolAdapter.serviceSuspended) {
-										// Do nothing
+									if (toolAdapter.isServiceSuspended()) {
+										log.warn("Not waiting for '" + toolAdapter.toolId + "' as it has been suspended.");
 									} else {
 										// If the tool adapter was not disabled.
 										wait(appInfo, toolAdapter);
@@ -174,8 +175,8 @@ public class ToolMgr implements Runnable {
 									// required but
 									// not available
 								} else {
-									if (toolAdapter.serviceSuspended) {
-										// Do nothing
+									if (toolAdapter.isServiceSuspended()) {
+										log.warn("Not checking tool '" + toolAdapter.toolId + "' as it has been suspended.");
 									} else {
 										// If the tool adapter was not disabled.
 										toolAdapter.shutdown(appInfo, true);
@@ -341,19 +342,16 @@ public class ToolMgr implements Runnable {
 								if (appInfo.log == null) {
 									log.error("AppInfo log is null");
 								} else {
-									appInfo.log.error("The '" + toolId + "' tool adapter has timed-out for app " + appInfo.appId + 
-											"' waiting for a report. Changing tool status from " + toolStatus + " to ERROR.");
+									appInfo.log.error("The '" + toolId + "' tool adapter has experienced an error for app " + appInfo.appId + 
+											"'. Changing tool status from " + toolStatus + " to ERROR.");
 								}
-
-								ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId, toolId,
-										ToolStatus.ERROR);
 								
 								// Next, set the suspendedService flag for the tool to prevent
 								// further apps from being sent to the tool
 								appInfo.log.warn("Disabling '" + toolId + "' adapter and suspending subsequent app submissions.");
 								DeviceOS os = DeviceOS.valueOf(deviceOs);
 								ToolAdapter toolAdapter = ToolAdapter.getByToolId(os, toolId);
-								toolAdapter.serviceSuspended = true;
+								toolAdapter.setServiceSuspended(true);
 								
 								// Email admins about the problem with the tool
 								UserInfo userInfo = Database.getUserInfo(appInfo.ownerName, null);
@@ -361,7 +359,7 @@ public class ToolMgr implements Runnable {
 								String emailContent = "Tool '" + toolId + "' has experienced an error. Disabling '" + toolId + "' adapter and suspending subsequent app submissions.";
 								Emailer.sendEmail(userInfo.getEmail(), emailSubject, emailContent);
 								
-								ToolStatusManager.setToolStatus(DeviceOS.valueOf(deviceOs), appId, toolId,
+								ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId, toolId,
 										ToolStatus.ERROR);
 							} else {
 								//appInfo.log.debug("NOT SETTING TOOL STATUS FOR " + toolId);
