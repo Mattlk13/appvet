@@ -138,7 +138,7 @@ public class AppVetProperties {
 	public static int GET_UPDATES_DELAY = 0;
 	// The max timeout from the time an app begins its PROCESSING state (after registration) to 
 	// the time that all tool reports have been received.
-	public static int ToolServiceProcessingTimeout = 0;
+	public static int ToolServiceTimeout = 0;
 	// Delay when polling for pending APKs to process (in ms)
 	public static int TOOL_MGR_POLLING_INTERVAL = 0;
 	// Max delay between starting each test (in ms)
@@ -286,9 +286,9 @@ public class AppVetProperties {
 				xml.getXPathValue("/AppVet/ToolServices/StaggerInterval"))
 				.intValue();
 		printVal("TOOL_MGR_STAGGER_INTERVAL", TOOL_MGR_STAGGER_INTERVAL);
-		ToolServiceProcessingTimeout = new Integer(
+		ToolServiceTimeout = new Integer(
 				xml.getXPathValue("/AppVet/ToolServices/Timeout")).intValue();
-		printVal("TOOL_TIMEOUT", ToolServiceProcessingTimeout);
+		printVal("TOOL_TIMEOUT", ToolServiceTimeout);
 		
 		// SSO parameters
 		SSO_ACTIVE = new Boolean(xml.getXPathValue("/AppVet/SSO/Active")).booleanValue();

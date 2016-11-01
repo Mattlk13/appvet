@@ -20,6 +20,7 @@
 package gov.nist.appvet.shared.all;
 
 
+
 /**
  * @author steveq@nist.gov
  */
@@ -133,27 +134,36 @@ public class Validate {
 		return isPrintable(fileName) && !hasWhiteSpace(fileName);
 	}
 
-	public static boolean hasValidAppFileExtension(String fileName) {
-		if (fileName == null || fileName.isEmpty()) {
-			return false;
+	public static DeviceOS hasValidAppFileExtension(String fileName) {
+		final String fileNameLowerCase = fileName.toLowerCase();
+		if (fileNameLowerCase.endsWith(".apk")) {
+			return DeviceOS.ANDROID;
+		} else if (fileNameLowerCase.endsWith(".ipa")) {
+			return DeviceOS.IOS;
+		} else {
+			return null;
 		}
-		final String fileNameUpperCase = fileName.toUpperCase();
-		return fileNameUpperCase.endsWith(".APK")
-				|| fileNameUpperCase.endsWith(".IPA");
 	}
 
-	public static boolean hasValidReportFileExtension(String fileName) {
-		if (fileName == null || fileName.isEmpty()) {
-			return false;
+	public static ReportFileType hasValidReportFileExtension(String fileName) {
+		final String fileNameLowerCase = fileName.toLowerCase();
+		if (fileNameLowerCase.endsWith(".pdf")) {
+			return ReportFileType.PDF;
+		} else if (fileNameLowerCase.endsWith(".json")) {
+			return ReportFileType.JSON;
+		} else if (fileNameLowerCase.endsWith(".html")) {
+			return ReportFileType.HTML;
+		} else if (fileNameLowerCase.endsWith(".txt")) {
+			return ReportFileType.TXT;
+		} else if (fileNameLowerCase.endsWith(".docx")) {
+			return ReportFileType.DOCX;
+		} else if (fileNameLowerCase.endsWith(".rtf")) {
+			return ReportFileType.RTF;
+		} else if (fileNameLowerCase.endsWith(".xml")) {
+			return ReportFileType.XML;
+		} else {
+			return null;
 		}
-		final String fileNameUpperCase = fileName.toUpperCase();
-		return fileNameUpperCase.endsWith(".PDF")
-				|| fileNameUpperCase.endsWith(".JSON")
-				|| fileNameUpperCase.endsWith(".HTML")
-				|| fileNameUpperCase.endsWith(".TXT")
-				|| fileNameUpperCase.endsWith(".DOCX")
-				|| fileNameUpperCase.endsWith(".RTF")
-				|| fileNameUpperCase.endsWith(".XML");
 	}
 
 	public static boolean isLegalSearchString(String str) {

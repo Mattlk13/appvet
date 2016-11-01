@@ -23,13 +23,13 @@ import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.servlet.preprocessor.Registration;
 import gov.nist.appvet.servlet.shared.Emailer;
 import gov.nist.appvet.servlet.shared.ErrorMessage;
-import gov.nist.appvet.servlet.shared.ReportFileType;
 import gov.nist.appvet.servlet.shared.Zip;
 import gov.nist.appvet.shared.all.AppStatus;
 import gov.nist.appvet.shared.all.AppVetParameter;
 import gov.nist.appvet.shared.all.AppVetServletCommand;
 import gov.nist.appvet.shared.all.DeviceOS;
 import gov.nist.appvet.shared.all.HttpBasicAuthentication;
+import gov.nist.appvet.shared.all.ReportFileType;
 import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.ToolType;
 import gov.nist.appvet.shared.all.UserInfo;
@@ -465,23 +465,27 @@ public class AppVetServlet extends HttpServlet {
 			AppInfo appInfo = null;
 			switch (command) {
 			case SUBMIT_APP:
-				// Submit a new app for processing. Used by GUI and non-GUI
-				// clients.
-				appInfo = createAppInfo(requesterUserName, fileItem,
-						clientIpAddress, request, null, null, null);
-				if (appInfo == null) {
-					sendHttpResponse(response,
-							HttpServletResponse.SC_BAD_REQUEST,
-							ErrorMessage.INVALID_APP_FILE.getDescription(),
-							true);
-					return;
-				} else {
-					// Send the response before completing the registration
-					sendHttpResponse(response, HttpServletResponse.SC_ACCEPTED,
-							appInfo.appId, false);
-					Registration appFileRegistration = new Registration(appInfo);
-					appFileRegistration.registerApp();
+				// Verify app file extension
+				DeviceOS deviceOS = Validate.hasValidAppFileExtension(fileItem
+						.getName());
+				if (deviceOS == null) {
+					sendHttpResponse(response, HttpServletResponse.SC_BAD_REQUEST,
+							ErrorMessage.INVALID_APP_FILE_EXTENSION
+									.getDescription(), true);
+					return;	
 				}
+				
+				// Create app info object
+				appInfo = createAppInfo(requesterUserName, fileItem,
+						clientIpAddress, request, deviceOS);
+				
+				// Send a response before completing the registration
+				sendHttpResponse(response, HttpServletResponse.SC_ACCEPTED,
+						appInfo.appId, false);
+				
+				// Register the app
+				Registration appFileRegistration = new Registration(appInfo);
+				appFileRegistration.registerApp();
 				break;
 			case SUBMIT_REPORT:
 				// Check if app exists
@@ -489,42 +493,29 @@ public class AppVetServlet extends HttpServlet {
 					sendHttpResponse(response,
 							HttpServletResponse.SC_BAD_REQUEST,
 							ErrorMessage.INVALID_APPID.getDescription(), true);
-				}
-
-				// Verify report file attachment
-				if (fileItem == null) {
-					log.error("File item is null. Aborting.");
-					log.error("File attachment is missing.");
-					sendHttpResponse(response,
-							HttpServletResponse.SC_BAD_REQUEST,
-							ErrorMessage.MISSING_FILE.getDescription(), true);
 					return;
 				}
-				if (!Validate.hasValidReportFileExtension(fileItem
-						.getName())) {
+
+				// Verify report file extension
+				ReportFileType reportFileType = Validate.hasValidReportFileExtension(fileItem
+						.getName());
+				if (reportFileType == null) {
 					sendHttpResponse(response,
 							HttpServletResponse.SC_BAD_REQUEST,
 							ErrorMessage.INVALID_REPORT_FILE_EXTENSION
 									.getDescription(), true);
-					return;
-				} else {
-					sendHttpResponse(response, HttpServletResponse.SC_OK,
-							"Report received successfully", false);
+					return;	
 				}
 				
-				appInfo = createAppInfo(appId, requesterUserName,
-						commandStr, toolId, toolRisk, fileItem, null,
-						clientIpAddress, response);
-				if (appInfo == null) {
-					sendHttpResponse(response,
-							HttpServletResponse.SC_BAD_REQUEST,
-							ErrorMessage.INVALID_APP_FILE.getDescription(),
-							true);
-					return;
-				} else {
-					// Submit the report
-					submitReport(requesterUserName, appInfo, response);
-				}
+				// Create app info object
+				appInfo = createAppInfo(appId, toolId, toolRisk, fileItem);
+				
+				// Send a response before completing the submission
+				sendHttpResponse(response, HttpServletResponse.SC_ACCEPTED,
+						"Report received successfully", false);
+				
+				// Submit the report
+				submitReport(requesterUserName, appInfo, response);
 				break;
 			default:
 				// Received unknown command. Ignoring.
@@ -605,21 +596,13 @@ public class AppVetServlet extends HttpServlet {
 	 * This method creates an app information object for a tool report
 	 * submission.
 	 */
-	private AppInfo createAppInfo(String appId, String userName,
-			String commandStr, String toolId, String toolRisk,
-			FileItem fileItem, ByteArrayBody report, String clientIpAddress,
-			HttpServletResponse response) {
-		if (Database.appExists(appId)) {
-			AppInfo appInfo = new AppInfo(appId);
-			appInfo.toolId = toolId;
-			appInfo.toolRisk = toolRisk;
-			appInfo.fileItem = fileItem;
-			return appInfo;
-		} else {
-			sendHttpResponse(response, HttpServletResponse.SC_BAD_REQUEST,
-					ErrorMessage.INVALID_APPID.getDescription(), true);
-			return null;
-		}
+	private AppInfo createAppInfo(String appId, String toolId, String toolRisk,
+			FileItem fileItem) {
+		AppInfo appInfo = new AppInfo(appId);
+		appInfo.toolId = toolId;
+		appInfo.toolRisk = toolRisk;
+		appInfo.fileItem = fileItem;
+		return appInfo;
 	}
 
 	
@@ -627,48 +610,28 @@ public class AppVetServlet extends HttpServlet {
 	 * This method creates an app information object for an app submission.
 	 */
 	private AppInfo createAppInfo(String userName, FileItem fileItem,
-			String clientIpAddress, HttpServletRequest request,
-			String appPackageName, String appVersion, String os) {
+			String clientIpAddress, HttpServletRequest request, DeviceOS deviceOS) {
 		String appId = generateAppid();
 		AppInfo appInfo = new AppInfo(appId, true);
 		appInfo.ownerName = userName;
 		String newAppFileName = null;
 		
-		if (fileItem != null) {
-			// App file was received.
-			appInfo.fileItem = fileItem;
-			String origFileName = FileUtil.getNormalizedFileName(fileItem
-					.getName());
-			// Note that spaces in the original fileItem name are replaced
-			// with underscores.
-			newAppFileName = origFileName.replaceAll(" ", "_");
-			String fileNameUpperCase = newAppFileName.toUpperCase();
-			if (fileNameUpperCase.endsWith(".APK")) {
-				appInfo.os = DeviceOS.ANDROID;
-			} else if (fileNameUpperCase.endsWith(".IPA")) {
-				appInfo.os = DeviceOS.IOS;
-			} else {
-				log.warn("Unknown file extension: " + fileNameUpperCase);
-				return null;
-			}
-			// Set app file and project name.
-			appInfo.setAppFileAndProjectName(newAppFileName, appInfo.os);
-			log.debug("Got project name: " + appInfo.getAppProjectName());
-		} else if (appPackageName != null && appVersion != null && os != null) {
-			// App metadata was submitted.
-			appInfo.packageName = appPackageName;
-			appInfo.appName = appInfo.packageName;
-			appInfo.versionName = appVersion;
-			appInfo.os = DeviceOS.getOS(os);
-			if (appInfo.os == null) {
-				log.error("Unknown OS received: " + os);
-				return null;
-			}
-		} else {
-			// App submission MUST be either an app file or metadata.
-			log.error("Required app file or metadata was not received.");
-			return null;
+		// App file was received.
+		appInfo.fileItem = fileItem;
+		String origFileName = FileUtil.getNormalizedFileName(fileItem
+				.getName());
+		// Note that spaces in the original fileItem name are replaced
+		// with underscores.
+		newAppFileName = origFileName.replaceAll(" ", "_");
+		String fileNameUpperCase = newAppFileName.toUpperCase();
+		if (fileNameUpperCase.endsWith(".APK")) {
+			appInfo.os = DeviceOS.ANDROID;
+		} else if (fileNameUpperCase.endsWith(".IPA")) {
+			appInfo.os = DeviceOS.IOS;
 		}
+		// Set app file and project name.
+		appInfo.setAppFileAndProjectName(newAppFileName, appInfo.os);
+		log.debug("Got project name: " + appInfo.getAppProjectName());
 		
 		// Get client IP address to set session.
 		InetAddress addr = null;

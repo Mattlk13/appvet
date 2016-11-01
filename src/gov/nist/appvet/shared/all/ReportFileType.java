@@ -17,7 +17,7 @@
  * Permission to use this software is contingent upon your acceptance
  * of the terms of this agreement.
  */
-package gov.nist.appvet.servlet.shared;
+package gov.nist.appvet.shared.all;
 
 /**
  * @author steveq@nist.gov

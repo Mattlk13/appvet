@@ -21,10 +21,10 @@ package gov.nist.appvet.shared.backend;
 
 import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.servlet.shared.ErrorMessage;
-import gov.nist.appvet.servlet.shared.ReportFileType;
 import gov.nist.appvet.servlet.toolmgr.AppSubmitType;
 import gov.nist.appvet.servlet.toolmgr.SSLWrapper;
 import gov.nist.appvet.shared.all.DeviceOS;
+import gov.nist.appvet.shared.all.ReportFileType;
 import gov.nist.appvet.shared.all.ToolType;
 import gov.nist.appvet.shared.all.UserToolCredentials;
 
@@ -416,14 +416,13 @@ public class ToolAdapter implements Runnable {
 					+ fileName + " is null or empty.");
 		}
 	}
-
 	
 	public void shutdown(AppInfo appInfo, boolean sendMobilizeReport) {
 		
-		if ((protocol == Protocol.PUSH) || (protocol == Protocol.INTERNAL)) {
-			// PUSH adapters should not have a thread to clean up.
-			return;
-		}
+//		if ((protocol == Protocol.PUSH) || (protocol == Protocol.INTERNAL)) {
+//			// PUSH adapters should not have a thread to clean up.
+//			return;
+//		}
 		
 		if (thread.isAlive()) {
 			appInfo.log.error("Thread for tool adapter '" + name
@@ -431,8 +430,8 @@ public class ToolAdapter implements Runnable {
 			thread.interrupt();
 			appInfo.log.error(ErrorMessage.TOOL_TIMEOUT_ERROR.getDescription());
 			// Keep this in SUBMITTED state and let ToolMgr handle it.
-			/*ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId, this.toolId,
-					ToolStatus.ERROR);*/
+			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId, this.toolId,
+					ToolStatus.ERROR);
 		} else {
 			log.debug("Tool adapter '" + name + "' is shutting down.");
 		}
