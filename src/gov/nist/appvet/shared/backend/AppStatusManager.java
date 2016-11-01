@@ -51,16 +51,15 @@ import gov.nist.appvet.shared.all.AppStatus;
  * @author steveq@nist.gov
  */
 public class AppStatusManager {
-	private static final Logger log = AppVetProperties.log;
 	
 	private AppStatusManager() {
 	}
 
-	public synchronized static boolean setAppStatus(String appId,
+	public synchronized static boolean setAppStatus(AppInfo appInfo,
 			AppStatus appStatus) {
 		// Only update the status if the new status is different from the
 		// current status (reduces GUI refresh).
-		final String currentAppStatusString = getAppStatusName(appId);
+		final String currentAppStatusString = getAppStatusName(appInfo.appId);
 		if (currentAppStatusString == null) {
 			return false;
 		}
@@ -73,16 +72,17 @@ public class AppStatusManager {
 		if (appStatus != currentAppStatus) {
 			// Update app status
 			final String sql = "UPDATE apps SET appstatus='" + appStatus.name()
-					+ "' where appid='" + appId + "'";
-			log.debug("SQL: " + sql);
+					+ "' where appid='" + appInfo.appId + "'";
 			if (Database.update(sql)) {
+				appInfo.log.info("Setting app " + appInfo.appId + " status to " + appStatus.name());
 				// Set last-updated time due to app status change
-				if (Database.setLastUpdatedTime(appId)) {
+				if (Database.setLastUpdatedTime(appInfo.appId)) {
 					return true;
 				} else {
 					return false;
 				}
 			} else {
+				appInfo.log.error("Could not set app status to " + appStatus.name());
 				return false;
 			}
 		} else {

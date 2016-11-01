@@ -55,7 +55,6 @@ import java.util.concurrent.TimeUnit;
 public class AndroidMetadata {
 	
 	private final DeviceOS OS = DeviceOS.ANDROID;
-	private final Logger log = AppVetProperties.log;
 
 	public final String APKTOOL_WINDOWS_COMMAND = "apktool.bat";
 	public final String APKTOOL_LINUX_COMMAND = "apktool";
@@ -70,19 +69,19 @@ public class AndroidMetadata {
 	public boolean getMetadata(AppInfo appInfo) {
 		appinfoTool = ToolAdapter.getByToolId(OS, METADATA_TOOL_ID);
 		if (appinfoTool == null) {
-			appInfo.log.error("Android tool adapter 'appinfo' was not found. "
+			appInfo.log.error("Tool adapter 'appinfo' was not found. "
 					+ "Cannot get app metadata.");
 			return false;
 		}
 		// Set status for metadata
-		ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+		ToolStatusManager.setToolStatus(appInfo,
 				appinfoTool.toolId, ToolStatus.SUBMITTED);
 		
 		// Decode/extract app file
 		if (!decodeApk(appInfo)) {
 			// Update metadata in DB
 			updateDbMetadata(appInfo);
-			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+			ToolStatusManager.setToolStatus(appInfo,
 					appinfoTool.toolId, ToolStatus.ERROR);
 			return false;
 		}
@@ -90,7 +89,7 @@ public class AndroidMetadata {
 		if (!getMetaData(appInfo)) {
 			// Update metadata in DB
 			updateDbMetadata(appInfo);
-			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+			ToolStatusManager.setToolStatus(appInfo,
 					appinfoTool.toolId, ToolStatus.ERROR);
 			return false;
 		}
@@ -98,10 +97,8 @@ public class AndroidMetadata {
 		updateDbMetadata(appInfo);
 		writeReport(appInfo, null);
 		// Set metadata processing to LOW.
-		ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+		ToolStatusManager.setToolStatus(appInfo,
 				appinfoTool.toolId, ToolStatus.LOW);
-		appInfo.log.debug("End Android metadata preprocessing for app "
-				+ appInfo.appId);
 		return true;
 	}
 	
@@ -511,7 +508,7 @@ public class AndroidMetadata {
 			appInfo.log.warn("Could not retrieve icon name from "
 					+ "path '/manifest/application/@icon' in Android manifest file. Using default Android icon.");
 			iconFile = new File(AppVetProperties.DEFAULT_ANDROID_ICON_PATH);
-			log.debug("Using default icon path: " + iconFile.getAbsolutePath());
+			appInfo.log.debug("Using default icon path: " + iconFile.getAbsolutePath());
 		} else {
 			// Icon value will have the syntax '@'<directoryName>'/'<iconName>
 			if ((iconValue.indexOf("@") == 0) && iconValue.contains("/")) {
@@ -527,7 +524,7 @@ public class AndroidMetadata {
 							.warn("No icon file found. Using default icon...");
 					iconFile = new File(AppVetProperties.DEFAULT_ANDROID_ICON_PATH);
 					if (iconFile.exists()) {
-						log.debug("Using  icon file at: " + iconFile.getAbsolutePath());
+						appInfo.log.debug("Using  icon file at: " + iconFile.getAbsolutePath());
 					}
 				} else {
 					appInfo.log.debug("Found icon at: "
@@ -548,9 +545,9 @@ public class AndroidMetadata {
 				+ appInfo.appId + ".png");
 		if (sourceFile != null && destFile != null) {
 			if (FileUtil.copyFile(sourceFile, destFile)) {
-				log.debug("Copied icon image to " + destFile);
+				appInfo.log.debug("Copied icon image to " + destFile);
 			} else {
-				log.warn("Could not copy icon image to " + destFile);
+				appInfo.log.warn("Could not copy icon image to " + destFile);
 			}
 		}
 	}

@@ -502,7 +502,7 @@ public class AppVetProperties {
 	 * restarts.
 	 */
 	public static void checkApps() {
-		ToolMgr.handleToolAdapterTimeout();
+		ToolMgr.handleStuckAppProcessing();
 	}
 	
 	/** This method launches the tool manager.*/

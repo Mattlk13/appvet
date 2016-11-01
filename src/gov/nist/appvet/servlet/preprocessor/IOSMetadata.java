@@ -32,7 +32,6 @@ import com.kylinworks.PNGConverter;
  */
 public class IOSMetadata {
 
-	private final Logger log = AppVetProperties.log;
 	private final DeviceOS OS = DeviceOS.IOS;
 	/** Both iOS and Android MUST use the metadata tool ID 'appinfo' */
 	private final String METADATA_TOOL_ID = "appinfo";
@@ -49,7 +48,7 @@ public class IOSMetadata {
 		}
 
 		// Set status for metadata
-		ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+		ToolStatusManager.setToolStatus(appInfo,
 				appinfoTool.toolId, ToolStatus.SUBMITTED);
 
 		// Copy IPA file to ZIP file so we can expand it
@@ -63,7 +62,7 @@ public class IOSMetadata {
 					+ "</font>");
 			// Update metadata in DB
 			updateDbMetadata(appInfo);
-			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+			ToolStatusManager.setToolStatus(appInfo,
 					appinfoTool.toolId, ToolStatus.ERROR);
 			return false;
 		}
@@ -75,14 +74,14 @@ public class IOSMetadata {
 			ZipFile zipFile = new ZipFile(zipFilePath);
 			zipFile.extractAll(extractedZipPath);
 		} catch (ZipException e) {
-			log.error(e.toString());
+			appInfo.log.error(e.toString());
 			// Write error report
 			writeReport(appInfo, "\n<font color=\"red\">"
 					+ "ERROR: Could not extract IPA zip file. IPA file may be corrupted."
 					+ "</font>");
 			// Update metadata in DB
 			updateDbMetadata(appInfo);
-			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+			ToolStatusManager.setToolStatus(appInfo,
 					appinfoTool.toolId, ToolStatus.ERROR);
 			return false;
 		}
@@ -98,7 +97,7 @@ public class IOSMetadata {
 		updateDbMetadata(appInfo);
 		writeReport(appInfo, null);
 		// Set metadata processing to LOW.
-		ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+		ToolStatusManager.setToolStatus(appInfo,
 				appinfoTool.toolId, ToolStatus.LOW);
 		appInfo.log.debug("End iOS metadata preprocessing for app "
 				+ appInfo.appId);
@@ -117,7 +116,7 @@ public class IOSMetadata {
 				appInfo.appName = "N/A";
 			}
 		} else {
-			log.debug("Got here instaed");
+			appInfo.log.debug("Got here instaed");
 		}
 		if (appInfo.packageName == null || appInfo.packageName.isEmpty()) {
 			appInfo.packageName = "N/A";
@@ -262,9 +261,9 @@ public class IOSMetadata {
 				+ appInfo.appId + ".png");
 		if (sourceFile != null && destFile != null) {
 			if (FileUtil.copyFile(sourceFile, destFile)) {
-				log.debug("Copied icon image to " + destFile);
+				appInfo.log.debug("Copied icon image to " + destFile);
 			} else {
-				log.warn("Could not copy icon image to " + destFile);
+				appInfo.log.warn("Could not copy icon image to " + destFile);
 			}
 		}
 		// Convert destination to PNG file from Apple optimized to PNG
@@ -308,7 +307,7 @@ public class IOSMetadata {
 			String[] keys = d.allKeys();
 
 			if (keys.length <= 0) {
-				log.debug("NO KEYS FOUND in " + destPlistPath);
+				appInfo.log.warn("NO KEYS FOUND in " + destPlistPath);
 				return;
 			}
 
@@ -341,7 +340,7 @@ public class IOSMetadata {
 				}
 			}
 		} catch (Exception e) {
-			appInfo.log.warn("Error processing plist file. IPA file may be corrupt.");
+			appInfo.log.error("Error processing plist file. IPA file may be corrupt.");
 		}
 	}
 

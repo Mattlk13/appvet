@@ -29,7 +29,6 @@ import gov.nist.appvet.shared.backend.AppInfo;
 import gov.nist.appvet.shared.backend.AppStatusManager;
 import gov.nist.appvet.shared.backend.Database;
 import gov.nist.appvet.shared.backend.FileUtil;
-import gov.nist.appvet.shared.backend.Logger;
 import gov.nist.appvet.shared.backend.ToolAdapter;
 import gov.nist.appvet.shared.backend.ToolStatus;
 import gov.nist.appvet.shared.backend.ToolStatusManager;
@@ -52,13 +51,14 @@ import java.util.Date;
 public class Registration {
 
 	private AppInfo appInfo = null;
-	private final Logger log = AppVetProperties.log;
 
 	public Registration(AppInfo appInfo) {
 		this.appInfo = appInfo;
 	}
 
 	public boolean registerApp() {
+		appInfo.log.info("App " + appInfo.appId
+				+ " has been uploaded by " + appInfo.ownerName);
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ToolAdapter registrationTool = ToolAdapter.getByToolId(appInfo.os,
@@ -187,13 +187,12 @@ public class Registration {
 						appInfo.log
 								.error(ErrorMessage.ERROR_SAVING_UPLOADED_FILE
 										.getDescription());
-						ToolStatusManager.setToolStatus(appInfo.os,
-								appInfo.appId, registrationTool.toolId,
+						ToolStatusManager.setToolStatus(appInfo, registrationTool.toolId,
 								ToolStatus.ERROR);
 						return false;
 					}
 
-					appInfo.log.debug("Saved app: " + appInfo.getAppFileName());
+					appInfo.log.info("Saved app: " + appInfo.getAppFileName());
 
 				}
 
@@ -207,10 +206,10 @@ public class Registration {
 				bufferedWriter.write("</body>\n");
 				bufferedWriter.write("</HTML>\n");
 				bufferedWriter.close();
-				appInfo.log.info("Registered app " + appInfo.appId);
+				appInfo.log.info("App " + appInfo.appId + " has been registered.");
 
 				// Update registration status to LOW (i.e., COMPLETED).
-				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+				ToolStatusManager.setToolStatus(appInfo,
 						registrationTool.toolId, ToolStatus.LOW);
 
 				// Email notify
@@ -226,12 +225,11 @@ public class Registration {
 						Emailer.sendEmail(userInfo.getEmail(), subject, content);
 					}
 				}
-				appInfo.log.debug("App " + appInfo.appId
-						+ " has been uploaded by " + appInfo.ownerName);
+
 				return true;
 			} else {
 				// Update registration status to ERROR.
-				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+				ToolStatusManager.setToolStatus(appInfo,
 						registrationTool.toolId, ToolStatus.ERROR);
 				appInfo.log.error(ErrorMessage.ERROR_APP_ALREADY_REGISTERED
 						.getDescription());

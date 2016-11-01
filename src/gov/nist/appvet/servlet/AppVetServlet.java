@@ -65,7 +65,6 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.http.entity.mime.content.ByteArrayBody;
 
 /**
  * This class defines the AppVet HTTP GET and POST server.
@@ -1010,17 +1009,17 @@ public class AppVetServlet extends HttpServlet {
 			HttpServletResponse response) {
 		final ToolAdapter tool = ToolAdapter.getByToolId(appInfo.os,
 				appInfo.toolId);
-		log.debug("Submit report for " + tool.os + " tool " + tool.toolId + ", type: " + tool.toolType);
-		log.debug("Tool report name: " + tool.reportName);
+		
+		appInfo.log.info("Received SUBMIT_REPORT from user '" + submitterUserName + "' for '"
+				+ tool.toolId + "' on app " + appInfo.appId + " with report '"
+				+ appInfo.fileItem.getName() + "' setting '" + tool.toolId + "' status to "
+				+ appInfo.toolRisk + ".");
 		
 		String submitterRoleStr = Database.getRoleStr(submitterUserName);
 		Role submitterRole = null;
 		try {
 			submitterRole = Role.getRole(submitterRoleStr);
-			// Make sure that submitter can access the app for the related app
-
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 				
@@ -1098,28 +1097,24 @@ public class AppVetServlet extends HttpServlet {
 				appInfo.log.error("appInfo.toolRisk is null");
 			}
 			if (appInfo.toolRisk.equals("HIGH")) {
-				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+				ToolStatusManager.setToolStatus(appInfo,
 						tool.toolId, ToolStatus.HIGH);
 			} else if (appInfo.toolRisk.equals("MODERATE")) {
-				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+				ToolStatusManager.setToolStatus(appInfo,
 						tool.toolId, ToolStatus.MODERATE);
 			} else if (appInfo.toolRisk.equals("LOW")) {
-				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+				ToolStatusManager.setToolStatus(appInfo,
 						tool.toolId, ToolStatus.LOW);
 			} else if (appInfo.toolRisk.equals("ERROR")) {
-				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+				ToolStatusManager.setToolStatus(appInfo,
 						tool.toolId, ToolStatus.ERROR);
 			} else if (appInfo.toolRisk.equals("AVAILABLE")) {
-				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+				ToolStatusManager.setToolStatus(appInfo,
 						tool.toolId, ToolStatus.AVAILABLE);	
 			} else {
 				appInfo.log.warn("Unknown risk type '" + appInfo.toolRisk
 						+ "' received from " + appInfo.ownerName);
 			}
-			appInfo.log.info(submitterUserName + " invoked SUBMIT_REPORT for "
-					+ tool.name + " on " + "app " + appInfo.appId + " with "
-					+ appInfo.fileItem.getName() + " setting tool status to "
-					+ appInfo.toolRisk);
 			
 			UserInfo userInfo = Database.getUserInfo(appInfo.ownerName, null);
 

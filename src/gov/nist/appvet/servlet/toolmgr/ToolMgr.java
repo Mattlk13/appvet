@@ -28,6 +28,7 @@ import gov.nist.appvet.shared.all.DeviceOS;
 import gov.nist.appvet.shared.all.ToolType;
 import gov.nist.appvet.shared.all.UserInfo;
 import gov.nist.appvet.shared.backend.AppInfo;
+import gov.nist.appvet.shared.backend.AppStatusManager;
 import gov.nist.appvet.shared.backend.Database;
 import gov.nist.appvet.shared.backend.FileUtil;
 import gov.nist.appvet.shared.backend.Logger;
@@ -42,55 +43,37 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+import java.sql.ResultSetMetaData;
 
 /**
  * @author steveq@nist.gov
  */
 public class ToolMgr implements Runnable {
 	private static final Logger log = AppVetProperties.log;
-	//private static final long TOOL_ADAPTER_SHUTDOWN_TIMEOUT = 10000;
+	/** Check if report was received every x milliseconds. */
+	private static final int REPORT_CHECK_INTERVAL = 2000;
 
 	public ToolMgr() {
 	}
 
 	@Override
 	public void run() {
-		// Set the time that the app processing timeout will occur
-		Date currentAppTimeout = null;
 
 		for (;;) {
-			// See AppVetProperties.xml (/AppVet/ToolServices/PollingInterval)
+			// Delay
 			delay(AppVetProperties.TOOL_MGR_POLLING_INTERVAL);
-
-			/////////////////////////////////////////////////////////////////////////////////
-
-			// Get the currently processing app ID
-			String currentProcessingAppId = Database.getCurrentProcessingAppId();
-			if (currentProcessingAppId != null) {
-				// An app is currently PROCESSING. Check if current app
-				// has exceeded timeout.
-				Date currentTime = new Date(System.currentTimeMillis());
-				if (currentTime.after(currentAppTimeout)) {
-					// Timeout occurred waiting for reports to be received
-					// from one or more tools, so properly kill the tools.
-					handleToolAdapterTimeout();
-				}	
-			}
-
-
-			////////////////////////////////////////////////////////////////////////////
 
 			// Get the next PENDING app
 			final String appid = Database.getNextApp(AppStatus.PENDING);
+			
 			if (appid != null) {
-				// Set /AppVet/ToolServices/Timeout in AppVetProperties.xml
-				currentAppTimeout = new Date(System.currentTimeMillis() + 
-						AppVetProperties.ToolServiceTimeout);
 				// Get app info
 				AppInfo appInfo = new AppInfo(appid);
+				appInfo.log.info("*** PROCESSING APP " + appid);
+				
 				// Get app metadata.
 				if (!getAppMetaData(appInfo)) {
-					log.error("Could not retrieve metadata for app " + appid);
+					appInfo.log.error("Could not retrieve metadata for app " + appid);
 					cleanUpFiles(appInfo);
 				} else {
 					// Get available tools for OS
@@ -103,61 +86,277 @@ public class ToolMgr implements Runnable {
 					appInfo.log.debug("availableTools.size: "
 							+ availableTools.size());
 					// Start tool adapters
+					appInfo.log.info("*** STARTING TOOL ADAPTERS FOR APPID: " + appid);
 					for (int i = 0; i < availableTools.size(); i++) {
 						ToolAdapter toolAdapter = availableTools.get(i);
-						log.info("TOOL " + toolAdapter.toolId + " is suspended: " + toolAdapter.isServiceSuspended());
 
 						// Only process test tools (not preprocessors,
 						// audit, or manual reports).
 						if (toolAdapter.toolType == ToolType.TESTTOOL) {
 							if (toolAdapter.isServiceSuspended()) {
 								// Do not start the tool adapter if it was disabled
-								log.warn("Tool adapter '" + toolAdapter.toolId + "' was disabled. Not starting.");
+								appInfo.log.warn("Tool adapter '" + toolAdapter.toolId + "' is disabled. Not starting.");
 							} else {
 								// If the tool adapter was not disabled.
 								toolAdapter.setApp(appInfo);
 								final Thread thread = toolAdapter.getThread();
-								appInfo.log.debug("App " + appInfo.appId
-										+ " starting " + toolAdapter.name);
+								appInfo.log.info("App " + appInfo.appId
+										+ " starting " + toolAdapter.toolId);
 								thread.start();
 								// Delay to keep processes from blocking
 								delay(AppVetProperties.TOOL_MGR_STAGGER_INTERVAL);
 							}
 						}
 					}
-					// Wait for tools to complete
+					// Wait to receive report from tool
+					appInfo.log.info("*** WAITING FOR TOOL ADAPTERS TO COMPLETE FOR APPID: " + appid);
 					for (int i = 0; i < availableTools.size(); i++) {
 						ToolAdapter toolAdapter = availableTools.get(i);
 						if (toolAdapter.toolType == ToolType.TESTTOOL) {
 							if (toolAdapter.isServiceSuspended()) {
-								log.warn("Tool adapter '" + toolAdapter.toolId + "' was disabled. Not waiting to finish.");
+								appInfo.log.warn("Tool adapter '" + toolAdapter.toolId + "' was disabled. Not waiting to finish.");
 							} else {
 								// If the tool adapter was not disabled.
-								wait(appInfo, toolAdapter);
+								waitForToolReport(appInfo, toolAdapter);
 							}
 						}
 					}
-					// Stop tools if they are still running
-					for (int i = 0; i < availableTools.size(); i++) {
-						final ToolAdapter toolAdapter = availableTools.get(i);
-						if (toolAdapter.toolType == ToolType.TESTTOOL) {
-							if (toolAdapter.isServiceSuspended()) {
-								log.warn("Tool adapter '" + toolAdapter.toolId + "' was disabled. Not stopping.");
-							} else {
-								// If the tool adapter was not disabled.
-								toolAdapter.shutdown(appInfo, true);
-							}
-						}
-					}
-					// Handle timed-out and tool errors
-					handleToolAdapterTimeout();
+					
+					// Verify app and tool statuses before moving to next app
+					verifyToolsAndAppEndStates(appInfo, availableTools);
 
-
-					availableTools = null;
-
+					// Clean up
 					cleanUpFiles(appInfo);
+					availableTools = null;
 				}
 			}
+		}
+	}
+	
+	public void verifyToolsAndAppEndStates(AppInfo appInfo, 
+			ArrayList<ToolAdapter> availableTools) {
+		
+		// Check if all tools are NA. If so, set app status to NA and return.
+		appInfo.log.info("*** CHECKING ALL-NA TOOLS FOR APPID: " + appInfo.appId);
+		if (allToolsAreNA(appInfo, availableTools)) {
+			return;
+		}
+		
+		// Handle tools stuck in SUBMITTED state (change to ERROR state)
+		appInfo.log.info("*** CHECKING TOOLS STUCK IN SUBMITTED STATE FOR APPID: " + appInfo.appId);
+		checkToolsInSubmittedState(appInfo);
+		
+		// Handle tools in ERROR state
+		appInfo.log.debug("*** HANDLING TOOL ERRORS FOR APPID: " + appInfo.appId);
+		handleToolAdapterErrors(appInfo, availableTools);
+		
+		// Verify the app is not in a PROCESSING state (it shouldn't at this point)
+		AppStatus appStatus = AppStatusManager.getAppStatus(appInfo.appId);
+		if (appStatus == AppStatus.PROCESSING) {
+			appInfo.log.error("TEST: App " + appInfo.appId + " is still in a PROCESSING state");
+		} else {
+			appInfo.log.info("TEST: App " + appInfo.appId + " is not in a PROCESSING state");
+		}
+
+		// Verify if tools in ERROR state have suspendSUbmission flag set
+		for (int i = 0; i < availableTools.size(); i++) {
+			final ToolAdapter toolAdapter = availableTools.get(i);
+			if (toolAdapter.toolType == ToolType.TESTTOOL) {
+				if (toolAdapter.isServiceSuspended()) {
+					appInfo.log.info("TEST: Tool adapter '" + toolAdapter.toolId + "' was disabled.");
+				} else {
+					// If the tool adapter was not disabled.
+					appInfo.log.info("TEST: Tool adapter '" + toolAdapter.toolId + "' was NOT disabled.");
+
+				}
+			}
+		}
+	}
+	
+	public boolean allToolsAreNA(AppInfo appInfo, ArrayList<ToolAdapter> availableTools) {
+		int numTools = availableTools.size();
+
+		// Compute the number of each TESTTOOL or REPORTS status type. 
+		int numToolErrors = 0;
+		int numToolHighs = 0;
+		int numToolModerates = 0;
+		int numToolLows = 0;
+		int numToolSubmitted = 0;
+		int numToolNAs = 0;
+		for (int i = 0; i < numTools; i++) {
+			ToolAdapter tool = null;
+			tool = availableTools.get(i);
+
+			if (tool != null) {
+				if (tool.toolType == ToolType.TESTTOOL ||
+						tool.toolType == ToolType.REPORT) {
+					ToolStatus toolStatus = ToolStatusManager.getToolStatus(appInfo.os, appInfo.appId,
+							tool.toolId);
+					if (toolStatus == ToolStatus.ERROR) {
+						numToolErrors++;
+					} else if (toolStatus == ToolStatus.HIGH) {
+						numToolHighs++;
+					} else if (toolStatus == ToolStatus.MODERATE) {
+						numToolModerates++;
+					} else if (toolStatus == ToolStatus.LOW) {
+						numToolLows++;
+					} else if (toolStatus == ToolStatus.SUBMITTED) {
+						numToolSubmitted++;
+					} else if (toolStatus == ToolStatus.NA) {
+						numToolNAs++; 
+					}
+				}
+			}
+
+		}
+		if (numToolErrors == 0 &&
+				numToolHighs == 0 &&
+				numToolModerates == 0 &&
+				numToolLows == 0 &&
+				numToolSubmitted == 0 &&
+				numToolNAs > 0) {
+			
+			// Only tool statuses of NA exist so set app status to NA
+			appInfo.log.debug("All tools for app " + appInfo.appId + " have a status of NA. Setting app " + appInfo.appId + " status to NA.");
+			AppStatusManager.setAppStatus(appInfo, AppStatus.NA);
+			return true;
+		} else {
+			// No change
+			return false;
+		}
+	}
+	
+	/** If a tool is stuck in SUBMITTED state, set to ERROR state. */
+	public static void checkToolsInSubmittedState(AppInfo appInfo) {
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet toolStatuses = null;
+		String sql = null;
+		try {
+			connection = Database.getConnection();
+			// Select tools in SUBMITTED state
+			if (appInfo.os == DeviceOS.ANDROID) {
+				sql = "SELECT * FROM androidtoolstatus WHERE appid='" + appInfo.appId + "'";
+			} else if (appInfo.os == DeviceOS.IOS) {
+				sql = "SELECT * FROM iostoolstatus WHERE appid='" + appInfo.appId + "'";
+			} else {
+				// Unknown OS
+				return;
+			}
+			statement = connection.createStatement();
+			toolStatuses = statement.executeQuery(sql);
+			while (toolStatuses.next()) {
+				ResultSetMetaData rsmd = toolStatuses.getMetaData();
+				int columnsNumber = rsmd.getColumnCount();
+				for (int i = 2; i <= columnsNumber; i++) { // Skip appid in 1st col
+					String toolId = rsmd.getColumnName(i);
+					String toolStatus = toolStatuses.getString(i);
+					appInfo.log.debug("Tool '" + toolId + "' in " + toolStatus + " state at end.");
+					if (toolStatus != null && toolStatus.equals(ToolStatus.SUBMITTED.name())) {
+						appInfo.log.error("Tool '" + toolId + 
+								"' adapter timed-out waiting for report. "
+								+ "Setting '" + toolId + "' status to ERROR.");
+						ToolStatusManager.setToolStatus(appInfo, toolId,
+								ToolStatus.ERROR);
+					}
+				}
+			}
+		} catch (final SQLException e) {
+			appInfo.log.error(e.toString());
+		} finally {
+			sql = null;
+			statement = null;
+			connection = null;
+		}
+	}
+	
+	/**
+	 * If a tool experienced an error, we need to disable the adapter for that
+	 * tool and alert administrators via email.
+	 */
+	public synchronized static void handleToolAdapterErrors(AppInfo appInfo, 
+			ArrayList<ToolAdapter> availableTools) {
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet appToolStatuses = null;
+		String sql = null;
+		try {
+			connection = Database.getConnection();
+			// Select tools in SUBMITTED state
+			if (appInfo.os == DeviceOS.ANDROID) {
+				sql = "SELECT * FROM androidtoolstatus WHERE appid='" + appInfo.appId + "'";
+			} else if (appInfo.os == DeviceOS.IOS) {
+				sql = "SELECT * FROM iostoolstatus WHERE appid='" + appInfo.appId + "'";
+			} else {
+				// Unknown OS
+				return;
+			}
+
+			statement = connection.createStatement();
+			appToolStatuses = statement.executeQuery(sql);
+			while (appToolStatuses.next()) {
+				ResultSetMetaData rsmd = appToolStatuses.getMetaData();
+				int columnsNumber = rsmd.getColumnCount();
+				for (int i = 2; i <= columnsNumber; i++) { // Skip appid in 1st col
+					String toolId = rsmd.getColumnName(i);
+					String toolStatus = appToolStatuses.getString(i);
+					
+					if (toolStatus != null && toolStatus.equals(ToolStatus.ERROR.name())) {
+						// Next, set the suspendedService flag for the tool to prevent
+						// further apps from being sent to the tool
+						appInfo.log.warn("Disabling '" + toolId + "' adapter and suspending subsequent app submissions.");
+						ToolAdapter toolAdapter = getToolAdapter(toolId, availableTools);
+						toolAdapter.setServiceSuspended(true);
+
+						// Email admins about the problem with the tool
+						UserInfo userInfo = Database.getUserInfo(appInfo.ownerName, null);
+						String errorMessage = "Tool '" + toolId + "' encountered an ERROR. Disabling '" + toolId + "' adapter and suspending subsequent app submissions.";						
+						String emailSubject = errorMessage;
+						String emailContent = errorMessage;
+						Emailer.sendEmail(userInfo.getEmail(), emailSubject, emailContent);
+					}
+				}
+			}
+		} catch (final SQLException e) {
+			appInfo.log.error(e.toString());
+		} finally {
+			sql = null;
+			statement = null;
+			connection = null;
+		}
+	}
+	
+	/** Handle app stuck in PROCESSING state. This method is called at launch
+	 * of AppVet in case AppVet was previously shut down during the processing 
+	 * of an app. Here, apps stuck in a PROCESSING state are due to one or 
+	 * more tools stuck in a SUBMITTED state. To address this issue, this 
+	 * method finds all apps stuck in a PROCESSING state and sets any of its
+	 * tools stuck in a SUBMITTED state to an ERROR state. */
+	public static void handleStuckAppProcessing() {
+		
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet appStatus = null;
+		String sql = null;
+		try {
+			connection = Database.getConnection();
+			// Select apps where app status is PROCESSING
+			sql = "SELECT * FROM apps WHERE appstatus='PROCESSING'";
+
+			statement = connection.createStatement();
+			appStatus = statement.executeQuery(sql);
+			while (appStatus.next()) {
+				// Get app ID
+				String appId = appStatus.getString(1);
+				AppInfo appInfo = new AppInfo(appId);
+				checkToolsInSubmittedState(appInfo);
+			}
+		} catch (final SQLException e) {
+			log.error(e.toString());
+		} finally {
+			sql = null;
+			statement = null;
+			connection = null;
 		}
 	}
 
@@ -169,32 +368,36 @@ public class ToolMgr implements Runnable {
 		}
 	}
 
-	public void wait(AppInfo appInfo, ToolAdapter tool) {
+	public void waitForToolReport(AppInfo appInfo, ToolAdapter tool) {
 		try {
-			// Wait for tool adapter thread to shut down.
-			tool.thread.join(AppVetProperties.ToolServiceTimeout);
-			//appInfo.log.info(tool.toolId + " shutting down.");
+			Date timeout = new Date(System.currentTimeMillis() + 
+					AppVetProperties.ToolServiceTimeout);
+			for (;;) {
+				ToolStatus toolStatus = 
+						ToolStatusManager.getToolStatus(appInfo.os, appInfo.appId, tool.toolId);
+				Date currentTime = new Date(System.currentTimeMillis());
+				if (toolStatus == ToolStatus.SUBMITTED && !currentTime.after(timeout)){
+					Thread.sleep(REPORT_CHECK_INTERVAL);
+				} else if (toolStatus != ToolStatus.SUBMITTED) {
+					appInfo.log.info("Tool adapter '" + tool.toolId + "' for app " + appInfo.appId + " changed status from SUBMITTED to " + toolStatus.name() + " while waiting for report.");
+					break;
+				} else if (currentTime.after(timeout)) {
+					appInfo.log.info("Tool adapter '" + tool.toolId + "' for app " + appInfo.appId + " timed-out waiting for report.");
+					break;
+				}
+			}
 		} catch (final InterruptedException e) {
 			appInfo.log.error(tool.toolId + " shut down prematurely after " + 
 					"AppVetProperties.ToolServiceProcessingTimeout = " + 
 					+ AppVetProperties.ToolServiceTimeout + "ms");
-			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId, tool.toolId,
+			ToolStatusManager.setToolStatus(appInfo, tool.toolId,
 					ToolStatus.ERROR);
-			/*			
-			// Next, set the suspendedService flag for the tool to prevent
-			// further apps from being sent to the tool
-			appInfo.log.warn("Tool '" + tool.name + "' has experienced an error. Disabling '" + tool.name + "' adapter and suspending subsequent app submissions.");
-			tool.serviceSuspended = true;
-
-			// Email admins about the problem with the tool
-			UserInfo userInfo = Database.getUserInfo(appInfo.ownerName, null);
-			String emailSubject = "Tool '" + tool.name + "' has experienced an error. Disabling '" + tool.name + "' adapter and suspending subsequent app submissions.";
-			String emailContent = "Tool '" + tool.name + "' has experienced an error. Disabling '" + tool.name + "' adapter and suspending subsequent app submissions.";
-			Emailer.sendEmail(userInfo.getEmail(), emailSubject, emailContent);*/
 		}
 	}
 
 	public void cleanUpFiles(AppInfo appInfo) {
+		appInfo.log.info("CLEANING UP FOR APPID: " + appInfo.appId);
+
 		if (!AppVetProperties.KEEP_APPS) {
 			// Remove app file
 			final String appFilePath = appInfo.getAppFilePath();
@@ -247,96 +450,25 @@ public class ToolMgr implements Runnable {
 		}
 	}
 
-	/**
-	 * If a tool is stuck in a SUBMITTED state, set the tool to ERROR and 
-	 * set the app status from PROCESSING or ERROR to LOW*, MODERATE*, or HIGH*.
-	 */
-	public synchronized static void handleToolAdapterTimeout() {
-		Connection connection = null;
-		Statement statement = null;
-		Statement statement2 = null;
-		ResultSet appIDsResultSet = null;
-		ResultSet appToolsResultSet = null;
-		String sql = null;
-		try {
-			connection = Database.getConnection();
-			// Select apps where app status is PROCESSING or ERROR
-			sql = "SELECT * FROM apps WHERE appstatus='"
-					+ AppStatus.PROCESSING.name() 
-					+ "' OR appstatus='" + AppStatus.ERROR.name() 
-					+ "'";
 
-			statement = connection.createStatement();
-			appIDsResultSet = statement.executeQuery(sql);
-			AppInfo appInfo = null;
-			while (appIDsResultSet.next()) {
-				String appId = appIDsResultSet.getString(1);
-				appInfo = new AppInfo(appId);
-				String deviceOs = Database.getOs(appId);
-				String sql2 = null;
-				ArrayList<String> tableColumnNames = new ArrayList<String>();
-				if (deviceOs.equals(DeviceOS.ANDROID.name())) {
-					sql2 = "SELECT * FROM androidtoolstatus WHERE appid='"
-							+ appId + "'";
-					tableColumnNames = Database.getTableColumnNames("androidtoolstatus");
-				} else if (deviceOs.equals(DeviceOS.IOS.name())) {
-					sql2 = "SELECT * FROM iostoolstatus WHERE appid='"
-							+ appId + "'";
-					tableColumnNames = Database.getTableColumnNames("iostoolstatus");
-				}
+	
+	
 
-				statement2 = connection.createStatement();
-				appToolsResultSet = statement2.executeQuery(sql2);
-				if (appToolsResultSet == null) {
-					log.error("appToolsResultSet IS NULL");
-				} else {
-					while (appToolsResultSet.next()) {
-						// Table column index starts at 1 (not 0). Skip appid at column 1.
-						for (int i = 1; i < tableColumnNames.size(); i++) {
-							String toolId = tableColumnNames.get(i);
-							String toolStatus = appToolsResultSet.getString(i+1); // Add 1.
+	
 
-							if (toolStatus != null && 
-									(toolStatus.equals(ToolStatus.SUBMITTED.name()) ||
-											toolStatus.equals(ToolStatus.ERROR.name()))) {
-								if (appInfo.log == null) {
-									log.error("AppInfo log is null");
-								} else {
-									appInfo.log.error("The '" + toolId + "' tool adapter has experienced an error for app " + appInfo.appId + 
-											"'. Changing tool status from " + toolStatus + " to ERROR.");
-								}
+	
 
-								// Next, set the suspendedService flag for the tool to prevent
-								// further apps from being sent to the tool
-								appInfo.log.warn("Disabling '" + toolId + "' adapter and suspending subsequent app submissions.");
-								DeviceOS os = DeviceOS.valueOf(deviceOs);
-								ToolAdapter toolAdapter = ToolAdapter.getByToolId(os, toolId);
-								toolAdapter.setServiceSuspended(true);
-
-								// Email admins about the problem with the tool
-								UserInfo userInfo = Database.getUserInfo(appInfo.ownerName, null);
-								String emailSubject = "Tool '" + toolId + "' has experienced an error. Disabling '" + toolId + "' adapter and suspending subsequent app submissions.";
-								String emailContent = "Tool '" + toolId + "' has experienced an error. Disabling '" + toolId + "' adapter and suspending subsequent app submissions.";
-								Emailer.sendEmail(userInfo.getEmail(), emailSubject, emailContent);
-
-								ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId, toolId,
-										ToolStatus.ERROR);
-							} else {
-								//appInfo.log.debug("NOT SETTING TOOL STATUS FOR " + toolId);
-							}
-						}
-					}
+	
+	public static ToolAdapter getToolAdapter(String toolId, ArrayList<ToolAdapter> availableTools) {
+		if (availableTools != null) {
+			for (int i = 0; i < availableTools.size(); i++) {
+				ToolAdapter toolAdapter = availableTools.get(i);
+				if (toolId.equals(toolAdapter.toolId)) {
+					return toolAdapter;
 				}
 			}
-		} catch (final SQLException e) {
-			log.error(e.toString());
-		} finally {
-			sql = null;
-			appToolsResultSet = null;
-			appIDsResultSet = null;
-			statement2 = null;
-			statement = null;
-			connection = null;
-		}
+		} 			
+		return null;
 	}
+	
 }

@@ -20,7 +20,6 @@
 package gov.nist.appvet.shared.backend;
 
 import gov.nist.appvet.properties.AppVetProperties;
-import gov.nist.appvet.servlet.shared.ErrorMessage;
 import gov.nist.appvet.servlet.toolmgr.AppSubmitType;
 import gov.nist.appvet.servlet.toolmgr.SSLWrapper;
 import gov.nist.appvet.shared.all.DeviceOS;
@@ -417,27 +416,21 @@ public class ToolAdapter implements Runnable {
 		}
 	}
 	
-	public void shutdown(AppInfo appInfo, boolean sendMobilizeReport) {
-		
-//		if ((protocol == Protocol.PUSH) || (protocol == Protocol.INTERNAL)) {
-//			// PUSH adapters should not have a thread to clean up.
-//			return;
+//	public void shutdown(AppInfo appInfo, boolean sendMobilizeReport) {
+//		appInfo.log.debug("App " + appInfo.appId + " in shutdown phase...");
+//		if (thread.isAlive()) {
+//			appInfo.log.error("Thread for tool adapter '" + name
+//					+ "' is still alive.  Interrupting...");
+//			thread.interrupt();
+//			appInfo.log.error(ErrorMessage.TOOL_TIMEOUT_ERROR.getDescription());
+//			ToolStatusManager.setToolStatus(appInfo, this.toolId,
+//					ToolStatus.ERROR);
+//		} else {
+//			appInfo.log.debug("Tool adapter '" + name + "' -- NOTHING TO SHUT DOWN!");
 //		}
-		
-		if (thread.isAlive()) {
-			appInfo.log.error("Thread for tool adapter '" + name
-					+ "' is still alive.  Interrupting...");
-			thread.interrupt();
-			appInfo.log.error(ErrorMessage.TOOL_TIMEOUT_ERROR.getDescription());
-			// Keep this in SUBMITTED state and let ToolMgr handle it.
-			ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId, this.toolId,
-					ToolStatus.ERROR);
-		} else {
-			log.debug("Tool adapter '" + name + "' is shutting down.");
-		}
-		
-		thread = null;
-	}
+//		
+//		thread = null;
+//	}
 
 	/**
 	 * This method is used to POST binary files.
@@ -464,18 +457,18 @@ public class ToolAdapter implements Runnable {
 						
 						if (paramValue.equals("APPVET_ID")) {
 							
-							appInfo.log.debug("Found " + paramName + " = "
-									+ "'APPVET_ID' for tool '" + toolId
-									+ "'. Setting to appid = '"
-									+ appInfo.appId + "'");
+//							appInfo.log.debug("Found " + paramName + " = "
+//									+ "'APPVET_ID' for tool '" + toolId
+//									+ "'. Setting to appid = '"
+//									+ appInfo.appId + "'");
 							
 							paramValue = appInfo.appId;
 							
 						} else if (paramValue.equals("APP_PACKAGE")) {
-							appInfo.log.debug("Found " + paramName + " = "
-									+ "'APP_PACKAGE' for tool '" + toolId
-									+ "'. Setting to appid = '"
-									+ appInfo.packageName + "'");
+//							appInfo.log.debug("Found " + paramName + " = "
+//									+ "'APP_PACKAGE' for tool '" + toolId
+//									+ "'. Setting to appid = '"
+//									+ appInfo.packageName + "'");
 							
 							paramValue = appInfo.packageName;
 						}
@@ -513,7 +506,7 @@ public class ToolAdapter implements Runnable {
 			if (appSubmitType == AppSubmitType.APP_FILE) {
 				final String apkFilePath = appInfo.getIdPath() + "/"
 						+ appInfo.getAppFileName();
-				appInfo.log.debug("Sending file: " + apkFilePath);
+				//appInfo.log.debug("Sending file: " + apkFilePath);
 				apkFile = new File(apkFilePath);
 				fileBody = new FileBody(apkFile);
 				entity.addPart(fileUploadParamName, fileBody);
@@ -599,8 +592,7 @@ public class ToolAdapter implements Runnable {
 								|| paramValue.equals("null")) {
 							appInfo.log.warn("Tool authentication parameter value "
 									+ "cannot be null. Setting tool to NA");
-							ToolStatusManager.setToolStatus(appInfo.os,
-									appInfo.appId, this.toolId, ToolStatus.NA);
+							ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.NA);
 							return;
 						} else {
 							appInfo.log.debug("Adding " + appInfo.ownerName
@@ -616,6 +608,7 @@ public class ToolAdapter implements Runnable {
 
 		}
 
+		// Send app to tool. When app receives HTTP 202, the process ends.
 		for (int i = 0; i < transactions.size(); i++) {
 			Transaction transaction = transactions.get(i);
 			Request appVetRequest = transaction.request;
@@ -628,7 +621,7 @@ public class ToolAdapter implements Runnable {
 				Date startDate = new Date();
 				final long startTime = startDate.getTime();
 				startDate = null;
-				ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
+				ToolStatusManager.setToolStatus(appInfo,
 						this.toolId, ToolStatus.SUBMITTED);
 				HttpParams httpParameters = new BasicHttpParams();
 				HttpConnectionParams.setConnectionTimeout(httpParameters,
@@ -660,7 +653,7 @@ public class ToolAdapter implements Runnable {
 
 				
 				httpPost.setEntity(entity);
-				appInfo.log.info(name + " adapter sending app " + appInfo.appId
+				appInfo.log.info("Tool adapter '" + toolId + "' sending app " + appInfo.appId
 						+ " to " + targetURL);
 
 				// Send the app to the tool
@@ -711,8 +704,7 @@ public class ToolAdapter implements Runnable {
 								appInfo.appId, this.toolId, ToolStatus.ERROR);*/
 						return;
 					} else {
-						ToolStatusManager.setToolStatus(appInfo.os,
-								appInfo.appId, this.toolId, toolStatus);
+						ToolStatusManager.setToolStatus(appInfo, this.toolId, toolStatus);
 					}
 
 				} else if (protocol == Protocol.ASYNCHRONOUS) {
@@ -727,24 +719,19 @@ public class ToolAdapter implements Runnable {
 								+ httpResponseVal
 								+ ". Make sure tool service is running at: " + targetURL);
 						
-						// Let this tool remain in Submitted state until handled by the ToolMgr
-						/*ToolStatusManager.setToolStatus(appInfo.os,
-								appInfo.appId, this.toolId, ToolStatus.ERROR);*/
+						ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.ERROR);
 						
 					} else if (httpResponseVal.indexOf("HTTP/1.1 400") > -1) {
 						appInfo.log.error("Received from " + toolId + ": "
 								+ httpResponseVal
 								+ ". Make sure parameters sent to " + this.toolId + " are correct.");
-						// Let this tool remain in Submitted state until handled by the ToolMgr
-						/*ToolStatusManager.setToolStatus(appInfo.os,
-								appInfo.appId, this.toolId, ToolStatus.ERROR);*/
+						ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.ERROR);
 					} else {
 						appInfo.log.error("Tool '" + toolId + "' received: "
 								+ httpResponseVal
 								+ ". Could not process app.");
 						// Let this tool remain in Submitted state until handled by the ToolMgr
-						/*ToolStatusManager.setToolStatus(appInfo.os,
-								appInfo.appId, this.toolId, ToolStatus.ERROR);*/
+						ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.ERROR);
 					}
 				}
 
@@ -759,9 +746,8 @@ public class ToolAdapter implements Runnable {
 //						+ Logger.formatElapsed(elapsedTime));
 			} catch (final Exception e) {
 				appInfo.log.error(e.toString());
-				// Keep this in SUBMITTED state and let ToolMgr handle it.
-				/*ToolStatusManager.setToolStatus(appInfo.os, appInfo.appId,
-						this.toolId, ToolStatus.ERROR);*/
+				ToolStatusManager.setToolStatus(appInfo,
+						this.toolId, ToolStatus.ERROR);
 			} finally {
 				if (inputStream != null) {
 					try {

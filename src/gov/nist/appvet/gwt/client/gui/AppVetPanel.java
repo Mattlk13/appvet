@@ -2225,10 +2225,10 @@ public class AppVetPanel extends DockLayoutPanel {
 					// A tool must have encountered an error, so alert the user
 					showMessageDialog(
 							"Tool Error",
-							"An error with a tool was detected for app "
+							"An error with one or more tools was detected for app "
 									+ updatedAppInfo.appId
-									+ ". The report for this tool may or may not arrive at a later time. "
-									+ "The tool has been disabled and the administrator has been notified.",
+									+ ". The reports for these tool may or may not arrive at a later time. "
+									+ "These tools has been disabled and the administrator has been notified.",
 							true);
 
 				}
