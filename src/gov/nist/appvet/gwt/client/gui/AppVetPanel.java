@@ -152,6 +152,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	public String documentationURL = null;
 	public boolean ssoActive = false;
 	public String ssoLogoutURL = null;
+	public boolean keepApps = false;
 
 	class AppListHandler implements SelectionChangeEvent.Handler {
 		ConfigInfoGwt configInfo = null;
@@ -492,6 +493,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		ssoActive = configInfo.getSSOActive();
 		ssoLogoutURL = configInfo.getSsoLogoutURL();
 		String orgLogoAltText = configInfo.getOrgLogoAltText();
+		keepApps = configInfo.keepApps();
 
 		final MenuBar adminMenuBar = new MenuBar(true);
 		adminMenuBar.setStyleName("adminMenuBar");
@@ -704,7 +706,7 @@ public class AppVetPanel extends DockLayoutPanel {
 			e.printStackTrace();
 		}
 
-		if (!configInfo.isKeepApps()) {
+		if (!keepApps) {
 			// Hide download app button if KEEP_APPS is false
 			downloadAppButton.setVisible(false);
 		}
@@ -1061,9 +1063,6 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		horizontalPanel.setSize("", "");
 		final PushButton submitButton = new PushButton("Upload App");
-		enableButton(submitButton, "Upload App", "Upload app", "Upload app",
-				"upload-white.png");
-		// submitButton.setStyleName("appUploadButton shadow");
 		submitButton.setStyleName("greenAppUploadButton shadow");
 
 		submitButton.addClickHandler(new ClickHandler() {
@@ -1136,8 +1135,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		submitButton.setSize("120px", "18px");
 
 		downloadAppButton = new PushButton("Download App");
-		enableButton(downloadAppButton, "Download App", "Download App",
-				"Download App", "download-black.png");
+		downloadAppButton.setEnabled(false);
 		rightCenterPanel = new SimplePanel();
 		rightCenterPanel.setStyleName("rightCenterPanel");
 		mainHorizontalPanel.add(rightCenterPanel);
@@ -1187,8 +1185,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoVerticalPanel.setCellVerticalAlignment(appButtonPanel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		uploadReportButton = new PushButton("Upload Report");
-		enableButton(uploadReportButton, "REPORT", "Upload report",
-				"Upload report", "upload-white.png");
 		// uploadReportButton.setStyleName("appvetButton shadow");
 		uploadReportButton.setStyleName("blueButton shadow");
 
@@ -1231,9 +1227,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		uploadReportButton.setSize("100px", "18px");
 		logButton = new PushButton("View Log");
-		enableButton(logButton, "LOG", "View log", "View log",
-				"magnifying-glass-black.png");
-		// logButton.setStyleName("appvetButton shadow");
 		logButton.setStyleName("blueButton shadow");
 
 		appButtonPanel.add(logButton);
@@ -1260,8 +1253,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		logButton.setSize("100px", "18px");
 		deleteButton = new PushButton("Delete App");
-		enableButton(deleteButton, "DELETE", "Delete app", "Delete app",
-				"delete-black.png");
 		// deleteButton.setStyleName("appvetButton  shadow");
 		deleteButton.setStyleName("blueButton shadow");
 
@@ -1304,9 +1295,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		deleteButton.setSize("100px", "18px");
 		downloadReportsButton = new PushButton("Download Reports");
-		enableButton(downloadReportsButton, "REPORTS", "Download reports",
-				"Download reports", "download-black.png");
-		// downloadReportsButton.setStyleName("appvetButton shadow");
 		downloadReportsButton.setStyleName("blueButton shadow");
 
 		appButtonPanel.add(downloadReportsButton);
@@ -1457,51 +1445,44 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 	}
 
-	public void enableButton(PushButton button, String text, String alt,
-			String title, String imageName) {
-		button.setEnabled(true);
-		// button.setHTML("<div><img style=\"vertical-align:middle;right-margin:5px\" width=\"12px\" height=\"12px\" src=\"images/"
-		// + imageName + "\" alt=\"" + alt +
-		// "\"/> <span style=\"vertical-align:middle\">" + text +
-		// "\r\n</span></div>");
-		button.setTitle(title);
-	}
+//	public void enableButton(PushButton button, String text, String alt,
+//			String title, String imageName) {
+//		button.setEnabled(true);
+//		// button.setHTML("<div><img style=\"vertical-align:middle;right-margin:5px\" width=\"12px\" height=\"12px\" src=\"images/"
+//		// + imageName + "\" alt=\"" + alt +
+//		// "\"/> <span style=\"vertical-align:middle\">" + text +
+//		// "\r\n</span></div>");
+//		button.setTitle(title);
+//	}
 
 	public void enableAllButtons() {
-		enableButton(logButton, "LOG", "View log", "View log",
-				"magnifying-glass-black.png");
-		enableButton(uploadReportButton, "REPORT", "Upload report",
-				"Upload report", "upload-black.png");
-		enableButton(deleteButton, "DELETE", "Delete app", "Delete app",
-				"delete-black.png");
-		enableButton(downloadReportsButton, "REPORTS", "Download reports",
-				"Download reports", "download-black.png");
-		enableButton(downloadAppButton, "APP", "Download app", "Download app",
-				"download-black.png");
+		logButton.setEnabled(true);
+		uploadReportButton.setEnabled(true);
+		if (keepApps)
+			deleteButton.setEnabled(true);
+		downloadReportsButton.setEnabled(true);
+		downloadReportsButton.setEnabled(true);
+		downloadAppButton.setEnabled(true);
 	}
 
 	public void disableAllButtons() {
-		disableButton(logButton, "LOG", "View log", "View log",
-				"magnifying-glass-white.png");
-		disableButton(uploadReportButton, "REPORT", "Upload report",
-				"Upload report", "upload-white.png");
-		disableButton(deleteButton, "DELETE", "Delete app", "Delete app",
-				"delete-white.png");
-		disableButton(downloadReportsButton, "REPORTS", "Download reports",
-				"Download reports", "download-white.png");
-		disableButton(downloadAppButton, "APP", "Download app", "Download app",
-				"download-white.png");
+		logButton.setEnabled(false);
+		uploadReportButton.setEnabled(false);
+		deleteButton.setEnabled(false);
+		downloadReportsButton.setEnabled(false);
+		downloadReportsButton.setEnabled(false);
+		downloadAppButton.setEnabled(false);
 	}
 
-	public void disableButton(PushButton button, String text, String alt,
-			String title, String imageName) {
-		button.setEnabled(false);
-		// button.setHTML("<div><img style=\"vertical-align:middle;right-margin:5px\" width=\"12px\" height=\"12px\" src=\"images/"
-		// + imageName + "\" alt=\"" + alt +
-		// "\"/> <span style=\"vertical-align:middle\">" + text +
-		// "\r\n</span></div>");
-		button.setTitle(title);
-	}
+//	public void disableButton(PushButton button, String text, String alt,
+//			String title, String imageName) {
+//		button.setEnabled(false);
+//		// button.setHTML("<div><img style=\"vertical-align:middle;right-margin:5px\" width=\"12px\" height=\"12px\" src=\"images/"
+//		// + imageName + "\" alt=\"" + alt +
+//		// "\"/> <span style=\"vertical-align:middle\">" + text +
+//		// "\r\n</span></div>");
+//		button.setTitle(title);
+//	}
 
 	public void removeSession(final boolean sessionExpired) {
 		// First stop polling the server for data
@@ -1849,8 +1830,12 @@ public class AppVetPanel extends DockLayoutPanel {
 								if ((selectedApp.appStatus == AppStatus.NA)
 										|| (selectedApp.appStatus == AppStatus.ERROR)
 										|| (selectedApp.appStatus == AppStatus.HIGH)
+										|| (selectedApp.appStatus == AppStatus.HIGH_WITH_ERROR)
 										|| (selectedApp.appStatus == AppStatus.MODERATE)
-										|| (selectedApp.appStatus == AppStatus.LOW)) {
+										|| (selectedApp.appStatus == AppStatus.MODERATE_WITH_ERROR)
+										|| (selectedApp.appStatus == AppStatus.LOW)
+										|| (selectedApp.appStatus == AppStatus.LOW_WITH_ERROR)
+										) {
 									appNameHtml = "<div id=\"appNameInfo\">"
 											+ selectedApp.appName + "</div>";
 									enableAllButtons();
@@ -1858,9 +1843,12 @@ public class AppVetPanel extends DockLayoutPanel {
 								} else {
 									appNameHtml = "<div id=\"appNameInfo\">"
 											+ selectedApp.appName + "</div>";
-									disableButton(downloadAppButton, "APP",
-											"Download app", "Download app",
-											"download-white.png");
+									uploadReportButton.setEnabled(false);
+									logButton.setEnabled(true);
+									deleteButton.setEnabled(false);
+									downloadReportsButton.setEnabled(false);
+									downloadReportsButton.setEnabled(false);
+									downloadAppButton.setEnabled(false);
 								}
 
 								// Set app package in right info panel
@@ -1888,9 +1876,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								final String htmlToolResults = getHtmlToolResults(
 										selectedApp.appId, toolsResults);
 								toolResultsHtml.setHTML(htmlToolResults);
-								enableButton(logButton, "LOG", "View log",
-										"View log",
-										"magnifying-glass-black.png");
+								logButton.setEnabled(true);
 							}
 						}
 

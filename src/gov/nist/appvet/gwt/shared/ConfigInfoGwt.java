@@ -214,7 +214,7 @@ public class ConfigInfoGwt implements IsSerializable {
 		this.ssoLogoutURL = ssoLogoutURL;
 	}
 
-	public boolean isKeepApps() {
+	public boolean keepApps() {
 		return keepApps;
 	}
 

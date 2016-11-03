@@ -139,7 +139,7 @@ public class ToolMgr implements Runnable {
 		}
 		
 		// Handle tools stuck in SUBMITTED state (change to ERROR state)
-		appInfo.log.info("*** CHECKING TOOLS STUCK IN SUBMITTED STATE FOR APPID: " + appInfo.appId);
+		appInfo.log.info("*** CHECKING TOOLS THATHAVE TIMED-OUT FOR APPID: " + appInfo.appId);
 		checkToolsInSubmittedState(appInfo);
 		
 		// Handle tools in ERROR state
