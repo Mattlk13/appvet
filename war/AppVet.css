@@ -1146,19 +1146,22 @@ White
 	vertical-align: middle;
 	padding: 3px 0px 3px 0px;
 }
-
+/* .grayButton-up {
+	background: #d9e1e4 !important;
+} */
 .grayButton:hover {
-	background: #efefef;
+	background: #f0f3f4;
 }
-
+.grayButton:focus {
+	background: #f0f3f4;
+}
+.grayButton:active {
+	color: white;
+	background: #f0f3f4 !important;
+}
 .grayButton-up-disabled {
 	color: white;
-	background: #efefef;
-}
-
-.grayButton-up-disabled:hover {
-	color: white;
-	background: #efefef;
+	background: #f0f3f4;
 }
 
 /*---------------------- Green Dialog buttons ----------------------*/
@@ -1168,20 +1171,19 @@ White
 	vertical-align: middle;
 	padding: 3px 0px 3px 0px;
 }
-
+/* .greenButton-up {
+	background: #2d8659 !important;
+} */
 .greenButton:hover {
 	background: #40bf80;
 }
-
 .greenButton:focus {
 	background: #40bf80;
 }
-
-.greenButton-up-disabled {
-	background: #c6ecd9;
+.greenButton:active {
+	background: #c6ecd9 !important;
 }
-
-.greenButton-up-disabled:hover {
+.greenButton-up-disabled {
 	background: #c6ecd9;
 }
 
@@ -1195,20 +1197,19 @@ White
 	padding: 5px 0px 5px 0px;
 	vertical-align: middle;
 }
-
+/* .greenAppUploadButton-up {
+	background: #2d8659 !important;
+} */
 .greenAppUploadButton:hover {
 	background: #40bf80;
 }
-
 .greenAppUploadButton:focus {
 	background: #40bf80;
 }
-
-.greenAppUploadButton-up-disabled {
-	background: #BBE8D1;
+.greenAppUploadButton:active {
+	background: #BBE8D1 !important;
 }
-
-.greenAppUploadButton-up-disabled:hover {
+.greenAppUploadButton-up-disabled {
 	background: #BBE8D1;
 }
 
@@ -1221,22 +1222,22 @@ White
 	padding: 3px 0px 3px 0px;
 	vertical-align: middle;
 }
-
+/* .blueButton-up {
+	background: #015289 !important;
+} */
 .blueButton:hover {
 	background: #0189e4;
 }
-
 .blueButton:focus {
 	background: #0189e4;
 }
-
+.blueButton:active {
+	background: #9ad6fe !important;
+}
 .blueButton-up-disabled {
 	background: #9ad6fe;
 }
 
-.blueButton-up-disabled:hover {
-	background: #9ad6fe;
-}
 /*---------------------- Main Banner ----------------------*/
 .mainBanner {
 	background: #015289;

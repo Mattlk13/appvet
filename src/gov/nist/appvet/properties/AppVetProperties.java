@@ -24,15 +24,22 @@ package gov.nist.appvet.properties;
  */
 import gov.nist.appvet.servlet.shared.Emailer;
 import gov.nist.appvet.servlet.toolmgr.ToolMgr;
+import gov.nist.appvet.shared.all.AppStatus;
 import gov.nist.appvet.shared.all.DeviceOS;
 import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.Validate;
+import gov.nist.appvet.shared.backend.AppInfo;
+import gov.nist.appvet.shared.backend.AppStatusManager;
 import gov.nist.appvet.shared.backend.Database;
 import gov.nist.appvet.shared.backend.Logger;
 import gov.nist.appvet.shared.backend.ToolAdapter;
 import gov.nist.appvet.shared.backend.XmlUtil;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class AppVetProperties {
@@ -394,7 +401,7 @@ public class AppVetProperties {
 		}
 		setupTools(DeviceOS.ANDROID);
 		setupTools(DeviceOS.IOS);
-		checkApps();
+		checkForAppsStuckInProcessingState();
 		startToolMgr();
 		log.debug("---------- END AppVet PROPERTIES -------------------", false);
 	}
@@ -497,12 +504,39 @@ public class AppVetProperties {
 		}
 	}
 	
-	/** If AppVet is shutdown while an app is in the PROCESSING state, the
-	 * status of the app should be changed to an ERROR state after AppVet
-	 * restarts.
-	 */
-	public static void checkApps() {
-		ToolMgr.handleStuckAppProcessing();
+	/** Handle app stuck in PROCESSING state. This method is called at launch
+	 * of AppVet in case AppVet was previously shut down during the processing 
+	 * of an app. Here, apps stuck in a PROCESSING state are due to one or 
+	 * more tools stuck in a SUBMITTED state. To address this issue, this 
+	 * method finds all apps stuck in a PROCESSING state and sets any of its
+	 * tools stuck in a SUBMITTED state to an ERROR state. */
+	public static void checkForAppsStuckInProcessingState() {
+
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet appStatus = null;
+		String sql = null;
+		try {
+			connection = Database.getConnection();
+			// Select apps where app status is PROCESSING
+			sql = "SELECT * FROM apps WHERE appstatus='PROCESSING'";
+
+			statement = connection.createStatement();
+			appStatus = statement.executeQuery(sql);
+			while (appStatus.next()) {
+				// Get app ID
+				String appId = appStatus.getString(1);
+				AppInfo appInfo = new AppInfo(appId);
+				appInfo.log.error("App was stuck in PROCESSING state upon startup of AppVet. Setting app state to ERROR.");
+				AppStatusManager.setAppStatus(appInfo, AppStatus.ERROR);
+			}
+		} catch (final SQLException e) {
+			log.error(e.toString());
+		} finally {
+			sql = null;
+			statement = null;
+			connection = null;
+		}
 	}
 	
 	/** This method launches the tool manager.*/
