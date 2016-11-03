@@ -41,13 +41,13 @@ public class ToolStatusManager {
 	
 	public static ToolStatus getToolStatus(DeviceOS os,
 			String appid, String toolId) {
-		String toolStatusName = getToolStatusName(os, appid, toolId);
-		return ToolStatus.getStatus(toolStatusName);
+		String toolStatusStr = getToolStatusStr(os, appid, toolId);
+		return ToolStatus.getStatus(toolStatusStr);
 	}
 
 	
 	// TODO: Change to getToolStatusStr
-	private static String getToolStatusName(DeviceOS os,
+	private static String getToolStatusStr(DeviceOS os,
 			String appid, String toolId) {
 		if (os == DeviceOS.ANDROID) {
 			return Database.getString("SELECT " + toolId

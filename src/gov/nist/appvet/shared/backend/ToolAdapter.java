@@ -214,7 +214,7 @@ public class ToolAdapter implements Runnable {
 				+ "-Report File Type: " + reportFileType.name() + "\n"
 				+ "-Report template URL: " + reportTemplateURL + "\n"
 				+ "-OS: " + os.name() + "\n" 
-				//+ "-Restriction Type: " + restrictionType + "\n" // Not used
+				//+ "-Restriction Type: " + restrictionType + "\n" // Deprecated
 				+ "-Vendor: " + vendorName + "\n" 
 				+ "-Website: " + webSite + "\n" 
 				+ "-App Submit Type: " + appSubmitType.name() + "\n"

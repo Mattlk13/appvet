@@ -54,30 +54,30 @@ public class FileUtil {
 		}
 	}
 
-	public static boolean copyFile(String sourceFilePath,
-			String destFilePath) {
-		if (sourceFilePath == null || destFilePath == null) {
-			log.error("sourceFilePath is null or empty");
-			return false;
-		}
-		File sourceFile = new File(sourceFilePath);
-		if (!sourceFile.exists()) {
-			log.error("sourceFilePath doesn't exist");
-			return false;
-		}
-		File destFile = new File(destFilePath);
-		try {
-			Files.copy(sourceFile.toPath(), destFile.toPath(),
-					StandardCopyOption.REPLACE_EXISTING);
-		} catch (final IOException e) {
-			log.error("File copy exception: " + e.toString());
-			return false;
-		} finally {
-			sourceFile = null;
-			destFile = null;
-		}
-		return true;
-	}
+//	public static boolean copyFile(String sourceFilePath,
+//			String destFilePath) {
+//		if (sourceFilePath == null || destFilePath == null) {
+//			log.error("sourceFilePath is null or empty");
+//			return false;
+//		}
+//		File sourceFile = new File(sourceFilePath);
+//		if (!sourceFile.exists()) {
+//			log.error("sourceFilePath doesn't exist");
+//			return false;
+//		}
+//		File destFile = new File(destFilePath);
+//		try {
+//			Files.copy(sourceFile.toPath(), destFile.toPath(),
+//					StandardCopyOption.REPLACE_EXISTING);
+//		} catch (final IOException e) {
+//			log.error("File copy exception: " + e.toString());
+//			return false;
+//		} finally {
+//			sourceFile = null;
+//			destFile = null;
+//		}
+//		return true;
+//	}
 
 	public static void deleteDirectory(File file) {
 		if (file == null) {
@@ -158,9 +158,9 @@ public class FileUtil {
 		}
 	}
 
-	public static String replaceSpaceWithUnderscore(String str) {
-		return str.replaceAll(" ", "_");
-	}
+//	public static String replaceSpaceWithUnderscore(String str) {
+//		return str.replaceAll(" ", "_");
+//	}
 
 	public static boolean saveReportUpload(String appId,
 			String reportName, FileItem fileItem) {

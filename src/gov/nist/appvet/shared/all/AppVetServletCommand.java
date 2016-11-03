@@ -38,7 +38,8 @@ public enum AppVetServletCommand {
 	DOWNLOAD_LOG, 
 	DOWNLOAD_APP,
 	// HTTP POST
-	 SUBMIT_APP, SUBMIT_APP_METADATA, SUBMIT_REPORT;
+	 SUBMIT_APP, 
+	 SUBMIT_REPORT;
 	private AppVetServletCommand() {
 	}
 

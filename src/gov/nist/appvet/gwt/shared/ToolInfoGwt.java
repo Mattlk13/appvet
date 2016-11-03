@@ -23,8 +23,6 @@ import gov.nist.appvet.shared.all.ToolType;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-// TODO: See if this class can be deleted since most of this information is
-// already contained in UserInfoGwt.ToolCredentialsGwt for tool credentials.
 /**
  * @author steveq@nist.gov
  */

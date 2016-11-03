@@ -21,7 +21,6 @@ package gov.nist.appvet.shared.all;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Logger;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**

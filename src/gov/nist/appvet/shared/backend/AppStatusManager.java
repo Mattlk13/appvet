@@ -19,34 +19,26 @@
  */
 package gov.nist.appvet.shared.backend;
 
-import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.shared.all.AppStatus;
 
 /**
  * This class supports the setting and getting of an app's status. The app
  * status lifecycle for an app is as follows:
  * 
- * - When app is uploaded and processed by Registration.java, the app moves
- *   from a null state to the REGISTERING state.
- * - When an app has completed registration, it moves REGISTERING state
- *   to the PENDING state.
- * - The ToolMgr looks for apps in a PENDING state to process. When the ToolMgr
- *   selects an app, that app moves from the PENDING state to the 
- *   PROCESSING state and the app then performs its metadata analysis.
- * - After the apps performs its metadata processing, it moves from the
- *   PROCESSING state to the NA state. This is so because the app state at
- *   this point is based on the state of the available tools which are NA 
- *   due to the fact that the tools have not yet been launched (i.e., the app 
- *   has not yet been SUBMITTED to the tools). If no tools are available to 
- *   launch (i.e., to put into a SUBMITTED state), then the app remains in the 
- *   NA state.
- * - If tools are available to process the app, the ToolMgr sets each tool 
- *   into a SUBMITTED state which changes the state of the app from NA back
- *   to PROCESSING.
+ * - When app is uploaded to AppVet, the app moves from a null state to
+ *   a REGISTERING state.
+ *   After registration of the app is complete, the app moves to a PENDING state.
+ *   AppVet searches for the next available app in a PENDING state and launches
+ *   the tool adapters for that app. When the tool adapters are launched, the
+ *   tool adapters are set to a SUBMITTED state. If one or more tool adapters
+ *   are in a SUBMITTED state, the app state will be set to a PROCESSING state.
+ *   Note that AppVet processes apps sequentially (mostly to ensure that third-party
+ *   tools do not experience processing issues). 
  * - After a tool has completed processing, the tool will move from the
- *   SUBMITTING state to an HIGH, MODERATE, LOW, or ERROR state. This will 
- *   change the state of the app depending on the policy encoded in 
- *   ToolStatusManager.computeAppStatus().  
+ *   SUBMITTED state to a HIGH, MODERATE, or LOW state. If an error occurs
+ *   with a tool, that tool will be set to an ERROR state and will force the
+ *   app state to a LOW*, MODERATE*, or HIGH* state indicating the next-highest
+ *   severity level among all of the other tools.
  * 
  * @author steveq@nist.gov
  */

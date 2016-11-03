@@ -19,7 +19,6 @@
  */
 package gov.nist.appvet.gwt.shared;
 
-import gov.nist.appvet.shared.all.RestrictionType;
 import gov.nist.appvet.shared.all.ToolType;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -31,7 +30,6 @@ public class ToolStatusGwt implements IsSerializable {
 	private String appId = null;
 	private String tool = null;
 	private ToolType toolType = null;
-	private RestrictionType restrictionType = null;
 	private String statusHtml = null;
 	private String report = null;
 	private String iconURL = null;
@@ -78,14 +76,6 @@ public class ToolStatusGwt implements IsSerializable {
 
 	public void setToolType(ToolType analysisType) {
 		this.toolType = analysisType;
-	}
-
-	public RestrictionType getRestrictionType() {
-		return restrictionType;
-	}
-
-	public void setRestrictionType(RestrictionType restrictionType) {
-		this.restrictionType = restrictionType;
 	}
 
 	public String getIconURL() {
