@@ -146,12 +146,12 @@ public class ToolMgr implements Runnable {
 		appInfo.log.debug("*** HANDLING TOOL ERRORS FOR APPID: " + appInfo.appId);
 		handleToolAdapterErrors(appInfo, availableTools);
 		
-		// Verify the app is not in a PROCESSING state (it shouldn't at this point)
+		// Verify the app is not in a PROCESSING state (it shouldn't be at this point)
 		AppStatus appStatus = AppStatusManager.getAppStatus(appInfo.appId);
 		if (appStatus == AppStatus.PROCESSING) {
 			appInfo.log.error("TEST: App " + appInfo.appId + " is still in a PROCESSING state");
 		} else {
-			appInfo.log.info("TEST: App " + appInfo.appId + " is not in a PROCESSING state");
+			//appInfo.log.info("TEST: App " + appInfo.appId + " is not in a PROCESSING state");
 		}
 
 /*		// Verify if tools in ERROR state have suspendSUbmission flag set
