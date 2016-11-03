@@ -58,19 +58,22 @@ import org.apache.pdfbox.util.PDFTextStripper;
  */
 public class ToolAdapter implements Runnable {
 
+	/** Check if report was received every x milliseconds. */
+	private static final int REPORT_CHECK_INTERVAL = 2000;
+
 	/** This flag is set to true if AppVet times-out waiting for a report
 	 * from this tool. This flag is then used to determine if subsequent apps
 	 * should be sent to this tool.
 	 */
-	private boolean serviceSuspended = false;
-	
+	private boolean serviceDisabled = false;
+
 	private static final Logger log = AppVetProperties.log;
 	// Display Name (e.g., Androwarn (Maaaaz))
 	public String name = null; 
 	// Tool ID (and tools database table column name)
 	public String toolId = null; 
 	public ToolType toolType = null;
-	
+
 	// public RestrictionType restrictionType = null; // Not used
 	public DeviceOS os = null;
 	public String vendorName = null;
@@ -113,7 +116,7 @@ public class ToolAdapter implements Runnable {
 		String toolValue = xml
 				.getXPathValue("/ToolAdapter/Description/Category");
 		toolType = ToolType.getAnalysisType(toolValue);
-		
+
 		//log.debug("Loading tool adapter " + toolId + " '" + name + "' of type: " + toolType.name());
 
 
@@ -126,12 +129,12 @@ public class ToolAdapter implements Runnable {
 		vendorName = xml.getXPathValue("/ToolAdapter/Description/VendorName");
 
 		webSite = xml.getXPathValue("/ToolAdapter/Description/VendorWebsite");
-		
+
 		// Authorization requirements
 		final String booleanStringValue = xml
 				.getXPathValue("/ToolAdapter/Description/AuthenticationRequired");
 		authenticationRequired = new Boolean(booleanStringValue).booleanValue();
-		
+
 		// Report template download URL (optional)
 		reportTemplateURL = xml.getXPathValue("/ToolAdapter/Description/ReportTemplateURL"); 
 		if (reportTemplateURL != null) {
@@ -139,7 +142,7 @@ public class ToolAdapter implements Runnable {
 		} else {
 			log.warn("Report template URL for tool '" + toolId + "' is null");
 		}
-		
+
 		// Report icon (optional
 		iconURL = xml.getXPathValue("/ToolAdapter/Description/Icon/URL");
 		if (iconURL != null) {
@@ -147,14 +150,14 @@ public class ToolAdapter implements Runnable {
 		} else {
 			//log.warn("Icon URL for tool '" + toolId + "' is null");
 		}
-		
+
 		iconAltText = xml.getXPathValue("/ToolAdapter/Description/Icon/AltText");
 		if (iconAltText != null) {
 			//log.debug("Icon ALT Text: " + iconAltText);
 		} else {
 			//log.warn("Icon ALT Text for tool '" + toolId + "' is null");
 		}
-		
+
 		if (authenticationRequired) {
 			// Get authorization parameter names
 			final String authenticationParamsString = xml
@@ -170,7 +173,7 @@ public class ToolAdapter implements Runnable {
 		} else {
 			// log.debug("No authorization required for " + name + " tool.");
 		}
-		
+
 		final String reportFileTypeString = xml
 				.getXPathValue("/ToolAdapter/Description/ReportFile");
 
@@ -262,7 +265,7 @@ public class ToolAdapter implements Runnable {
 	}
 
 	public static ToolAdapter getByToolId(DeviceOS os, String toolId) {
-		
+
 		if (os == null) {
 			log.error("Cannot get tool adapter for null os.");
 			return null;
@@ -304,7 +307,7 @@ public class ToolAdapter implements Runnable {
 		}
 
 	}
-	
+
 	public static ToolAdapter getByToolName(DeviceOS os, String toolName) {
 
 		if (os == DeviceOS.ANDROID) {
@@ -343,10 +346,10 @@ public class ToolAdapter implements Runnable {
 
 	}
 
-	
+
 	public static String getHtmlReportString(String reportPath, AppInfo appInfo) {
 		byte[] encoded = null;
-		
+
 		try {
 			encoded = Files.readAllBytes(Paths.get(reportPath));
 			return Charset.defaultCharset().decode(ByteBuffer.wrap(encoded))
@@ -357,15 +360,15 @@ public class ToolAdapter implements Runnable {
 		} finally {
 			encoded = null;
 		}
-		
+
 	}
 
-	
+
 	public static String getPdfReportString(String reportPath, AppInfo appInfo) {
 		File file = new File(reportPath);
 		PDDocument pddDocument = null;
 		PDFTextStripper textStripper = null;
-		
+
 		try {
 			pddDocument = PDDocument.load(file);
 			textStripper = new PDFTextStripper();
@@ -388,13 +391,13 @@ public class ToolAdapter implements Runnable {
 			textStripper = null;
 			file = null;
 		}
-		
+
 	}
 
-	
+
 	public static String getTextReportString(String reportPath, AppInfo appInfo) {
 		byte[] encoded = null;
-		
+
 		try {
 			encoded = Files.readAllBytes(Paths.get(reportPath));
 			return Charset.defaultCharset().decode(ByteBuffer.wrap(encoded))
@@ -405,32 +408,32 @@ public class ToolAdapter implements Runnable {
 		} finally {
 			encoded = null;
 		}
-		
+
 	}
 
-	
+
 	public void checkNullString(String fileName, String parameter, String value) {
 		if ((value == null) || value.isEmpty()) {
 			log.error("Required parameter '" + parameter + "' in file "
 					+ fileName + " is null or empty.");
 		}
 	}
-	
-//	public void shutdown(AppInfo appInfo, boolean sendMobilizeReport) {
-//		appInfo.log.debug("App " + appInfo.appId + " in shutdown phase...");
-//		if (thread.isAlive()) {
-//			appInfo.log.error("Thread for tool adapter '" + name
-//					+ "' is still alive.  Interrupting...");
-//			thread.interrupt();
-//			appInfo.log.error(ErrorMessage.TOOL_TIMEOUT_ERROR.getDescription());
-//			ToolStatusManager.setToolStatus(appInfo, this.toolId,
-//					ToolStatus.ERROR);
-//		} else {
-//			appInfo.log.debug("Tool adapter '" + name + "' -- NOTHING TO SHUT DOWN!");
-//		}
-//		
-//		thread = null;
-//	}
+
+	//	public void shutdown(AppInfo appInfo, boolean sendMobilizeReport) {
+	//		appInfo.log.debug("App " + appInfo.appId + " in shutdown phase...");
+	//		if (thread.isAlive()) {
+	//			appInfo.log.error("Thread for tool adapter '" + name
+	//					+ "' is still alive.  Interrupting...");
+	//			thread.interrupt();
+	//			appInfo.log.error(ErrorMessage.TOOL_TIMEOUT_ERROR.getDescription());
+	//			ToolStatusManager.setToolStatus(appInfo, this.toolId,
+	//					ToolStatus.ERROR);
+	//		} else {
+	//			appInfo.log.debug("Tool adapter '" + name + "' -- NOTHING TO SHUT DOWN!");
+	//		}
+	//		
+	//		thread = null;
+	//	}
 
 	/**
 	 * This method is used to POST binary files.
@@ -440,44 +443,44 @@ public class ToolAdapter implements Runnable {
 		final MultipartEntity entity = new MultipartEntity();
 		File apkFile = null;
 		FileBody fileBody = null;
-		
+
 		try {
 			String fileUploadParamName = null;
-			
+
 			// Add parameter name-value pairs
 			if (request.formParameterNames != null) {
-				
+
 				for (int i = 0; i < request.formParameterNames.size(); i++) {
 					final String paramName = request.formParameterNames.get(i);
 					String paramValue = request.formParameterValues.get(i);
-					
+
 					if (paramValue.equals("APP_FILE")) {
 						fileUploadParamName = paramName;
 					} else {
-						
+
 						if (paramValue.equals("APPVET_ID")) {
-							
-//							appInfo.log.debug("Found " + paramName + " = "
-//									+ "'APPVET_ID' for tool '" + toolId
-//									+ "'. Setting to appid = '"
-//									+ appInfo.appId + "'");
-							
+
+							//							appInfo.log.debug("Found " + paramName + " = "
+							//									+ "'APPVET_ID' for tool '" + toolId
+							//									+ "'. Setting to appid = '"
+							//									+ appInfo.appId + "'");
+
 							paramValue = appInfo.appId;
-							
+
 						} else if (paramValue.equals("APP_PACKAGE")) {
-//							appInfo.log.debug("Found " + paramName + " = "
-//									+ "'APP_PACKAGE' for tool '" + toolId
-//									+ "'. Setting to appid = '"
-//									+ appInfo.packageName + "'");
-							
+							//							appInfo.log.debug("Found " + paramName + " = "
+							//									+ "'APP_PACKAGE' for tool '" + toolId
+							//									+ "'. Setting to appid = '"
+							//									+ appInfo.packageName + "'");
+
 							paramValue = appInfo.packageName;
 						}
-						
+
 						if ((paramName == null) || paramName.isEmpty()) {
 							appInfo.log.warn("Param name is null or empty "
 									+ "for tool '" + name + "'");
 						}
-						
+
 						StringBody partValue = new StringBody(paramValue,
 								Charset.forName("UTF-8"));
 						entity.addPart(paramName, partValue);
@@ -488,16 +491,16 @@ public class ToolAdapter implements Runnable {
 
 			// Add authentication parameters if they exist
 			if (authenticationRequired) {
-				
+
 				if (authParamNames != null && !authParamNames.isEmpty()) {
-					
+
 					for (int i = 0; i < authParamNames.size(); i++) {
 						StringBody partValue = new StringBody(
 								authParamValues.get(i),
 								Charset.forName("UTF-8"));
 						entity.addPart(authParamNames.get(i), partValue);
 					}
-					
+
 				}
 
 			}
@@ -545,10 +548,10 @@ public class ToolAdapter implements Runnable {
 		}
 	}
 
-	public Thread getThread() {
-		thread = new Thread(this);
-		return thread;
-	}
+	//	public Thread getThread() {
+	//		thread = new Thread(this);
+	//		return thread;
+	//	}
 
 	@Override
 	public void run() {
@@ -575,16 +578,16 @@ public class ToolAdapter implements Runnable {
 			// Get user's tool credentials
 			ArrayList<UserToolCredentials> userToolCredentials = 
 					Database.getUserToolCredentials(appInfo.ownerName);
-			
+
 			for (int i = 0; i < userToolCredentials.size(); i++) {
 				UserToolCredentials userToolCredential = userToolCredentials
 						.get(i);
-				
+
 				if (userToolCredential.toolId.equals(toolId)
 						&& userToolCredential.os.equals(os.name())) {
 
 					for (int j = 0; j < userToolCredential.authParamNames.length; j++) {
-						
+
 						String paramName = userToolCredential.authParamNames[j];
 						String paramValue = userToolCredential.authParamValues[j];
 
@@ -600,10 +603,10 @@ public class ToolAdapter implements Runnable {
 							authParamNames.add(paramName);
 							authParamValues.add(paramValue);
 						}
-						
+
 					}
 				}
-				
+
 			}
 
 		}
@@ -640,18 +643,18 @@ public class ToolAdapter implements Runnable {
 							this.toolId, ToolStatus.ERROR);*/
 					return;
 				}
-				
+
 				String targetURL = appVetRequest.URL;
-				
+
 				/* Need special case for RRF tool that appends appID to URL path */
 				if (toolId.equals("androidrrf") || toolId.equals("rrf")) {
 					targetURL += "/" + appInfo.appId;
 					appInfo.log.info("RRF tool using modified target URL: " + targetURL);
 				}
-				
+
 				HttpPost httpPost = new HttpPost(targetURL);
 
-				
+
 				httpPost.setEntity(entity);
 				appInfo.log.info("Tool adapter '" + toolId + "' sending app " + appInfo.appId
 						+ " to " + targetURL);
@@ -663,8 +666,8 @@ public class ToolAdapter implements Runnable {
 						+ httpResponse.getStatusLine());
 
 				if (protocol == Protocol.SYNCHRONOUS
-				// || protocol == Protocol.MULTISYNCHRONOUS
-				) {
+						// || protocol == Protocol.MULTISYNCHRONOUS
+						) {
 					// We only handle report from Synchronous tools here.
 					// Reports for
 					// asynchronous tools are handled by the AppVetServlet. Also
@@ -718,9 +721,9 @@ public class ToolAdapter implements Runnable {
 						appInfo.log.error("Received from " + toolId + ": "
 								+ httpResponseVal
 								+ ". Make sure tool service is running at: " + targetURL);
-						
+
 						ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.ERROR);
-						
+
 					} else if (httpResponseVal.indexOf("HTTP/1.1 400") > -1) {
 						appInfo.log.error("Received from " + toolId + ": "
 								+ httpResponseVal
@@ -742,8 +745,8 @@ public class ToolAdapter implements Runnable {
 				final long endTime = endDate.getTime();
 				endDate = null;
 				final long elapsedTime = endTime - startTime;
-//				appInfo.log.info(name + " elapsed: "
-//						+ Logger.formatElapsed(elapsedTime));
+				//				appInfo.log.info(name + " elapsed: "
+				//						+ Logger.formatElapsed(elapsedTime));
 			} catch (final Exception e) {
 				appInfo.log.error(e.toString());
 				ToolStatusManager.setToolStatus(appInfo,
@@ -768,15 +771,44 @@ public class ToolAdapter implements Runnable {
 				fileOut = null;
 			}
 		}
+
+		// Now wait for report to come in
+		try {
+			log.debug("Tool " + toolId + " is WAITING FOR REPORT!");
+			Date timeout = new Date(System.currentTimeMillis() + 
+					AppVetProperties.ToolServiceTimeout);
+			for (;;) {
+				ToolStatus toolStatus = 
+						ToolStatusManager.getToolStatus(appInfo.os, appInfo.appId, toolId);
+				Date currentTime = new Date(System.currentTimeMillis());
+				if (toolStatus == ToolStatus.SUBMITTED && !currentTime.after(timeout)){
+					Thread.sleep(REPORT_CHECK_INTERVAL);
+				} else if (toolStatus != ToolStatus.SUBMITTED) {
+					log.debug("Tool adapter '" + toolId + "' for app " + appInfo.appId + " changed status from SUBMITTED to " + toolStatus.name() + " while waiting for report.");
+					appInfo.log.info("Tool adapter '" + toolId + "' for app " + appInfo.appId + " changed status from SUBMITTED to " + toolStatus.name() + " while waiting for report.");
+					break;
+				} else if (currentTime.after(timeout)) {
+					log.debug("Tool adapter '" + toolId + "' for app " + appInfo.appId + " timed-out waiting for report.");
+					appInfo.log.info("Tool adapter '" + toolId + "' for app " + appInfo.appId + " timed-out waiting for report.");
+					break;
+				}
+			}
+			appInfo.log.info("Closing tool adapter '" + toolId + "' for app " + appInfo.appId);
+		} catch (final InterruptedException e) {
+			appInfo.log.error(toolId + " shut down prematurely after " + 
+					"AppVetProperties.ToolServiceProcessingTimeout = " + 
+					+ AppVetProperties.ToolServiceTimeout + "ms");
+			ToolStatusManager.setToolStatus(appInfo, toolId,
+					ToolStatus.ERROR);
+		}
 	}
 
-	public boolean isServiceSuspended() {
-		return serviceSuspended;
+	public boolean serviceIsDisabled() {
+		return serviceDisabled;
 	}
 
-	public void setServiceSuspended(boolean serviceSuspended) {
-		log.error("SETTING SERVICE SUSPENDED TO TRUE");
-		this.serviceSuspended = serviceSuspended;
+	public void disableService() {
+		this.serviceDisabled = true;
 	}
 
 }

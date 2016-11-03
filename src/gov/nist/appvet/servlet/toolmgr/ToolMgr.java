@@ -42,7 +42,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.sql.ResultSetMetaData;
 
 /**
@@ -50,8 +49,6 @@ import java.sql.ResultSetMetaData;
  */
 public class ToolMgr implements Runnable {
 	private static final Logger log = AppVetProperties.log;
-	/** Check if report was received every x milliseconds. */
-	private static final int REPORT_CHECK_INTERVAL = 2000;
 
 	public ToolMgr() {
 	}
@@ -87,39 +84,38 @@ public class ToolMgr implements Runnable {
 							+ availableTools.size());
 					// Start tool adapters
 					appInfo.log.info("*** STARTING TOOL ADAPTERS FOR APPID: " + appid);
+					ArrayList<Thread> threads = new ArrayList<Thread>();
 					for (int i = 0; i < availableTools.size(); i++) {
 						ToolAdapter toolAdapter = availableTools.get(i);
 
 						// Only process test tools (not preprocessors,
 						// audit, or manual reports).
 						if (toolAdapter.toolType == ToolType.TESTTOOL) {
-							if (toolAdapter.isServiceSuspended()) {
+							if (toolAdapter.serviceIsDisabled()) {
 								// Do not start the tool adapter if it was disabled
 								appInfo.log.warn("Tool adapter '" + toolAdapter.toolId + "' is disabled. Not starting.");
 							} else {
 								// If the tool adapter was not disabled.
 								toolAdapter.setApp(appInfo);
-								final Thread thread = toolAdapter.getThread();
+								Thread thread = new Thread(toolAdapter);
 								appInfo.log.info("App " + appInfo.appId
 										+ " starting " + toolAdapter.toolId);
 								thread.start();
-								// Delay to keep processes from blocking
-								delay(AppVetProperties.TOOL_MGR_STAGGER_INTERVAL);
+								threads.add(thread);
 							}
 						}
 					}
-					// Wait to receive report from tool
+					
 					appInfo.log.info("*** WAITING FOR TOOL ADAPTERS TO COMPLETE FOR APPID: " + appid);
-					for (int i = 0; i < availableTools.size(); i++) {
-						ToolAdapter toolAdapter = availableTools.get(i);
-						if (toolAdapter.toolType == ToolType.TESTTOOL) {
-							if (toolAdapter.isServiceSuspended()) {
-								appInfo.log.warn("Tool adapter '" + toolAdapter.toolId + "' was disabled. Not waiting to finish.");
-							} else {
-								// If the tool adapter was not disabled.
-								waitForToolReport(appInfo, toolAdapter);
-							}
+					try {
+						for (int j = 0; j < threads.size(); j++) {
+							Thread thread = threads.get(j);
+							thread.join();
 						}
+						appInfo.log.info("*** ALL TOOL ADAPTERS HAVE CLOSED");
+
+					} catch (InterruptedException e) {
+						log.error(e.getMessage());
 					}
 					
 					// Verify app and tool statuses before moving to next app
@@ -158,11 +154,11 @@ public class ToolMgr implements Runnable {
 			appInfo.log.info("TEST: App " + appInfo.appId + " is not in a PROCESSING state");
 		}
 
-		// Verify if tools in ERROR state have suspendSUbmission flag set
+/*		// Verify if tools in ERROR state have suspendSUbmission flag set
 		for (int i = 0; i < availableTools.size(); i++) {
 			final ToolAdapter toolAdapter = availableTools.get(i);
 			if (toolAdapter.toolType == ToolType.TESTTOOL) {
-				if (toolAdapter.isServiceSuspended()) {
+				if (toolAdapter.serviceIsDisabled()) {
 					appInfo.log.info("TEST: Tool adapter '" + toolAdapter.toolId + "' was disabled.");
 				} else {
 					// If the tool adapter was not disabled.
@@ -170,7 +166,7 @@ public class ToolMgr implements Runnable {
 
 				}
 			}
-		}
+		}*/
 	}
 	
 	public boolean allToolsAreNA(AppInfo appInfo, ArrayList<ToolAdapter> availableTools) {
@@ -255,7 +251,7 @@ public class ToolMgr implements Runnable {
 					if (toolStatus != null && toolStatus.equals(ToolStatus.SUBMITTED.name())) {
 						appInfo.log.error("Tool '" + toolId + 
 								"' adapter timed-out waiting for report. "
-								+ "Setting '" + toolId + "' status to ERROR.");
+								+ "Setting '" + toolId + "' status from SUBMITTED to ERROR.");
 						ToolStatusManager.setToolStatus(appInfo, toolId,
 								ToolStatus.ERROR);
 					}
@@ -306,7 +302,7 @@ public class ToolMgr implements Runnable {
 						// further apps from being sent to the tool
 						appInfo.log.warn("Disabling '" + toolId + "' adapter and suspending subsequent app submissions.");
 						ToolAdapter toolAdapter = getToolAdapter(toolId, availableTools);
-						toolAdapter.setServiceSuspended(true);
+						toolAdapter.disableService();
 
 						// Email admins about the problem with the tool
 						UserInfo userInfo = Database.getUserInfo(appInfo.ownerName, null);
@@ -368,33 +364,6 @@ public class ToolMgr implements Runnable {
 		}
 	}
 
-	public void waitForToolReport(AppInfo appInfo, ToolAdapter tool) {
-		try {
-			Date timeout = new Date(System.currentTimeMillis() + 
-					AppVetProperties.ToolServiceTimeout);
-			for (;;) {
-				ToolStatus toolStatus = 
-						ToolStatusManager.getToolStatus(appInfo.os, appInfo.appId, tool.toolId);
-				Date currentTime = new Date(System.currentTimeMillis());
-				if (toolStatus == ToolStatus.SUBMITTED && !currentTime.after(timeout)){
-					Thread.sleep(REPORT_CHECK_INTERVAL);
-				} else if (toolStatus != ToolStatus.SUBMITTED) {
-					appInfo.log.info("Tool adapter '" + tool.toolId + "' for app " + appInfo.appId + " changed status from SUBMITTED to " + toolStatus.name() + " while waiting for report.");
-					break;
-				} else if (currentTime.after(timeout)) {
-					appInfo.log.info("Tool adapter '" + tool.toolId + "' for app " + appInfo.appId + " timed-out waiting for report.");
-					break;
-				}
-			}
-		} catch (final InterruptedException e) {
-			appInfo.log.error(tool.toolId + " shut down prematurely after " + 
-					"AppVetProperties.ToolServiceProcessingTimeout = " + 
-					+ AppVetProperties.ToolServiceTimeout + "ms");
-			ToolStatusManager.setToolStatus(appInfo, tool.toolId,
-					ToolStatus.ERROR);
-		}
-	}
-
 	public void cleanUpFiles(AppInfo appInfo) {
 		appInfo.log.info("CLEANING UP FOR APPID: " + appInfo.appId);
 
@@ -407,9 +376,8 @@ public class ToolMgr implements Runnable {
 				appInfo.log.debug("Removed " + appInfo.appName + " app file.");
 			}
 		}
-		// Remove expanded (unzipped) app project directory		
 		if (appInfo.os == DeviceOS.IOS) {
-			// Remove zip file
+			// Remove expanded (unzipped) app project directory		
 			String zipPath = appInfo.getIdPath() + "/Received.zip";
 			final File zipFile = new File(zipPath);
 			if (zipFile.exists()) {
@@ -423,10 +391,9 @@ public class ToolMgr implements Runnable {
 				FileUtil.deleteDirectory(expandedZipFile);
 				appInfo.log.debug("Removed " + expandedZipPath);
 			}
-		} else {
+		} else if (appInfo.os == DeviceOS.ANDROID){
 			// Removed expanded apk directory
 			String projectPath = appInfo.getProjectPath();
-			appInfo.log.debug("Project Path: " + projectPath);
 			final File projectDirectory = new File(projectPath);
 			if (projectDirectory.exists()) {
 				FileUtil.deleteDirectory(projectDirectory);
@@ -449,15 +416,6 @@ public class ToolMgr implements Runnable {
 			return false;
 		}
 	}
-
-
-	
-	
-
-	
-
-	
-
 	
 	public static ToolAdapter getToolAdapter(String toolId, ArrayList<ToolAdapter> availableTools) {
 		if (availableTools != null) {
