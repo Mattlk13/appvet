@@ -12,7 +12,6 @@ public class LogViewer extends DialogBox {
 	public PushButton closeButton = null;
 	
 	public LogViewer(String log) {
-		
 		DockPanel dockPanel = new DockPanel();
 		dockPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		dockPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
@@ -28,6 +27,7 @@ public class LogViewer extends DialogBox {
 		horizontalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		dockPanel.add(horizontalPanel, DockPanel.SOUTH);
+		horizontalPanel.setHeight("40px");
 		dockPanel.setCellWidth(horizontalPanel, "100%");
 		dockPanel.setHeight("28px");
 		
