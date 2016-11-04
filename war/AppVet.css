@@ -315,7 +315,7 @@ searchPanel {
 }
 
 .infoDialogBox {
-	color: black;
+	color: white;
 	font-size: 14px;
 	vertical-align: middle;
 	text-align: center;
@@ -577,9 +577,8 @@ searchPanel {
 }
 
 .insetPanel {
-	color: White;
+	color: #015289;
 	padding: 5px;
-	border: 1px solid Silver;
 }
 
 .gwt-Label {
@@ -794,7 +793,7 @@ searchPanel {
 }
 
 .aboutDialogButtonPanel {
-	padding-bottom: 10px;
+	background: #015289;
 }
 
 .loginPanelLogo {
@@ -1265,4 +1264,29 @@ searchPanel {
 /*---------------------- South Center Panel ----------------------*/
 .southPanel {
 	border-top: 1px solid #d9e1e4;
+	
+/*---------------------- About Panel ----------------------*/
+.aboutPanel {
+   background: #015289 !important;
+}	
+.gwt-DialogBox .dialogContent {
+	   background: #015289 !important;
+	
+}
+.aboutPanel {
+background: blue;
+}
+.aboutDialog {
+background: #015289;
+}
+.dialogContent {
+background: red;
+}
+.aboutDialogPanel {
+}
+.grayButton shadow {
+}
+.greenButton shadow {
+}
+	
 }

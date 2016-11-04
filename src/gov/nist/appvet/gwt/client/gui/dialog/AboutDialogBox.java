@@ -39,32 +39,36 @@ public class AboutDialogBox extends DialogBox {
 
 	public AboutDialogBox(String version) {
 		super(false, true);
-		setSize("400px", "209px");
+		setGlassEnabled(true);
+		this.setStyleName("");
+		setSize("376px", "209px");
 		setAnimationEnabled(false);
-		final VerticalPanel dialogVPanel = new VerticalPanel();
-		dialogVPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		dialogVPanel.addStyleName("dialogVPanel");
-		dialogVPanel
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		final String message = "Version " + version;
+		final DockPanel dockPanel = new DockPanel();
+		dockPanel.setStyleName("aboutDialogButtonPanel");
+		dockPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		dockPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		this.setWidget(dockPanel);
+		dockPanel.setSize("348px", "195px");
+		
+		SimplePanel simplePanel_1 = new SimplePanel();
+		dockPanel.add(simplePanel_1, DockPanel.CENTER);
+		dockPanel.setCellVerticalAlignment(simplePanel_1, HasVerticalAlignment.ALIGN_BOTTOM);
+		simplePanel_1.setHeight("96px");
 		final VerticalPanel verticalPanel = new VerticalPanel();
+		simplePanel_1.setWidget(verticalPanel);
 		verticalPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		verticalPanel.setStyleName("insetPanel");
-		dialogVPanel.add(verticalPanel);
-		dialogVPanel.setCellVerticalAlignment(verticalPanel,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		dialogVPanel.setCellHorizontalAlignment(verticalPanel,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		dialogVPanel.setCellWidth(verticalPanel, "100%");
-		verticalPanel.setWidth("350px");
-		final Image appvetLogoAbout = new Image("../appvet_images/appvet_logo_login.png");
+		verticalPanel.setSize("100%", "100%");
+		Image appvetLogoAbout = new Image("../appvet_images/appvet_logo_main.png");
+		appvetLogoAbout.setWidth("200px");
+		appvetLogoAbout.setHeight("25px");
 		//image.setTitle("AppVet Mobile App Vetting System");
-		appvetLogoAbout.setAltText("AppVet Mobile App Vetting System");
+		appvetLogoAbout.setAltText("Carwash AppVet");
 		verticalPanel.add(appvetLogoAbout);
+		verticalPanel.setCellVerticalAlignment(appvetLogoAbout, HasVerticalAlignment.ALIGN_BOTTOM);
 		verticalPanel.setCellHorizontalAlignment(appvetLogoAbout,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		appvetLogoAbout.setSize("192px", "73px");
-		final String message = "Version " + version;
 		final HorizontalPanel horizontalPanel = new HorizontalPanel();
 		verticalPanel.add(horizontalPanel);
 		verticalPanel.setCellWidth(horizontalPanel, "100%");
@@ -74,7 +78,7 @@ public class AboutDialogBox extends DialogBox {
 		horizontalPanel.setCellHorizontalAlignment(messageLabel,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel.setCellVerticalAlignment(messageLabel,
-				HasVerticalAlignment.ALIGN_MIDDLE);
+				HasVerticalAlignment.ALIGN_BOTTOM);
 		messageLabel.setStyleName("infoDialogBox");
 		verticalPanel.setCellVerticalAlignment(messageLabel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
@@ -82,37 +86,15 @@ public class AboutDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		messageLabel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		dialogVPanel.setCellHorizontalAlignment(messageLabel,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		dialogVPanel.setCellVerticalAlignment(messageLabel,
-				HasVerticalAlignment.ALIGN_MIDDLE);
 		messageLabel.setSize("350px", "18px");
-		final DockPanel dockPanel = new DockPanel();
-		dockPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		dockPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		dockPanel.add(dialogVPanel, DockPanel.CENTER);
-		dockPanel.setCellVerticalAlignment(dialogVPanel,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		dockPanel.setCellHorizontalAlignment(dialogVPanel,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		this.setWidget(dockPanel);
-		dockPanel.setSize("372px", "181px");
-		dialogVPanel.setSize("360px", "125px");
-		final SimplePanel simplePanel = new SimplePanel();
+		
+		SimplePanel simplePanel = new SimplePanel();
 		dockPanel.add(simplePanel, DockPanel.SOUTH);
-		dockPanel.setCellHorizontalAlignment(simplePanel, HasHorizontalAlignment.ALIGN_CENTER);
-		dockPanel.setCellVerticalAlignment(simplePanel,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		simplePanel.setStyleName("aboutDialogButtonPanel");
-		dialogVPanel.setCellWidth(simplePanel, "100%");
-		simplePanel.setWidth("340px");
+		dockPanel.setCellVerticalAlignment(simplePanel, HasVerticalAlignment.ALIGN_BOTTOM);
+		simplePanel.setHeight("44px");
 		closeButton = new PushButton("Close");
-		closeButton.setStyleName("greenButton shadow");
 		simplePanel.setWidget(closeButton);
-		dialogVPanel.setCellVerticalAlignment(closeButton,
-				HasVerticalAlignment.ALIGN_MIDDLE);
 		closeButton.setSize("70px", "18px");
-		dialogVPanel.setCellHorizontalAlignment(closeButton,
-				HasHorizontalAlignment.ALIGN_CENTER);
+		closeButton.setStyleName("greenButton shadow");
 	}
 }

@@ -935,7 +935,7 @@ public class AppVetPanel extends DockLayoutPanel {
 					public void execute() {
 						aboutDialogBox = new AboutDialogBox(configInfo
 								.getAppVetVersion());
-						aboutDialogBox.setText("About");
+						//aboutDialogBox.setText("About");
 						aboutDialogBox.center();
 						aboutDialogBox.closeButton
 								.addClickHandler(new ClickHandler() {
