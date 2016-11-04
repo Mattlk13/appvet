@@ -38,6 +38,7 @@ h3 {
 
 .dialogVPanel {
 	margin: 5px;
+	color: black;
 }
 
 /* .serverResponseLabelError {
@@ -735,16 +736,41 @@ searchPanel {
 
 .
 {
+padding-top
+:
+ 
+3
+px
+;
+
 	
-	padding-top: 3px;
-	padding-bottom: 3px;
-	border: white;
-	background-color: White;
+padding-bottom
+:
+ 
+3
+px
+;
+
+	
+border
+:
+ 
+white
+;
+
+	
+background-color
+:
+ 
+White
+;
 
 
+
 	
 	
 	
+
 
 
 }
@@ -1144,17 +1170,21 @@ searchPanel {
 .grayButton:hover {
 	background: #f0f3f4;
 }
+
 .grayButton:focus {
 	background: #f0f3f4;
 }
+
 .grayButton:active {
 	color: white;
 	background: #f0f3f4 !important;
 }
+
 .grayButton-up-disabled {
 	color: white;
 	background: #f0f3f4;
 }
+
 .grayButton-up-disabled:hover {
 	color: white;
 	background: #f0f3f4;
@@ -1173,15 +1203,19 @@ searchPanel {
 .greenButton:hover {
 	background: #40bf80;
 }
+
 .greenButton:focus {
 	background: #40bf80;
 }
+
 .greenButton:active {
 	background: #c6ecd9 !important;
 }
+
 .greenButton-up-disabled {
 	background: #c6ecd9;
 }
+
 .greenButton-up-disabled:hover {
 	background: #c6ecd9;
 }
@@ -1201,15 +1235,19 @@ searchPanel {
 .greenAppUploadButton:hover {
 	background: #40bf80;
 }
+
 .greenAppUploadButton:focus {
 	background: #40bf80;
 }
+
 .greenAppUploadButton:active {
 	background: #BBE8D1 !important;
 }
+
 .greenAppUploadButton-up-disabled {
 	background: #BBE8D1;
 }
+
 .greenAppUploadButton-up-disabled:hover {
 	background: #BBE8D1;
 }
@@ -1228,15 +1266,19 @@ searchPanel {
 .blueButton:hover {
 	background: #0189e4;
 }
+
 .blueButton:focus {
 	background: #0189e4;
 }
+
 .blueButton:active {
 	background: #9ad6fe !important;
 }
+
 .blueButton-up-disabled {
 	background: #9ad6fe;
 }
+
 .blueButton-up-disabled:hover {
 	background: #9ad6fe;
 }
@@ -1264,29 +1306,41 @@ searchPanel {
 /*---------------------- South Center Panel ----------------------*/
 .southPanel {
 	border-top: 1px solid #d9e1e4;
-	
-/*---------------------- About Panel ----------------------*/
-.aboutPanel {
-   background: #015289 !important;
-}	
+
+	/*---------------------- About Panel ----------------------*/
+	.
+	aboutPanel
+	{
+	background
+	:
+	#015289
+	!important;
+}
+
 .gwt-DialogBox .dialogContent {
-	   background: #015289 !important;
+	background: #015289 !important;
+}
+
+.aboutPanel {
+	background: blue;
+}
+
+.aboutDialog {
+	background: #015289;
+}
+
+.dialogContent {
+	background: red;
+}
+
+.aboutDialogPanel {
 	
 }
-.aboutPanel {
-background: blue;
-}
-.aboutDialog {
-background: #015289;
-}
-.dialogContent {
-background: red;
-}
-.aboutDialogPanel {
-}
+
 .grayButton shadow {
+	
 }
+
 .greenButton shadow {
-}
 	
 }
