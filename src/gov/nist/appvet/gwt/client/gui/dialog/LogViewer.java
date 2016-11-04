@@ -29,6 +29,7 @@ public class LogViewer extends DialogBox {
 		horizontalPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		dockPanel.add(horizontalPanel, DockPanel.SOUTH);
 		dockPanel.setCellWidth(horizontalPanel, "100%");
+		dockPanel.setHeight("28px");
 		
 		closeButton = new PushButton("Close");
 		closeButton.setStyleName("greenButton shadow");

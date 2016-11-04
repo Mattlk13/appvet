@@ -515,12 +515,10 @@ public class ToolAdapter implements Runnable {
 				if (toolStatus == ToolStatus.SUBMITTED && !currentTime.after(timeout)){
 					Thread.sleep(REPORT_CHECK_INTERVAL);
 				} else if (toolStatus != ToolStatus.SUBMITTED) {
-					log.debug("Tool adapter '" + toolId + "' for app " + appInfo.appId + " changed status from SUBMITTED to " + toolStatus.name() + " while waiting for report.");
 					appInfo.log.info("Tool adapter '" + toolId + "' for app " + appInfo.appId + " changed status from SUBMITTED to " + toolStatus.name() + " while waiting for report.");
 					break;
 				} else if (currentTime.after(timeout)) {
-					log.debug("Tool adapter '" + toolId + "' for app " + appInfo.appId + " timed-out waiting for report.");
-					appInfo.log.info("Tool adapter '" + toolId + "' for app " + appInfo.appId + " timed-out waiting for report.");
+					// Don't change SUBMITTED to ERROR -this will be done when checking final tool statuses.
 					break;
 				}
 			}

@@ -159,12 +159,19 @@ public class ToolMgr implements Runnable {
 		}
 
 		// Handle tools stuck in SUBMITTED state (change to ERROR state)
-		appInfo.log.info("*** CHECKING TOOLS THATHAVE TIMED-OUT FOR APPID: " + appInfo.appId);
+		appInfo.log.info("*** CHECKING TOOLS THAT HAVE TIMED-OUT FOR APPID: " + appInfo.appId);
 		checkToolsInSubmittedState(appInfo);
 
 		// Handle tools in ERROR state
 		appInfo.log.debug("*** HANDLING TOOL ERRORS FOR APPID: " + appInfo.appId);
 		handleToolAdapterErrors(appInfo, availableTools);
+		
+		// Wait for any pending tool status updates to complete
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			appInfo.log.error("Interrupted exception while waiting for status updates to complete.");
+		}
 
 		// Verify the app is not in a PROCESSING state (it shouldn't be at this point)
 		AppStatus appStatus = AppStatusManager.getAppStatus(appInfo.appId);
