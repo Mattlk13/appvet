@@ -21,7 +21,6 @@ package gov.nist.appvet.servlet.preprocessor;
 
 import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.servlet.shared.ErrorMessage;
-import gov.nist.appvet.servlet.shared.Native;
 import gov.nist.appvet.shared.all.DeviceOS;
 import gov.nist.appvet.shared.backend.AppInfo;
 import gov.nist.appvet.shared.backend.Database;
@@ -221,7 +220,7 @@ public class AndroidMetadata {
 			appInfo.log
 					.warn("APKTOOL_HOME, which is used to launch the apktool, is null.");
 		}
-		String appvetOS = Native.os;
+		String appvetOS = System.getProperty("os.name");
 		String apktoolCommand = AppVetProperties.APKTOOL_HOME + "/";
 		if (appvetOS.toUpperCase().indexOf("WIN") > -1) {
 			apktoolCommand += APKTOOL_WINDOWS_COMMAND;

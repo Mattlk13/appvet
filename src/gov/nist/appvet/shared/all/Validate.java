@@ -19,8 +19,6 @@
  */
 package gov.nist.appvet.shared.all;
 
-
-
 /**
  * @author steveq@nist.gov
  */
@@ -75,22 +73,6 @@ public class Validate {
 		return s.matches(".*\\s+.*");
 	}
 
-	public static boolean isDate(String s) {
-		if (s == null || s.isEmpty()) {
-			return false;
-		}
-		// Match format YYYY-MM-DD
-		return s.matches("\\d{4}-\\d{2}-\\d{2}");
-	}
-
-	public static boolean isTime(String s) {
-		if (s == null || s.isEmpty()) {
-			return false;
-		}
-		// Match format HH:MM:SSZ
-		return s.matches("\\d{2}:\\d{2}:\\d{2}Z");
-	}
-
 	public static boolean isValidUserName(String userName) {
 		if (userName == null || userName.isEmpty()) {
 			return false;
@@ -117,17 +99,6 @@ public class Validate {
 		}
 		return email
 				.matches("[A-Za-z0-9._%+-][A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{3}");
-	}
-	
-	public static boolean isValidRole(String roleStr) {
-		return isPrintable(roleStr);
-	}
-
-	public static boolean isUrl(String s) {
-		if (s == null || s.isEmpty()) {
-			return false;
-		}
-		return s.matches("([a-zA-Z0-9\\-_\\.!\\~\\*'\\(\\);/\\?:\\@\\&=\\+$,]|(%[a-fA-F0-9]{2}))*");
 	}
 
 	public static boolean isLegalFileName(String fileName) {
@@ -171,19 +142,6 @@ public class Validate {
 			return false;
 		}
 		return isPrintable(str) && !hasWhiteSpace(str);
-	}
-	
-	public static boolean hasValidOs(String appOS) {
-		if (appOS == null || appOS.isEmpty()) {
-			return false;
-		}
-		String os = appOS.toUpperCase();
-		if (os.equals(DeviceOS.ANDROID.name()) || 
-				os.equals(DeviceOS.IOS.name())) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	public Validate() {

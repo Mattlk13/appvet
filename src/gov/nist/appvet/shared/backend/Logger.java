@@ -26,7 +26,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author steveq@nist.gov
@@ -65,17 +64,17 @@ public class Logger {
 		}
 	}
 
-	public static String formatElapsed(long millis) {
-		final long hr = TimeUnit.MILLISECONDS.toHours(millis);
-		final long min = TimeUnit.MILLISECONDS.toMinutes(millis
-				- TimeUnit.HOURS.toMillis(hr));
-		final long sec = TimeUnit.MILLISECONDS.toSeconds(millis
-				- TimeUnit.HOURS.toMillis(hr) - TimeUnit.MINUTES.toMillis(min));
-		final long ms = TimeUnit.MILLISECONDS.toMillis(millis
-				- TimeUnit.HOURS.toMillis(hr) - TimeUnit.MINUTES.toMillis(min)
-				- TimeUnit.SECONDS.toMillis(sec));
-		return String.format("%02d:%02d:%02d.%03d", hr, min, sec, ms);
-	}
+//	public static String formatElapsed(long millis) {
+//		final long hr = TimeUnit.MILLISECONDS.toHours(millis);
+//		final long min = TimeUnit.MILLISECONDS.toMinutes(millis
+//				- TimeUnit.HOURS.toMillis(hr));
+//		final long sec = TimeUnit.MILLISECONDS.toSeconds(millis
+//				- TimeUnit.HOURS.toMillis(hr) - TimeUnit.MINUTES.toMillis(min));
+//		final long ms = TimeUnit.MILLISECONDS.toMillis(millis
+//				- TimeUnit.HOURS.toMillis(hr) - TimeUnit.MINUTES.toMillis(min)
+//				- TimeUnit.SECONDS.toMillis(sec));
+//		return String.format("%02d:%02d:%02d.%03d", hr, min, sec, ms);
+//	}
 
 	public Logger(String logFilePath, String displayName) {
 		if (displayName == null || displayName.isEmpty()) {
@@ -115,22 +114,6 @@ public class Logger {
 		}
 	}
 
-	public void debug(String message, boolean showLogData) {
-		writeMessage(Level.DEBUG, message, showLogData);
-	}
-
-	public void error(String message, boolean showLogData) {
-		writeMessage(Level.ERROR, message, showLogData);
-	}
-
-	public void info(String message, boolean showLogData) {
-		writeMessage(Level.INFO, message, showLogData);
-	}
-
-	public void warn(String message, boolean showLogData) {
-		writeMessage(Level.WARNING, message, showLogData);
-	}
-
 	public void debug(String message) {
 		writeMessage(Level.DEBUG, message, true);
 	}
@@ -145,10 +128,6 @@ public class Logger {
 
 	public void warn(String message) {
 		writeMessage(Level.WARNING, message, true);
-	}
-
-	public boolean isClosed() {
-		return isClosed;
 	}
 
 	private void writeMessage(Level level, String message,

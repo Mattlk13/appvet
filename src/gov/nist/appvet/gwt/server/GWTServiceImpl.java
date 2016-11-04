@@ -47,6 +47,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -397,7 +398,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			throws IllegalArgumentException {
 		return Database.getApps(username, null);
 	}
-	
+
 	public List<String> getOrgHierarchies() {
 		return Database.getUserOrgMemberships();
 	}
@@ -406,7 +407,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			String appId) throws IllegalArgumentException {
 		return getToolsStatuses(os, sessionId, appId);
 	}
-	
+
 	public Boolean setAlertMessage(String username, SystemAlert alert) {
 		if (Database.setAlertMessage(username, alert)) {
 			return new Boolean(true);
@@ -422,12 +423,11 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			return new Boolean(false);
 		}
 	}
-	
-	// TODO //////////////////////////////////////////////////////////////////
+
 	public ServerPacket getServerUpdates(String username, String sessionId, 
 			Date newSessionExpiration, Date lastAppsListUpdate) 
-		throws IllegalArgumentException {
-		
+					throws IllegalArgumentException {
+
 		ServerPacket serverPacket = new ServerPacket();
 		serverPacket.setSystemAlert(Database.getAlertMessage());
 		serverPacket.setSessionExpiration(updateSessionExpiration(sessionId, newSessionExpiration));
@@ -540,40 +540,40 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			// we return an NA status.
 			toolCompleted = true;
 			toolStatusGwt
-					.setStatusHtml("<div id=\"tabledim\">N/A</div>");
+			.setStatusHtml("<div id=\"tabledim\">N/A</div>");
 		} else if (toolStatus == ToolStatus.NA) {
 			toolCompleted = true;
 			toolStatusGwt
-					.setStatusHtml("<div id=\"tabledim\">N/A</div>");
+			.setStatusHtml("<div id=\"tabledim\">N/A</div>");
 
 		} else if (toolStatus == ToolStatus.AVAILABLE) {
 			toolCompleted = true;
 			toolStatusGwt
-					.setStatusHtml("<div id=\"tabledim\" style='color: black'>AVAILABLE</div>");
+			.setStatusHtml("<div id=\"tabledim\" style='color: black'>AVAILABLE</div>");
 
 		} else if (toolStatus == ToolStatus.HIGH) {
 			toolCompleted = true;
 			toolStatusGwt
-					.setStatusHtml("<div id=\"tableitembad\" style='color: red'>HIGH</div>");
+			.setStatusHtml("<div id=\"tableitembad\" style='color: red'>HIGH</div>");
 		} else if (toolStatus == ToolStatus.ERROR) {
 			toolCompleted = true;
 			toolStatusGwt
-					.setStatusHtml("<div id=\"tableitembad\" style='color: black'>ERROR</div>");
+			.setStatusHtml("<div id=\"tableitembad\" style='color: black'>ERROR</div>");
 		} else if (toolStatus == ToolStatus.MODERATE) {
 			toolCompleted = true;
 			toolStatusGwt
-					.setStatusHtml("<div id=\"tableitembad\" style='color: orange'>MODERATE</div>");
+			.setStatusHtml("<div id=\"tableitembad\" style='color: orange'>MODERATE</div>");
 		} else if (toolStatus == ToolStatus.LOW) {
 			toolCompleted = true;
 			toolStatusGwt
-					.setStatusHtml("<div id=\"tableitemendorsed\" style='color: green'>LOW</div>");
+			.setStatusHtml("<div id=\"tableitemendorsed\" style='color: green'>LOW</div>");
 		} else if (toolStatus == ToolStatus.SUBMITTED) {
 			toolStatusGwt
-					.setStatusHtml("<div id=\"tableitem\" style='color: black'>SUBMITTED</div>");
+			.setStatusHtml("<div id=\"tableitem\" style='color: black'>SUBMITTED</div>");
 		} else {
 			toolStatusGwt
-					.setStatusHtml("<div id=\"tableitem\" style='color: black'>"
-							+ toolStatus.name() + "</div>");
+			.setStatusHtml("<div id=\"tableitem\" style='color: black'>"
+					+ toolStatus.name() + "</div>");
 		}
 		final String reportsPath = AppVetProperties.APPS_ROOT + "/" + appId
 				+ "/reports";
@@ -581,7 +581,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		if (toolStatus == null || toolStatus == ToolStatus.NA
 				|| !reportFile.exists()) {
 			toolStatusGwt
-					.setReport("<div id=\"tabledim\" style='color: gray'>N/A</div>");
+			.setReport("<div id=\"tabledim\" style='color: gray'>N/A</div>");
 		} else if (toolCompleted) {
 			// Make sure we do not cache this report since any new reports will
 			// override this URL with the same filename. Make sure to set
@@ -599,7 +599,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			}
 		} else {
 			toolStatusGwt
-					.setReport("<div id=\"tabledim\" style='color: gray'>N/A</div>");
+			.setReport("<div id=\"tabledim\" style='color: gray'>N/A</div>");
 		}
 		return toolStatusGwt;
 	}
@@ -611,8 +611,52 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 
 	public Boolean updateUserToolCredentials(String username,
 			ArrayList<UserToolCredentials> credentialsList)
-			throws IllegalArgumentException {
+					throws IllegalArgumentException {
 		Database.saveUserToolCredentials(username, credentialsList);
 		return true;
 	}
+
+	@Override
+	public String getAppLog(String appId) throws IllegalArgumentException {
+		final String appLogPath = AppVetProperties.APPS_ROOT + "/" + appId + "/reports/app_log.txt";
+		final File appLogFile = new File(appLogPath);
+		try {
+			if (appLogFile.exists()) {
+				if (appLogFile.length() == 0) {
+					return "Log file is empty";
+				}
+				Scanner fileReader = new Scanner(appLogFile, "UTF-8");
+				fileReader.useDelimiter("\\Z"); // \Z means EOF.
+				String content = fileReader.next();
+				fileReader.close();
+				return content;
+			} else {
+				return "ERROR: Could not find log file for app " + appId;
+			}
+		} catch (FileNotFoundException e) {
+			return "ERROR: Problem accessing log file for app " + appId;
+		}
+	}
+
+	public String getAppVetLog() throws IllegalArgumentException {
+		final String logPath = AppVetProperties.APPVET_FILES_HOME + "/logs/appvet_log.txt";
+		final File logFile = new File(logPath);
+		if (logFile.exists()) {
+			if (logFile.length() == 0) {
+				return "Log file is empty";
+			}
+			try {
+				Scanner fileReader = new Scanner(logFile, "UTF-8");
+				fileReader.useDelimiter("\\Z"); // \Z means EOF.
+				String content = fileReader.next();
+				fileReader.close();
+				return content;
+			} catch (FileNotFoundException e) {
+				return "ERROR: Could not access AppVet log file";
+			}
+		} else {
+			return "ERROR: Could not find AppVet log file";
+		}
+	}
+
 }

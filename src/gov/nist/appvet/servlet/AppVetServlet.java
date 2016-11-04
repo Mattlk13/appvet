@@ -80,9 +80,7 @@ public class AppVetServlet extends HttpServlet {
 	/** Handler for HTTP GET messages.*/
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) {
-		
-		String cmd = request.getParameter(AppVetParameter.COMMAND.value);
-		
+				
 		String authHeaderValue = request.getHeader("Authorization");
 		if (authHeaderValue != null) {
 			// Requester is attempting to authenticate
@@ -320,8 +318,6 @@ public class AppVetServlet extends HttpServlet {
 		FileItem fileItem = null;
 		String clientIpAddress = request.getRemoteAddr();
 		
-		String cmd = request.getParameter(AppVetParameter.COMMAND.value);
-
 		// On CentOS, clientIpAddress will be '0:0:0:0:0:0:0:1' if on
 		// localhost, so change to '127.0.0.1'
 		log.info("IP ADDRESS IN DOPOST: " + clientIpAddress);
@@ -573,10 +569,6 @@ public class AppVetServlet extends HttpServlet {
 		} else {
 			return false;
 		}  
-	}
-
-	/** TODO: Search app store for metadata. */
-	public void searchAppStore(String appName, String appVersion, String appOS) {
 	}
 
 	public boolean isValidAppId(String appId, AppVetServletCommand command) {

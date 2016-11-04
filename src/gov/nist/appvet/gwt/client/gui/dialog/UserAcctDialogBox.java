@@ -25,8 +25,6 @@ import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.UserInfo;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -408,25 +406,5 @@ public class UserAcctDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		dockPanel.setCellHorizontalAlignment(horizontalPanel,
 				HasHorizontalAlignment.ALIGN_CENTER);
-	}
-	
-	public void showMessageDialog(String windowTitle, String message,
-			boolean isError) {
-		messageDialogBox = new MessageDialogBox(message, isError);
-		messageDialogBox.setText(windowTitle);
-		messageDialogBox.center();
-		messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				killDialogBox(messageDialogBox);
-			}
-		});
-	}
-	
-	public void killDialogBox(DialogBox dialogBox) {
-		if (dialogBox != null) {
-			dialogBox.hide();
-			dialogBox = null;
-		} 
 	}
 }

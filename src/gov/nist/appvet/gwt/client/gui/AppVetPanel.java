@@ -23,6 +23,7 @@ import gov.nist.appvet.gwt.client.GWTService;
 import gov.nist.appvet.gwt.client.GWTServiceAsync;
 import gov.nist.appvet.gwt.client.gui.dialog.AboutDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.AppUploadDialogBox;
+import gov.nist.appvet.gwt.client.gui.dialog.LogViewer;
 import gov.nist.appvet.gwt.client.gui.dialog.MessageDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.ReportUploadDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.SetAlertDialogBox;
@@ -80,7 +81,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.MenuBar;
@@ -129,7 +129,6 @@ public class AppVetPanel extends DockLayoutPanel {
 	private Date sessionExpiration = null;
 	private Timer pollingTimer = null;
 	private Timer warningTimer = null;
-	private HorizontalSplitPanel centerAppVetSplitPanel = null;
 	private HorizontalPanel appsListButtonPanel = null;
 	private SimplePanel rightCenterPanel = null;
 	private AppUploadDialogBox appUploadDialogBox = null;
@@ -614,14 +613,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				new Command() {
 					@Override
 					public void execute() {
-						final String dateString = "?nocache"
-								+ new Date().getTime();
-						final String url = SERVLET_URL + dateString + "&"
-								+ AppVetParameter.COMMAND.value + "="
-								+ AppVetServletCommand.GET_APPVET_LOG.name()
-								+ "&" + AppVetParameter.SESSIONID.value + "="
-								+ sessionId;
-						Window.open(url, "_blank", "");
+						showAppVetLog();
 					}
 				});
 		mntmAppVetLog.setHTML("View Log");
@@ -1237,18 +1229,9 @@ public class AppVetPanel extends DockLayoutPanel {
 		logButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				final AppInfoGwt selected = appSelectionModel
+				final AppInfoGwt selectedApp = appSelectionModel
 						.getSelectedObject();
-				if (selected != null) {
-					final String appId = selected.appId;
-					final String dateString = "?nocache" + new Date().getTime();
-					final String url = SERVLET_URL + dateString + "&"
-							+ AppVetParameter.COMMAND.value + "="
-							+ AppVetServletCommand.GET_APP_LOG.name() + "&"
-							+ AppVetParameter.APPID.value + "=" + appId + "&"
-							+ AppVetParameter.SESSIONID.value + "=" + sessionId;
-					Window.open(url, "_blank", "");
-				}
+				showAppLog(selectedApp.appId);
 			}
 		});
 		logButton.setSize("100px", "18px");
@@ -1358,7 +1341,7 @@ public class AppVetPanel extends DockLayoutPanel {
 							+ AppVetServletCommand.DOWNLOAD_APP.name() + "&"
 							+ AppVetParameter.APPID.value + "=" + appId + "&"
 							+ AppVetParameter.SESSIONID.value + "=" + sessionId;
-					Window.open(url, "_blank", "");
+					Window.open(url, "_self", "");
 				}
 			}
 		});
@@ -1445,15 +1428,56 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 	}
 
-//	public void enableButton(PushButton button, String text, String alt,
-//			String title, String imageName) {
-//		button.setEnabled(true);
-//		// button.setHTML("<div><img style=\"vertical-align:middle;right-margin:5px\" width=\"12px\" height=\"12px\" src=\"images/"
-//		// + imageName + "\" alt=\"" + alt +
-//		// "\"/> <span style=\"vertical-align:middle\">" + text +
-//		// "\r\n</span></div>");
-//		button.setTitle(title);
-//	}
+	public void showAppLog(final String appId) {
+		appVetServiceAsync.getAppLog(appId,
+				new AsyncCallback<String>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						showMessageDialog("AppVet Error",
+								"Could not access app log", true);
+					}
+
+					@Override
+					public void onSuccess(String result) {
+						final LogViewer logViewer = new LogViewer(result);
+						logViewer.setText("App " + appId + " log");
+						logViewer.center();
+						logViewer.closeButton.addClickHandler(new ClickHandler() {
+							@Override
+							public void onClick(ClickEvent event) {
+								killDialogBox(logViewer);
+							}
+						});
+					}
+
+				});
+	}
+	
+	public void showAppVetLog() {
+		appVetServiceAsync.getAppVetLog(new AsyncCallback<String>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						showMessageDialog("AppVet Error",
+								"Could not access AppVet log", true);
+					}
+
+					@Override
+					public void onSuccess(String result) {
+						final LogViewer logViewer = new LogViewer(result);
+						logViewer.setText("AppVet log");
+						logViewer.center();
+						logViewer.closeButton.addClickHandler(new ClickHandler() {
+							@Override
+							public void onClick(ClickEvent event) {
+								killDialogBox(logViewer);
+							}
+						});
+					}
+
+				});
+	}
 
 	public void enableAllButtons() {
 		logButton.setEnabled(true);
@@ -1473,16 +1497,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		downloadReportsButton.setEnabled(false);
 		downloadAppButton.setEnabled(false);
 	}
-
-//	public void disableButton(PushButton button, String text, String alt,
-//			String title, String imageName) {
-//		button.setEnabled(false);
-//		// button.setHTML("<div><img style=\"vertical-align:middle;right-margin:5px\" width=\"12px\" height=\"12px\" src=\"images/"
-//		// + imageName + "\" alt=\"" + alt +
-//		// "\"/> <span style=\"vertical-align:middle\">" + text +
-//		// "\r\n</span></div>");
-//		button.setTitle(title);
-//	}
 
 	public void removeSession(final boolean sessionExpired) {
 		// First stop polling the server for data

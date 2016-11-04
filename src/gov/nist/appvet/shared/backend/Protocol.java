@@ -4,9 +4,6 @@ package gov.nist.appvet.shared.backend;
  * @author steveq@nist.gov
  */
 public enum Protocol {
-	// xmlTags must match tags in config xml file
-	SYNCHRONOUS ("Synchronous"),
-	//MULTISYNCHRONOUS ("MultiSynchronous"),
 	ASYNCHRONOUS ("Asynchronous"), 
 	PUSH ("Push"), 
 	INTERNAL ("Internal");

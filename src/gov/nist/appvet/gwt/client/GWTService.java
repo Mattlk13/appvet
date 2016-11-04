@@ -40,6 +40,10 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("greet")
 public interface GWTService extends RemoteService {
+	
+	String getAppLog(String appId) throws IllegalArgumentException;
+	
+	String getAppVetLog() throws IllegalArgumentException;
 
 	ConfigInfoGwt handleServletRequest() throws IllegalArgumentException;
 

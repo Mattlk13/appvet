@@ -736,18 +736,11 @@ searchPanel {
 
 .
 {
-border
-:
- 
-white
-;
-
 	
-background-color
-:
- 
-White
-;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	border: white;
+	background-color: White;
 
 
 	
@@ -1163,6 +1156,10 @@ White
 	color: white;
 	background: #f0f3f4;
 }
+.grayButton-up-disabled:hover {
+	color: white;
+	background: #f0f3f4;
+}
 
 /*---------------------- Green Dialog buttons ----------------------*/
 .greenButton {
@@ -1186,7 +1183,9 @@ White
 .greenButton-up-disabled {
 	background: #c6ecd9;
 }
-
+.greenButton-up-disabled:hover {
+	background: #c6ecd9;
+}
 /*---------------------- Green App Upload buttons ----------------------*/
 .greenAppUploadButton {
 	font-family: Sans-Serif;
@@ -1212,7 +1211,9 @@ White
 .greenAppUploadButton-up-disabled {
 	background: #BBE8D1;
 }
-
+.greenAppUploadButton-up-disabled:hover {
+	background: #BBE8D1;
+}
 /*---------------------- Blue buttons ----------------------*/
 .blueButton {
 	font-family: Sans-Serif;
@@ -1237,7 +1238,9 @@ White
 .blueButton-up-disabled {
 	background: #9ad6fe;
 }
-
+.blueButton-up-disabled:hover {
+	background: #9ad6fe;
+}
 /*---------------------- Main Banner ----------------------*/
 .mainBanner {
 	background: #015289;

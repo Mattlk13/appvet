@@ -130,7 +130,6 @@ public class AppVetProperties {
 	public static String SENDER_NAME = null;
 	public static String SENDER_EMAIL_PASSWORD = null;
 	
-	
 	/** Timeout in milliseconds until a URL connection is established. */
 	public static int CONNECTION_TIMEOUT = 0;
 	/**
@@ -195,8 +194,7 @@ public class AppVetProperties {
 		LOG_LEVEL = xml.getXPathValue("/AppVet/Logging/Level");
 		LOG_TO_CONSOLE = xml.getXPathValue("/AppVet/Logging/ToConsole");
 		log = new Logger(APPVET_LOG_PATH, "APPVET");
-		log.debug("---------- START AppVet PROPERTIES -------------------",
-				false);
+		log.debug("---------- START AppVet PROPERTIES -------------------");
 		printVal("APPVET VERSION", APPVET_VERSION);
 		printVal("JAVA_HOME", JAVA_HOME);
 		printVal("JRE_HOME", JRE_HOME);
@@ -403,14 +401,14 @@ public class AppVetProperties {
 		setupTools(DeviceOS.IOS);
 		checkForAppsStuckInProcessingState();
 		startToolMgr();
-		log.debug("---------- END AppVet PROPERTIES -------------------", false);
+		log.debug("---------- END AppVet PROPERTIES -------------------");
 	}
 
 	private static void printVal(String parameter, Object obj) {
 		if (obj == null) {
-			log.warn(parameter + ": \tnull", false);
+			log.warn(parameter + ": \tnull");
 		} else {
-			log.debug(parameter + ": \t" + obj.toString(), false);
+			log.debug(parameter + ": \t" + obj.toString());
 		}
 	}
 
@@ -477,7 +475,7 @@ public class AppVetProperties {
 				}
 			}
 			tableColumnNames = null;
-			log.debug("Found " + androidTools.size() + " Android tools", false);
+			log.debug("Found " + androidTools.size() + " Android tools");
 		} else if (os == DeviceOS.IOS) {
 			folder = new File(TOOLS_CONF_ROOT + "/ios");
 			tableColumnNames = Database.getTableColumnNames("iostoolstatus");
@@ -500,7 +498,7 @@ public class AppVetProperties {
 				}
 			}
 			tableColumnNames = null;
-			log.debug("Found " + iosTools.size() + " iOS tools", false);
+			log.debug("Found " + iosTools.size() + " iOS tools");
 		}
 	}
 	

@@ -39,6 +39,12 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public interface GWTServiceAsync {
 	
+	void getAppLog(String appId, AsyncCallback<String> callback)
+			throws IllegalArgumentException;
+	
+	void getAppVetLog(AsyncCallback<String> callback)
+			throws IllegalArgumentException;
+	
 	void setAlertMessage(String username, SystemAlert alert,
 			AsyncCallback<Boolean> callback)
 			throws IllegalArgumentException;

@@ -55,38 +55,38 @@ public class Database {
 
 	private static final Logger log = AppVetProperties.log;
 
-	/***************************************/
-
-	/**
-	 * Fortify security recommendation to resolve SQL query injections. query
-	 * must be of the form "SELECT * FROM items WHERE thing1=? AND thing2=? This
-	 * is impractical for AppVet.
-	 */
-	public static String selectString(String query, String item1, String item2) {
-		// Add alert message
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-		try {
-			connection = getConnection();
-			preparedStatement = connection.prepareStatement(query);
-			preparedStatement.setString(1, item1);
-			preparedStatement.setString(2, item2);
-			preparedStatement.executeUpdate();
-			ResultSet rs = preparedStatement.executeQuery();
-			while (rs.next()) {
-				// Return first (and should be only) alert message
-				return rs.getString(1);
-			}
-		} catch (final SQLException e) {
-			log.error(e.toString());
-		} finally {
-			cleanUpPreparedStatement(preparedStatement);
-			cleanUpConnection(connection);
-		}
-		return null;
-	}
-
-	/************** AppVet specific methods **************/
+//	/***************************************/
+//
+//	/**
+//	 * Fortify security recommendation to resolve SQL query injections. query
+//	 * must be of the form "SELECT * FROM items WHERE thing1=? AND thing2=? This
+//	 * is impractical for AppVet.
+//	 */
+//	public static String selectString(String query, String item1, String item2) {
+//		// Add alert message
+//		Connection connection = null;
+//		PreparedStatement preparedStatement = null;
+//		try {
+//			connection = getConnection();
+//			preparedStatement = connection.prepareStatement(query);
+//			preparedStatement.setString(1, item1);
+//			preparedStatement.setString(2, item2);
+//			preparedStatement.executeUpdate();
+//			ResultSet rs = preparedStatement.executeQuery();
+//			while (rs.next()) {
+//				// Return first (and should be only) alert message
+//				return rs.getString(1);
+//			}
+//		} catch (final SQLException e) {
+//			log.error(e.toString());
+//		} finally {
+//			cleanUpPreparedStatement(preparedStatement);
+//			cleanUpConnection(connection);
+//		}
+//		return null;
+//	}
+//
+//	/************** AppVet specific methods **************/
 
 	public static boolean userExists(String username) {
 		String sql = "SELECT * FROM users " + "WHERE username='" + username
@@ -229,9 +229,9 @@ public class Database {
 		}
 	}
 
-	public static boolean deleteAlerts() {
-		return update("DELETE FROM alerts");
-	}
+//	public static boolean deleteAlerts() {
+//		return update("DELETE FROM alerts");
+//	}
 
 	public static SystemAlert getAlertMessage() {
 		Connection connection = null;
@@ -976,26 +976,6 @@ public class Database {
 		}
 	}
 
-	// private static void printToolCredentials(String username,
-	// ArrayList<UserToolCredentials> credentialsList) {
-	// for (int i = 0; i < credentialsList.size(); i++) {
-	// UserToolCredentials toolCredentials = credentialsList.get(i);
-	// log.debug("[" + toolCredentials.toolId + ","
-	// + toolCredentials.toolName + "," + toolCredentials.os + ","
-	// + toolCredentials.authRequired + "]");
-	// if (toolCredentials.authRequired) {
-	// for (int j = 0; j < toolCredentials.authParamNames.length; j++) {
-	// log.debug(toolCredentials.authParamNames[j] + "="
-	// + toolCredentials.authParamValues[j]);
-	// }
-	// }
-	// }
-	// }
-
-	// TODO
-
-	/************** SQL specific methods **************/
-
 	public static Timestamp getTimestamp(String sql) {
 		Connection connection = null;
 		Statement statement = null;
@@ -1204,16 +1184,6 @@ public class Database {
 			cleanUpConnection(connection);
 		}
 	}
-
-//	/**
-//	 * For an app that has timed-out waiting for one or more reports to be
-//	 * received, set all tools in a SUBMITTED state to ERROR.
-//	 * 
-//	 * @param appId
-//	 */
-//	public synchronized static void setAppProcessingTimeoutToError(String appId) {
-//
-//	}
 
 	/**
 	 * Get the next app that has the given appstatus, in ascending order.
@@ -1455,8 +1425,5 @@ public class Database {
 		} else {
 			return true;
 		}
-	}
-
-	private Database() {
 	}
 }

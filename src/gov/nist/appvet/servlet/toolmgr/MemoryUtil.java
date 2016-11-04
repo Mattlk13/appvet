@@ -46,7 +46,7 @@ public class MemoryUtil {
 				+ " " + units[digitGroups];
 	}
 
-	public static String showHeap(String message) {
+	public static String showHGeap(String message) {
 		return "Heap (" + message + "): "
 				+ readableFileSize(Runtime.getRuntime().totalMemory());
 	}

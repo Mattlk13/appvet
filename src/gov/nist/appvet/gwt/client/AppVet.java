@@ -129,11 +129,8 @@ public class AppVet implements EntryPoint {
 					rootLayoutPanel.clear();
 					rootLayoutPanel.add(appVetPanel);
 				}
-
 			}
-
 		});
-		
 	}
 
 	private void showMessageDialog(String windowTitle, String message,

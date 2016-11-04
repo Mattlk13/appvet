@@ -77,10 +77,6 @@ public class NameValueDialogBox extends DialogBox {
 		previousValue = value;
 	}
 
-	public String getPreviousValue() {
-		return previousValue;
-	}
-
 	public String getParameterName() {
 		return this.nameTextBox.getText();
 	}
