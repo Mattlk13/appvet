@@ -190,9 +190,10 @@ public class AppVetPanel extends DockLayoutPanel {
 			String appFileName = appUploadDialogBox.fileUpload.getFilename();
 			appUploadDialog.mainLabel.setText("");
 			appUploadDialog.statusLabel.setText("");
+			killDialogBox(appUploadDialog);
+
 			showMessageDialog("App Submission", "App \"" + appFileName
 					+ "\" was successfully uploaded.", false);
-			killDialogBox(appUploadDialog);
 		}
 	}
 
@@ -481,7 +482,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		MAX_SESSION_IDLE_DURATION = configInfo.getMaxIdleTime();
 		POLLING_INTERVAL = configInfo.getUpdatesDelay();
 		setSize("", "");
-		setStyleName("mainDockPanel");
 		SERVLET_URL = configInfo.getAppVetServletUrl();
 		appSelectionModel = new SingleSelectionModel<AppInfoGwt>();
 		appSelectionModel.addSelectionChangeHandler(new AppListHandler(this,
@@ -1046,7 +1046,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		horizontalPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 		horizontalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel.setStyleName("appFunctionButtonPanel");
 		appsListButtonPanel.add(horizontalPanel);
 		appsListButtonPanel.setCellWidth(horizontalPanel, "50%");
 		appsListButtonPanel.setCellVerticalAlignment(horizontalPanel,
@@ -1153,7 +1152,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoName = new HTML("", false);
 		appInfoName.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		verticalPanel.add(appInfoName);
-		appInfoName.setStyleName("appInfoName");
 		appInfoName.setSize("", "33px");
 		appInfoPanel.setCellVerticalAlignment(appInfoName,
 				HasVerticalAlignment.ALIGN_MIDDLE);
@@ -1177,7 +1175,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoVerticalPanel.setCellVerticalAlignment(appButtonPanel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		uploadReportButton = new PushButton("Upload Report");
-		// uploadReportButton.setStyleName("appvetButton shadow");
 		uploadReportButton.setStyleName("blueButton shadow");
 
 		appButtonPanel.add(uploadReportButton);

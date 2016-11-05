@@ -40,7 +40,6 @@ public class AboutDialogBox extends DialogBox {
 	public AboutDialogBox(String version) {
 		super(false, true);
 		setGlassEnabled(true);
-		this.setStyleName("");
 		setSize("376px", "209px");
 		setAnimationEnabled(false);
 		final String message = "Version " + version;
@@ -79,7 +78,7 @@ public class AboutDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel.setCellVerticalAlignment(messageLabel,
 				HasVerticalAlignment.ALIGN_BOTTOM);
-		messageLabel.setStyleName("infoDialogBox");
+		messageLabel.setStyleName("");
 		verticalPanel.setCellVerticalAlignment(messageLabel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel.setCellHorizontalAlignment(messageLabel,

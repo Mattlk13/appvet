@@ -316,7 +316,7 @@ searchPanel {
 }
 
 .infoDialogBox {
-	color: white;
+	color: Black;
 	font-size: 14px;
 	vertical-align: middle;
 	text-align: center;
@@ -709,6 +709,7 @@ searchPanel {
 }
 
 .messagePanel {
+	color: Black;
 	padding-bottom: 10px;
 	border: 1px solid Silver;
 }
@@ -820,6 +821,7 @@ White
 
 .aboutDialogButtonPanel {
 	background: #015289;
+	color: White;
 }
 
 .loginPanelLogo {
@@ -999,7 +1001,7 @@ White
 }
 
 .userMenuBar {
-	width: 106px;
+	width: 110px;
 	position: absolute;
 	right: 0px;
 	top: -5px;
@@ -1026,7 +1028,6 @@ White
 	color: white;
 	background: #015289;
 }
-
 /*-------------- Help Menu ------------------*/
 .helpMenuItem {
 	background: #015289;
@@ -1151,6 +1152,11 @@ White
 }
 
 /*---------------------- For ALL buttons ----------------------*/
+/* FOR ALL BUTTONS, USE THE FOLLOWING GWT SYNTAX FOR BUTTON EVENTS:
+   gwt-PushButton-up,gwt-PushButton-up-hovering,gwt-PushButton-up-disabled,
+   gwt-PushButton-down,.gwt-PushButton-down-hovering,.gwt-PushButton-down-disabled
+*/
+
 .shadow {
 	-webkit-box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.75);
 	-moz-box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.75);
@@ -1160,34 +1166,21 @@ White
 /*---------------------- Gray Dialog Buttons ----------------------*/
 .grayButton {
 	color: black;
-	background: #d9e1e4;
+	background: #e9edef;
 	vertical-align: middle;
 	padding: 3px 0px 3px 0px;
+	cursor: pointer; 
 }
-/* .grayButton-up {
-	background: #d9e1e4 !important;
-} */
-.grayButton:hover {
-	background: #f0f3f4;
+.grayButton-up-hovering {
+	background: #f7f8f9;
 }
-
-.grayButton:focus {
-	background: #f0f3f4;
+.grayButton-down-hovering {
+	background: #f7f8f9;
 }
-
-.grayButton:active {
-	color: white;
-	background: #f0f3f4 !important;
-}
-
 .grayButton-up-disabled {
 	color: white;
-	background: #f0f3f4;
-}
-
-.grayButton-up-disabled:hover {
-	color: white;
-	background: #f0f3f4;
+	background: #f7f8f9;
+	cursor: not-allowed !important;
 }
 
 /*---------------------- Green Dialog buttons ----------------------*/
@@ -1196,60 +1189,41 @@ White
 	background: #2d8659;
 	vertical-align: middle;
 	padding: 3px 0px 3px 0px;
+	cursor: pointer; 
 }
-/* .greenButton-up {
-	background: #2d8659 !important;
-} */
-.greenButton:hover {
-	background: #40bf80;
+.greenButton-up-hovering {
+	background: #3aaf75;
 }
-
-.greenButton:focus {
-	background: #40bf80;
+.greenButton-down-hovering {
+	background: #3aaf75;
 }
-
-.greenButton:active {
-	background: #c6ecd9 !important;
-}
-
 .greenButton-up-disabled {
-	background: #c6ecd9;
-}
-
-.greenButton-up-disabled:hover {
-	background: #c6ecd9;
+	background: #b4e7cd;
+	cursor: not-allowed !important;
 }
 /*---------------------- Green App Upload buttons ----------------------*/
+/*    gwt-PushButton-up,gwt-PushButton-up-hovering,gwt-PushButton-up-disabled,
+   gwt-PushButton-down,.gwt-PushButton-down-hovering,.gwt-PushButton-down-disabled */
+   
 .greenAppUploadButton {
+	background: #2d8659;
+	color: white;
 	font-family: Sans-Serif;
 	font-weight: bold;
-	color: white;
-	background: #2d8659;
 	margin: 6px 6px 6px 0px;
 	padding: 5px 0px 5px 0px;
 	vertical-align: middle;
 }
-/* .greenAppUploadButton-up {
-	background: #2d8659 !important;
-} */
-.greenAppUploadButton:hover {
-	background: #40bf80;
+.greenAppUploadButton-up-hovering {
+	cursor: pointer; 
 }
-
-.greenAppUploadButton:focus {
-	background: #40bf80;
+.greenAppUploadButton-down-hovering {
+	background: #76d1a4;
+	cursor: pointer; 
 }
-
-.greenAppUploadButton:active {
-	background: #BBE8D1 !important;
-}
-
 .greenAppUploadButton-up-disabled {
-	background: #BBE8D1;
-}
-
-.greenAppUploadButton-up-disabled:hover {
-	background: #BBE8D1;
+	background: #b4e7cd;
+	cursor: not-allowed !important;
 }
 /*---------------------- Blue buttons ----------------------*/
 .blueButton {
@@ -1260,27 +1234,16 @@ White
 	padding: 3px 0px 3px 0px;
 	vertical-align: middle;
 }
-/* .blueButton-up {
-	background: #015289 !important;
-} */
-.blueButton:hover {
-	background: #0189e4;
+.blueButton-up-hovering {
+	cursor: pointer; 
 }
-
-.blueButton:focus {
-	background: #0189e4;
+.blueButton-down-hovering {
+	background: #059afe;
+	cursor: pointer; 
 }
-
-.blueButton:active {
-	background: #9ad6fe !important;
-}
-
 .blueButton-up-disabled {
-	background: #9ad6fe;
-}
-
-.blueButton-up-disabled:hover {
-	background: #9ad6fe;
+	background: #d2edff;
+	cursor: not-allowed !important;
 }
 /*---------------------- Main Banner ----------------------*/
 .mainBanner {
@@ -1307,14 +1270,9 @@ White
 .southPanel {
 	border-top: 1px solid #d9e1e4;
 
-	/*---------------------- About Panel ----------------------*/
-	.
-	aboutPanel
-	{
-	background
-	:
-	#015289
-	!important;
+/*---------------------- About Panel ----------------------*/
+.aboutPanel {
+	background: #015289 !important;
 }
 
 .gwt-DialogBox .dialogContent {
@@ -1343,4 +1301,10 @@ White
 
 .greenButton shadow {
 	
+}
+.aboutDialogVersion {
+	color: White;
+	border: solid White;
+	vertical-align: middle;
+	text-align: center;
 }

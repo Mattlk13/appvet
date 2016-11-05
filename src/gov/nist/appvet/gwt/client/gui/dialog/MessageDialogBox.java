@@ -38,6 +38,7 @@ public class MessageDialogBox extends DialogBox {
 	public MessageDialogBox(String message, boolean isErrorMessage) {
 		super(false, true);
 		messageLabel = new Label(message);
+		messageLabel.setStyleName("");
 		if (isErrorMessage) {
 			messageLabel.setStyleName("errorDialogBox");
 		} else {
@@ -51,7 +52,6 @@ public class MessageDialogBox extends DialogBox {
 		dialogVPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		final VerticalPanel verticalPanel = new VerticalPanel();
-		verticalPanel.setStyleName("messagePanel");
 		verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
