@@ -20,6 +20,7 @@ public class LogViewer extends DialogBox {
 		
 		TextArea textArea = new TextArea();
 		textArea.setText(log);
+		//textArea.setReadOnly(true);
 		dockPanel.add(textArea, DockPanel.CENTER);
 		textArea.setSize("650px", "450px");
 		

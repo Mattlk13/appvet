@@ -386,14 +386,14 @@ public class ToolAdapter implements Runnable {
 
 	@Override
 	public void run() {
-		log.debug("Starting tool adapter for " + toolId);
+		appInfo.log.debug("Starting tool adapter for " + toolId);
 
 		if ((protocol == Protocol.PUSH) || (protocol == Protocol.INTERNAL)) {
 			// PUSH/INTERNAL adapters do not send requests to a service.
 			return;
 		}
 		if (appInfo == null) {
-			log.error("AppInfo object is null in tool adapter. "
+			appInfo.log.error("AppInfo object is null in tool adapter. "
 					+ "Aborting processing app.");
 			return;
 		}
@@ -505,7 +505,7 @@ public class ToolAdapter implements Runnable {
 
 		// Wait for report to come in
 		try {
-			log.debug("Tool " + toolId + " is WAITING FOR REPORT!");
+			appInfo.log.debug("Tool " + toolId + " is WAITING FOR REPORT!");
 			Date timeout = new Date(System.currentTimeMillis() + 
 					AppVetProperties.ToolServiceTimeout);
 			for (;;) {

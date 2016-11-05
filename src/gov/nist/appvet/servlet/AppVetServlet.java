@@ -320,8 +320,6 @@ public class AppVetServlet extends HttpServlet {
 		
 		// On CentOS, clientIpAddress will be '0:0:0:0:0:0:0:1' if on
 		// localhost, so change to '127.0.0.1'
-		log.info("IP ADDRESS IN DOPOST: " + clientIpAddress);
-
 		if (clientIpAddress.equals("0:0:0:0:0:0:0:1")) {
 			clientIpAddress = "127.0.0.1";
 		}
@@ -373,7 +371,7 @@ public class AppVetServlet extends HttpServlet {
 				} else {
 					// item should now hold the received file.
 					fileItem = item;
-					log.debug("Received file " + fileItem.getName());
+					//log.debug("Received file " + fileItem.getName());
 				}
 			}
 /*
@@ -452,7 +450,7 @@ public class AppVetServlet extends HttpServlet {
 									.getDescription(), true);
 					return;
 				} else {
-					log.debug("File attachment is valid");
+					//log.debug("File attachment is valid");
 				}
 			}
 
@@ -742,7 +740,7 @@ public class AppVetServlet extends HttpServlet {
 			Database.updateUserLogonTime(user);
 			return true;
 		} else {
-			log.debug("Session " + sessionId + " expired");
+			//log.debug("Session " + sessionId + " expired");
 			return false;
 		}
 	}

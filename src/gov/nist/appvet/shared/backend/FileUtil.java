@@ -134,7 +134,7 @@ public class FileUtil {
 	}
 
 	public static boolean saveReportUpload(String appId,
-			String reportName, FileItem fileItem) {
+		String reportName, FileItem fileItem) {
 		String reportsPath = null;
 		String outputFilePath = null;
 		File file = null;
@@ -149,10 +149,10 @@ public class FileUtil {
 				}
 			}
 			fileItem.write(file);
-			log.debug("Wrote report file: " + outputFilePath);
+			//log.debug("Wrote report file: " + outputFilePath);
 			return true;
 		} catch (final Exception e) {
-			log.error("Could not write report to " + outputFilePath + "\n" + e.toString());
+			//log.error("Could not write report to " + outputFilePath + "\n" + e.toString());
 			return false;
 		} finally {
 			reportsPath = null;

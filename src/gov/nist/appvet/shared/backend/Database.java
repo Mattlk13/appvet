@@ -712,8 +712,8 @@ public class Database {
 	 */
 	public static boolean sessionIsGood(String sessionId, String clientIpAddress) {
 		if (sessionId == null || sessionId.isEmpty()) {
-			log.debug("Session ID is null while authenticating session. "
-					+ "Cannot authenticate session.");
+			//log.debug("Session ID is null while authenticating session. "
+			//		+ "Cannot authenticate session.");
 			return false;
 		}
 		if (clientIpAddress == null || clientIpAddress.isEmpty()) {
