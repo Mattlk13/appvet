@@ -176,7 +176,7 @@ searchPanel {
 }
 
 .appInfoScrollPanel {
-	padding-bottom: 10px;
+	padding-left: 10px;
 }
 
 .AppInformationLabeledPanel {
@@ -341,8 +341,7 @@ searchPanel {
 }
 
 .appInfoVersion {
-	color: darkslategray;
-	margin-left: 7px;
+	color: darkslategrey;
 	font-size: 14px;
 }
 
@@ -500,7 +499,7 @@ searchPanel {
 }
 
 .gwt-Image {
-	margin-right: 5px;
+	margin-right: 10px;
 	margin-left: 10px;
 }
 
@@ -877,7 +876,6 @@ White
 }
 
 .gwt-HTML {
-	margin-left: 5px;
 	color: darkslategrey;
 }
 
@@ -1308,3 +1306,31 @@ White
 	vertical-align: middle;
 	text-align: center;
 }
+.appStatusInfo {
+	color: darkslategray;
+	font-size: 14px;
+}
+#highStatus {
+	color: red;
+}
+#moderateStatus {
+	color: orange;
+}
+#lowStatus {
+	color: green;
+}
+#naStatus {
+	color: gray;
+}
+#normalStatus {
+	color: black;
+}
+.appStatusPanel {
+margin-left: 10px;
+}
+
+
+
+
+
+

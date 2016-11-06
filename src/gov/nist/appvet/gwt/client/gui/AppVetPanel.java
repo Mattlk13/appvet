@@ -93,6 +93,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 
 /**
  * @author steveq@nist.gov
@@ -111,6 +112,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	private HTML appInfoName = null;
 	private HTML appInfoPackage = null;
 	private HTML appInfoVersion = null;
+	private HTML appStatusInfo = null;
 	private Image appInfoIcon = null;
 	private HTML toolResultsHtml = null;
 	private AppsListPagingDataGrid<AppInfoGwt> appsListTable = null;
@@ -1146,25 +1148,35 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoPanel.add(appInfoIcon);
 		appInfoPanel.setCellVerticalAlignment(appInfoIcon,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		appInfoIcon.setSize("78px", "78px");
+		appInfoIcon.setSize("82px", "82px");
 		final VerticalPanel verticalPanel = new VerticalPanel();
 		appInfoPanel.add(verticalPanel);
-		appInfoName = new HTML("", false);
+		verticalPanel.setHeight("82px");
+		appInfoName = new HTML("App Name", false);
 		appInfoName.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		verticalPanel.add(appInfoName);
-		appInfoName.setSize("", "33px");
+		appInfoName.setSize("500px", "33px");
 		appInfoPanel.setCellVerticalAlignment(appInfoName,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		appInfoPackage = new HTML("", true);
+		appInfoPackage = new HTML("Package: ", true);
 		appInfoPackage
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		appInfoPackage.setStyleName("appInfoVersion");
 		verticalPanel.add(appInfoPackage);
-		appInfoVersion = new HTML("", true);
+		appInfoPackage.setSize("500px", "14px");
+		appInfoVersion = new HTML("Version: ", true);
 		appInfoVersion
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		appInfoVersion.setStyleName("appInfoVersion");
 		verticalPanel.add(appInfoVersion);
+		appInfoVersion.setSize("500px", "14px");
+		
+		appStatusInfo = new HTML("Status: ", true);
+		appStatusInfo.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		appStatusInfo.setStyleName("appInfoVersion");
+		verticalPanel.add(appStatusInfo);
+		appStatusInfo.setSize("500px", "14px");
+		verticalPanel.setCellVerticalAlignment(appStatusInfo, HasVerticalAlignment.ALIGN_MIDDLE);
 
 		HorizontalPanel appButtonPanel = new HorizontalPanel();
 		appButtonPanel
@@ -1315,13 +1327,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		appButtonPanel.setCellHorizontalAlignment(downloadAppButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		downloadAppButton.setSize("100px", "18px");
-		toolResultsHtml = new HTML("", true);
-		toolResultsHtml.setSize("561px", "");
-		toolResultsHtml
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		toolResultsHtml.setStyleName("toolResultsHtml");
-		appInfoVerticalPanel.add(toolResultsHtml);
-		appInfoVerticalPanel.setCellWidth(toolResultsHtml, "100%");
 		downloadAppButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1360,6 +1365,13 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appsListButtonPanel.setCellHorizontalAlignment(downloadReportsButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
+		toolResultsHtml = new HTML("", true);
+		appInfoVerticalPanel.add(toolResultsHtml);
+		toolResultsHtml.setWidth("561px");
+		toolResultsHtml
+				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		toolResultsHtml.setStyleName("toolResultsHtml");
+		appInfoVerticalPanel.setCellWidth(toolResultsHtml, "100%");
 
 		SimplePanel southPanel = new SimplePanel();
 		southPanel.setStyleName("southPanel");
@@ -1646,6 +1658,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								} else {
 									appInfoVersion.setHTML("");
 									appInfoPackage.setHTML("");
+									appStatusInfo.setHTML("");
 									appInfoIcon.setVisible(false);
 									appInfoName.setText("");
 									toolResultsHtml.setText("");
@@ -1882,6 +1895,42 @@ public class AppVetPanel extends DockLayoutPanel {
 									appInfoVersion.setHTML("<b>Version: </b>"
 											+ selectedApp.versionName);
 								}
+								
+								// Set status in right info panel
+								String status = null;
+								AppStatus appStatus = selectedApp.appStatus;
+								if (appStatus == null) {
+									status = "<div style=\"display: inline\" id=\"naStatus\">"
+											+ "<b>N/A</b>" + "</div>";
+								} else if (appStatus == AppStatus.HIGH) {
+									status = "<div style=\"display: inline\" id=\"highStatus\">"
+											+ "<b>HIGH</b>" + "</div>";
+								} else if (appStatus == AppStatus.HIGH_WITH_ERROR) {
+									status = "<div style=\"display: inline\" id=\"highStatus\">"
+											+ "<b>HIGH*</b>" + "</div>";
+								} else if (appStatus == AppStatus.MODERATE) {
+									status = "<div style=\"display: inline\" id=\"moderateStatus\">"
+											+ "<b>MODERATE</b>" + "</div>";									
+								} else if (appStatus == AppStatus.MODERATE_WITH_ERROR) {
+									status = "<div style=\"display: inline\" id=\"moderateStatus\">"
+											+ "<b>MODERATE*</b>" + "</div>";	
+								} else if (appStatus == AppStatus.LOW) {
+									status = "<div style=\"display: inline\" id=\"lowStatus\">"
+											+ "<b>LOW</b>" + "</div>";	
+								} else if (appStatus == AppStatus.LOW_WITH_ERROR) {
+									status = "<div style=\"display: inline\" id=\"lowStatus\">"
+											+ "<b>LOW*</b>" + "</div>";	
+								} else if (appStatus == AppStatus.NA) {
+									status = "<div style=\"display: inline\" id=\"naStatus\">"
+											+ "<b>N/A</b>" + "</div>";
+								} else {
+									status = "<div style=\"display: inline\" id=\"normalStatus\">"
+											+ "<b>" + appStatus.name() + "</b></div>";
+								}
+									
+								// Set status display
+								appStatusInfo.setHTML("<b>Status: </b>"
+										+ status);
 
 								// Get tool results
 								final String htmlToolResults = getHtmlToolResults(
@@ -1962,29 +2011,29 @@ public class AppVetPanel extends DockLayoutPanel {
 							}
 
 							/* Get audit results */
-							statuses += "<h3 title=\"Final Organizational Determination\" id=\"appInfoSectionHeader\">Final Organizational Determination</h3>\n";
-							int auditCount = 0;
-
-							for (int i = 0; i < toolResults.size(); i++) {
-								ToolType toolType = toolResults.get(i)
-										.getToolType();
-
-								if (toolType == ToolType.AUDIT) { // TODO: For
-																	// AV3,
-																	// AUDIT was
-																	// removed
-																	// (now uses
-																	// only
-																	// REPORT)
-									auditCount++;
-									statuses += getToolStatusHtmlDisplay(toolResults
-											.get(i));
-								}
-							}
-
-							if (auditCount == 0) {
-								statuses += getNAStatus();
-							}
+//							statuses += "<h3 title=\"Final Organizational Determination\" id=\"appInfoSectionHeader\">Final Organizational Determination</h3>\n";
+//							int auditCount = 0;
+//
+//							for (int i = 0; i < toolResults.size(); i++) {
+//								ToolType toolType = toolResults.get(i)
+//										.getToolType();
+//
+//								if (toolType == ToolType.AUDIT) { // TODO: For
+//																	// AV3,
+//																	// AUDIT was
+//																	// removed
+//																	// (now uses
+//																	// only
+//																	// REPORT)
+//									auditCount++;
+//									statuses += getToolStatusHtmlDisplay(toolResults
+//											.get(i));
+//								}
+//							}
+//
+//							if (auditCount == 0) {
+//								statuses += getNAStatus();
+//							}
 
 							return statuses;
 						}
