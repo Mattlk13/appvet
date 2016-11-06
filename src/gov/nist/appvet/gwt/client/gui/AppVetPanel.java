@@ -1148,30 +1148,30 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoPanel.add(appInfoIcon);
 		appInfoPanel.setCellVerticalAlignment(appInfoIcon,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		appInfoIcon.setSize("82px", "82px");
+		appInfoIcon.setSize("87px", "87px");
 		final VerticalPanel verticalPanel = new VerticalPanel();
 		appInfoPanel.add(verticalPanel);
 		verticalPanel.setHeight("82px");
-		appInfoName = new HTML("App Name", false);
+		appInfoName = new HTML("", false);
 		appInfoName.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		verticalPanel.add(appInfoName);
 		appInfoName.setSize("500px", "33px");
 		appInfoPanel.setCellVerticalAlignment(appInfoName,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		appInfoPackage = new HTML("Package: ", true);
+		appInfoPackage = new HTML("", true);
 		appInfoPackage
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		appInfoPackage.setStyleName("appInfoVersion");
 		verticalPanel.add(appInfoPackage);
 		appInfoPackage.setSize("500px", "14px");
-		appInfoVersion = new HTML("Version: ", true);
+		appInfoVersion = new HTML("", true);
 		appInfoVersion
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		appInfoVersion.setStyleName("appInfoVersion");
 		verticalPanel.add(appInfoVersion);
 		appInfoVersion.setSize("500px", "14px");
 		
-		appStatusInfo = new HTML("Status: ", true);
+		appStatusInfo = new HTML("", true);
 		appStatusInfo.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		appStatusInfo.setStyleName("appInfoVersion");
 		verticalPanel.add(appStatusInfo);
@@ -1897,39 +1897,49 @@ public class AppVetPanel extends DockLayoutPanel {
 								}
 								
 								// Set status in right info panel
+								String tag = null;
 								String status = null;
 								AppStatus appStatus = selectedApp.appStatus;
 								if (appStatus == null) {
-									status = "<div style=\"display: inline\" id=\"naStatus\">"
+									tag = "Status: ";
+									status = "<div style=\"display: inline;color: gray\">"
 											+ "<b>N/A</b>" + "</div>";
 								} else if (appStatus == AppStatus.HIGH) {
-									status = "<div style=\"display: inline\" id=\"highStatus\">"
+									tag = "Risk: ";
+									status = "<div style=\"display: inline;color: red\">"
 											+ "<b>HIGH</b>" + "</div>";
 								} else if (appStatus == AppStatus.HIGH_WITH_ERROR) {
-									status = "<div style=\"display: inline\" id=\"highStatus\">"
+									tag = "Risk: ";
+									status = "<div style=\"display: inline;color: red\">"
 											+ "<b>HIGH*</b>" + "</div>";
 								} else if (appStatus == AppStatus.MODERATE) {
-									status = "<div style=\"display: inline\" id=\"moderateStatus\">"
+									tag = "Risk: ";
+									status = "<div style=\"display: inline;color: orange\">"
 											+ "<b>MODERATE</b>" + "</div>";									
 								} else if (appStatus == AppStatus.MODERATE_WITH_ERROR) {
-									status = "<div style=\"display: inline\" id=\"moderateStatus\">"
+									tag = "Risk: ";
+									status = "<div style=\"display: inline;color: orange\">"
 											+ "<b>MODERATE*</b>" + "</div>";	
 								} else if (appStatus == AppStatus.LOW) {
-									status = "<div style=\"display: inline\" id=\"lowStatus\">"
+									tag = "Risk: ";
+									status = "<div style=\"display: inline;color: green\">"
 											+ "<b>LOW</b>" + "</div>";	
 								} else if (appStatus == AppStatus.LOW_WITH_ERROR) {
-									status = "<div style=\"display: inline\" id=\"lowStatus\">"
+									tag = "Risk: ";
+									status = "<div style=\"display: inline;color: green\">"
 											+ "<b>LOW*</b>" + "</div>";	
 								} else if (appStatus == AppStatus.NA) {
-									status = "<div style=\"display: inline\" id=\"naStatus\">"
+									tag = "Status: ";
+									status = "<div style=\"display: inline;color: gray\">"
 											+ "<b>N/A</b>" + "</div>";
 								} else {
-									status = "<div style=\"display: inline\" id=\"normalStatus\">"
+									tag = "Status: ";
+									status = "<div style=\"display: inline;color: black\">"
 											+ "<b>" + appStatus.name() + "</b></div>";
 								}
 									
 								// Set status display
-								appStatusInfo.setHTML("<b>Status: </b>"
+								appStatusInfo.setHTML("<b>" + tag + "</b>"
 										+ status);
 
 								// Get tool results

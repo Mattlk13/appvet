@@ -191,27 +191,27 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 				String statusHtml = null;
 				
 				if (appStatus == AppStatus.ERROR) {
-					statusHtml = "<div id=\"normalStatus\">ERROR</div>";
+					statusHtml = "<div style=\"color: black\">ERROR</div>";
 				} else if (appStatus == AppStatus.MODERATE_WITH_ERROR) {
-					statusHtml = "<div id=\"moderateStatus\">"
+					statusHtml = "<div style=\"color: orange\">"
 							+ "MODERATE*" + "</div>";	
 				} else if (appStatus == AppStatus.MODERATE) {
-					statusHtml = "<div id=\"moderateStatus\">"
+					statusHtml = "<div style=\"color: orange\">"
 							+ "MODERATE" + "</div>";	
 				} else if (appStatus == AppStatus.LOW_WITH_ERROR) {
-					statusHtml = "<div id=\"lowStatus\">"
+					statusHtml = "<div style=\"color: green\">"
 							+ "LOW*" + "</div>";		
 				} else if (appStatus == AppStatus.LOW) {
-					statusHtml = "<div id=\"lowStatus\">"
+					statusHtml = "<div style=\"color: green\">"
 							+ "LOW" + "</div>";		
 				} else if (appStatus == AppStatus.HIGH_WITH_ERROR) {
-					statusHtml = "<div id=\"highStatus\">HIGH*</div>";	
+					statusHtml = "<div style=\"color: red\">HIGH*</div>";	
 				} else if (appStatus == AppStatus.HIGH) {
-					statusHtml = "<div id=\"highStatus\">HIGH</div>";
+					statusHtml = "<div style=\"color: red\">HIGH</div>";
 				} else if (appStatus == AppStatus.NA) {
-					statusHtml = "<div id=\"naStatus\">N/A</div>";
+					statusHtml = "<div style=\"color: gray\">N/A</div>";
 				} else {
-					statusHtml = "<div id=\"normalStatus\">"
+					statusHtml = "<div style=\"color: black\">"
 							+ appStatus.name() + "</div>";
 				}
 				sb.appendHtmlConstant(statusHtml);
