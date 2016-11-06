@@ -324,11 +324,11 @@ public class AppVetProperties {
 		printVal("GET_UPDATES_DELAY", GET_UPDATES_DELAY);
 		DEFAULT_ADMIN_USERNAME = xml.getXPathValue("/AppVet/Admin/Username");
 		if (DEFAULT_ADMIN_USERNAME == null || DEFAULT_ADMIN_USERNAME.isEmpty()) {
-			System.err.println("Default admin username is null or empty");
+			log.error("Default admin username is null or empty");
 		}
 		DEFAULT_ADMIN_PASSWORD = xml.getXPathValue("/AppVet/Admin/Password");
 		if (DEFAULT_ADMIN_PASSWORD == null || DEFAULT_ADMIN_PASSWORD.isEmpty()) {
-			System.err.println("Default admin password is null or empty");
+			log.error("Default admin password is null or empty");
 		}
 		HOST = xml.getXPathValue("/AppVet/Host/Hostname");
 		printVal("HOST (Static)", HOST);
@@ -336,7 +336,7 @@ public class AppVetProperties {
 		printVal("SSL", SSL);
 		PORT = xml.getXPathValue("/AppVet/Host/Port");
 		if (!Validate.isNumeric(PORT)) {
-			System.err.println("AppVet Port is not numeric");
+			log.error("AppVet Port is not numeric");
 		} else {
 			printVal("PORT", PORT);
 		}
@@ -395,7 +395,7 @@ public class AppVetProperties {
 		androidTools = new ArrayList<ToolAdapter>();
 		iosTools = new ArrayList<ToolAdapter>();
 		if (!Database.adminExists()) {
-			System.err.println("No AppVet administrator found in database.");
+			log.error("No AppVet administrator found in database.");
 		}
 		setupTools(DeviceOS.ANDROID);
 		setupTools(DeviceOS.IOS);
@@ -408,7 +408,7 @@ public class AppVetProperties {
 		if (obj == null) {
 			log.warn(parameter + ": \tnull");
 		} else {
-			log.debug(parameter + ": \t" + obj.toString());
+			log.info(parameter + ": \t" + obj.toString());
 		}
 	}
 

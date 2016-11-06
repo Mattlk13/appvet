@@ -1176,7 +1176,7 @@ White
 	background: #f7f8f9;
 }
 .grayButton-up-disabled {
-	color: white;
+	color: gray;
 	background: #f7f8f9;
 	cursor: not-allowed !important;
 }
