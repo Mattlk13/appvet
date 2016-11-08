@@ -27,6 +27,7 @@ import gov.nist.appvet.gwt.client.gui.dialog.LogViewer;
 import gov.nist.appvet.gwt.client.gui.dialog.MessageDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.ReportUploadDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.SetAlertDialogBox;
+import gov.nist.appvet.gwt.client.gui.dialog.ToolAdapterEnableDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.ToolAuthParamDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.UserAcctDialogBox;
 import gov.nist.appvet.gwt.client.gui.dialog.AdminUserListDialogBox;
@@ -93,7 +94,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
-import com.google.gwt.user.client.ui.ScrollPanel;
 
 /**
  * @author steveq@nist.gov
@@ -528,6 +528,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								});
 					}
 				});
+		
 		// Set tab-able for 508 compliance
 		Roles.getMenuitemRole().setTabindexExtraAttribute(
 				usersMenuItem.getElement(), 0);
@@ -538,6 +539,79 @@ public class AppVetPanel extends DockLayoutPanel {
 		MenuItemSeparator separator_1 = new MenuItemSeparator();
 		adminMenuBar.addSeparator(separator_1);
 		separator_1.setSize("100%", "1px");
+		
+		// Enable/disable tool adapters
+		final MenuItem setToolEnableMenuItem = new MenuItem("Tool Adapters",
+				false, new Command() {
+					@Override
+					public void execute() {
+						// Check if any test tools are available
+						int count = 0;
+						for (int i = 0; i < tools.size(); i++) {
+							ToolInfoGwt tool = tools.get(i);
+							if (tool.getType() == ToolType.TESTTOOL) {
+								count++;
+							}
+						}
+						if (count == 0) {
+							showMessageDialog("AppVet Error", "No test tools available",
+									true);
+							return;
+						} 
+						
+						final ToolAdapterEnableDialogBox setAlertDialogBox = 
+								new ToolAdapterEnableDialogBox(tools);
+						setAlertDialogBox.setText("Enabled/Disable Tool");
+						setAlertDialogBox.center();
+						setAlertDialogBox.cancelButton
+								.addClickHandler(new ClickHandler() {
+									@Override
+									public void onClick(ClickEvent event) {
+										killDialogBox(setAlertDialogBox);
+										return;
+									}
+								});
+						setAlertDialogBox.okButton
+								.addClickHandler(new ClickHandler() {
+									@Override
+									public void onClick(ClickEvent event) {
+										killDialogBox(setAlertDialogBox);
+//										SystemAlertType alertType = null;
+//										if (setAlertDialogBox.alertNormalRadioButton
+//												.getValue())
+//											alertType = SystemAlertType.NORMAL;
+//										else if (setAlertDialogBox.alertWarningRadioButton
+//												.getValue())
+//											alertType = SystemAlertType.WARNING;
+//										else if (setAlertDialogBox.alertCriticalRadioButton
+//												.getValue())
+//											alertType = SystemAlertType.CRITICAL;
+//
+//										String alertMessage = setAlertDialogBox.alertTextArea
+//												.getText();
+//										if (alertMessage == null
+//												|| alertMessage.isEmpty()) {
+//											showMessageDialog(
+//													"AppVet Error",
+//													"Alert message cannot be empty.",
+//													true);
+//										}
+//
+//										setAlertMessage(userInfo.getUserName(),
+//												alertType, alertMessage);
+									}
+								});
+					}
+				});
+		
+		setToolEnableMenuItem.setHTML("Tool Adapters");
+		adminMenuBar.addItem(setToolEnableMenuItem);
+		setToolEnableMenuItem.setStyleName("adminSubMenuItem");
+
+		MenuItemSeparator separator_2 = new MenuItemSeparator();
+		adminMenuBar.addSeparator(separator_2);
+		separator_2.setSize("100%", "1px");
+		
 
 		final MenuItem clearAlertMessageMenuItem = new MenuItem(
 				"Clear Status Message", false, new Command() {
@@ -546,6 +620,8 @@ public class AppVetPanel extends DockLayoutPanel {
 						clearAlertMessage(userInfo.getUserName());
 					}
 				});
+
+		
 		// Set tab-able for 508 compliance
 		Roles.getMenuitemRole().setTabindexExtraAttribute(
 				clearAlertMessageMenuItem.getElement(), 0);
@@ -607,9 +683,9 @@ public class AppVetPanel extends DockLayoutPanel {
 		adminMenuBar.addItem(setAlertMenuItem);
 		setAlertMenuItem.setStyleName("adminSubMenuItem");
 
-		MenuItemSeparator separator_2 = new MenuItemSeparator();
-		adminMenuBar.addSeparator(separator_2);
-		separator_2.setSize("100%", "1px");
+		MenuItemSeparator separator_3 = new MenuItemSeparator();
+		adminMenuBar.addSeparator(separator_3);
+		separator_3.setSize("100%", "1px");
 
 		final MenuItem mntmAppVetLog = new MenuItem("View Log", false,
 				new Command() {
@@ -894,9 +970,9 @@ public class AppVetPanel extends DockLayoutPanel {
 		userMenuBar.addItem(myAppsMenuItem);
 		myAppsMenuItem.setHeight("");
 
-		final MenuItemSeparator separator = new MenuItemSeparator();
-		userMenuBar.addSeparator(separator);
-		separator.setSize("100%", "1px");
+		final MenuItemSeparator separator_4 = new MenuItemSeparator();
+		userMenuBar.addSeparator(separator_4);
+		separator_4.setSize("100%", "1px");
 		final MenuItem logoutMenuItem = new MenuItem("Logout", false,
 				new Command() {
 					@Override
@@ -1797,6 +1873,10 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				});
 
+	}
+	
+	public void showToolAdapters() {
+		
 	}
 
 	@Override

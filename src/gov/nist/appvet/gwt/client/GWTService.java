@@ -23,6 +23,7 @@ import gov.nist.appvet.gwt.shared.AppsListGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.gwt.shared.ServerPacket;
 import gov.nist.appvet.gwt.shared.SystemAlert;
+import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolStatusGwt;
 import gov.nist.appvet.shared.all.DeviceOS;
 import gov.nist.appvet.shared.all.UserInfo;
@@ -40,6 +41,9 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("greet")
 public interface GWTService extends RemoteService {
+		
+	Boolean setToolAdapterEnabled(String toolId, boolean enabled)
+			throws IllegalArgumentException;
 	
 	String getAppLog(String appId) throws IllegalArgumentException;
 	

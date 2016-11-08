@@ -30,6 +30,7 @@ public class ToolInfoGwt implements IsSerializable {
 	// -------------- Updated via tool configuration file -------------
 	private String id = null;
 	private String name = null;
+	private boolean enabled = true;
 	private boolean authenticationRequired = false;
 	private String[] authenticationParameterNames = null;
 	private String reportFileType = null;
@@ -131,5 +132,13 @@ public class ToolInfoGwt implements IsSerializable {
 
 	public void setIconAltText(String iconAltText) {
 		this.iconAltText = iconAltText;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 }

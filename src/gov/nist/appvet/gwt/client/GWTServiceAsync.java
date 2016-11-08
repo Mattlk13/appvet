@@ -39,6 +39,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public interface GWTServiceAsync {
 	
+	void setToolAdapterEnabled(String toolId, boolean enabled, AsyncCallback<Boolean> callback) throws IllegalArgumentException;
+	
 	void getAppLog(String appId, AsyncCallback<String> callback)
 			throws IllegalArgumentException;
 	

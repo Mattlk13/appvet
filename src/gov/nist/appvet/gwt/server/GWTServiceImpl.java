@@ -659,4 +659,11 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		}
 	}
 
+	@Override
+	public Boolean setToolAdapterEnabled(String toolId, boolean enabled)
+			throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
