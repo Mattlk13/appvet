@@ -72,9 +72,9 @@ public class AppVetProperties {
 	// Admin username and password
 	public static String DEFAULT_ADMIN_USERNAME = null;
 	public static String DEFAULT_ADMIN_PASSWORD = null;
+	public static String DEFAULT_ADMIN_EMAIL = null;
 	public static final String DEFAULT_ADMIN_FIRSTNAME = "AppVet";
 	public static final String DEFAULT_ADMIN_LASTNAME = "Administrator";
-	public static final String DEFAULT_ADMIN_EMAIL = "appvet@appvet.org";
 	public static final Role DEFAULT_ADMIN_ROLE = Role.ADMIN;
 
 	static {
@@ -228,13 +228,34 @@ public class AppVetProperties {
 		}
 		printVal("APP_IMAGES_PATH", APP_IMAGES_PATH);
 		
+		// Default Admin properties
+		DEFAULT_ADMIN_USERNAME = xml.getXPathValue("/AppVet/Admin/Username");
+		printVal("DEFAULT_ADMIN_USERNAME", DEFAULT_ADMIN_USERNAME);
+		DEFAULT_ADMIN_PASSWORD = xml.getXPathValue("/AppVet/Admin/Password");
+		printVal("DEFAULT_ADMIN_PASSWORD", "**********");
+		DEFAULT_ADMIN_EMAIL = xml.getXPathValue("/AppVet/Admin/Email");
+		printVal("DEFAULT_ADMIN_EMAIL", DEFAULT_ADMIN_EMAIL);
+		
 		// Database properties
 		DB_URL = xml.getXPathValue("/AppVet/Database/URL");
 		printVal("DB_URL", DB_URL);
 		DB_USERNAME = xml.getXPathValue("/AppVet/Database/UserName");
 		printVal("DB_USERNAME", DB_USERNAME);
 		DB_PASSWORD = xml.getXPathValue("/AppVet/Database/Password");
+		printVal("DB_PASSWORD", "**********");
 		
+		// Always set the AppVet default Administrator upon startup. IMPORTANT:
+		// Always remove any previous default Administrators in the database
+		// directly through the database. You are not permitted to delete the
+		// default AppVet Administrator from within AppVet.
+		if (Database.adminAddNewUser(DEFAULT_ADMIN_USERNAME, DEFAULT_ADMIN_PASSWORD, 
+				DEFAULT_ADMIN_EMAIL, Role.ADMIN.name(),
+				DEFAULT_ADMIN_LASTNAME, DEFAULT_ADMIN_FIRSTNAME)) {
+			log.debug("Added AppVet Default Administrator '" + Role.ADMIN.name() + "' to database.");
+		} else {
+			log.error("Could not add AppVet Default Administrator '" + Role.ADMIN.name() + "' to database.");
+		}
+
 		// Email notification properties
 		SMTP_HOST = xml.getXPathValue("/AppVet/Email/SMTPHost");
 		printVal("SMTP_HOST", SMTP_HOST);
@@ -322,14 +343,8 @@ public class AppVetProperties {
 				xml.getXPathValue("/AppVet/Sessions/GetUpdatesDelay"))
 				.intValue();
 		printVal("GET_UPDATES_DELAY", GET_UPDATES_DELAY);
-		DEFAULT_ADMIN_USERNAME = xml.getXPathValue("/AppVet/Admin/Username");
-		if (DEFAULT_ADMIN_USERNAME == null || DEFAULT_ADMIN_USERNAME.isEmpty()) {
-			log.error("Default admin username is null or empty");
-		}
-		DEFAULT_ADMIN_PASSWORD = xml.getXPathValue("/AppVet/Admin/Password");
-		if (DEFAULT_ADMIN_PASSWORD == null || DEFAULT_ADMIN_PASSWORD.isEmpty()) {
-			log.error("Default admin password is null or empty");
-		}
+
+
 		HOST = xml.getXPathValue("/AppVet/Host/Hostname");
 		printVal("HOST (Static)", HOST);
 		SSL = new Boolean(xml.getXPathValue("/AppVet/Host/SSL")).booleanValue();
@@ -394,9 +409,7 @@ public class AppVetProperties {
 				"ERROR");
 		androidTools = new ArrayList<ToolAdapter>();
 		iosTools = new ArrayList<ToolAdapter>();
-		if (!Database.adminExists()) {
-			log.error("No AppVet administrator found in database.");
-		}
+
 		setupTools(DeviceOS.ANDROID);
 		setupTools(DeviceOS.IOS);
 		checkForAppsStuckInProcessingState();
