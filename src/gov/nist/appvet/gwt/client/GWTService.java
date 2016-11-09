@@ -42,8 +42,10 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("greet")
 public interface GWTService extends RemoteService {
 		
-	Boolean setToolAdapterEnabled(String toolId, boolean enabled)
+	Boolean setTestToolsEnabledDisabled(ArrayList<ToolInfoGwt> newToolInfo)
 			throws IllegalArgumentException;
+	
+	List<ToolInfoGwt> getTestToolsEnabledDisabled() throws IllegalArgumentException;
 	
 	String getAppLog(String appId) throws IllegalArgumentException;
 	

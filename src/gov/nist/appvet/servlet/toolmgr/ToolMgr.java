@@ -92,7 +92,7 @@ public class ToolMgr implements Runnable {
 							// Only process test tools (not preprocessors,
 							// audit, or manual reports).
 							if (toolAdapter.toolType == ToolType.TESTTOOL) {
-								if (toolAdapter.serviceIsDisabled()) {
+								if (toolAdapter.isDisabled()) {
 									// Do not start the tool adapter if it was disabled
 									appInfo.log.warn("Tool adapter '" + toolAdapter.toolId + "' is disabled. Not starting.");
 								} else {
@@ -328,7 +328,7 @@ public class ToolMgr implements Runnable {
 						// further apps from being sent to the tool
 						appInfo.log.warn("Disabling '" + toolId + "' adapter and suspending subsequent app submissions.");
 						ToolAdapter toolAdapter = getToolAdapter(toolId, availableTools);
-						toolAdapter.disableService();
+						toolAdapter.setDisabled(true);
 
 						// Email admins about the problem with the tool
 						UserInfo userInfo = Database.getUserInfo(appInfo.ownerName, null);

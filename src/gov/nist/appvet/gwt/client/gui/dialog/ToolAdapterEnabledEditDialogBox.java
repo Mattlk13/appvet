@@ -20,6 +20,8 @@
 package gov.nist.appvet.gwt.client.gui.dialog;
 
 
+import gov.nist.appvet.gwt.shared.ToolInfoGwt;
+
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -46,11 +48,13 @@ public class ToolAdapterEnabledEditDialogBox extends DialogBox {
 //	public Hidden hiddenAppOS = null;
 	public Label statusLabel = null;
 	public List<String> allUserOrgLevels = null;
-	private Logger log = Logger.getLogger("ToolAdapterEnabledEditDialogBox");
+	//private Logger log = Logger.getLogger("ToolAdapterEnabledEditDialogBox");
 //	public SuggestBox suggestBox = null;
 //	public String orgMembership;
+	RadioButton enableRadioButton = null;
+	RadioButton disableRadioButton = null;
 
-	public ToolAdapterEnabledEditDialogBox(String toolId, String os, boolean toolAdapterEnabled) {
+	public ToolAdapterEnabledEditDialogBox(ToolInfoGwt testTool, String disabledEnabledStr) {
 		super(false, true);
 //		this.orgMembership = orgMembership;
 		setWidth("200px");
@@ -64,7 +68,7 @@ public class ToolAdapterEnabledEditDialogBox extends DialogBox {
 
 		// Set label
 //		int index = selectedIndex + 1; // Index must start at 1, not 0
-		mainLabel = new Label("Enable or disable tool");
+		mainLabel = new Label("Enable or disable '" + testTool.getId() + "'");
 		mainPanel.add(mainLabel);
 		mainLabel.setDirection(Direction.LTR);
 		mainPanel.setCellVerticalAlignment(mainLabel,
@@ -74,13 +78,21 @@ public class ToolAdapterEnabledEditDialogBox extends DialogBox {
 
 //		MultiWordSuggestOracle suggestOracle = getOracle(selectedIndex);
 		
-		RadioButton enableRadioButton = new RadioButton("Enable", "Enable");
+		enableRadioButton = new RadioButton("group1", "Enable");
 		mainPanel.add(enableRadioButton);
 		enableRadioButton.setHeight("20px");
 		
-		RadioButton disableRadioButton = new RadioButton("new name", "Disable");
+		disableRadioButton = new RadioButton("group1", "Disable");
 		mainPanel.add(disableRadioButton);
 		disableRadioButton.setHeight("20px");
+		
+		if (disabledEnabledStr.equals("disabled")) {
+			enableRadioButton.setValue(false);
+			disableRadioButton.setValue(true);
+		} else if (disabledEnabledStr.equals("enabled")) {
+			enableRadioButton.setValue(true);
+			disableRadioButton.setValue(false);
+		}
 
 		final HorizontalPanel horizontalButtonPanel = new HorizontalPanel();
 		horizontalButtonPanel.setStyleName("buttonPanel");
@@ -111,50 +123,4 @@ public class ToolAdapterEnabledEditDialogBox extends DialogBox {
 		okButton.setSize("70px", "18px");
 
 	}
-
-//	/** Generate suggestions based on existing user org hierarchy membership paths.*/
-//	public MultiWordSuggestOracle getOracle(int selectedIndex) {
-//		MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
-//
-//		try {
-//			String[] selectedUserMembership = orgMembership.split(",");
-//			if (allUserOrgLevels == null) {
-//				log.warning("Hierarchies is null");
-//				return oracle;
-//			}
-//
-//			for (int i = 0; i < allUserOrgLevels.size(); i++) {
-//
-//				boolean onHeirarchyPath = true;
-//				String otherUserMembershipStr = allUserOrgLevels.get(i);
-//				String[] otherUserMembership = otherUserMembershipStr.split(",");
-//
-//				for (int j = 0; j < selectedIndex; j++) {
-//
-//					if (orgMembership == null || orgMembership.isEmpty()) {
-//
-//						break;
-//					} else if (selectedUserMembership[j].equals(otherUserMembership[j])) {
-//
-//						// Do nothing
-//					} else {
-//
-//						onHeirarchyPath = false;
-//						break;
-//					}
-//				}
-//				
-//				if (onHeirarchyPath) {
-//
-//					oracle.add(otherUserMembership[selectedIndex]);
-//				}
-//			}
-//
-//		} catch (Exception e) {
-//
-//			log.severe(e.getMessage());
-//		}
-//		return oracle;
-//
-//	}
 }

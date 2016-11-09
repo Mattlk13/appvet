@@ -23,6 +23,7 @@ import gov.nist.appvet.gwt.shared.AppsListGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.gwt.shared.ServerPacket;
 import gov.nist.appvet.gwt.shared.SystemAlert;
+import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolStatusGwt;
 import gov.nist.appvet.shared.all.DeviceOS;
 import gov.nist.appvet.shared.all.UserInfo;
@@ -39,7 +40,12 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public interface GWTServiceAsync {
 	
-	void setToolAdapterEnabled(String toolId, boolean enabled, AsyncCallback<Boolean> callback) throws IllegalArgumentException;
+	void setTestToolsEnabledDisabled(ArrayList<ToolInfoGwt> newToolInfo, 
+			AsyncCallback<Boolean> callback)
+					throws IllegalArgumentException;
+		
+	void getTestToolsEnabledDisabled(AsyncCallback<List<ToolInfoGwt>> callback)
+			throws IllegalArgumentException;
 	
 	void getAppLog(String appId, AsyncCallback<String> callback)
 			throws IllegalArgumentException;

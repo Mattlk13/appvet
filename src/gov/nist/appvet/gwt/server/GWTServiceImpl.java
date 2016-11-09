@@ -281,6 +281,29 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		configInfo.setMaxOrgLevels(AppVetProperties.maxOrgLevels);
 		configInfo.setKeepApps(AppVetProperties.KEEP_APPS);
 
+		// Get tools
+		ArrayList<ToolInfoGwt> tools = getAllTools();
+		
+		// Add tools to configuration info
+		configInfo.setTools(tools);
+		// Get user's information
+		final UserInfo userInfo = Database.getUserInfo(username, tools);
+		if (userInfo == null) {
+			log.error("GWT DataProvider could not get user information");
+			return null;
+		} else {
+			configInfo.setUserInfo(userInfo);
+		}
+		// Get tool credentials
+		ArrayList<UserToolCredentials> toolCredentials = configInfo
+				.getUserInfo().getToolCredentials();
+		if (toolCredentials == null) {
+			log.error("toolCredentials is null in GWTServiceImpl");
+		}
+		return configInfo;
+	}
+	
+	public ArrayList<ToolInfoGwt> getAllTools() {
 		final ArrayList<ToolInfoGwt> tools = new ArrayList<ToolInfoGwt>();
 		// Get Android tools
 		final ArrayList<ToolAdapter> androidTools = AppVetProperties.androidTools;
@@ -294,8 +317,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					toolInfo.setName(androidTool.name);
 					toolInfo.setId(androidTool.toolId);
 					toolInfo.setType(androidTool.toolType);
-					//toolInfo.setRestrictionType(androidTool.restrictionType
-					//		.name()); // Not used
+					toolInfo.setDisabled(androidTool.isDisabled());
 					toolInfo.setAuthenticationRequired(androidTool.authenticationRequired);
 					if (toolInfo.requiresAuthentication()) {
 						toolInfo.setAuthenticationParameterNames(androidTool.authenticationParams);
@@ -331,6 +353,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					toolInfo.setName(iosTool.name);
 					toolInfo.setId(iosTool.toolId);
 					toolInfo.setType(iosTool.toolType);
+					toolInfo.setDisabled(iosTool.isDisabled());
 					toolInfo.setAuthenticationRequired(iosTool.authenticationRequired);
 					if (toolInfo.requiresAuthentication()) {
 						toolInfo.setAuthenticationParameterNames(iosTool.authenticationParams);
@@ -348,23 +371,112 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					+ " at least 'appinfo'" + " and 'registration' tools.");
 			return null;
 		}
-		// Add tools to configuration info
-		configInfo.setTools(tools);
-		// Get user's information
-		final UserInfo userInfo = Database.getUserInfo(username, tools);
-		if (userInfo == null) {
-			log.error("GWT DataProvider could not get user information");
-			return null;
+		return tools;
+	}
+	
+	public Boolean setTestToolsEnabledDisabled(ArrayList<ToolInfoGwt> newToolInfoList)
+		throws IllegalArgumentException {
+		ArrayList<ToolAdapter> androidTools = AppVetProperties.androidTools;
+		ArrayList<ToolAdapter> iosTools = AppVetProperties.iosTools;
+
+		for (int i = 0; i < newToolInfoList.size(); i++) {
+			ToolInfoGwt newToolInfo = newToolInfoList.get(i);
+			DeviceOS newToolOS = DeviceOS.getOS(newToolInfo.getOs());
+			if (newToolOS == DeviceOS.ANDROID) {
+				for (int j = 0; j < androidTools.size(); j++) {
+					ToolAdapter toolAdapter = androidTools.get(j);
+					if (toolAdapter.toolId.equals(newToolInfo.getId())) {
+						log.debug("Setting tool '" + toolAdapter.toolId + 
+								"' disabled to " + newToolInfo.isDisabled());
+						toolAdapter.setDisabled(newToolInfo.isDisabled());
+					}
+				}
+			} else if (newToolOS == DeviceOS.IOS) {
+				for (int j = 0; j < iosTools.size(); j++) {
+					ToolAdapter toolAdapter = iosTools.get(j);
+					if (toolAdapter.toolId.equals(newToolInfo.getId())) {
+						log.debug("Setting tool '" + toolAdapter.toolId + 
+								"' disabled to " + newToolInfo.isDisabled());
+						toolAdapter.setDisabled(newToolInfo.isDisabled());
+					}
+				}
+			}
+		}
+		return new Boolean(true);
+	}
+	
+	/** This method only retrieves TESTTOOL information needed for determining
+	 * current enabled and disabled tools (i.e., toolId, OS, and isDisabled)
+	 * @return
+	 */
+	public List<ToolInfoGwt> getTestToolsEnabledDisabled() throws IllegalArgumentException {
+		final ArrayList<ToolInfoGwt> tools = new ArrayList<ToolInfoGwt>();
+		// Get Android tools
+		final ArrayList<ToolAdapter> androidTools = AppVetProperties.androidTools;
+		if ((androidTools != null) && !androidTools.isEmpty()) {
+			for (int i = 0; i < androidTools.size(); i++) {
+				final ToolAdapter androidTool = androidTools.get(i);
+				if (androidTool != null
+						&& (androidTool.toolType == ToolType.TESTTOOL)) {
+					ToolInfoGwt toolInfo = new ToolInfoGwt();
+					toolInfo.setId(androidTool.toolId);
+					toolInfo.setOs(DeviceOS.ANDROID.name());
+					toolInfo.setDisabled(androidTool.isDisabled());
+//					toolInfo.setType(androidTool.toolType);
+//					toolInfo.setName(androidTool.name);
+//					toolInfo.setAuthenticationRequired(androidTool.authenticationRequired);
+//					if (toolInfo.requiresAuthentication()) {
+//						toolInfo.setAuthenticationParameterNames(androidTool.authenticationParams);
+//					}
+//					if (androidTool.reportTemplateURL == null) {
+//						log.error("Report template for " + androidTool.toolId + " is null!");
+//					} else {
+//						log.debug("Report template for " + androidTool.toolId + " is good!");
+//					}
+//					toolInfo.setReportTemplateURL(androidTool.reportTemplateURL);
+//					toolInfo.setIconURL(androidTool.iconURL);
+//					toolInfo.setIconAltText(androidTool.iconAltText);
+//					toolInfo.setReportFileType(androidTool.reportFileType
+//							.name());
+					tools.add(toolInfo);
+				}
+			}
 		} else {
-			configInfo.setUserInfo(userInfo);
+			log.error("Android tools empty.");
+			return null;
 		}
-		// Get tool credentials
-		ArrayList<UserToolCredentials> toolCredentials = configInfo
-				.getUserInfo().getToolCredentials();
-		if (toolCredentials == null) {
-			log.error("toolCredentials is null in GWTServiceImpl");
+		// Get iOS tools
+		final ArrayList<ToolAdapter> iosTools = AppVetProperties.iosTools;
+
+		if ((iosTools != null) && !iosTools.isEmpty()) {
+			for (int i = 0; i < iosTools.size(); i++) {
+				final ToolAdapter iosTool = iosTools.get(i);
+				if (iosTool != null
+						&& (iosTool.toolType == ToolType.TESTTOOL)) {
+					ToolInfoGwt toolInfo = new ToolInfoGwt();
+					toolInfo.setId(iosTool.toolId);
+					toolInfo.setOs(DeviceOS.IOS.name());
+					toolInfo.setDisabled(iosTool.isDisabled());
+//					toolInfo.setName(iosTool.name);
+//					toolInfo.setType(iosTool.toolType);
+//					toolInfo.setAuthenticationRequired(iosTool.authenticationRequired);
+//					if (toolInfo.requiresAuthentication()) {
+//						toolInfo.setAuthenticationParameterNames(iosTool.authenticationParams);
+//					}
+//					toolInfo.setReportTemplateURL(iosTool.reportTemplateURL);
+//					toolInfo.setIconURL(iosTool.iconURL);
+//					toolInfo.setIconAltText(iosTool.iconAltText);
+//					toolInfo.setReportFileType(iosTool.reportFileType.name());
+					tools.add(toolInfo);
+				}
+			}
+		} else {
+			log.error("GWT DataProvider could not read "
+					+ "iOS tool info from AppVetProperties. Tools must include "
+					+ " at least 'appinfo'" + " and 'registration' tools.");
+			return null;
 		}
-		return configInfo;
+		return tools;
 	}
 
 	public Boolean deleteApp(DeviceOS os, String appid, String username)
@@ -657,13 +769,6 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		} else {
 			return "ERROR: Could not find AppVet log file";
 		}
-	}
-
-	@Override
-	public Boolean setToolAdapterEnabled(String toolId, boolean enabled)
-			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

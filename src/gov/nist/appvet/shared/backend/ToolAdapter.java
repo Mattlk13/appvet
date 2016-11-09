@@ -571,12 +571,12 @@ public class ToolAdapter implements Runnable {
 		}
 	}
 
-	public boolean serviceIsDisabled() {
+	public boolean isDisabled() {
 		return serviceDisabled;
 	}
 
-	public void disableService() {
-		this.serviceDisabled = true;
+	public void setDisabled(boolean disabled) {
+		this.serviceDisabled = disabled;
 	}
 
 }

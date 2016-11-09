@@ -84,6 +84,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.MenuItemSeparator;
@@ -382,8 +383,6 @@ public class AppVetPanel extends DockLayoutPanel {
 				killDialogBox(messageDialogBox);
 
 				if (diff <= 0) {
-					// Didn't click within the 60s alert period, so expire
-					// pollingTimer.cancel();
 					removeSession(true);
 				} else {
 					sessionExpiration = new Date(System.currentTimeMillis()
@@ -513,22 +512,22 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		final MenuItem usersMenuItem = new MenuItem("Add/Edit Users", false,
 				new Command() {
+			@Override
+			public void execute() {
+				usersDialogBox = new AdminUserListDialogBox(configInfo,
+						ssoActive);
+				usersDialogBox.setText("Users");
+				usersDialogBox.center();
+				usersDialogBox.doneButton
+				.addClickHandler(new ClickHandler() {
 					@Override
-					public void execute() {
-						usersDialogBox = new AdminUserListDialogBox(configInfo,
-								ssoActive);
-						usersDialogBox.setText("Users");
-						usersDialogBox.center();
-						usersDialogBox.doneButton
-								.addClickHandler(new ClickHandler() {
-									@Override
-									public void onClick(ClickEvent event) {
-										killDialogBox(usersDialogBox);
-									}
-								});
+					public void onClick(ClickEvent event) {
+						killDialogBox(usersDialogBox);
 					}
 				});
-		
+			}
+		});
+
 		// Set tab-able for 508 compliance
 		Roles.getMenuitemRole().setTabindexExtraAttribute(
 				usersMenuItem.getElement(), 0);
@@ -539,71 +538,16 @@ public class AppVetPanel extends DockLayoutPanel {
 		MenuItemSeparator separator_1 = new MenuItemSeparator();
 		adminMenuBar.addSeparator(separator_1);
 		separator_1.setSize("100%", "1px");
-		
+
 		// Enable/disable tool adapters
 		final MenuItem setToolEnableMenuItem = new MenuItem("Tool Adapters",
 				false, new Command() {
-					@Override
-					public void execute() {
-						// Check if any test tools are available
-						int count = 0;
-						for (int i = 0; i < tools.size(); i++) {
-							ToolInfoGwt tool = tools.get(i);
-							if (tool.getType() == ToolType.TESTTOOL) {
-								count++;
-							}
-						}
-						if (count == 0) {
-							showMessageDialog("AppVet Error", "No test tools available",
-									true);
-							return;
-						} 
-						
-						final ToolAdapterEnableDialogBox setAlertDialogBox = 
-								new ToolAdapterEnableDialogBox(tools);
-						setAlertDialogBox.setText("Enabled/Disable Tool");
-						setAlertDialogBox.center();
-						setAlertDialogBox.cancelButton
-								.addClickHandler(new ClickHandler() {
-									@Override
-									public void onClick(ClickEvent event) {
-										killDialogBox(setAlertDialogBox);
-										return;
-									}
-								});
-						setAlertDialogBox.okButton
-								.addClickHandler(new ClickHandler() {
-									@Override
-									public void onClick(ClickEvent event) {
-										killDialogBox(setAlertDialogBox);
-//										SystemAlertType alertType = null;
-//										if (setAlertDialogBox.alertNormalRadioButton
-//												.getValue())
-//											alertType = SystemAlertType.NORMAL;
-//										else if (setAlertDialogBox.alertWarningRadioButton
-//												.getValue())
-//											alertType = SystemAlertType.WARNING;
-//										else if (setAlertDialogBox.alertCriticalRadioButton
-//												.getValue())
-//											alertType = SystemAlertType.CRITICAL;
-//
-//										String alertMessage = setAlertDialogBox.alertTextArea
-//												.getText();
-//										if (alertMessage == null
-//												|| alertMessage.isEmpty()) {
-//											showMessageDialog(
-//													"AppVet Error",
-//													"Alert message cannot be empty.",
-//													true);
-//										}
-//
-//										setAlertMessage(userInfo.getUserName(),
-//												alertType, alertMessage);
-									}
-								});
-					}
-				});
-		
+			@Override
+			public void execute() {
+				showToolEnableDialog();
+			}
+		});
+
 		setToolEnableMenuItem.setHTML("Tool Adapters");
 		adminMenuBar.addItem(setToolEnableMenuItem);
 		setToolEnableMenuItem.setStyleName("adminSubMenuItem");
@@ -611,7 +555,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		MenuItemSeparator separator_2 = new MenuItemSeparator();
 		adminMenuBar.addSeparator(separator_2);
 		separator_2.setSize("100%", "1px");
-		
 
 		final MenuItem clearAlertMessageMenuItem = new MenuItem(
 				"Clear Status Message", false, new Command() {
@@ -621,7 +564,6 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				});
 
-		
 		// Set tab-able for 508 compliance
 		Roles.getMenuitemRole().setTabindexExtraAttribute(
 				clearAlertMessageMenuItem.getElement(), 0);
@@ -631,51 +573,51 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		final MenuItem setAlertMenuItem = new MenuItem("Set Status Message",
 				false, new Command() {
+			@Override
+			public void execute() {
+				final SetAlertDialogBox setAlertDialogBox = new SetAlertDialogBox();
+				setAlertDialogBox.setText("Set Alert Message");
+				setAlertDialogBox.center();
+				setAlertDialogBox.cancelButton
+				.addClickHandler(new ClickHandler() {
 					@Override
-					public void execute() {
-						final SetAlertDialogBox setAlertDialogBox = new SetAlertDialogBox();
-						setAlertDialogBox.setText("Set Alert Message");
-						setAlertDialogBox.center();
-						setAlertDialogBox.cancelButton
-								.addClickHandler(new ClickHandler() {
-									@Override
-									public void onClick(ClickEvent event) {
-										killDialogBox(setAlertDialogBox);
-										return;
-									}
-								});
-						setAlertDialogBox.okButton
-								.addClickHandler(new ClickHandler() {
-									@Override
-									public void onClick(ClickEvent event) {
-										killDialogBox(setAlertDialogBox);
-										SystemAlertType alertType = null;
-										if (setAlertDialogBox.alertNormalRadioButton
-												.getValue())
-											alertType = SystemAlertType.NORMAL;
-										else if (setAlertDialogBox.alertWarningRadioButton
-												.getValue())
-											alertType = SystemAlertType.WARNING;
-										else if (setAlertDialogBox.alertCriticalRadioButton
-												.getValue())
-											alertType = SystemAlertType.CRITICAL;
-
-										String alertMessage = setAlertDialogBox.alertTextArea
-												.getText();
-										if (alertMessage == null
-												|| alertMessage.isEmpty()) {
-											showMessageDialog(
-													"AppVet Error",
-													"Alert message cannot be empty.",
-													true);
-										}
-
-										setAlertMessage(userInfo.getUserName(),
-												alertType, alertMessage);
-									}
-								});
+					public void onClick(ClickEvent event) {
+						killDialogBox(setAlertDialogBox);
+						return;
 					}
 				});
+				setAlertDialogBox.okButton
+				.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						killDialogBox(setAlertDialogBox);
+						SystemAlertType alertType = null;
+						if (setAlertDialogBox.alertNormalRadioButton
+								.getValue())
+							alertType = SystemAlertType.NORMAL;
+						else if (setAlertDialogBox.alertWarningRadioButton
+								.getValue())
+							alertType = SystemAlertType.WARNING;
+						else if (setAlertDialogBox.alertCriticalRadioButton
+								.getValue())
+							alertType = SystemAlertType.CRITICAL;
+
+						String alertMessage = setAlertDialogBox.alertTextArea
+								.getText();
+						if (alertMessage == null
+								|| alertMessage.isEmpty()) {
+							showMessageDialog(
+									"AppVet Error",
+									"Alert message cannot be empty.",
+									true);
+						}
+
+						setAlertMessage(userInfo.getUserName(),
+								alertType, alertMessage);
+					}
+				});
+			}
+		});
 		// Set tab-able for 508 compliance
 		Roles.getMenuitemRole().setTabindexExtraAttribute(
 				setAlertMenuItem.getElement(), 0);
@@ -689,11 +631,11 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		final MenuItem mntmAppVetLog = new MenuItem("View Log", false,
 				new Command() {
-					@Override
-					public void execute() {
-						showAppVetLog();
-					}
-				});
+			@Override
+			public void execute() {
+				showAppVetLog();
+			}
+		});
 		mntmAppVetLog.setHTML("View Log");
 		adminMenuBar.addItem(mntmAppVetLog);
 		mntmAppVetLog.setStyleName("adminSubMenuItem");
@@ -704,31 +646,31 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		final MenuItem clearAppVetLogMenuItem = new MenuItem("Clear Log",
 				false, new Command() {
+			@Override
+			public void execute() {
+				final YesNoConfirmDialog clearLogDialogBox = new YesNoConfirmDialog(
+						"<p align=\"center\">\r\nAre you sure you want to clear the AppVet log?\r\n</p>");
+				clearLogDialogBox.setText("Confirm Clear");
+				clearLogDialogBox.center();
+				clearLogDialogBox.cancelButton.setFocus(true);
+				clearLogDialogBox.cancelButton
+				.addClickHandler(new ClickHandler() {
 					@Override
-					public void execute() {
-						final YesNoConfirmDialog clearLogDialogBox = new YesNoConfirmDialog(
-								"<p align=\"center\">\r\nAre you sure you want to clear the AppVet log?\r\n</p>");
-						clearLogDialogBox.setText("Confirm Clear");
-						clearLogDialogBox.center();
-						clearLogDialogBox.cancelButton.setFocus(true);
-						clearLogDialogBox.cancelButton
-								.addClickHandler(new ClickHandler() {
-									@Override
-									public void onClick(ClickEvent event) {
-										killDialogBox(clearLogDialogBox);
-										return;
-									}
-								});
-						clearLogDialogBox.okButton
-								.addClickHandler(new ClickHandler() {
-									@Override
-									public void onClick(ClickEvent event) {
-										killDialogBox(clearLogDialogBox);
-										clearLog();
-									}
-								});
+					public void onClick(ClickEvent event) {
+						killDialogBox(clearLogDialogBox);
+						return;
 					}
 				});
+				clearLogDialogBox.okButton
+				.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						killDialogBox(clearLogDialogBox);
+						clearLog();
+					}
+				});
+			}
+		});
 		// Set tab-able for 508 compliance
 		Roles.getMenuitemRole().setTabindexExtraAttribute(
 				clearAppVetLogMenuItem.getElement(), 0);
@@ -737,18 +679,18 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		final MenuItem downloadAppVetLogMenuItem = new MenuItem("Download Log",
 				false, new Command() {
-					@Override
-					public void execute() {
-						final String dateString = "?nocache"
-								+ new Date().getTime();
-						final String url = SERVLET_URL + dateString + "&"
-								+ AppVetParameter.COMMAND.value + "="
-								+ AppVetServletCommand.DOWNLOAD_LOG.name()
-								+ "&" + AppVetParameter.SESSIONID.value + "="
-								+ sessionId;
-						Window.open(url, "_self", "");
-					}
-				});
+			@Override
+			public void execute() {
+				final String dateString = "?nocache"
+						+ new Date().getTime();
+				final String url = SERVLET_URL + dateString + "&"
+						+ AppVetParameter.COMMAND.value + "="
+						+ AppVetServletCommand.DOWNLOAD_LOG.name()
+						+ "&" + AppVetParameter.SESSIONID.value + "="
+						+ sessionId;
+				Window.open(url, "_self", "");
+			}
+		});
 		// Set tab-able for 508 compliance
 		Roles.getMenuitemRole().setTabindexExtraAttribute(
 				downloadAppVetLogMenuItem.getElement(), 0);
@@ -759,7 +701,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		adminMenuItem.setStyleName("adminMenuItem");
 
 		adminMenuItem
-				.setHTML("<img src=\"images/icon-gear.png\" width=\"16px\" height=\"16px\" alt=\"Admin\">");
+		.setHTML("<img src=\"images/icon-gear.png\" width=\"16px\" height=\"16px\" alt=\"Admin\">");
 
 		final MenuBar appVetMenuBar = new MenuBar(false);
 
@@ -793,13 +735,13 @@ public class AppVetPanel extends DockLayoutPanel {
 		final VerticalPanel northAppVetPanel = new VerticalPanel();
 		northPanel.setWidget(northAppVetPanel);
 		northAppVetPanel
-				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		northAppVetPanel
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		northAppVetPanel.setSize("100%", "");
 		final HorizontalPanel topBannerPanel = new HorizontalPanel();
 		topBannerPanel
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		topBannerPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		topBannerPanel.setStyleName("mainBanner");
 		northAppVetPanel.add(topBannerPanel);
@@ -863,7 +805,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		searchButton.setTitle("Search by app ID, name, release kit, etc.");
 		searchButton.setSize("", "");
 		searchButton
-				.setHTML("<img width=\"18px\" height=\"18px\" src=\"images/icon-search.png\" alt=\"search\" />");
+		.setHTML("<img width=\"18px\" height=\"18px\" src=\"images/icon-search.png\" alt=\"search\" />");
 		searchButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -916,7 +858,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		userMenuItem.setStyleName("userMenuItem");
 		userMenuItem.setTitle("User Preferences");
 		userMenuItem
-				.setHTML("<img src=\"images/icon-user.png\" width=\"16px\" height=\"16px\" alt=\"User Preferences\">");
+		.setHTML("<img src=\"images/icon-user.png\" width=\"16px\" height=\"16px\" alt=\"User Preferences\">");
 		userMenuBar.setHeight("");
 		// Set tab-able for 508 compliance
 		Roles.getMenuitemRole().setTabindexExtraAttribute(
@@ -952,17 +894,17 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		final MenuItem myAppsMenuItem = new MenuItem("My Apps", false,
 				new Command() {
-					@Override
-					public void execute() {
-						searchTextBox.setText(userInfo.getUserName());
-						final int numFound = search();
-						if (numFound > 0) {
-							final SafeHtmlBuilder sb = new SafeHtmlBuilder();
-							sb.appendHtmlConstant("<h3>My Apps</h3>");
-							appsLabelHtml.setHTML(sb.toSafeHtml());
-						}
-					}
-				});
+			@Override
+			public void execute() {
+				searchTextBox.setText(userInfo.getUserName());
+				final int numFound = search();
+				if (numFound > 0) {
+					final SafeHtmlBuilder sb = new SafeHtmlBuilder();
+					sb.appendHtmlConstant("<h3>My Apps</h3>");
+					appsLabelHtml.setHTML(sb.toSafeHtml());
+				}
+			}
+		});
 		myAppsMenuItem.setStyleName("userSubMenuItem");
 		// Set tab-able for 508 compliance
 		Roles.getMenuitemRole().setTabindexExtraAttribute(
@@ -975,11 +917,11 @@ public class AppVetPanel extends DockLayoutPanel {
 		separator_4.setSize("100%", "1px");
 		final MenuItem logoutMenuItem = new MenuItem("Logout", false,
 				new Command() {
-					@Override
-					public void execute() {
-						removeSession(false);
-					}
-				});
+			@Override
+			public void execute() {
+				removeSession(false);
+			}
+		});
 		logoutMenuItem.setStyleName("userSubMenuItem");
 		// Set tab-able for 508 compliance
 		Roles.getMenuitemRole().setTabindexExtraAttribute(
@@ -1000,7 +942,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		final MenuItem helpMenuItem = new MenuItem("Help", true, helpMenuBar);
 		helpMenuItem.setTitle("Help");
 		helpMenuItem
-				.setHTML("<img src=\"images/icon-white-question-mark.png\"  width=\"16px\" height=\"16px\" alt=\"Settings\">");
+		.setHTML("<img src=\"images/icon-white-question-mark.png\"  width=\"16px\" height=\"16px\" alt=\"Settings\">");
 		helpMenuItem.setStyleName("helpMenuItem");
 		helpMenuBar.setHeight("");
 		// Set tab-able for 508 compliance
@@ -1009,21 +951,21 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		final MenuItem aboutMenuItem = new MenuItem("About", false,
 				new Command() {
+			@Override
+			public void execute() {
+				aboutDialogBox = new AboutDialogBox(configInfo
+						.getAppVetVersion());
+				// aboutDialogBox.setText("About");
+				aboutDialogBox.center();
+				aboutDialogBox.closeButton
+				.addClickHandler(new ClickHandler() {
 					@Override
-					public void execute() {
-						aboutDialogBox = new AboutDialogBox(configInfo
-								.getAppVetVersion());
-						//aboutDialogBox.setText("About");
-						aboutDialogBox.center();
-						aboutDialogBox.closeButton
-								.addClickHandler(new ClickHandler() {
-									@Override
-									public void onClick(ClickEvent event) {
-										killDialogBox(aboutDialogBox);
-									}
-								});
+					public void onClick(ClickEvent event) {
+						killDialogBox(aboutDialogBox);
 					}
 				});
+			}
+		});
 		aboutMenuItem.setStyleName("helpSubMenuItem");
 		// Set tab-able for 508 compliance
 		Roles.getMenuitemRole().setTabindexExtraAttribute(
@@ -1031,11 +973,11 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		final MenuItem documentationMenuItem = new MenuItem("Documentation",
 				false, new Command() {
-					@Override
-					public void execute() {
-						Window.open(documentationURL, "_blank", null);
-					}
-				});
+			@Override
+			public void execute() {
+				Window.open(documentationURL, "_blank", null);
+			}
+		});
 		documentationMenuItem.setStyleName("helpSubMenuItem");
 		// Set tab-able for 508 compliance
 		Roles.getMenuitemRole().setTabindexExtraAttribute(
@@ -1051,9 +993,9 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		final HorizontalPanel statusMessagePanel = new HorizontalPanel();
 		statusMessagePanel
-				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		statusMessagePanel
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		northAppVetPanel.add(statusMessagePanel);
 		northAppVetPanel.setCellVerticalAlignment(statusMessagePanel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
@@ -1071,7 +1013,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		statusMessagePanel.setCellWidth(statusMessageHtml, "100%");
 		statusMessageHtml.setStyleName("statusMessage");
 		statusMessageHtml
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		statusMessageHtml.setSize("90%", "28px");
 
 		centerPanel = new SimplePanel();
@@ -1084,7 +1026,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsListTable = new AppsListPagingDataGrid<AppInfoGwt>();
 		appsListTable.pager.setHeight("");
 		appsListTable.dataGrid
-				.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
+		.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 		appsListTable.dataGrid.setFocus(false);
 		appsListTable.setPageSize(configInfo.getNumRowsAppsList());
 		appsListTable.dataGrid.setStyleName("dataGrid");
@@ -1108,7 +1050,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		dockPanel_1.setSize("100%", "");
 		appsListButtonPanel = new HorizontalPanel();
 		appsListButtonPanel
-				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		dockPanel_1.add(appsListButtonPanel, DockPanel.NORTH);
 		dockPanel_1.setCellHorizontalAlignment(appsListButtonPanel,
 				HasHorizontalAlignment.ALIGN_CENTER);
@@ -1122,7 +1064,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsListButtonPanel.add(appsLabelHtml);
 		final HorizontalPanel horizontalPanel = new HorizontalPanel();
 		horizontalPanel
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 		horizontalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		appsListButtonPanel.add(horizontalPanel);
 		appsListButtonPanel.setCellWidth(horizontalPanel, "50%");
@@ -1142,37 +1084,37 @@ public class AppVetPanel extends DockLayoutPanel {
 				appUploadDialogBox.setText("Submit App");
 				appUploadDialogBox.center();
 				appUploadDialogBox.cancelButton
-						.addClickHandler(new ClickHandler() {
-							@Override
-							public void onClick(ClickEvent event) {
-								killDialogBox(appUploadDialogBox);
-							}
-						});
+				.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						killDialogBox(appUploadDialogBox);
+					}
+				});
 				appUploadDialogBox.uploadAppFileForm
-						.addFormHandler(new AppUploadFormHandler(
-								appUploadDialogBox));
+				.addFormHandler(new AppUploadFormHandler(
+						appUploadDialogBox));
 				appUploadDialogBox.submitButton
-						.addClickHandler(new ClickHandler() {
-							@Override
-							public void onClick(ClickEvent event) {
-								if (appUploadDialogBox.fileUpload.getFilename()
-										.isEmpty()) {
-									showMessageDialog("Submit App File",
-											"No app file selected.", true);
-									return;
-								}
-								appUploadDialogBox.cancelButton
-										.setEnabled(false);
-								appUploadDialogBox.submitButton
-										.setEnabled(false);
-								String fileName = appUploadDialogBox.fileUpload
-										.getFilename();
-								appUploadDialogBox.statusLabel
-										.setText("Uploading " + fileName
-												+ "...");
-								appUploadDialogBox.uploadAppFileForm.submit();
-							}
-						});
+				.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						if (appUploadDialogBox.fileUpload.getFilename()
+								.isEmpty()) {
+							showMessageDialog("Submit App File",
+									"No app file selected.", true);
+							return;
+						}
+						appUploadDialogBox.cancelButton
+						.setEnabled(false);
+						appUploadDialogBox.submitButton
+						.setEnabled(false);
+						String fileName = appUploadDialogBox.fileUpload
+								.getFilename();
+						appUploadDialogBox.statusLabel
+						.setText("Uploading " + fileName
+								+ "...");
+						appUploadDialogBox.uploadAppFileForm.submit();
+					}
+				});
 			}
 		});
 		viewAllButton = new PushButton("View All");
@@ -1236,27 +1178,27 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appInfoPackage = new HTML("", true);
 		appInfoPackage
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		appInfoPackage.setStyleName("appInfoVersion");
 		verticalPanel.add(appInfoPackage);
 		appInfoPackage.setSize("500px", "14px");
 		appInfoVersion = new HTML("", true);
 		appInfoVersion
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		appInfoVersion.setStyleName("appInfoVersion");
 		verticalPanel.add(appInfoVersion);
 		appInfoVersion.setSize("500px", "14px");
-		
+
 		appStatusInfo = new HTML("", true);
 		appStatusInfo.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		appStatusInfo.setStyleName("appInfoVersion");
 		verticalPanel.add(appStatusInfo);
 		appStatusInfo.setSize("500px", "14px");
-		verticalPanel.setCellVerticalAlignment(appStatusInfo, HasVerticalAlignment.ALIGN_MIDDLE);
+		verticalPanel.setCellVerticalAlignment(appStatusInfo,
+				HasVerticalAlignment.ALIGN_MIDDLE);
 
 		HorizontalPanel appButtonPanel = new HorizontalPanel();
-		appButtonPanel
-				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		appButtonPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		appInfoVerticalPanel.add(appButtonPanel);
 		appInfoVerticalPanel.setCellWidth(appButtonPanel, "100%");
 		appButtonPanel.setSize("", "");
@@ -1289,15 +1231,15 @@ public class AppVetPanel extends DockLayoutPanel {
 					reportUploadDialogBox.toolNamesComboBox.setFocus(true);
 
 					reportUploadDialogBox.cancelButton
-							.addClickHandler(new ClickHandler() {
-								@Override
-								public void onClick(ClickEvent event) {
-									killDialogBox(reportUploadDialogBox);
-								}
-							});
+					.addClickHandler(new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent event) {
+							killDialogBox(reportUploadDialogBox);
+						}
+					});
 					reportUploadDialogBox.uploadReportForm
-							.addFormHandler(new ReportUploadFormHandler(
-									reportUploadDialogBox, userName, selected));
+					.addFormHandler(new ReportUploadFormHandler(
+							reportUploadDialogBox, userName, selected));
 
 				}
 			}
@@ -1341,24 +1283,24 @@ public class AppVetPanel extends DockLayoutPanel {
 				deleteConfirmDialogBox.setText("Confirm Delete");
 				deleteConfirmDialogBox.center();
 				deleteConfirmDialogBox.cancelButton
-						.addClickHandler(new ClickHandler() {
-							@Override
-							public void onClick(ClickEvent event) {
-								killDialogBox(deleteConfirmDialogBox);
-								return;
-							}
-						});
+				.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						killDialogBox(deleteConfirmDialogBox);
+						return;
+					}
+				});
 				deleteConfirmDialogBox.okButton
-						.addClickHandler(new ClickHandler() {
-							@Override
-							public void onClick(ClickEvent event) {
-								killDialogBox(deleteConfirmDialogBox);
-								if (selected != null) {
-									deleteApp(selected.os, selected.appId,
-											userName);
-								}
-							}
-						});
+				.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						killDialogBox(deleteConfirmDialogBox);
+						if (selected != null) {
+							deleteApp(selected.os, selected.appId,
+									userName);
+						}
+					}
+				});
 			}
 		});
 		deleteButton.setSize("100px", "18px");
@@ -1445,7 +1387,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoVerticalPanel.add(toolResultsHtml);
 		toolResultsHtml.setWidth("561px");
 		toolResultsHtml
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		toolResultsHtml.setStyleName("toolResultsHtml");
 		appInfoVerticalPanel.setCellWidth(toolResultsHtml, "100%");
 
@@ -1457,7 +1399,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		VerticalPanel verticalPanel_1 = new VerticalPanel();
 		verticalPanel_1.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel_1
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		southPanel.setWidget(verticalPanel_1);
 		verticalPanel_1.setSize("100%", "");
 
@@ -1468,9 +1410,9 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel_1.setCellWidth(horizontalPanel_2, "100%");
 		horizontalPanel_2
-				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_2
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
 		Image orgLogoMain = new Image("../appvet_images/org_logo_main.png");
 		orgLogoMain.setAltText("Org Logo");
@@ -1513,55 +1455,127 @@ public class AppVetPanel extends DockLayoutPanel {
 		}
 	}
 
-	public void showAppLog(final String appId) {
-		appVetServiceAsync.getAppLog(appId,
-				new AsyncCallback<String>() {
+	public void showToolEnableDialog() {
+		appVetServiceAsync.getTestToolsEnabledDisabled(
+				new AsyncCallback<List<ToolInfoGwt>>() {
 
+			@Override
+			public void onFailure(Throwable caught) {
+				showMessageDialog("AppVet Error",
+						"Could not access AppVet test tools", true);
+			}
+
+			@Override
+			public void onSuccess(final List<ToolInfoGwt> testTools) {
+				if (testTools == null || testTools.isEmpty()) {
+					showMessageDialog("AppVet Error",
+							"No test tools available", true);
+					return;
+				}
+
+				final ToolAdapterEnableDialogBox toolAdapterDialogBox = 
+						new ToolAdapterEnableDialogBox(testTools);
+				toolAdapterDialogBox.setText("Enabled/Disable Tool");
+				toolAdapterDialogBox.center();
+				toolAdapterDialogBox.cancelButton
+				.addClickHandler(new ClickHandler() {
 					@Override
-					public void onFailure(Throwable caught) {
-						showMessageDialog("AppVet Error",
-								"Could not access app log", true);
+					public void onClick(ClickEvent event) {
+						killDialogBox(toolAdapterDialogBox);
+						return;
 					}
-
+				});
+				toolAdapterDialogBox.okButton.addClickHandler(new ClickHandler() {
 					@Override
-					public void onSuccess(String result) {
-						final LogViewer logViewer = new LogViewer(result);
-						logViewer.setText("App " + appId + " log");
-						logViewer.center();
-						logViewer.closeButton.addClickHandler(new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						ListBox listBox = toolAdapterDialogBox.listBox;
+						ArrayList<ToolInfoGwt> newToolInfoList = new ArrayList<ToolInfoGwt>();
+						
+						for (int i = 0; i < testTools.size(); i++) {
+							ToolInfoGwt testTool = testTools.get(i);
+
+							String toolStr = listBox.getItemText(i);
+							String[] toolStrArray = toolStr.split(": ");
+							String enabledStr = toolStrArray[1];
+							if (enabledStr.equals("enabled")) {
+								testTool.setDisabled(false);
+							} else if (enabledStr.equals("disabled")) {
+								testTool.setDisabled(true);
+							}
+							newToolInfoList.add(testTool);
+						}
+						
+						killDialogBox(toolAdapterDialogBox);
+						
+						appVetServiceAsync.setTestToolsEnabledDisabled(
+								newToolInfoList, new AsyncCallback<Boolean>() {
+
 							@Override
-							public void onClick(ClickEvent event) {
-								killDialogBox(logViewer);
+							public void onFailure(Throwable caught) {
+								showMessageDialog("AppVet Error",
+										"Could not access AppVet test tools", true);
+							}
+
+							@Override
+							public void onSuccess(Boolean result) {
+								showMessageDialog("AppVet Info",
+										"Tool(s) enable/disable successful", false);
 							}
 						});
 					}
-
 				});
+			}
+		});
 	}
-	
+
+	public void showAppLog(final String appId) {
+		appVetServiceAsync.getAppLog(appId, new AsyncCallback<String>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				showMessageDialog("AppVet Error", "Could not access app log",
+						true);
+			}
+
+			@Override
+			public void onSuccess(String result) {
+				final LogViewer logViewer = new LogViewer(result);
+				logViewer.setText("App " + appId + " log");
+				logViewer.center();
+				logViewer.closeButton.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						killDialogBox(logViewer);
+					}
+				});
+			}
+
+		});
+	}
+
 	public void showAppVetLog() {
 		appVetServiceAsync.getAppVetLog(new AsyncCallback<String>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						showMessageDialog("AppVet Error",
-								"Could not access AppVet log", true);
-					}
+			@Override
+			public void onFailure(Throwable caught) {
+				showMessageDialog("AppVet Error",
+						"Could not access AppVet log", true);
+			}
 
+			@Override
+			public void onSuccess(String result) {
+				final LogViewer logViewer = new LogViewer(result);
+				logViewer.setText("AppVet log");
+				logViewer.center();
+				logViewer.closeButton.addClickHandler(new ClickHandler() {
 					@Override
-					public void onSuccess(String result) {
-						final LogViewer logViewer = new LogViewer(result);
-						logViewer.setText("AppVet log");
-						logViewer.center();
-						logViewer.closeButton.addClickHandler(new ClickHandler() {
-							@Override
-							public void onClick(ClickEvent event) {
-								killDialogBox(logViewer);
-							}
-						});
+					public void onClick(ClickEvent event) {
+						killDialogBox(logViewer);
 					}
-
 				});
+			}
+
+		});
 	}
 
 	public void enableAllButtons() {
@@ -1591,40 +1605,40 @@ public class AppVetPanel extends DockLayoutPanel {
 		appVetServiceAsync.removeSession(sessionId,
 				new AsyncCallback<Boolean>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						showMessageDialog("AppVet Error",
-								"App list retrieval error", true);
+			@Override
+			public void onFailure(Throwable caught) {
+				showMessageDialog("AppVet Error",
+						"App list retrieval error", true);
+			}
+
+			@Override
+			public void onSuccess(Boolean result) {
+				if (result == false) {
+					showMessageDialog("AppVet Error",
+							"Could not remove session", true);
+				} else {
+					if (sessionExpired) {
+						// Show session expired message
+						showMessageDialog("AppVet Session",
+								"AppVet session has expired", true);
+						messageDialogBox.closeButton
+						.addClickHandler(new ClickHandler() {
+							@Override
+							public void onClick(ClickEvent event) {
+								killDialogBox(messageDialogBox);
+							}
+						});
+					}
+					if (ssoActive) {
+						logoutSSO();
+					} else {
+						logoutNonSSO();
 					}
 
-					@Override
-					public void onSuccess(Boolean result) {
-						if (result == false) {
-							showMessageDialog("AppVet Error",
-									"Could not remove session", true);
-						} else {
-							if (sessionExpired) {
-								// Show session expired message
-								showMessageDialog("AppVet Session",
-										"AppVet session has expired", true);
-								messageDialogBox.closeButton
-										.addClickHandler(new ClickHandler() {
-											@Override
-											public void onClick(ClickEvent event) {
-												killDialogBox(messageDialogBox);
-											}
-										});
-							}
-							if (ssoActive) {
-								logoutSSO();
-							} else {
-								logoutNonSSO();
-							}
+				}
+			}
 
-						}
-					}
-
-				});
+		});
 	}
 
 	public void setAlertMessage(String username, SystemAlertType alertType,
@@ -1635,43 +1649,43 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		appVetServiceAsync.setAlertMessage(username, alert,
 				new AsyncCallback<Boolean>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						showMessageDialog("AppVet Error",
-								"Could not set alert message", true);
-					}
+			@Override
+			public void onFailure(Throwable caught) {
+				showMessageDialog("AppVet Error",
+						"Could not set alert message", true);
+			}
 
-					@Override
-					public void onSuccess(Boolean setAlert) {
-						if (!setAlert) {
-							showMessageDialog("AppVet Error",
-									"Could not set alert message", true);
-						} else {
-							// log.info("Alert message set");
-						}
-					}
-				});
+			@Override
+			public void onSuccess(Boolean setAlert) {
+				if (!setAlert) {
+					showMessageDialog("AppVet Error",
+							"Could not set alert message", true);
+				} else {
+					// log.info("Alert message set");
+				}
+			}
+		});
 	}
 
 	public void clearAlertMessage(String username) {
 		appVetServiceAsync.clearAlertMessage(username,
 				new AsyncCallback<Boolean>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						showMessageDialog("AppVet Error",
-								"Could not clear alert message", true);
-					}
+			@Override
+			public void onFailure(Throwable caught) {
+				showMessageDialog("AppVet Error",
+						"Could not clear alert message", true);
+			}
 
-					@Override
-					public void onSuccess(Boolean setAlert) {
-						if (!setAlert) {
-							showMessageDialog("AppVet Error",
-									"Could not clear alert message", true);
-						} else {
-							// log.info("Alert message cleared");
-						}
-					}
-				});
+			@Override
+			public void onSuccess(Boolean setAlert) {
+				if (!setAlert) {
+					showMessageDialog("AppVet Error",
+							"Could not clear alert message", true);
+				} else {
+					// log.info("Alert message cleared");
+				}
+			}
+		});
 	}
 
 	public void clearLog() {
@@ -1698,53 +1712,53 @@ public class AppVetPanel extends DockLayoutPanel {
 			final String username) {
 		appVetServiceAsync.deleteApp(os, appid, username,
 				new AsyncCallback<Boolean>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						showMessageDialog("AppVet Error",
-								"App list retrieval error", true);
-					}
+			@Override
+			public void onFailure(Throwable caught) {
+				showMessageDialog("AppVet Error",
+						"App list retrieval error", true);
+			}
 
-					@Override
-					public void onSuccess(Boolean deleted) {
-						if (deleted == false) {
-							showMessageDialog("AppVet Error",
-									"Could not delete app", true);
-						} else {
-							final AppInfoGwt currentlySelectedApp = appSelectionModel
-									.getSelectedObject();
-							final int currentlySelectedIndex = getAppsListIndex(
-									currentlySelectedApp, allApps);
-							for (int i = 0; i < allApps.size(); i++) {
-								final AppInfoGwt appInfoGwt = allApps.get(i);
-								if (appInfoGwt.appId.equals(appid)) {
-									allApps.remove(i);
-									if (!searchMode) {
-										appsListTable.remove(i);
-									} else {
-										appsListTable.remove(appid);
-									}
-									break;
-								}
-							}
+			@Override
+			public void onSuccess(Boolean deleted) {
+				if (deleted == false) {
+					showMessageDialog("AppVet Error",
+							"Could not delete app", true);
+				} else {
+					final AppInfoGwt currentlySelectedApp = appSelectionModel
+							.getSelectedObject();
+					final int currentlySelectedIndex = getAppsListIndex(
+							currentlySelectedApp, allApps);
+					for (int i = 0; i < allApps.size(); i++) {
+						final AppInfoGwt appInfoGwt = allApps.get(i);
+						if (appInfoGwt.appId.equals(appid)) {
+							allApps.remove(i);
 							if (!searchMode) {
-								if (allApps.size() > 0) {
-									appSelectionModel.setSelected(
-											allApps.get(currentlySelectedIndex),
-											true);
-								} else {
-									appInfoVersion.setHTML("");
-									appInfoPackage.setHTML("");
-									appStatusInfo.setHTML("");
-									appInfoIcon.setVisible(false);
-									appInfoName.setText("");
-									toolResultsHtml.setText("");
-									disableAllButtons();
-
-								}
+								appsListTable.remove(i);
+							} else {
+								appsListTable.remove(appid);
 							}
+							break;
 						}
 					}
-				});
+					if (!searchMode) {
+						if (allApps.size() > 0) {
+							appSelectionModel.setSelected(
+									allApps.get(currentlySelectedIndex),
+									true);
+						} else {
+							appInfoVersion.setHTML("");
+							appInfoPackage.setHTML("");
+							appStatusInfo.setHTML("");
+							appInfoIcon.setVisible(false);
+							appInfoName.setText("");
+							toolResultsHtml.setText("");
+							disableAllButtons();
+
+						}
+					}
+				}
+			}
+		});
 	}
 
 	public int getAppsListIndex(AppInfoGwt item, List<AppInfoGwt> appsList) {
@@ -1764,120 +1778,118 @@ public class AppVetPanel extends DockLayoutPanel {
 				sessionExpiration, lastAppsListUpdate,
 				new AsyncCallback<ServerPacket>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						log.severe("Could not update from server: "
-								+ caught.getMessage());
+			@Override
+			public void onFailure(Throwable caught) {
+				log.severe("Could not update from server: "
+						+ caught.getMessage());
+			}
+
+			@Override
+			public void onSuccess(ServerPacket serverPacket) {
+				if (serverPacket == null) {
+					log.severe("Error updating server packet.");
+					removeSession(true);
+				} else {
+					// Get session expiration
+					Date newSessionExpiration = serverPacket
+							.getSessionExpiration();
+					if (newSessionExpiration == null) {
+						// log.severe("Error updating session expiration. Session probably expired.");
+						removeSession(true);
+					} else {
+						sessionTimeLeft(newSessionExpiration);
 					}
 
-					@Override
-					public void onSuccess(ServerPacket serverPacket) {
-						if (serverPacket == null) {
-							log.severe("Error updating server packet.");
-							removeSession(true);
+					// Get alert message
+					SystemAlert systemAlert = serverPacket
+							.getSystemAlert();
+					if (systemAlert != null) {
+						// log.info("system alert is not null. Setting message: "
+						// +
+						// systemAlert.message);
+
+						String newSpanValue = systemAlert.message;
+						// log.info("newSpanValue: " + newSpanValue);
+						String newAlertMessage = null;
+						String newAltValue = null;
+
+						String currentAlertMessage = statusMessageHtml
+								.getHTML();
+						int startSpanIndex = currentAlertMessage
+								.indexOf("<span style=\"\">");
+						int endSpanIndex = currentAlertMessage.indexOf(
+								"</span>", startSpanIndex + 15);
+						String currentSpanValue = currentAlertMessage
+								.substring(startSpanIndex + 15,
+										endSpanIndex);
+						// log.info("currentSpanValue: " +
+						// currentSpanValue);
+
+						int startAltIndex = currentAlertMessage
+								.indexOf("alt=\"");
+						int endAltIndex = currentAlertMessage.indexOf(
+								"\"", startAltIndex + 5);
+						String currentAltValue = currentAlertMessage
+								.substring(startAltIndex + 5,
+										endAltIndex);
+						// log.info("currentAltValue: " +
+						// currentAltValue);
+
+						// log.info("--------- checking messages ---------------");
+						if (systemAlert.type == SystemAlertType.NORMAL) {
+							newAlertMessage = "<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/icon-metadata.png\" alt=\"System Message\" /> <span style=\"\">"
+									+ newSpanValue + "</span></div>";
+							newAltValue = "System Message";
+							// log.info("newAltValue: " + newAltValue);
+
+						} else if (systemAlert.type == SystemAlertType.WARNING) {
+							newAlertMessage = "<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/icon-warning.png\" alt=\"Warning Message\" /> <span style=\"\">"
+									+ newSpanValue + "</span></div>";
+							newAltValue = "Warning Message";
+							// log.info("newAltValue: " + newAltValue);
+
+						} else if (systemAlert.type == SystemAlertType.CRITICAL) {
+							newAlertMessage = "<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/icon-error.png\" alt=\"Error Message\" /> <span style=\"\">"
+									+ newSpanValue + "</span></div>";
+							newAltValue = "Error Message";
+							// log.info("newAltValue: " + newAltValue);
+						}
+
+						// Only set if new message is different from
+						// current message
+						if (currentSpanValue.equals(newSpanValue)
+								&& currentAltValue.equals(newAltValue)) {
+							// log.info("New message is same as current message");
 						} else {
-							// Get session expiration
-							Date newSessionExpiration = serverPacket
-									.getSessionExpiration();
-							if (newSessionExpiration == null) {
-								// log.severe("Error updating session expiration. Session probably expired.");
-								removeSession(true);
-							} else {
-								sessionTimeLeft(newSessionExpiration);
-							}
+							statusMessageHtml.setHTML(newAlertMessage);
+						}
+					} else {
+						// log.info("system alert is null. Setting message to ''");
+						statusMessageHtml.setHTML("");
+					}
 
-							// Get alert message
-							SystemAlert systemAlert = serverPacket
-									.getSystemAlert();
-							if (systemAlert != null) {
-								// log.info("system alert is not null. Setting message: "
-								// +
-								// systemAlert.message);
-
-								String newSpanValue = systemAlert.message;
-								// log.info("newSpanValue: " + newSpanValue);
-								String newAlertMessage = null;
-								String newAltValue = null;
-
-								String currentAlertMessage = statusMessageHtml
-										.getHTML();
-								int startSpanIndex = currentAlertMessage
-										.indexOf("<span style=\"\">");
-								int endSpanIndex = currentAlertMessage.indexOf(
-										"</span>", startSpanIndex + 15);
-								String currentSpanValue = currentAlertMessage
-										.substring(startSpanIndex + 15,
-												endSpanIndex);
-								// log.info("currentSpanValue: " +
-								// currentSpanValue);
-
-								int startAltIndex = currentAlertMessage
-										.indexOf("alt=\"");
-								int endAltIndex = currentAlertMessage.indexOf(
-										"\"", startAltIndex + 5);
-								String currentAltValue = currentAlertMessage
-										.substring(startAltIndex + 5,
-												endAltIndex);
-								// log.info("currentAltValue: " +
-								// currentAltValue);
-
-								// log.info("--------- checking messages ---------------");
-								if (systemAlert.type == SystemAlertType.NORMAL) {
-									newAlertMessage = "<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/icon-metadata.png\" alt=\"System Message\" /> <span style=\"\">"
-											+ newSpanValue + "</span></div>";
-									newAltValue = "System Message";
-									// log.info("newAltValue: " + newAltValue);
-
-								} else if (systemAlert.type == SystemAlertType.WARNING) {
-									newAlertMessage = "<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/icon-warning.png\" alt=\"Warning Message\" /> <span style=\"\">"
-											+ newSpanValue + "</span></div>";
-									newAltValue = "Warning Message";
-									// log.info("newAltValue: " + newAltValue);
-
-								} else if (systemAlert.type == SystemAlertType.CRITICAL) {
-									newAlertMessage = "<div><img style=\"vertical-align:bottom\" width=\"18px\" height=\"18px\" src=\"images/icon-error.png\" alt=\"Error Message\" /> <span style=\"\">"
-											+ newSpanValue + "</span></div>";
-									newAltValue = "Error Message";
-									// log.info("newAltValue: " + newAltValue);
-								}
-
-								// Only set if new message is different from
-								// current message
-								if (currentSpanValue.equals(newSpanValue)
-										&& currentAltValue.equals(newAltValue)) {
-									// log.info("New message is same as current message");
-								} else {
-									statusMessageHtml.setHTML(newAlertMessage);
-								}
-							} else {
-								// log.info("system alert is null. Setting message to ''");
-								statusMessageHtml.setHTML("");
-							}
-
-							// Get updated apps
-							AppsListGwt updatedAppsList = serverPacket
-									.getUpdatedAppsList();
-							if (updatedAppsList == null) {
-								showMessageDialog("AppVet Database Error",
-										"Could not retrieve updated apps", true);
-							} else {
-								// log.info("Update time: " +
-								// updatedAppsList.appsLastChecked.toString());
-								lastAppsListUpdate = updatedAppsList.appsLastChecked;
-								if (updatedAppsList.apps.size() > 0) {
-									setUpdatedApps(updatedAppsList.apps);
-								}
-							}
-
+					// Get updated apps
+					AppsListGwt updatedAppsList = serverPacket
+							.getUpdatedAppsList();
+					if (updatedAppsList == null) {
+						showMessageDialog("AppVet Database Error",
+								"Could not retrieve updated apps", true);
+					} else {
+						// log.info("Update time: " +
+						// updatedAppsList.appsLastChecked.toString());
+						lastAppsListUpdate = updatedAppsList.appsLastChecked;
+						if (updatedAppsList.apps.size() > 0) {
+							setUpdatedApps(updatedAppsList.apps);
 						}
 					}
-				});
+
+				}
+			}
+		});
 
 	}
-	
-	public void showToolAdapters() {
-		
-	}
+
+
 
 	@Override
 	public void onBrowserEvent(Event event) {
@@ -1892,330 +1904,332 @@ public class AppVetPanel extends DockLayoutPanel {
 					selectedApp.appId,
 					new AsyncCallback<List<ToolStatusGwt>>() {
 
-						@Override
-						public void onFailure(Throwable caught) {
-							showMessageDialog("AppVet Error",
-									"System error retrieving app info", true);
+				@Override
+				public void onFailure(Throwable caught) {
+					showMessageDialog("AppVet Error",
+							"System error retrieving app info", true);
+				}
+
+				@Override
+				public void onSuccess(List<ToolStatusGwt> toolsResults) {
+
+					if ((toolsResults == null)
+							|| toolsResults.isEmpty()) {
+						showMessageDialog("AppVet Error: ",
+								"Could not retrieve app info.", true);
+					} else {
+						// Display selected app information
+						String iconPath = null;
+						String altText = null;
+						if (selectedApp.iconURL == null) {
+							// Icon has not yet been generated for this
+							// app
+							if (selectedApp.os == DeviceOS.ANDROID) {
+								iconPath = "images/android-icon-gray.png";
+								altText = "Android app";
+							} else if (selectedApp.os == DeviceOS.IOS) {
+								iconPath = "images/apple-icon-gray.png";
+								altText = "iOS app";
+							}
+						} else {
+							// Icon has been generated for this app
+							iconPath = selectedApp.iconURL;
+							altText = selectedApp.appName;
 						}
 
-						@Override
-						public void onSuccess(List<ToolStatusGwt> toolsResults) {
+						appInfoIcon.setVisible(true);
+						appInfoIcon.setUrl(iconPath);
+						appInfoIcon.setAltText(altText);
 
-							if ((toolsResults == null)
-									|| toolsResults.isEmpty()) {
-								showMessageDialog("AppVet Error: ",
-										"Could not retrieve app info.", true);
-							} else {
-								// Display selected app information
-								String iconPath = null;
-								String altText = null;
-								if (selectedApp.iconURL == null) {
-									// Icon has not yet been generated for this
-									// app
-									if (selectedApp.os == DeviceOS.ANDROID) {
-										iconPath = "images/android-icon-gray.png";
-										altText = "Android app";
-									} else if (selectedApp.os == DeviceOS.IOS) {
-										iconPath = "images/apple-icon-gray.png";
-										altText = "iOS app";
-									}
-								} else {
-									// Icon has been generated for this app
-									iconPath = selectedApp.iconURL;
-									altText = selectedApp.appName;
-								}
+						// Set app name in right info panel
+						String appNameHtml = null;
+						if ((selectedApp.appStatus == AppStatus.NA)
+								|| (selectedApp.appStatus == AppStatus.ERROR)
+								|| (selectedApp.appStatus == AppStatus.HIGH)
+								|| (selectedApp.appStatus == AppStatus.HIGH_WITH_ERROR)
+								|| (selectedApp.appStatus == AppStatus.MODERATE)
+								|| (selectedApp.appStatus == AppStatus.MODERATE_WITH_ERROR)
+								|| (selectedApp.appStatus == AppStatus.LOW)
+								|| (selectedApp.appStatus == AppStatus.LOW_WITH_ERROR)) {
+							appNameHtml = "<div id=\"appNameInfo\">"
+									+ selectedApp.appName + "</div>";
+							enableAllButtons();
 
-								appInfoIcon.setVisible(true);
-								appInfoIcon.setUrl(iconPath);
-								appInfoIcon.setAltText(altText);
-
-								// Set app name in right info panel
-								String appNameHtml = null;
-								if ((selectedApp.appStatus == AppStatus.NA)
-										|| (selectedApp.appStatus == AppStatus.ERROR)
-										|| (selectedApp.appStatus == AppStatus.HIGH)
-										|| (selectedApp.appStatus == AppStatus.HIGH_WITH_ERROR)
-										|| (selectedApp.appStatus == AppStatus.MODERATE)
-										|| (selectedApp.appStatus == AppStatus.MODERATE_WITH_ERROR)
-										|| (selectedApp.appStatus == AppStatus.LOW)
-										|| (selectedApp.appStatus == AppStatus.LOW_WITH_ERROR)
-										) {
-									appNameHtml = "<div id=\"appNameInfo\">"
-											+ selectedApp.appName + "</div>";
-									enableAllButtons();
-
-								} else {
-									appNameHtml = "<div id=\"appNameInfo\">"
-											+ selectedApp.appName + "</div>";
-									uploadReportButton.setEnabled(false);
-									logButton.setEnabled(true);
-									deleteButton.setEnabled(false);
-									downloadReportsButton.setEnabled(false);
-									downloadReportsButton.setEnabled(false);
-									downloadAppButton.setEnabled(false);
-								}
-
-								// Set app package in right info panel
-								appInfoName.setHTML(appNameHtml);
-								if ((selectedApp.packageName == null)
-										|| selectedApp.packageName.equals("")) {
-									appInfoPackage
-											.setHTML("<b>Package: </b>N/A");
-								} else {
-									appInfoPackage.setHTML("<b>Package: </b>"
-											+ selectedApp.packageName);
-								}
-
-								// Set version in right info panel
-								if ((selectedApp.versionName == null)
-										|| selectedApp.versionName.equals("")) {
-									appInfoVersion
-											.setHTML("<b>Version: </b>N/A");
-								} else {
-									appInfoVersion.setHTML("<b>Version: </b>"
-											+ selectedApp.versionName);
-								}
-								
-								// Set status in right info panel
-								String tag = null;
-								String status = null;
-								AppStatus appStatus = selectedApp.appStatus;
-								if (appStatus == null) {
-									tag = "Status: ";
-									status = "<div style=\"display: inline;color: gray\">"
-											+ "<b>N/A</b>" + "</div>";
-								} else if (appStatus == AppStatus.HIGH) {
-									tag = "Risk: ";
-									status = "<div style=\"display: inline;color: red\">"
-											+ "<b>HIGH</b>" + "</div>";
-								} else if (appStatus == AppStatus.HIGH_WITH_ERROR) {
-									tag = "Risk: ";
-									status = "<div style=\"display: inline;color: red\">"
-											+ "<b>HIGH*</b>" + "</div>";
-								} else if (appStatus == AppStatus.MODERATE) {
-									tag = "Risk: ";
-									status = "<div style=\"display: inline;color: orange\">"
-											+ "<b>MODERATE</b>" + "</div>";									
-								} else if (appStatus == AppStatus.MODERATE_WITH_ERROR) {
-									tag = "Risk: ";
-									status = "<div style=\"display: inline;color: orange\">"
-											+ "<b>MODERATE*</b>" + "</div>";	
-								} else if (appStatus == AppStatus.LOW) {
-									tag = "Risk: ";
-									status = "<div style=\"display: inline;color: green\">"
-											+ "<b>LOW</b>" + "</div>";	
-								} else if (appStatus == AppStatus.LOW_WITH_ERROR) {
-									tag = "Risk: ";
-									status = "<div style=\"display: inline;color: green\">"
-											+ "<b>LOW*</b>" + "</div>";	
-								} else if (appStatus == AppStatus.NA) {
-									tag = "Status: ";
-									status = "<div style=\"display: inline;color: gray\">"
-											+ "<b>N/A</b>" + "</div>";
-								} else {
-									tag = "Status: ";
-									status = "<div style=\"display: inline;color: black\">"
-											+ "<b>" + appStatus.name() + "</b></div>";
-								}
-									
-								// Set status display
-								appStatusInfo.setHTML("<b>" + tag + "</b>"
-										+ status);
-
-								// Get tool results
-								final String htmlToolResults = getHtmlToolResults(
-										selectedApp.appId, toolsResults);
-								toolResultsHtml.setHTML(htmlToolResults);
-								logButton.setEnabled(true);
-							}
+						} else {
+							appNameHtml = "<div id=\"appNameInfo\">"
+									+ selectedApp.appName + "</div>";
+							uploadReportButton.setEnabled(false);
+							logButton.setEnabled(true);
+							deleteButton.setEnabled(false);
+							downloadReportsButton.setEnabled(false);
+							downloadReportsButton.setEnabled(false);
+							downloadAppButton.setEnabled(false);
 						}
 
-						// Display all reports
-						public String getHtmlToolResults(String appId,
-								List<ToolStatusGwt> toolResults) {
-							// Get summary report
-							String statuses = "<h3 title=\"Overview\" id=\"appInfoSectionHeader\">Overview</h3>\n";
-							int summaryCount = 0;
-
-							for (int i = 0; i < toolResults.size(); i++) {
-								ToolType analysisType = toolResults.get(i)
-										.getToolType();
-
-								if (analysisType == ToolType.SUMMARY) { // TODO:
-																		// For
-																		// AV3,
-																		// SUMMARY
-																		// was
-																		// removed
-																		// (now
-																		// uses
-																		// only
-																		// REPORT)
-									summaryCount++;
-									statuses += getToolStatusHtmlDisplay(toolResults
-											.get(i));
-								}
-							}
-
-							if (summaryCount == 0) {
-								statuses += getNAStatus();
-							}
-
-							// Get pre-processing analysis results
-							statuses += "<h3 title=\"App Information\" id=\"appInfoSectionHeader\">App Information</h3>\n";
-							int preprocessorToolCount = 0;
-
-							for (int i = 0; i < toolResults.size(); i++) {
-								ToolType toolType = toolResults.get(i)
-										.getToolType();
-
-								if (toolType == ToolType.PREPROCESSOR) {
-									preprocessorToolCount++;
-									statuses += getPreprocessorStatusHtmlDisplay(toolResults
-											.get(i));
-								}
-							}
-
-							if (preprocessorToolCount == 0) {
-								statuses += getNAStatus();
-							}
-
-							// Get tool and manually-uploaded results.
-							statuses += "<h3 title=\"Report Type\"  id=\"appInfoSectionHeader\">Report Type</h3>\n";
-							int analysisToolCount = 0;
-
-							for (int i = 0; i < toolResults.size(); i++) {
-								ToolType toolType = toolResults.get(i)
-										.getToolType();
-
-								if (toolType == ToolType.TESTTOOL
-										|| toolType == ToolType.REPORT) {
-									analysisToolCount++;
-									statuses += getToolStatusHtmlDisplay(toolResults
-											.get(i));
-								}
-							}
-
-							if (analysisToolCount == 0) {
-								statuses += getNAStatus();
-							}
-
-							/* Get audit results */
-//							statuses += "<h3 title=\"Final Organizational Determination\" id=\"appInfoSectionHeader\">Final Organizational Determination</h3>\n";
-//							int auditCount = 0;
-//
-//							for (int i = 0; i < toolResults.size(); i++) {
-//								ToolType toolType = toolResults.get(i)
-//										.getToolType();
-//
-//								if (toolType == ToolType.AUDIT) { // TODO: For
-//																	// AV3,
-//																	// AUDIT was
-//																	// removed
-//																	// (now uses
-//																	// only
-//																	// REPORT)
-//									auditCount++;
-//									statuses += getToolStatusHtmlDisplay(toolResults
-//											.get(i));
-//								}
-//							}
-//
-//							if (auditCount == 0) {
-//								statuses += getNAStatus();
-//							}
-
-							return statuses;
+						// Set app package in right info panel
+						appInfoName.setHTML(appNameHtml);
+						if ((selectedApp.packageName == null)
+								|| selectedApp.packageName.equals("")) {
+							appInfoPackage
+							.setHTML("<b>Package: </b>N/A");
+						} else {
+							appInfoPackage.setHTML("<b>Package: </b>"
+									+ selectedApp.packageName);
 						}
 
-						public String getNAStatus() {
-							return "<table>\n"
-									+ "<tr>\n"
-									+ "<td title=\"NA status\" align=\"left\" style='color: dimgray; size:18; weight: bold'width=\"185\">"
-									+ "N/A" + "</td>\n" + "</tr>\n"
-									+ "</table>\n";
+						// Set version in right info panel
+						if ((selectedApp.versionName == null)
+								|| selectedApp.versionName.equals("")) {
+							appInfoVersion
+							.setHTML("<b>Version: </b>N/A");
+						} else {
+							appInfoVersion.setHTML("<b>Version: </b>"
+									+ selectedApp.versionName);
 						}
 
-						public String getPreprocessorStatusHtmlDisplay(
-								ToolStatusGwt toolStatus) {
-							String status = null;
-
-							if (toolStatus.getStatusHtml().indexOf("LOW") > -1) {
-								// Pre-processor status of LOW is displayed as
-								// "COMPLETED"
-								status = "<div id=\"tabledim\" style='color: black'>COMPLETED</div>";
-							} else {
-								status = toolStatus.getStatusHtml();
-							}
-
-							String toolIconURL = null;
-							String toolIconAltText = null;
-							if (toolStatus.getIconURL() != null) {
-								// Check for custom icon URL defined in tool
-								// adapter config file
-								toolIconURL = toolStatus.getIconURL();
-								toolIconAltText = toolStatus.getIconAltText();
-							} else {
-								// Use default icons
-								toolIconURL = toolStatus.getToolType()
-										.getDefaultIconURL();
-								toolIconAltText = toolStatus.getToolType()
-										.getDefaultAltText();
-							}
-
-							// To over on table, add 'class=\"hovertable\"
-							return getToolRowHtml(toolIconURL, toolIconAltText,
-									toolStatus.getToolDisplayName(), status,
-									toolStatus.getReport());
+						// Set status in right info panel
+						String tag = null;
+						String status = null;
+						AppStatus appStatus = selectedApp.appStatus;
+						if (appStatus == null) {
+							tag = "Status: ";
+							status = "<div style=\"display: inline;color: gray\">"
+									+ "<b>N/A</b>" + "</div>";
+						} else if (appStatus == AppStatus.HIGH) {
+							tag = "Risk: ";
+							status = "<div style=\"display: inline;color: red\">"
+									+ "<b>HIGH</b>" + "</div>";
+						} else if (appStatus == AppStatus.HIGH_WITH_ERROR) {
+							tag = "Risk: ";
+							status = "<div style=\"display: inline;color: red\">"
+									+ "<b>HIGH*</b>" + "</div>";
+						} else if (appStatus == AppStatus.MODERATE) {
+							tag = "Risk: ";
+							status = "<div style=\"display: inline;color: orange\">"
+									+ "<b>MODERATE</b>" + "</div>";
+						} else if (appStatus == AppStatus.MODERATE_WITH_ERROR) {
+							tag = "Risk: ";
+							status = "<div style=\"display: inline;color: orange\">"
+									+ "<b>MODERATE*</b>" + "</div>";
+						} else if (appStatus == AppStatus.LOW) {
+							tag = "Risk: ";
+							status = "<div style=\"display: inline;color: green\">"
+									+ "<b>LOW</b>" + "</div>";
+						} else if (appStatus == AppStatus.LOW_WITH_ERROR) {
+							tag = "Risk: ";
+							status = "<div style=\"display: inline;color: green\">"
+									+ "<b>LOW*</b>" + "</div>";
+						} else if (appStatus == AppStatus.NA) {
+							tag = "Status: ";
+							status = "<div style=\"display: inline;color: gray\">"
+									+ "<b>N/A</b>" + "</div>";
+						} else {
+							tag = "Status: ";
+							status = "<div style=\"display: inline;color: black\">"
+									+ "<b>"
+									+ appStatus.name()
+									+ "</b></div>";
 						}
 
-						public String getToolStatusHtmlDisplay(
-								ToolStatusGwt toolStatus) {
-							String toolIconURL = null;
-							String toolIconAltText = null;
+						// Set status display
+						appStatusInfo.setHTML("<b>" + tag + "</b>"
+								+ status);
 
-							if (toolStatus.getIconURL() != null) {
-								toolIconURL = toolStatus.getIconURL();
-								toolIconAltText = toolStatus.getIconAltText();
-							} else {
-								toolIconURL = toolStatus.getToolType()
-										.getDefaultIconURL();
-								toolIconAltText = toolStatus.getToolType()
-										.getDefaultAltText();
-							}
+						// Get tool results
+						final String htmlToolResults = getHtmlToolResults(
+								selectedApp.appId, toolsResults);
+						toolResultsHtml.setHTML(htmlToolResults);
+						logButton.setEnabled(true);
+					}
+				}
 
-							return getToolRowHtml(toolIconURL, toolIconAltText,
-									toolStatus.getToolDisplayName(),
-									toolStatus.getStatusHtml(),
-									toolStatus.getReport());
+				// Display all reports
+				public String getHtmlToolResults(String appId,
+						List<ToolStatusGwt> toolResults) {
+					// Get summary report
+					String statuses = "<h3 title=\"Overview\" id=\"appInfoSectionHeader\">Overview</h3>\n";
+					int summaryCount = 0;
+
+					for (int i = 0; i < toolResults.size(); i++) {
+						ToolType analysisType = toolResults.get(i)
+								.getToolType();
+
+						if (analysisType == ToolType.SUMMARY) { // TODO:
+							// For
+							// AV3,
+							// SUMMARY
+							// was
+							// removed
+							// (now
+							// uses
+							// only
+							// REPORT)
+							summaryCount++;
+							statuses += getToolStatusHtmlDisplay(toolResults
+									.get(i));
 						}
+					}
 
-						private String getToolRowHtml(String toolIconURL,
-								String toolIconAltText, String toolDisplayName,
-								String toolStatus, String toolReport) {
-							return "<table>" + "<tr>\n"
-									+ "<td>"
-									+ "<img class=\"toolimages\" src=\""
-									+ toolIconURL
-									+ "\" alt=\""
-									+ toolIconAltText
-									+ "\"> "
-									+ "</td>\n"
-									// Removed title="mytitle" from following td
-									+ "<td align=\"left\" width=\"200\">"
-									+ toolDisplayName
-									+ "</td>\n"
-									// Removed title="mytitle" from following td
-									+ "<td align=\"left\" width=\"140\">"
-									+ toolStatus
-									+ "</td>\n"
-									// Removed title="mytitle" from following td
-									+ "<td align=\"left\" width=\"45\">"
-									+ toolReport + "</td>\n" + "</tr>\n"
-									+ "</table>";
+					if (summaryCount == 0) {
+						statuses += getNAStatus();
+					}
+
+					// Get pre-processing analysis results
+					statuses += "<h3 title=\"App Information\" id=\"appInfoSectionHeader\">App Information</h3>\n";
+					int preprocessorToolCount = 0;
+
+					for (int i = 0; i < toolResults.size(); i++) {
+						ToolType toolType = toolResults.get(i)
+								.getToolType();
+
+						if (toolType == ToolType.PREPROCESSOR) {
+							preprocessorToolCount++;
+							statuses += getPreprocessorStatusHtmlDisplay(toolResults
+									.get(i));
 						}
+					}
 
-					});
+					if (preprocessorToolCount == 0) {
+						statuses += getNAStatus();
+					}
+
+					// Get tool and manually-uploaded results.
+					statuses += "<h3 title=\"Report Type\"  id=\"appInfoSectionHeader\">Report Type</h3>\n";
+					int analysisToolCount = 0;
+
+					for (int i = 0; i < toolResults.size(); i++) {
+						ToolType toolType = toolResults.get(i)
+								.getToolType();
+
+						if (toolType == ToolType.TESTTOOL
+								|| toolType == ToolType.REPORT) {
+							analysisToolCount++;
+							statuses += getToolStatusHtmlDisplay(toolResults
+									.get(i));
+						}
+					}
+
+					if (analysisToolCount == 0) {
+						statuses += getNAStatus();
+					}
+
+					/* Get audit results */
+					// statuses +=
+					// "<h3 title=\"Final Organizational Determination\" id=\"appInfoSectionHeader\">Final Organizational Determination</h3>\n";
+					// int auditCount = 0;
+					//
+					// for (int i = 0; i < toolResults.size(); i++) {
+					// ToolType toolType = toolResults.get(i)
+					// .getToolType();
+					//
+					// if (toolType == ToolType.AUDIT) { // TODO: For
+					// // AV3,
+					// // AUDIT was
+					// // removed
+					// // (now uses
+					// // only
+					// // REPORT)
+					// auditCount++;
+					// statuses += getToolStatusHtmlDisplay(toolResults
+					// .get(i));
+					// }
+					// }
+					//
+					// if (auditCount == 0) {
+					// statuses += getNAStatus();
+					// }
+
+					return statuses;
+				}
+
+				public String getNAStatus() {
+					return "<table>\n"
+							+ "<tr>\n"
+							+ "<td title=\"NA status\" align=\"left\" style='color: dimgray; size:18; weight: bold'width=\"185\">"
+							+ "N/A" + "</td>\n" + "</tr>\n"
+							+ "</table>\n";
+				}
+
+				public String getPreprocessorStatusHtmlDisplay(
+						ToolStatusGwt toolStatus) {
+					String status = null;
+
+					if (toolStatus.getStatusHtml().indexOf("LOW") > -1) {
+						// Pre-processor status of LOW is displayed as
+						// "COMPLETED"
+						status = "<div id=\"tabledim\" style='color: black'>COMPLETED</div>";
+					} else {
+						status = toolStatus.getStatusHtml();
+					}
+
+					String toolIconURL = null;
+					String toolIconAltText = null;
+					if (toolStatus.getIconURL() != null) {
+						// Check for custom icon URL defined in tool
+						// adapter config file
+						toolIconURL = toolStatus.getIconURL();
+						toolIconAltText = toolStatus.getIconAltText();
+					} else {
+						// Use default icons
+						toolIconURL = toolStatus.getToolType()
+								.getDefaultIconURL();
+						toolIconAltText = toolStatus.getToolType()
+								.getDefaultAltText();
+					}
+
+					// To over on table, add 'class=\"hovertable\"
+					return getToolRowHtml(toolIconURL, toolIconAltText,
+							toolStatus.getToolDisplayName(), status,
+							toolStatus.getReport());
+				}
+
+				public String getToolStatusHtmlDisplay(
+						ToolStatusGwt toolStatus) {
+					String toolIconURL = null;
+					String toolIconAltText = null;
+
+					if (toolStatus.getIconURL() != null) {
+						toolIconURL = toolStatus.getIconURL();
+						toolIconAltText = toolStatus.getIconAltText();
+					} else {
+						toolIconURL = toolStatus.getToolType()
+								.getDefaultIconURL();
+						toolIconAltText = toolStatus.getToolType()
+								.getDefaultAltText();
+					}
+
+					return getToolRowHtml(toolIconURL, toolIconAltText,
+							toolStatus.getToolDisplayName(),
+							toolStatus.getStatusHtml(),
+							toolStatus.getReport());
+				}
+
+				private String getToolRowHtml(String toolIconURL,
+						String toolIconAltText, String toolDisplayName,
+						String toolStatus, String toolReport) {
+					return "<table>" + "<tr>\n"
+							+ "<td>"
+							+ "<img class=\"toolimages\" src=\""
+							+ toolIconURL
+							+ "\" alt=\""
+							+ toolIconAltText
+							+ "\"> "
+							+ "</td>\n"
+							// Removed title="mytitle" from following td
+							+ "<td align=\"left\" width=\"200\">"
+							+ toolDisplayName
+							+ "</td>\n"
+							// Removed title="mytitle" from following td
+							+ "<td align=\"left\" width=\"140\">"
+							+ toolStatus
+							+ "</td>\n"
+							// Removed title="mytitle" from following td
+							+ "<td align=\"left\" width=\"45\">"
+							+ toolReport + "</td>\n" + "</tr>\n"
+							+ "</table>";
+				}
+
+			});
 		}
 	}
 
@@ -2244,7 +2258,7 @@ public class AppVetPanel extends DockLayoutPanel {
 							"AppVet Info",
 							"AppVet is a dynamic web application that automatically updates "
 									+ " in real-time. Do not refresh or reload this page while using AppVet.",
-							true);
+									true);
 				}
 			}
 		};
@@ -2263,11 +2277,11 @@ public class AppVetPanel extends DockLayoutPanel {
 		 * the most problematic, so check all three browsers!
 		 */
 		final int appVetPanelHeight = this.getOffsetHeight(); // Total height
-																// including
-																// decoration
-																// and padding,
-																// but not
-																// margin
+		// including
+		// decoration
+		// and padding,
+		// but not
+		// margin
 
 		// Set center panel height
 		final int MARGIN_HEIGHT = 0;
@@ -2275,7 +2289,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				- (int) NORTH_PANEL_HEIGHT - (int) SOUTH_PANEL_HEIGHT
 				- MARGIN_HEIGHT;
 		int adjustedCenterPanelHeight = centerPanelHeight + 12; // Adjust center
-																// panel height
+		// panel height
 		centerPanel.setHeight(adjustedCenterPanelHeight + "px");
 
 		// Set pager height to adjust appsListTable height inside center panel
@@ -2365,7 +2379,7 @@ public class AppVetPanel extends DockLayoutPanel {
 									+ updatedAppInfo.appId
 									+ ". The reports for these tool may or may not arrive at a later time. "
 									+ "These tools has been disabled and the administrator has been notified.",
-							true);
+									true);
 
 				}
 			} else {
@@ -2491,42 +2505,42 @@ public class AppVetPanel extends DockLayoutPanel {
 
 				appVetServiceAsync.selfUpdatePassword(updatedUserInfo,
 						new AsyncCallback<Boolean>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								showMessageDialog("Update Error",
-										"Could not update user information",
-										true);
-								killDialogBox(userAcctDialogBox);
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						showMessageDialog("Update Error",
+								"Could not update user information",
+								true);
+						killDialogBox(userAcctDialogBox);
+					}
 
-							@Override
-							public void onSuccess(Boolean result) {
-								final boolean updated = result.booleanValue();
-								if (updated) {
-									userMenuItem.setText(userInfo
-											.getNameWithLastNameInitial());
-									userInfo.setUserName(userInfo.getUserName());
-									userInfo.setLastName(updatedUserInfo
-											.getLastName());
-									userInfo.setFirstName(updatedUserInfo
-											.getFirstName());
-									userInfo.setEmail(updatedUserInfo
-											.getEmail());
-									updatedUserInfo.setPassword("");
+					@Override
+					public void onSuccess(Boolean result) {
+						final boolean updated = result.booleanValue();
+						if (updated) {
+							userMenuItem.setText(userInfo
+									.getNameWithLastNameInitial());
+							userInfo.setUserName(userInfo.getUserName());
+							userInfo.setLastName(updatedUserInfo
+									.getLastName());
+							userInfo.setFirstName(updatedUserInfo
+									.getFirstName());
+							userInfo.setEmail(updatedUserInfo
+									.getEmail());
+							updatedUserInfo.setPassword("");
 
-									killDialogBox(userAcctDialogBox);
-									showMessageDialog("Account Update",
-											"Password updated successfully.",
-											false);
-								} else {
-									showMessageDialog(
-											"Update Error",
-											"Could not update user information",
-											true);
-									killDialogBox(userAcctDialogBox);
-								}
-							}
-						});
+							killDialogBox(userAcctDialogBox);
+							showMessageDialog("Account Update",
+									"Password updated successfully.",
+									false);
+						} else {
+							showMessageDialog(
+									"Update Error",
+									"Could not update user information",
+									true);
+							killDialogBox(userAcctDialogBox);
+						}
+					}
+				});
 
 			}
 		});
