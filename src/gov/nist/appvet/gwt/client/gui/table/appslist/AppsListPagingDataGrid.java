@@ -210,6 +210,8 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 					statusHtml = "<div style=\"color: red\">HIGH</div>";
 				} else if (appStatus == AppStatus.NA) {
 					statusHtml = "<div style=\"color: gray\">N/A</div>";
+				} else if (appStatus == AppStatus.PROCESSING) {
+					statusHtml = "<div style=\"color: blue\">PROCESSING</div>";	
 				} else {
 					statusHtml = "<div style=\"color: black\">"
 							+ appStatus.name() + "</div>";

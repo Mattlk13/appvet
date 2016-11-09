@@ -1180,7 +1180,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoPackage
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		appInfoPackage.setStyleName("appInfoVersion");
-		verticalPanel.add(appInfoPackage);
+		// Remove package from app info panel
+		//verticalPanel.add(appInfoPackage);
 		appInfoPackage.setSize("500px", "14px");
 		appInfoVersion = new HTML("", true);
 		appInfoVersion
@@ -1968,6 +1969,8 @@ public class AppVetPanel extends DockLayoutPanel {
 
 						// Set app package in right info panel
 						appInfoName.setHTML(appNameHtml);
+						
+						
 						if ((selectedApp.packageName == null)
 								|| selectedApp.packageName.equals("")) {
 							appInfoPackage
@@ -2023,6 +2026,10 @@ public class AppVetPanel extends DockLayoutPanel {
 							tag = "Status: ";
 							status = "<div style=\"display: inline;color: gray\">"
 									+ "<b>N/A</b>" + "</div>";
+						} else if (appStatus == AppStatus.PROCESSING) {
+							tag = "Status: ";
+							status = "<div style=\"display: inline;color: blue\">"
+									+ "<b>PROCESSING</b>" + "</div>";
 						} else {
 							tag = "Status: ";
 							status = "<div style=\"display: inline;color: black\">"

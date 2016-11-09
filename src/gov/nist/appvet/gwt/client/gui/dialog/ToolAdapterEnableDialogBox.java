@@ -37,7 +37,6 @@ public class ToolAdapterEnableDialogBox extends DialogBox {
 		lblNewLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dockPanel.add(lblNewLabel, DockPanel.NORTH);
 		lblNewLabel.setHeight("23px");
-		// String[] userMembershipLevels;
 		listBox = new ListBox();
 		listBox.setStyleName("h1");
 		listBox.setFocus(true);
@@ -69,7 +68,6 @@ public class ToolAdapterEnableDialogBox extends DialogBox {
 				String selectedToolString = listBox.getItemText(selectedIndex);
 				String[] selectedToolStringArray = selectedToolString.split(": ");
 				String selectedToolEnabledString = selectedToolStringArray[1];
-				//log.info("Selected tool is: " + selectedToolEnabledString);
 				toolAdapterEnabledDialog = new ToolAdapterEnabledEditDialogBox(
 						selectedTestTool, selectedToolEnabledString);
 				toolAdapterEnabledDialog.setText("Tool Enable/Disable");

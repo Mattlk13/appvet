@@ -441,8 +441,8 @@ public class ToolAdapter implements Runnable {
 
 			HttpPost httpPost = new HttpPost(toolServiceURL);
 			httpPost.setEntity(entity);
-			appInfo.log.info("Tool adapter '" + toolId + "' sending app " + appInfo.appId
-					+ " to " + toolServiceURL);
+			appInfo.log.info("Sending app " + 
+					appInfo.appId + " to tool '" + toolId + "'");
 
 			// Send the app to the tool
 			final HttpResponse httpResponse = httpclient.execute(httpPost);

@@ -45,7 +45,7 @@ import java.util.ArrayList;
 public class AppVetProperties {
 	public static boolean error = false;
 	/** AppVet Github release version number. */
-	public static final String APPVET_VERSION = "2.4"; 
+	public static final String APPVET_VERSION = "2.4.1"; 
 	// Logging
 	public static Logger log = null;
 	private static String APPVET_LOG_NAME = "appvet_log.txt";
@@ -78,7 +78,6 @@ public class AppVetProperties {
 	public static final Role DEFAULT_ADMIN_ROLE = Role.ADMIN;
 
 	static {
-		//System.out.println("*** Starting AppVet v" + APPVET_VERSION + " ***");
 		JAVA_HOME = System.getenv("JAVA_HOME");
 		if (JAVA_HOME == null || JAVA_HOME.isEmpty()) {
 			System.err.println("The JAVA_HOME environment variable is null!");
@@ -194,7 +193,7 @@ public class AppVetProperties {
 		LOG_LEVEL = xml.getXPathValue("/AppVet/Logging/Level");
 		LOG_TO_CONSOLE = xml.getXPathValue("/AppVet/Logging/ToConsole");
 		log = new Logger(APPVET_LOG_PATH, "APPVET");
-		log.debug("---------- START AppVet PROPERTIES -------------------");
+		log.debug("*** Starting AppVet v" + APPVET_VERSION);
 		printVal("APPVET VERSION", APPVET_VERSION);
 		printVal("JAVA_HOME", JAVA_HOME);
 		printVal("JRE_HOME", JRE_HOME);

@@ -23,7 +23,6 @@ package gov.nist.appvet.gwt.client.gui.dialog;
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -41,25 +40,16 @@ import com.google.gwt.user.client.ui.RadioButton;
 public class ToolAdapterEnabledEditDialogBox extends DialogBox {
 	public PushButton cancelButton = null;
 	public Label mainLabel = null;
-//	public FileUpload fileUpload = null;
 	public PushButton okButton = null;
-//	public Hidden hiddenAppPackage = null;
-//	public Hidden hiddenAppVersion = null;
-//	public Hidden hiddenAppOS = null;
 	public Label statusLabel = null;
 	public List<String> allUserOrgLevels = null;
-	//private Logger log = Logger.getLogger("ToolAdapterEnabledEditDialogBox");
-//	public SuggestBox suggestBox = null;
-//	public String orgMembership;
 	RadioButton enableRadioButton = null;
 	RadioButton disableRadioButton = null;
 
 	public ToolAdapterEnabledEditDialogBox(ToolInfoGwt testTool, String disabledEnabledStr) {
 		super(false, true);
-//		this.orgMembership = orgMembership;
 		setWidth("200px");
 		setAnimationEnabled(false);
-//		this.allUserOrgLevels = allUserOrgLevels;
 		final VerticalPanel mainPanel = new VerticalPanel();
 		mainPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		mainPanel.addStyleName("mainPanel");
@@ -67,7 +57,6 @@ public class ToolAdapterEnabledEditDialogBox extends DialogBox {
 		mainPanel.setSize("", "141px");
 
 		// Set label
-//		int index = selectedIndex + 1; // Index must start at 1, not 0
 		mainLabel = new Label("Enable or disable '" + testTool.getId() + "'");
 		mainPanel.add(mainLabel);
 		mainLabel.setDirection(Direction.LTR);
@@ -75,8 +64,6 @@ public class ToolAdapterEnabledEditDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		mainLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		mainLabel.setSize("", "32px");
-
-//		MultiWordSuggestOracle suggestOracle = getOracle(selectedIndex);
 		
 		enableRadioButton = new RadioButton("group1", "Enable");
 		enableRadioButton.setStyleName("h1");
