@@ -87,9 +87,8 @@ public class OrgLevelsDialogBox extends DialogBox {
 		}
 	    
 		dockPanel.add(listBox, DockPanel.CENTER);
-		dockPanel.setCellVerticalAlignment(listBox, HasVerticalAlignment.ALIGN_MIDDLE);
 		dockPanel.setCellHorizontalAlignment(listBox, HasHorizontalAlignment.ALIGN_CENTER);
-		listBox.setSize("372px", "118px");
+		listBox.setSize("372px", "110px");
 		listBox.setVisibleItemCount(7);
 		
 		HorizontalPanel horizontalPanel = new HorizontalPanel();

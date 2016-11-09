@@ -36,21 +36,21 @@ public class ToolAdapterEnableDialogBox extends DialogBox {
 		Label lblNewLabel = new Label("Select tool to enable/disable:");
 		lblNewLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dockPanel.add(lblNewLabel, DockPanel.NORTH);
+		lblNewLabel.setHeight("23px");
 		// String[] userMembershipLevels;
 		listBox = new ListBox();
+		listBox.setStyleName("h1");
 		listBox.setFocus(true);
 
 		dockPanel.add(listBox, DockPanel.CENTER);
-		dockPanel.setCellVerticalAlignment(listBox,
-				HasVerticalAlignment.ALIGN_MIDDLE);
 		dockPanel.setCellHorizontalAlignment(listBox,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		listBox.setSize("372px", "118px");
+		listBox.setSize("361px", "102px");
 		listBox.setVisibleItemCount(7);
 
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		dockPanel.add(horizontalPanel, DockPanel.SOUTH);
-		horizontalPanel.setWidth("373px");
+		horizontalPanel.setSize("373px", "28px");
 
 		cancelButton = new PushButton("Cancel");
 		cancelButton.setStyleName("grayButton shadow");

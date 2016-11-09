@@ -79,8 +79,9 @@ public class ToolAdapterEnabledEditDialogBox extends DialogBox {
 //		MultiWordSuggestOracle suggestOracle = getOracle(selectedIndex);
 		
 		enableRadioButton = new RadioButton("group1", "Enable");
+		enableRadioButton.setStyleName("h1");
 		mainPanel.add(enableRadioButton);
-		enableRadioButton.setHeight("20px");
+		enableRadioButton.setSize("229px", "20px");
 		
 		disableRadioButton = new RadioButton("group1", "Disable");
 		mainPanel.add(disableRadioButton);
