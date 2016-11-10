@@ -1531,7 +1531,7 @@ public class AppVetPanel extends DockLayoutPanel {
 							@Override
 							public void onSuccess(Boolean result) {
 								showMessageDialog("AppVet Info",
-										"Tool(s) enable/disable successful", false);
+										"Tool(s) enabled/disabled successfully", false);
 							}
 						});
 					}

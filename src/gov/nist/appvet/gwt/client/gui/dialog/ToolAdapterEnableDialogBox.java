@@ -64,6 +64,11 @@ public class ToolAdapterEnableDialogBox extends DialogBox {
 		editButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
 				final int selectedIndex = listBox.getSelectedIndex();
+				if (selectedIndex < 0) {
+					// Nothing is selected
+					showMessageDialog("AppVet Error", "No tool is selected", true);
+					return;
+				}
 				final ToolInfoGwt selectedTestTool = testTools.get(selectedIndex);
 				String selectedToolString = listBox.getItemText(selectedIndex);
 				String[] selectedToolStringArray = selectedToolString.split(": ");
@@ -106,6 +111,7 @@ public class ToolAdapterEnableDialogBox extends DialogBox {
 			}
 		});
 		editButton.setStyleName("grayButton shadow");
+		editButton.setEnabled(false);
 		horizontalPanel.add(editButton);
 		editButton.setSize("70px", "18px");
 		horizontalPanel.setCellVerticalAlignment(editButton,
@@ -123,6 +129,12 @@ public class ToolAdapterEnableDialogBox extends DialogBox {
 		horizontalPanel.setCellHorizontalAlignment(okButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		okButton.setSize("70px", "18px");
+		
+		listBox.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent arg0) {
+				editButton.setEnabled(true);
+			}
+		});
 
 		try {
 			for (int i = 0; i < testTools.size(); i++) {
