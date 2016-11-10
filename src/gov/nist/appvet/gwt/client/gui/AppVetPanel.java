@@ -114,7 +114,8 @@ public class AppVetPanel extends DockLayoutPanel {
 	private HTML appInfoPackage = null;
 	private HTML appInfoVersion = null;
 	private HTML appStatusInfo = null;
-	private Image appInfoIcon = null;
+	private Image appIcon = null;
+	private Image appPlatformIcon = null;
 	private HTML toolResultsHtml = null;
 	private AppsListPagingDataGrid<AppInfoGwt> appsListTable = null;
 	private Date lastAppsListUpdate = null;
@@ -1160,20 +1161,22 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoVerticalPanel.add(appInfoPanel);
 		appInfoVerticalPanel.setCellWidth(appInfoPanel, "100%");
 		appInfoPanel.setSize("", "");
-		appInfoIcon = new Image("");
-		appInfoIcon.setVisible(false);
-		appInfoIcon.setAltText("");
-		appInfoPanel.add(appInfoIcon);
-		appInfoPanel.setCellVerticalAlignment(appInfoIcon,
+		appIcon = new Image("");
+		appIcon.setVisible(false);
+		appIcon.setAltText("");
+		appInfoPanel.add(appIcon);
+		appInfoPanel.setCellVerticalAlignment(appIcon,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		appInfoIcon.setSize("87px", "87px");
+		appIcon.setSize("87px", "87px");
 		final VerticalPanel verticalPanel = new VerticalPanel();
+		verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
 		appInfoPanel.add(verticalPanel);
-		verticalPanel.setHeight("82px");
+		verticalPanel.setHeight("87px");
 		appInfoName = new HTML("", false);
 		appInfoName.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		verticalPanel.add(appInfoName);
-		appInfoName.setSize("500px", "33px");
+		verticalPanel.setCellVerticalAlignment(appInfoName, HasVerticalAlignment.ALIGN_MIDDLE);
+		appInfoName.setSize("398px", "38px");
 		appInfoPanel.setCellVerticalAlignment(appInfoName,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appInfoPackage = new HTML("", true);
@@ -1188,15 +1191,23 @@ public class AppVetPanel extends DockLayoutPanel {
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		appInfoVersion.setStyleName("appInfoVersion");
 		verticalPanel.add(appInfoVersion);
-		appInfoVersion.setSize("500px", "14px");
+		verticalPanel.setCellVerticalAlignment(appInfoVersion, HasVerticalAlignment.ALIGN_MIDDLE);
+		appInfoVersion.setSize("398px", "24px");
 
 		appStatusInfo = new HTML("", true);
 		appStatusInfo.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		appStatusInfo.setStyleName("appInfoVersion");
 		verticalPanel.add(appStatusInfo);
-		appStatusInfo.setSize("500px", "14px");
+		appStatusInfo.setSize("398px", "25px");
 		verticalPanel.setCellVerticalAlignment(appStatusInfo,
-				HasVerticalAlignment.ALIGN_MIDDLE);
+				HasVerticalAlignment.ALIGN_BOTTOM);
+		
+		appPlatformIcon = new Image("");
+		appPlatformIcon.setVisible(true);
+		appInfoPanel.add(appPlatformIcon);
+		appInfoPanel.setCellVerticalAlignment(appPlatformIcon, HasVerticalAlignment.ALIGN_MIDDLE);
+		appInfoPanel.setCellHorizontalAlignment(appPlatformIcon, HasHorizontalAlignment.ALIGN_RIGHT);
+		appPlatformIcon.setSize("50px", "50px");
 
 		HorizontalPanel appButtonPanel = new HorizontalPanel();
 		appButtonPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
@@ -1750,7 +1761,7 @@ public class AppVetPanel extends DockLayoutPanel {
 							appInfoVersion.setHTML("");
 							appInfoPackage.setHTML("");
 							appStatusInfo.setHTML("");
-							appInfoIcon.setVisible(false);
+							appIcon.setVisible(false);
 							appInfoName.setText("");
 							toolResultsHtml.setText("");
 							disableAllButtons();
@@ -1919,7 +1930,7 @@ public class AppVetPanel extends DockLayoutPanel {
 						showMessageDialog("AppVet Error: ",
 								"Could not retrieve app info.", true);
 					} else {
-						// Display selected app information
+						// Display APP ICON
 						String iconPath = null;
 						String altText = null;
 						if (selectedApp.iconURL == null) {
@@ -1938,11 +1949,26 @@ public class AppVetPanel extends DockLayoutPanel {
 							altText = selectedApp.appName;
 						}
 
-						appInfoIcon.setVisible(true);
-						appInfoIcon.setUrl(iconPath);
-						appInfoIcon.setAltText(altText);
+						appIcon.setVisible(true);
+						appIcon.setUrl(iconPath);
+						appIcon.setAltText(altText);
+						
+						// Display PLATFORM ICON
+						String platformIconPath = null;
+						String platformIconAlt = null;
+						if (selectedApp.os == DeviceOS.ANDROID) {
+							platformIconPath = "images/android-platform-logo.png";
+							platformIconAlt = "Android";
+						} else if (selectedApp.os == DeviceOS.IOS) {
+							platformIconPath = "images/ios-platform-logo.png";
+							platformIconAlt = "iOS";
+						}
 
-						// Set app name in right info panel
+						appPlatformIcon.setVisible(true);
+						appPlatformIcon.setUrl(platformIconPath);
+						appPlatformIcon.setAltText(platformIconAlt);
+
+						// Display APP NAME
 						String appNameHtml = null;
 						if ((selectedApp.appStatus == AppStatus.NA)
 								|| (selectedApp.appStatus == AppStatus.ERROR)
@@ -1967,10 +1993,9 @@ public class AppVetPanel extends DockLayoutPanel {
 							downloadAppButton.setEnabled(false);
 						}
 
-						// Set app package in right info panel
 						appInfoName.setHTML(appNameHtml);
 						
-						
+						// Display APP PACKAGE
 						if ((selectedApp.packageName == null)
 								|| selectedApp.packageName.equals("")) {
 							appInfoPackage
@@ -1980,7 +2005,7 @@ public class AppVetPanel extends DockLayoutPanel {
 									+ selectedApp.packageName);
 						}
 
-						// Set version in right info panel
+						// Display VERSION
 						if ((selectedApp.versionName == null)
 								|| selectedApp.versionName.equals("")) {
 							appInfoVersion
@@ -1989,8 +2014,9 @@ public class AppVetPanel extends DockLayoutPanel {
 							appInfoVersion.setHTML("<b>Version: </b>"
 									+ selectedApp.versionName);
 						}
+					
 
-						// Set status in right info panel
+						// Display APP STATUS
 						String tag = null;
 						String status = null;
 						AppStatus appStatus = selectedApp.appStatus;
@@ -2038,11 +2064,10 @@ public class AppVetPanel extends DockLayoutPanel {
 									+ "</b></div>";
 						}
 
-						// Set status display
 						appStatusInfo.setHTML("<b>" + tag + "</b>"
 								+ status);
 
-						// Get tool results
+						// Display TOOL RESULTS
 						final String htmlToolResults = getHtmlToolResults(
 								selectedApp.appId, toolsResults);
 						toolResultsHtml.setHTML(htmlToolResults);
@@ -2050,7 +2075,7 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				}
 
-				// Display all reports
+				// Display REPORTS
 				public String getHtmlToolResults(String appId,
 						List<ToolStatusGwt> toolResults) {
 					// Get summary report
@@ -2081,7 +2106,7 @@ public class AppVetPanel extends DockLayoutPanel {
 						statuses += getNAStatus();
 					}
 
-					// Get pre-processing analysis results
+					// Display pre-processing analysis results
 					statuses += "<h3 title=\"App Information\" id=\"appInfoSectionHeader\">App Information</h3>\n";
 					int preprocessorToolCount = 0;
 
@@ -2100,7 +2125,7 @@ public class AppVetPanel extends DockLayoutPanel {
 						statuses += getNAStatus();
 					}
 
-					// Get tool and manually-uploaded results.
+					// Display tool and manually-uploaded results.
 					statuses += "<h3 title=\"Report Type\"  id=\"appInfoSectionHeader\">Report Type</h3>\n";
 					int analysisToolCount = 0;
 
@@ -2417,7 +2442,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				appSelectionModel.setSelected(
 						allApps.get(currentlySelectedIndex), true);
 			} else {
-				appInfoIcon.setVisible(false);
+				appIcon.setVisible(false);
 				appInfoName.setText("");
 				toolResultsHtml.setText("");
 				disableAllButtons();

@@ -33,6 +33,8 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.i18n.client.HasDirection.Direction;
 import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
 
 /**
  * @author steveq@nist.gov
@@ -66,11 +68,21 @@ public class ToolAdapterEnabledEditDialogBox extends DialogBox {
 		mainLabel.setSize("", "32px");
 		
 		enableRadioButton = new RadioButton("group1", "Enable");
+		enableRadioButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent arg0) {
+				okButton.setEnabled(true);
+			}
+		});
 		enableRadioButton.setStyleName("h1");
 		mainPanel.add(enableRadioButton);
 		enableRadioButton.setSize("229px", "20px");
 		
 		disableRadioButton = new RadioButton("group1", "Disable");
+		disableRadioButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent arg0) {
+				okButton.setEnabled(true);
+			}
+		});
 		mainPanel.add(disableRadioButton);
 		disableRadioButton.setHeight("20px");
 		
@@ -104,6 +116,7 @@ public class ToolAdapterEnabledEditDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		cancelButton.setSize("70px", "18px");
 		okButton = new PushButton("Ok");
+		okButton.setEnabled(false);
 		okButton.setStyleName("greenButton shadow");
 		horizontalButtonPanel.add(okButton);
 		horizontalButtonPanel.setCellHorizontalAlignment(okButton,

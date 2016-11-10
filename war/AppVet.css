@@ -215,7 +215,7 @@ searchPanel {
 #appNameInfo {
 	color: darkslategray;
 	padding-bottom: 5px;
-	font-size: 28px;
+	font-size: 32px;
 	font-weight: bold
 }
 
@@ -342,7 +342,7 @@ searchPanel {
 
 .appInfoVersion {
 	color: darkslategrey;
-	font-size: 14px;
+	font-size: 18px;
 }
 
 .moreInfo {

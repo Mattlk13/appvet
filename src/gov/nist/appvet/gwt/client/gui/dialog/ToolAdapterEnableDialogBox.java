@@ -98,6 +98,9 @@ public class ToolAdapterEnableDialogBox extends DialogBox {
 						}
 
 						killDialogBox(toolAdapterEnabledDialog);
+						
+						// Enable this OK button
+						okButton.setEnabled(true);
 					}
 				});
 			}
@@ -111,6 +114,7 @@ public class ToolAdapterEnableDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 
 		okButton = new PushButton("Ok");
+		okButton.setEnabled(false);
 		okButton.setStyleName("greenButton shadow");
 		okButton.setHTML("Ok");
 		horizontalPanel.add(okButton);

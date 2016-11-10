@@ -90,9 +90,9 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 					return sb.toSafeHtml();
 				}
 				if (os == DeviceOS.ANDROID) {
-					sb.appendHtmlConstant("<img width=\"10\" src=\"images/android_logo_green.png\"  alt=\"Android\" />");
+					sb.appendHtmlConstant("<img width=\"12\" src=\"images/android-logo-green.png\"  alt=\"Android\" />");
 				} else if (os == DeviceOS.IOS) {
-					sb.appendHtmlConstant("<img width=\"10\" src=\"images/ios_logo_blue.png\"  alt=\"iOS\" />");
+					sb.appendHtmlConstant("<img width=\"12\" src=\"images/ios-logo-blue.png\"  alt=\"iOS\" />");
 				}
 				return sb.toSafeHtml();
 			}
