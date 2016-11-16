@@ -57,18 +57,18 @@ public class OrgLevelNameEditDialogBox extends DialogBox {
 			int selectedIndex, String selectedLevelName) {
 		super(false, true);
 		this.orgMembership = orgMembership;
-		setWidth("100%");
+		setWidth("408px");
 		setAnimationEnabled(false);
 		this.allUserOrgLevels = allUserOrgLevels;
 		final VerticalPanel mainPanel = new VerticalPanel();
 		mainPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		mainPanel.addStyleName("mainPanel");
 		this.setWidget(mainPanel);
-		mainPanel.setSize("114px", "100px");
+		mainPanel.setSize("380px", "161px");
 
 		// Set label
 		int index = selectedIndex + 1; // Index must start at 1, not 0
-		mainLabel = new Label("Enter name for Level " + index + ":");
+		mainLabel = new Label("");
 		mainPanel.add(mainLabel);
 		mainLabel.setDirection(Direction.LTR);
 		mainPanel.setCellVerticalAlignment(mainLabel,
@@ -81,7 +81,7 @@ public class OrgLevelNameEditDialogBox extends DialogBox {
 		suggestBox.setText(selectedLevelName);
 		suggestBox.getTextBox().selectAll();
 		mainPanel.add(suggestBox);
-		suggestBox.setSize("370px", "36px");
+		suggestBox.setSize("370px", "20px");
 		suggestBox.setFocus(true);
 
 		final HorizontalPanel horizontalButtonPanel = new HorizontalPanel();

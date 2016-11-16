@@ -25,10 +25,10 @@ public class NameValueDialogBox extends DialogBox {
 	private Logger log = Logger.getLogger("NameValueDialogBox");
 
 	public NameValueDialogBox() {
-		setWidth("");
+		setWidth("400px");
 		DockLayoutPanel dockLayoutPanel = new DockLayoutPanel(Unit.EM);
 		setWidget(dockLayoutPanel);
-		dockLayoutPanel.setSize("372px", "125px");
+		dockLayoutPanel.setSize("372px", "139px");
 		SimplePanel simplePanel = new SimplePanel();
 		dockLayoutPanel.addSouth(simplePanel, 2.5);
 		HorizontalPanel horizontalPanel = new HorizontalPanel();

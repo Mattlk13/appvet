@@ -916,7 +916,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		final MenuItemSeparator separator_4 = new MenuItemSeparator();
 		userMenuBar.addSeparator(separator_4);
 		separator_4.setSize("100%", "1px");
-		final MenuItem logoutMenuItem = new MenuItem("Logout", false,
+		final MenuItem logoutMenuItem = new MenuItem("Log Out", false,
 				new Command() {
 			@Override
 			public void execute() {

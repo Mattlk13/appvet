@@ -50,13 +50,13 @@ public class ToolAdapterEnabledEditDialogBox extends DialogBox {
 
 	public ToolAdapterEnabledEditDialogBox(ToolInfoGwt testTool, String disabledEnabledStr) {
 		super(false, true);
-		setWidth("200px");
+		setWidth("298px");
 		setAnimationEnabled(false);
 		final VerticalPanel mainPanel = new VerticalPanel();
 		mainPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		mainPanel.addStyleName("mainPanel");
 		this.setWidget(mainPanel);
-		mainPanel.setSize("", "141px");
+		mainPanel.setSize("270px", "157px");
 
 		// Set label
 		mainLabel = new Label("Enable or disable '" + testTool.getId() + "'");

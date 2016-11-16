@@ -31,7 +31,7 @@ public class ToolAdapterEnableDialogBox extends DialogBox {
 
 		DockPanel dockPanel = new DockPanel();
 		setWidget(dockPanel);
-		dockPanel.setSize("374px", "182px");
+		dockPanel.setSize("374px", "223px");
 
 		Label lblNewLabel = new Label("Select tool to enable/disable:");
 		lblNewLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);

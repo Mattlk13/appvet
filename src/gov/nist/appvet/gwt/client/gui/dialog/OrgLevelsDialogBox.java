@@ -38,7 +38,7 @@ public class OrgLevelsDialogBox extends DialogBox {
 		
 		DockPanel dockPanel = new DockPanel();
 		setWidget(dockPanel);
-		dockPanel.setSize("374px", "182px");
+		dockPanel.setSize("374px", "221px");
 		
 		Label lblNewLabel = new Label("Select level to edit:");
 		lblNewLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);

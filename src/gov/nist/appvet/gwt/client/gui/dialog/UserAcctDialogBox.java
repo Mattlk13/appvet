@@ -321,17 +321,21 @@ public class UserAcctDialogBox extends DialogBox {
 		horizontalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel.setSize("200px", "50px");
+		horizontalPanel.setSize("100%", "50px");
 		
 		cancelButton = new PushButton("Cancel");
 		cancelButton.setStyleName("grayButton shadow");
 		horizontalPanel.add(cancelButton);
+		horizontalPanel.setCellVerticalAlignment(cancelButton, HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel.setCellHorizontalAlignment(cancelButton, HasHorizontalAlignment.ALIGN_CENTER);
+		horizontalPanel.setCellWidth(cancelButton, "50%");
 		cancelButton.setSize("70px", "18px");
 		
 		okButton = new PushButton("Ok");
 		okButton.setStyleName("greenButton shadow");
 		okButton.setHTML("Ok");
 		horizontalPanel.add(okButton);
+		horizontalPanel.setCellWidth(okButton, "50%");
 		horizontalPanel.setCellHorizontalAlignment(okButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel.setCellVerticalAlignment(okButton,
@@ -402,6 +406,7 @@ public class UserAcctDialogBox extends DialogBox {
 		dockPanel.setSize("380px", "378px");
 		dockPanel.add(simplePanel, DockPanel.CENTER);
 		dockPanel.add(horizontalPanel, DockPanel.SOUTH);
+		dockPanel.setCellWidth(horizontalPanel, "100%");
 		dockPanel.setCellVerticalAlignment(horizontalPanel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		dockPanel.setCellHorizontalAlignment(horizontalPanel,

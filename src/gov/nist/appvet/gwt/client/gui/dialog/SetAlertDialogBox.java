@@ -46,23 +46,19 @@ public class SetAlertDialogBox extends DialogBox {
 
 	public SetAlertDialogBox() {
 		super(false, true);
-		setSize("", "200px");
+		setSize("391px", "197px");
 		setAnimationEnabled(false);
 		final VerticalPanel verticalPanel = new VerticalPanel();
 		verticalPanel.addStyleName("dialogVPanel");
 		verticalPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		this.setWidget(verticalPanel);
-		verticalPanel.setSize("290px", "");
+		verticalPanel.setSize("363px", "169px");
 		final VerticalPanel verticalPanel_1 = new VerticalPanel();
 		verticalPanel_1.setStyleName("messagePanel");
 		verticalPanel.add(verticalPanel_1);
 		verticalPanel_1.setWidth("320px");
 		verticalPanel.setCellWidth(verticalPanel_1, "100%");
-		final SimplePanel simplePanel = new SimplePanel();
-		verticalPanel_1.add(simplePanel);
-		verticalPanel_1.setCellWidth(simplePanel, "100%");
-		simplePanel.setHeight("20px");
 		
 		DockPanel dockPanel = new DockPanel();
 		verticalPanel_1.add(dockPanel);
@@ -104,11 +100,7 @@ public class SetAlertDialogBox extends DialogBox {
 		
 		alertTextArea = new TextArea();
 		dockPanel.add(alertTextArea, DockPanel.CENTER);
-		alertTextArea.setSize("233px", "100%");
-		final SimplePanel simplePanel_2 = new SimplePanel();
-		verticalPanel_1.add(simplePanel_2);
-		verticalPanel_1.setCellWidth(simplePanel_2, "100%");
-		simplePanel_2.setHeight("20px");
+		alertTextArea.setSize("239px", "70px");
 		final HorizontalPanel horizontalButtonPanel = new HorizontalPanel();
 		horizontalButtonPanel.setStyleName("buttonPanel");
 		horizontalButtonPanel

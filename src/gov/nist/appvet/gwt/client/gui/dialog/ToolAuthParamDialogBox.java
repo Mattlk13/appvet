@@ -64,7 +64,7 @@ public class ToolAuthParamDialogBox extends DialogBox {
 
 	public ToolAuthParamDialogBox(final ConfigInfoGwt configInfoGwt) {
 		super(false, true);
-		setSize("400px", "438px");
+		setSize("407px", "438px");
 		setAnimationEnabled(false);
 		saveButton.setStyleName("grayButton shadow");
 		saveButton.setEnabled(false);
@@ -75,7 +75,7 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		verticalPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		setWidget(verticalPanel);
-		verticalPanel.setSize("366px", "383px");
+		verticalPanel.setSize("373px", "383px");
 		CaptionPanel toolListPanel = new CaptionPanel("Tool");
 		verticalPanel.add(toolListPanel);
 		toolListPanel.setWidth("");
@@ -118,12 +118,13 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		toolParamStatusLabel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		verticalPanel.add(toolParamStatusLabel);
+		toolParamStatusLabel.setHeight("22px");
 		CaptionPanel cptnpnlNewPanel = new CaptionPanel(
 				"Authentication Parameters");
 		verticalPanel.add(cptnpnlNewPanel);
 		verticalPanel.setCellVerticalAlignment(cptnpnlNewPanel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		cptnpnlNewPanel.setSize("", "");
+		cptnpnlNewPanel.setSize("", "189px");
 		final VerticalPanel dockLayoutPanel = new VerticalPanel();
 		dockLayoutPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		cptnpnlNewPanel.setContentWidget(dockLayoutPanel);
@@ -147,7 +148,7 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		dockLayoutPanel.add(horizontalPanel_2);
 		dockLayoutPanel.setCellVerticalAlignment(horizontalPanel_2,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_2.setWidth("338px");
+		horizontalPanel_2.setSize("338px", "50px");
 		verticalPanel.setCellVerticalAlignment(horizontalPanel_2,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel.setCellHorizontalAlignment(horizontalPanel_2,
@@ -243,7 +244,7 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		horizontalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel.add(horizontalPanel);
-		horizontalPanel.setWidth("338px");
+		horizontalPanel.setSize("338px", "32px");
 		okButton = new PushButton("Ok");
 		okButton.setStyleName("greenButton shadow");
 		horizontalPanel.add(okButton);
