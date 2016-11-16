@@ -71,7 +71,7 @@ public class ReportUploadDialogBox extends DialogBox {
 			String appid, String servletURL, DeviceOS os,
 			final ArrayList<ToolInfoGwt> tools) {
 		super(false, true);
-		setWidth("100%");
+		setWidth("400px");
 		setAnimationEnabled(false);
 		final VerticalPanel dialogVPanel = new VerticalPanel();
 		dialogVPanel.addStyleName("dialogVPanel");
@@ -144,9 +144,9 @@ public class ReportUploadDialogBox extends DialogBox {
 		verticalPanel.setCellWidth(grid, "100%");
 		final Label userLabel = new Label("User:");
 		userLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		userLabel.setStyleName("reportUploadLabel");
 		grid.setWidget(0, 0, userLabel);
-		userLabel.setWidth("");
+		grid.getCellFormatter().setWidth(0, 0, "300px");
+		userLabel.setSize("96px", "22px");
 		final TextBox analystTextBox = new TextBox();
 		analystTextBox.setName("User");
 		analystTextBox.setTitle("User is non-editable");
@@ -335,21 +335,13 @@ public class ReportUploadDialogBox extends DialogBox {
 		riskLabel = new Label("Risk: ");
 		riskLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		grid.setWidget(4, 0, riskLabel);
-		grid.getCellFormatter().setHorizontalAlignment(4, 0,
-				HasHorizontalAlignment.ALIGN_RIGHT);
 		grid.getCellFormatter().setWidth(4, 1, "300px");
-		grid.getCellFormatter().setHorizontalAlignment(1, 0,
-				HasHorizontalAlignment.ALIGN_RIGHT);
 		grid.getCellFormatter().setHorizontalAlignment(1, 1,
 				HasHorizontalAlignment.ALIGN_LEFT);
-		grid.getCellFormatter().setHorizontalAlignment(2, 0,
-				HasHorizontalAlignment.ALIGN_RIGHT);
 		grid.getCellFormatter().setVerticalAlignment(1, 0,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		grid.getCellFormatter().setVerticalAlignment(2, 0,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		grid.getCellFormatter().setHorizontalAlignment(3, 0,
-				HasHorizontalAlignment.ALIGN_RIGHT);
 		grid.getCellFormatter().setVerticalAlignment(3, 0,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		grid.getCellFormatter().setVerticalAlignment(4, 0,
@@ -384,8 +376,11 @@ public class ReportUploadDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		grid.getCellFormatter().setHorizontalAlignment(0, 1,
 				HasHorizontalAlignment.ALIGN_LEFT);
-		grid.getCellFormatter().setHorizontalAlignment(0, 0,
-				HasHorizontalAlignment.ALIGN_RIGHT);
+		grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
+		grid.getCellFormatter().setHorizontalAlignment(1, 0, HasHorizontalAlignment.ALIGN_LEFT);
+		grid.getCellFormatter().setHorizontalAlignment(2, 0, HasHorizontalAlignment.ALIGN_LEFT);
+		grid.getCellFormatter().setHorizontalAlignment(3, 0, HasHorizontalAlignment.ALIGN_LEFT);
+		grid.getCellFormatter().setHorizontalAlignment(4, 0, HasHorizontalAlignment.ALIGN_LEFT);
 		
 		
 		// Set report type filter for first tool in list
