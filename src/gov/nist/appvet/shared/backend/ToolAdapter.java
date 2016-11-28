@@ -451,7 +451,6 @@ public class ToolAdapter implements Runnable {
 					+ httpResponse.getStatusLine());
 
 			if (protocol == Protocol.ASYNCHRONOUS) {
-
 				final String httpResponseVal = httpResponse.getStatusLine()
 						.toString();
 				if ((httpResponseVal.indexOf("HTTP/1.1 202") > -1)

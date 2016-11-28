@@ -73,6 +73,8 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.FormHandler;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormSubmitEvent;
 import com.google.gwt.user.client.ui.HTML;
@@ -188,6 +190,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		public void onSubmitComplete(FormSubmitCompleteEvent event) {
 			String appFileName = appUploadDialogBox.fileUpload.getFilename();
 			appUploadDialog.mainLabel.setText("");
+			appUploadDialog.statusLabel.setText("");
 			killDialogBox(appUploadDialog);
 
 			showMessageDialog("App Submission", "App \"" + appFileName
@@ -1037,7 +1040,6 @@ public class AppVetPanel extends DockLayoutPanel {
 			public void onClick(ClickEvent event) {
 				appUploadDialogBox = new AppUploadDialogBox(sessionId,
 						SERVLET_URL);
-
 				appUploadDialogBox.setText("Submit App");
 				appUploadDialogBox.center();
 				appUploadDialogBox.cancelButton
@@ -1047,31 +1049,24 @@ public class AppVetPanel extends DockLayoutPanel {
 						killDialogBox(appUploadDialogBox);
 					}
 				});
-				appUploadDialogBox.uploadAppFileForm
-				.addFormHandler(new AppUploadFormHandler(
-						appUploadDialogBox));
-				appUploadDialogBox.submitButton
-				.addClickHandler(new ClickHandler() {
+				appUploadDialogBox.uploadAppFileForm.addFormHandler(new AppUploadFormHandler(appUploadDialogBox));
+				appUploadDialogBox.submitButton.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
-						if (appUploadDialogBox.fileUpload.getFilename()
-								.isEmpty()) {
-							showMessageDialog("Submit App File",
-									"No app file selected.", true);
+						if (appUploadDialogBox.fileUpload.getFilename().isEmpty()) {
+							showMessageDialog("Submit App File", "No app file selected.", true);
 							return;
 						}
-						appUploadDialogBox.cancelButton
-						.setEnabled(false);
-						appUploadDialogBox.submitButton
-						.setEnabled(false);
-						String fileName = appUploadDialogBox.fileUpload
-								.getFilename();
+						appUploadDialogBox.cancelButton.setEnabled(false);
+						appUploadDialogBox.submitButton.setEnabled(false);
+						String fileName = appUploadDialogBox.fileUpload.getFilename();
+						appUploadDialogBox.statusLabel.setText("Uploading " + fileName + "...");
 						appUploadDialogBox.uploadAppFileForm.submit();
 					}
 				});
 			}
-
 		});
+		
 		viewAllButton = new PushButton("View All");
 		// viewAllButton.setStyleName("appvetButton shadow");
 		viewAllButton.setStyleName("blueButton shadow");
