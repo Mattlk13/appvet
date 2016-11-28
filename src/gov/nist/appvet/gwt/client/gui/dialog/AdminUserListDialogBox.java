@@ -129,7 +129,7 @@ public class AdminUserListDialogBox extends DialogBox {
 			}
 		});
 
-/*		// THE FOLLOWING WAS REMOVED AS IT PREVENTS 508 TAB NAVIGATION
+/*		// THE FOLLOWING WAS REMOVED AS IT PREVENTS 508 TAB NAVIGATION REQUIREMENTS
 		searchTextBox.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event_) {
