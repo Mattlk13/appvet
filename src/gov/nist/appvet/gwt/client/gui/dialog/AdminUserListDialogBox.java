@@ -129,6 +129,7 @@ public class AdminUserListDialogBox extends DialogBox {
 			}
 		});
 
+/*		// THE FOLLOWING WAS REMOVED AS IT PREVENTS 508 TAB NAVIGATION
 		searchTextBox.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event_) {
@@ -137,12 +138,6 @@ public class AdminUserListDialogBox extends DialogBox {
 				final String searchString = searchTextBox.getText();
 				if (enterPressed) {
 					search();
-//					if (numFound > 0) {
-//						final SafeHtmlBuilder sb = new SafeHtmlBuilder();
-//						sb.appendHtmlConstant("<h3>Found " + numFound
-//								+ " results for \"" + searchString + "\"</h3>");
-//						appsLabelHtml.setHTML(sb.toSafeHtml());
-//					}
 				}
 			}
 		});
@@ -163,7 +158,7 @@ public class AdminUserListDialogBox extends DialogBox {
 					}
 				}
 			}
-		});
+		});*/
 		
 		
 		horizontalPanel_1.add(searchTextBox);

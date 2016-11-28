@@ -722,6 +722,7 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		});
 
+/*		// THE FOLLOWING WAS REMOVED AS IT PREVENTS 508 TAB NAVIGATION
 		searchTextBox.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event_) {
@@ -756,7 +757,7 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 				}
 			}
-		});
+		});*/
 
 		searchTextBox.setSize("240px", "15px");
 		searchTextBox.setTabIndex(1);
