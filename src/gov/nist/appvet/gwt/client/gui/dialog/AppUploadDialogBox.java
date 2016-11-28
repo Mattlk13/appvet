@@ -35,8 +35,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.i18n.client.HasDirection.Direction;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 
@@ -47,7 +45,6 @@ public class AppUploadDialogBox extends DialogBox {
 	public FocusPanel focusPanel = null;
 	public PushButton cancelButton = null;
 	public FormPanel uploadAppFileForm = null;
-	public Label mainLabel = null;
 	public FileUpload fileUpload = null;
 	public RadioButton androidRadioButton = null;
 	public RadioButton iosRadioButton = null;
@@ -65,7 +62,7 @@ public class AppUploadDialogBox extends DialogBox {
 		
 		focusPanel = new FocusPanel();
 		this.setWidget(focusPanel);
-		focusPanel.setSize("361px", "156px");
+		focusPanel.setSize("361px", "163px");
 
 		
 		final VerticalPanel mainPanel = new VerticalPanel();
@@ -122,11 +119,15 @@ public class AppUploadDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_BOTTOM);
 		hiddenParamsPanel.setCellHorizontalAlignment(fileUpload,
 				HasHorizontalAlignment.ALIGN_CENTER);
+		
+		statusLabel = new Label("New label");
+		statusLabel.setStyleName("statusLabel");
+		hiddenParamsPanel.add(statusLabel);
 		final HorizontalPanel horizontalButtonPanel = new HorizontalPanel();
 		horizontalButtonPanel.setStyleName("buttonPanel");
 		mainPanel.add(horizontalButtonPanel);
 		mainPanel.setCellWidth(horizontalButtonPanel, "100%");
-		horizontalButtonPanel.setSize("361px", "70px");
+		horizontalButtonPanel.setSize("361px", "50px");
 		horizontalButtonPanel
 				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		mainPanel.setCellVerticalAlignment(horizontalButtonPanel,

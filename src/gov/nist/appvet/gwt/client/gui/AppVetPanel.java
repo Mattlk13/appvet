@@ -189,7 +189,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		@Deprecated
 		public void onSubmitComplete(FormSubmitCompleteEvent event) {
 			String appFileName = appUploadDialogBox.fileUpload.getFilename();
-			appUploadDialog.mainLabel.setText("");
 			appUploadDialog.statusLabel.setText("");
 			killDialogBox(appUploadDialog);
 
@@ -239,8 +238,7 @@ public class AppVetPanel extends DockLayoutPanel {
 			} else {
 				reportUploadDialogBox.cancelButton.setEnabled(false);
 				reportUploadDialogBox.submitButton.setEnabled(false);
-				reportUploadDialogBox.statusLabel.setText("Uploading "
-						+ reportFileName + "...");
+				reportUploadDialogBox.statusLabel.setText("Uploading " + reportFileName + "...");
 			}
 		}
 
