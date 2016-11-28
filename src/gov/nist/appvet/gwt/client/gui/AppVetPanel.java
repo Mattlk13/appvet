@@ -61,15 +61,9 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -448,16 +442,16 @@ public class AppVetPanel extends DockLayoutPanel {
 		adminMenuBar.setStyleName("adminMenuBar");
 
 		// Set tab-able for 508 compliance
-		Roles.getMenubarRole().setTabindexExtraAttribute(
-				adminMenuBar.getElement(), -1);
+		Roles.getMenubarRole().setTabindexExtraAttribute(adminMenuBar.getElement(), 0);
 		adminMenuBar.setFocusOnHoverEnabled(true);
 
 		// Admin menubar
 		final MenuItem adminMenuItem = new MenuItem("Admin", true, adminMenuBar);
 		adminMenuItem.setTitle("Admin");
+		adminMenuItem.setStyleName("adminMenuItem");
+		adminMenuItem.setHTML("<img src=\"images/icon-gear.png\" width=\"16px\" height=\"16px\" alt=\"Admin\">");
 		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(
-				adminMenuItem.getElement(), 0);
+		Roles.getMenuitemRole().setTabindexExtraAttribute(adminMenuItem.getElement(), 0);
 
 		final MenuItem usersMenuItem = new MenuItem("Add/Edit Users", false,
 				new Command() {
@@ -478,8 +472,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 
 		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(
-				usersMenuItem.getElement(), 0);
+		//Roles.getMenuitemRole().setTabindexExtraAttribute(usersMenuItem.getElement(), 0);
 		usersMenuItem.setHTML("Add/Edit Users");
 		adminMenuBar.addItem(usersMenuItem);
 		usersMenuItem.setStyleName("adminSubMenuItem");
@@ -514,8 +507,8 @@ public class AppVetPanel extends DockLayoutPanel {
 				});
 
 		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(
-				clearAlertMessageMenuItem.getElement(), 0);
+//		Roles.getMenuitemRole().setTabindexExtraAttribute(
+//				clearAlertMessageMenuItem.getElement(), 0);
 		clearAlertMessageMenuItem.setHTML("Clear Status Message");
 		adminMenuBar.addItem(clearAlertMessageMenuItem);
 		clearAlertMessageMenuItem.setStyleName("adminSubMenuItem");
@@ -568,8 +561,8 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		});
 		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(
-				setAlertMenuItem.getElement(), 0);
+//		Roles.getMenuitemRole().setTabindexExtraAttribute(
+//				setAlertMenuItem.getElement(), 0);
 
 		adminMenuBar.addItem(setAlertMenuItem);
 		setAlertMenuItem.setStyleName("adminSubMenuItem");
@@ -590,8 +583,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		mntmAppVetLog.setStyleName("adminSubMenuItem");
 
 		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(
-				mntmAppVetLog.getElement(), 0);
+//		Roles.getMenuitemRole().setTabindexExtraAttribute(
+//				mntmAppVetLog.getElement(), 0);
 
 		final MenuItem clearAppVetLogMenuItem = new MenuItem("Clear Log",
 				false, new Command() {
@@ -621,8 +614,8 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		});
 		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(
-				clearAppVetLogMenuItem.getElement(), 0);
+//		Roles.getMenuitemRole().setTabindexExtraAttribute(
+//				clearAppVetLogMenuItem.getElement(), 0);
 		adminMenuBar.addItem(clearAppVetLogMenuItem);
 		clearAppVetLogMenuItem.setStyleName("adminSubMenuItem");
 
@@ -641,16 +634,13 @@ public class AppVetPanel extends DockLayoutPanel {
 			}
 		});
 		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(
-				downloadAppVetLogMenuItem.getElement(), 0);
+//		Roles.getMenuitemRole().setTabindexExtraAttribute(
+//				downloadAppVetLogMenuItem.getElement(), 0);
 		downloadAppVetLogMenuItem.setHTML("Download Log");
 		adminMenuBar.addItem(downloadAppVetLogMenuItem);
 		downloadAppVetLogMenuItem.setStyleName("adminSubMenuItem");
 
-		adminMenuItem.setStyleName("adminMenuItem");
 
-		adminMenuItem
-		.setHTML("<img src=\"images/icon-gear.png\" width=\"16px\" height=\"16px\" alt=\"Admin\">");
 
 		final MenuBar appVetMenuBar = new MenuBar(false);
 
@@ -799,31 +789,31 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_RIGHT);
 
 		Roles.getMenubarRole().setTabindexExtraAttribute(
-				appVetMenuBar.getElement(), -1);
+				appVetMenuBar.getElement(), 0);
 		menuBarPanel.add(appVetMenuBar);
 		menuBarPanel.setCellVerticalAlignment(appVetMenuBar,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		menuBarPanel.setCellHorizontalAlignment(appVetMenuBar,
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		appVetMenuBar.setStyleName("gwt-MenuBar");
-		appVetMenuBar.setAutoOpen(false);
 		appVetMenuBar.setSize("250px", "");
 		appVetMenuBar.setAnimationEnabled(false);
-		appVetMenuBar.setFocusOnHoverEnabled(false);
+		appVetMenuBar.setFocusOnHoverEnabled(true);
 
 		final MenuBar userMenuBar = new MenuBar(true);
 		userMenuBar.setStyleName("userMenuBar");
 		userMenuBar.setFocusOnHoverEnabled(false);
+		userMenuBar.setHeight("");
 		// Set tab-able for 508 compliance
 		Roles.getMenubarRole().setTabindexExtraAttribute(
-				userMenuBar.getElement(), -1);
+				userMenuBar.getElement(), 0);
 
 		userMenuItem = new MenuItem("User", true, userMenuBar);
 		userMenuItem.setStyleName("userMenuItem");
 		userMenuItem.setTitle("User Preferences");
+		userMenuItem.setHeight("");
 		userMenuItem
 		.setHTML("<img src=\"images/icon-user.png\" width=\"16px\" height=\"16px\" alt=\"User Preferences\">");
-		userMenuBar.setHeight("");
 		// Set tab-able for 508 compliance
 		Roles.getMenuitemRole().setTabindexExtraAttribute(
 				userMenuItem.getElement(), 0);
@@ -837,8 +827,9 @@ public class AppVetPanel extends DockLayoutPanel {
 				});
 		accountSettingsMenuItem.setStyleName("userSubMenuItem");
 		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(
-				accountSettingsMenuItem.getElement(), 0);
+//		Roles.getMenuitemRole().setTabindexExtraAttribute(
+//				accountSettingsMenuItem.getElement(), 0);
+		
 		userMenuBar.addItem(accountSettingsMenuItem);
 
 		final MenuItem toolCredentialsMenuItem = new MenuItem(
@@ -850,8 +841,8 @@ public class AppVetPanel extends DockLayoutPanel {
 				});
 		toolCredentialsMenuItem.setStyleName("userSubMenuItem");
 		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(
-				toolCredentialsMenuItem.getElement(), 0);
+//		Roles.getMenuitemRole().setTabindexExtraAttribute(
+//				toolCredentialsMenuItem.getElement(), 0);
 
 		userMenuBar.addItem(toolCredentialsMenuItem);
 		accountSettingsMenuItem.setHeight("");
@@ -871,8 +862,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		myAppsMenuItem.setStyleName("userSubMenuItem");
 		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(
-				myAppsMenuItem.getElement(), 0);
+//		Roles.getMenuitemRole().setTabindexExtraAttribute(
+//				myAppsMenuItem.getElement(), 0);
 		userMenuBar.addItem(myAppsMenuItem);
 		myAppsMenuItem.setHeight("");
 
@@ -888,19 +879,18 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		logoutMenuItem.setStyleName("userSubMenuItem");
 		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(
-				logoutMenuItem.getElement(), 0);
+//		Roles.getMenuitemRole().setTabindexExtraAttribute(
+//				logoutMenuItem.getElement(), 0);
 		userMenuBar.addItem(logoutMenuItem);
 		logoutMenuItem.setHeight("");
 
 		appVetMenuBar.addItem(userMenuItem);
-		userMenuItem.setHeight("");
 
 		final MenuBar helpMenuBar = new MenuBar(true);
 		helpMenuBar.setStyleName("helpMenuBar");
 		// Set tab-able for 508 compliance
 		Roles.getMenubarRole().setTabindexExtraAttribute(
-				helpMenuBar.getElement(), -1);
+				helpMenuBar.getElement(), 0);
 		helpMenuBar.setFocusOnHoverEnabled(false);
 
 		final MenuItem helpMenuItem = new MenuItem("Help", true, helpMenuBar);
@@ -932,8 +922,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		aboutMenuItem.setStyleName("helpSubMenuItem");
 		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(
-				aboutMenuItem.getElement(), 0);
+//		Roles.getMenuitemRole().setTabindexExtraAttribute(
+//				aboutMenuItem.getElement(), 0);
 
 		final MenuItem documentationMenuItem = new MenuItem("Documentation",
 				false, new Command() {
@@ -944,8 +934,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		documentationMenuItem.setStyleName("helpSubMenuItem");
 		// Set tab-able for 508 compliance
-		Roles.getMenuitemRole().setTabindexExtraAttribute(
-				documentationMenuItem.getElement(), 0);
+//		Roles.getMenuitemRole().setTabindexExtraAttribute(
+//				documentationMenuItem.getElement(), 0);
 
 		helpMenuBar.addItem(documentationMenuItem);
 		documentationMenuItem.setHeight("");
