@@ -120,7 +120,7 @@ public class AppUploadDialogBox extends DialogBox {
 		hiddenParamsPanel.setCellHorizontalAlignment(fileUpload,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		
-		statusLabel = new Label("New label");
+		statusLabel = new Label("");
 		statusLabel.setStyleName("statusLabel");
 		hiddenParamsPanel.add(statusLabel);
 		final HorizontalPanel horizontalButtonPanel = new HorizontalPanel();
