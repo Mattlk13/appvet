@@ -2,8 +2,10 @@ package gov.nist.appvet.gwt.client.gui.dialog;
 
 import java.util.logging.Logger;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -35,6 +37,7 @@ public class NameValueDialogBox extends DialogBox {
 		simplePanel.setWidget(horizontalPanel);
 		horizontalPanel.setSize("100%", "100%");
 		okButton = new PushButton("Ok");
+		okButton.setTitle("Ok");
 		okButton.setStyleName("greenButton shadow");
 		okButton.setHTML("Ok");
 		horizontalPanel.add(okButton);
@@ -48,6 +51,7 @@ public class NameValueDialogBox extends DialogBox {
 		grid.setWidget(0, 0, lblNewLabel_1);
 		lblNewLabel_1.setSize("70px", "100%");
 		nameTextBox = new TextBox();
+		nameTextBox.setTitle("Name");
 		grid.setWidget(0, 1, nameTextBox);
 		nameTextBox.setWidth("250px");
 		nameTextBox.setReadOnly(true);
@@ -55,6 +59,7 @@ public class NameValueDialogBox extends DialogBox {
 		grid.setWidget(1, 0, lblNewLabel);
 		lblNewLabel.setSize("70px", "100%");
 		valueTextBox = new TextBox();
+		valueTextBox.setTitle("Value");
 		grid.setWidget(1, 1, valueTextBox);
 		valueTextBox.setWidth("250px");
 		grid.getCellFormatter().setVerticalAlignment(0, 1,
@@ -69,6 +74,17 @@ public class NameValueDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		grid.getCellFormatter().setHorizontalAlignment(1, 1,
 				HasHorizontalAlignment.ALIGN_RIGHT);
+	}
+	
+	/** This fixes focus for dialog boxes in Firefox and IE browsers */
+	@Override
+	public void show() {
+	    super.show();
+	    Scheduler.get().scheduleDeferred(new Command() {
+	        public void execute() {
+	        	okButton.setFocus(true);
+	        }
+	    });
 	}
 
 	public void setParameter(String name, String value) {

@@ -43,7 +43,6 @@ import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.PushButton;
@@ -52,6 +51,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.HTML;
 
 /**
  * 
@@ -86,15 +86,12 @@ public class LoginPanel extends DockLayoutPanel {
 		simplePanel_2.setWidget(horizontalPanel);
 
 		horizontalPanel.setSize("100%", "100%");
-
-		// Your org_logo.png should be placed in $CATALINA_HOME/webapps/appvet_images directory.
-		Image orgLogoLogin = new Image("../appvet_images/org_logo_login.png");
-		horizontalPanel.add(orgLogoLogin);
-		orgLogoLogin.setSize("125px", "125px");
-		horizontalPanel.setCellHorizontalAlignment(orgLogoLogin, HasHorizontalAlignment.ALIGN_RIGHT);
-		orgLogoLogin.setAltText("Organizational logo");
-		//orgLogo.setTitle("Organizational logo");
-		orgLogoLogin.setStyleName("nistLoginLogo");
+		
+		HTML orgLogoLoginHtml = new HTML("<img alt=\"AppVet login\" width=\"125px\" height=\"125px\" src=\"../appvet_images/org_logo_login.png\">", false);
+		orgLogoLoginHtml.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+		horizontalPanel.add(orgLogoLoginHtml);
+		orgLogoLoginHtml.setSize("125px", "125px");
+		horizontalPanel.setCellHorizontalAlignment(orgLogoLoginHtml, HasHorizontalAlignment.ALIGN_RIGHT);
 
 		final VerticalPanel centerVerticalPanel = new VerticalPanel();
 		centerVerticalPanel
@@ -132,17 +129,13 @@ public class LoginPanel extends DockLayoutPanel {
 		dockPanel.setCellHorizontalAlignment(verticalPanel,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.setSize("300px", "90px");
-
-		final Image appvetLogoLogin = new Image("../appvet_images/appvet_logo_login.png");
-		//appVetImage.setTitle("AppVet Mobile App Vetting System");
-		appvetLogoLogin.setAltText("AppVet Mobile App Vetting System");
-		appvetLogoLogin.setStyleName("transparentPanel");
-		verticalPanel.add(appvetLogoLogin);
-		verticalPanel.setCellHorizontalAlignment(appvetLogoLogin,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		verticalPanel.setCellVerticalAlignment(appvetLogoLogin,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		appvetLogoLogin.setSize("192px", "73px");
+	
+		
+		HTML appvetLogoLoginHtml = new HTML("<img alt=\"AppVet logo\" width=\"192px\" height=\"73px\" src=\"../appvet_images/appvet_logo_login.png\">", true);
+		verticalPanel.add(appvetLogoLoginHtml);
+		verticalPanel.setCellVerticalAlignment(appvetLogoLoginHtml, HasVerticalAlignment.ALIGN_MIDDLE);
+		verticalPanel.setCellHorizontalAlignment(appvetLogoLoginHtml, HasHorizontalAlignment.ALIGN_CENTER);
+		appvetLogoLoginHtml.setSize("192px", "73px");
 		loginStatusLabel.setStyleName("submissionRequirementsLabel");
 		verticalPanel.add(loginStatusLabel);
 		loginStatusLabel.setVisible(true);
@@ -234,12 +227,6 @@ public class LoginPanel extends DockLayoutPanel {
 		horizontalPanel_1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 		simplePanel.setWidget(horizontalPanel_1);
 		horizontalPanel_1.setSize("100%", "");
-
-		Image image = new Image("images/nist_logo_darkgrey.png");
-		horizontalPanel_1.add(image);
-		horizontalPanel_1.setCellHorizontalAlignment(image, HasHorizontalAlignment.ALIGN_RIGHT);
-		image.setWidth("50px");
-		image.setAltText("NIST logo");
 
 	}
 

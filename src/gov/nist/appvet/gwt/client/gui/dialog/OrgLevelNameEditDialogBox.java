@@ -23,6 +23,7 @@ package gov.nist.appvet.gwt.client.gui.dialog;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -33,6 +34,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.i18n.client.HasDirection.Direction;
 import com.google.gwt.user.client.ui.SuggestBox;
 
@@ -78,6 +80,7 @@ public class OrgLevelNameEditDialogBox extends DialogBox {
 
 		MultiWordSuggestOracle suggestOracle = getOracle(selectedIndex);
 		suggestBox = new SuggestBox(suggestOracle);
+		suggestBox.setTitle("Enter level name");
 		suggestBox.setText(selectedLevelName);
 		suggestBox.getTextBox().selectAll();
 		mainPanel.add(suggestBox);
@@ -99,6 +102,7 @@ public class OrgLevelNameEditDialogBox extends DialogBox {
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
 		cancelButton = new PushButton("Cancel");
+		cancelButton.setTitle("Cancel");
 		cancelButton.setStyleName("grayButton shadow");
 		cancelButton.setHTML("Cancel");
 		horizontalButtonPanel.add(cancelButton);
@@ -110,12 +114,24 @@ public class OrgLevelNameEditDialogBox extends DialogBox {
 		horizontalButtonPanel.add(label);
 		label.setSize("30px", "");
 		okButton = new PushButton("Ok");
+		okButton.setTitle("Ok");
 		okButton.setStyleName("greenButton shadow");
 		horizontalButtonPanel.add(okButton);
 		horizontalButtonPanel.setCellHorizontalAlignment(okButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		okButton.setSize("70px", "18px");
 
+	}
+	
+	/** This fixes focus for dialog boxes in Firefox and IE browsers */
+	@Override
+	public void show() {
+	    super.show();
+	    Scheduler.get().scheduleDeferred(new Command() {
+	        public void execute() {
+	        	suggestBox.setFocus(true);
+	        }
+	    });
 	}
 
 	/** Generate suggestions based on existing user org hierarchy membership paths.*/

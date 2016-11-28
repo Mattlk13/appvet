@@ -634,7 +634,11 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		String websiteHrefTag = "";
 		if (tool.webSite != null) {
 			websiteHrefTag = "<a href=\"" + tool.webSite
-					+ "\" target=\"_blank\">" + tool.name + "</a>";
+					+ "\" "
+					+ "title=\"" 
+					+ tool.name + " Information Website \" " 
+					+ "target=\"_blank\">" 
+					+ tool.name + "</a>";
 		} else {
 			websiteHrefTag = tool.name;
 		}
@@ -652,39 +656,39 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 			// we return an NA status.
 			toolCompleted = true;
 			toolStatusGwt
-			.setStatusHtml("<div id=\"tabledim\">N/A</div>");
+			.setStatusHtml("<div alt=\"Tool is not applicable\" title=\"Tool is not applicable\" id=\"tabledim\">N/A</div>");
 		} else if (toolStatus == ToolStatus.NA) {
 			toolCompleted = true;
 			toolStatusGwt
-			.setStatusHtml("<div id=\"tabledim\">N/A</div>");
+			.setStatusHtml("<div alt=\"Tool is not applicable\" title=\"Tool is not applicable\" id=\"tabledim\">N/A</div>");
 
 		} else if (toolStatus == ToolStatus.AVAILABLE) {
 			toolCompleted = true;
 			toolStatusGwt
-			.setStatusHtml("<div id=\"tabledim\" style='color: black'>AVAILABLE</div>");
+			.setStatusHtml("<div alt=\"Tool is available\" title=\"Tool is available\" id=\"tabledim\" style='color: black'>AVAILABLE</div>");
 
 		} else if (toolStatus == ToolStatus.HIGH) {
 			toolCompleted = true;
 			toolStatusGwt
-			.setStatusHtml("<div id=\"tableitembad\" style='color: red'>HIGH</div>");
+			.setStatusHtml("<div alt=\"Tool has deemed app as high risk\" title=\"Tool has deemed app as high risk\" id=\"tableitembad\" style='color: red'>HIGH</div>");
 		} else if (toolStatus == ToolStatus.ERROR) {
 			toolCompleted = true;
 			toolStatusGwt
-			.setStatusHtml("<div id=\"tableitembad\" style='color: black'>ERROR</div>");
+			.setStatusHtml("<div alt=\"Tool has experienced an error\" title=\"Tool has experienced an error\" id=\"tableitembad\" style='color: black'>ERROR</div>");
 		} else if (toolStatus == ToolStatus.MODERATE) {
 			toolCompleted = true;
 			toolStatusGwt
-			.setStatusHtml("<div id=\"tableitembad\" style='color: orange'>MODERATE</div>");
+			.setStatusHtml("<div alt=\"Tool has deemed app as moderate risk\" title=\"Tool has deemed app as moderate risk\" id=\"tableitembad\" style='color: orange'>MODERATE</div>");
 		} else if (toolStatus == ToolStatus.LOW) {
 			toolCompleted = true;
 			toolStatusGwt
-			.setStatusHtml("<div id=\"tableitemendorsed\" style='color: green'>LOW</div>");
+			.setStatusHtml("<div alt=\"Tool has deemed app as low risk\" title=\"Tool has deemed app as low risk\" id=\"tableitemendorsed\" style='color: green'>LOW</div>");
 		} else if (toolStatus == ToolStatus.SUBMITTED) {
 			toolStatusGwt
-			.setStatusHtml("<div id=\"tableitem\" style='color: black'>SUBMITTED</div>");
+			.setStatusHtml("<div alt=\"App has been submitted to tool\" title=\"App has been submitted to tool\" id=\"tableitem\" style='color: black'>SUBMITTED</div>");
 		} else {
 			toolStatusGwt
-			.setStatusHtml("<div id=\"tableitem\" style='color: black'>"
+			.setStatusHtml("<div alt=\"Tool status\" title=\"Tool status\" id=\"tableitem\" style='color: red'>"
 					+ toolStatus.name() + "</div>");
 		}
 		final String reportsPath = AppVetProperties.APPS_ROOT + "/" + appId
@@ -707,7 +711,10 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 						+ AppVetParameter.APPID.value + "=" + appId + "&"
 						+ AppVetParameter.SESSIONID.value + "=" + sessionId
 						+ "&" + AppVetParameter.TOOLID.value + "="
-						+ tool.toolId + "\" target=\"_blank\">Report</a>");
+						+ tool.toolId + "\" " 
+						+ "title=\"" 
+						+ tool.name + " Report \" " 
+						+ "target=\"_blank\">Report</a>");
 			}
 		} else {
 			toolStatusGwt

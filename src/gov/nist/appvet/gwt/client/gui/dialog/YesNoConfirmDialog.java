@@ -19,6 +19,8 @@
  */
 package gov.nist.appvet.gwt.client.gui.dialog;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -87,6 +89,7 @@ public class YesNoConfirmDialog extends DialogBox {
 		horizontalButtonPanel.setWidth("320px");
 		verticalPanel.setCellWidth(horizontalButtonPanel, "100%");
 		cancelButton = new PushButton("No");
+		cancelButton.setTitle("Cancel");
 		cancelButton.setStyleName("grayButton shadow");
 		cancelButton.setHTML("Cancel");
 		horizontalButtonPanel.add(cancelButton);
@@ -96,6 +99,7 @@ public class YesNoConfirmDialog extends DialogBox {
 		horizontalButtonPanel.setCellHorizontalAlignment(cancelButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		okButton = new PushButton("Yes");
+		okButton.setTitle("Ok");
 		okButton.setStyleName("greenButton shadow");
 		okButton.setHTML("Ok");
 		horizontalButtonPanel.add(okButton);
@@ -104,5 +108,16 @@ public class YesNoConfirmDialog extends DialogBox {
 		horizontalButtonPanel.setCellVerticalAlignment(okButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		okButton.setSize("70px", "18px");
+	}
+	
+	/** This fixes focus for dialog boxes in Firefox and IE browsers */
+	@Override
+	public void show() {
+	    super.show();
+	    Scheduler.get().scheduleDeferred(new Command() {
+	        public void execute() {
+	        	cancelButton.setFocus(true);
+	        }
+	    });
 	}
 }

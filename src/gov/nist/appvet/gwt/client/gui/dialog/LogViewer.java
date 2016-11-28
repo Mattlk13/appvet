@@ -1,5 +1,7 @@
 package gov.nist.appvet.gwt.client.gui.dialog;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -19,6 +21,7 @@ public class LogViewer extends DialogBox {
 		dockPanel.setSize("100%", "100%");
 		
 		TextArea textArea = new TextArea();
+		textArea.setTitle("Log");
 		textArea.setText(log);
 		//textArea.setReadOnly(true);
 		dockPanel.add(textArea, DockPanel.CENTER);
@@ -33,10 +36,22 @@ public class LogViewer extends DialogBox {
 		dockPanel.setHeight("28px");
 		
 		closeButton = new PushButton("Close");
+		closeButton.setTitle("Close");
 		closeButton.setStyleName("greenButton shadow");
 		closeButton.setHTML("Close");
 		horizontalPanel.add(closeButton);
 		closeButton.setSize("70px", "18px");
+	}
+	
+	/** This fixes focus for dialog boxes in Firefox and IE browsers */
+	@Override
+	public void show() {
+	    super.show();
+	    Scheduler.get().scheduleDeferred(new Command() {
+	        public void execute() {
+	        	closeButton.setFocus(true);
+	        }
+	    });
 	}
 
 }

@@ -22,6 +22,7 @@ package gov.nist.appvet.gwt.client.gui.dialog;
 import gov.nist.appvet.gwt.client.GWTService;
 import gov.nist.appvet.gwt.client.GWTServiceAsync;
 import gov.nist.appvet.gwt.client.gui.table.appslist.UsersListPagingDataGrid;
+import gov.nist.appvet.gwt.shared.AppInfoGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.UserInfo;
@@ -32,14 +33,21 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -50,13 +58,14 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
 import com.google.gwt.user.client.ui.TextBoxBase;
+import com.google.gwt.user.client.ui.FocusPanel;
 
 /**
  * @author steveq@nist.gov
  */
 public class AdminUserListDialogBox extends DialogBox {
 	private Logger log = Logger.getLogger("AdminUserListDialogBox");
-
+	public FocusPanel focusPanel = null;
 	public PushButton doneButton = null;
 	private final GWTServiceAsync appVetServiceAsync = GWT
 			.create(GWTService.class);
@@ -70,6 +79,8 @@ public class AdminUserListDialogBox extends DialogBox {
 	public TextBox searchTextBox = null;
 	public PushButton addUserButton = null;
 	public List<String> allUsersOrgMemberships = new ArrayList<String>();
+	public enum BadFieldValue {last_name, first_name, username, email, org, role_memb, password};
+	public BadFieldValue badField = null;
 
 	public AdminUserListDialogBox(final ConfigInfoGwt configInfo, final boolean useSSO) {
 		super(false, true);
@@ -78,68 +89,110 @@ public class AdminUserListDialogBox extends DialogBox {
 		usersSelectionModel = new SingleSelectionModel<UserInfo>();
 		usersSelectionModel
 		.addSelectionChangeHandler(new UserListHandler(this));
-		final DockPanel dockPanel = new DockPanel();
-		dockPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		dockPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		setWidget(dockPanel);
-		dockPanel.setSize("", "417px");
+		//final DockPanel dockPanel = new DockPanel();
+		focusPanel = new FocusPanel();
+		setWidget(focusPanel);
+		focusPanel.setSize("100%", "100%");
+
+		//		dockPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		//		dockPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		//		setWidget(dockPanel);
+		//		dockPanel.setSize("", "417px");
+
+		//				dockPanel.add(focusPanel, DockPanel.CENTER);
 		final VerticalPanel verticalPanel = new VerticalPanel();
+		focusPanel.setWidget(verticalPanel);
 		verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.setStyleName("usersCenterPanel");
-		dockPanel.add(verticalPanel, DockPanel.CENTER);
-		dockPanel.setCellVerticalAlignment(verticalPanel,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		dockPanel.setCellHorizontalAlignment(verticalPanel,
-				HasHorizontalAlignment.ALIGN_CENTER);
-		verticalPanel.setSize("", "416px");
+		verticalPanel.setSize("", "");
 		final HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
 		horizontalPanel_1.setStyleName("usersHorizPanel");
 		horizontalPanel_1
 		.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_1
-		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.add(horizontalPanel_1);
 		horizontalPanel_1.setWidth("365px");
 		verticalPanel.setCellVerticalAlignment(horizontalPanel_1,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		verticalPanel.setCellHorizontalAlignment(horizontalPanel_1,
-				HasHorizontalAlignment.ALIGN_CENTER);
 		searchTextBox = new TextBox();
+		searchTextBox.setTitle("Search users");
+		searchTextBox.setName("Search users");
+		searchTextBox.setStyleName("h1");
 		searchTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		searchTextBox.setAlignment(TextAlignment.LEFT);
-//		searchTextBox.addKeyDownHandler(new KeyDownHandler() {
-//			@Override
-//			public void onKeyDown(KeyDownEvent event) {
-//				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-//					searchMode = true;
-//					search();
-//				}
-//			}
-//		});
-		horizontalPanel_1.add(searchTextBox);
-		horizontalPanel_1.setCellVerticalAlignment(searchTextBox,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		searchTextBox.setSize("220px", "18px");
-		final PushButton searchButton = new PushButton("Search");
-		searchButton.setStyleName("grayButton shadow");
-		searchButton.setTitle("Search Users");
-		searchButton.addClickHandler(new ClickHandler() {
+
+		searchTextBox.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				log.info("Clicked search button");
-				searchMode = true;
-				search();
+				searchTextBox.setText("");
 			}
 		});
+
+		searchTextBox.addKeyPressHandler(new KeyPressHandler() {
+			@Override
+			public void onKeyPress(KeyPressEvent event_) {
+				final boolean enterPressed = KeyCodes.KEY_ENTER == event_
+						.getNativeEvent().getKeyCode();
+				final String searchString = searchTextBox.getText();
+				if (enterPressed) {
+					search();
+//					if (numFound > 0) {
+//						final SafeHtmlBuilder sb = new SafeHtmlBuilder();
+//						sb.appendHtmlConstant("<h3>Found " + numFound
+//								+ " results for \"" + searchString + "\"</h3>");
+//						appsLabelHtml.setHTML(sb.toSafeHtml());
+//					}
+				}
+			}
+		});
+
+		searchTextBox.addKeyDownHandler(new KeyDownHandler() {
+			@Override
+			public final void onKeyDown(KeyDownEvent event) {
+				if (event.getNativeKeyCode() == 9) {
+					event.preventDefault();
+					event.stopPropagation();
+					if(event.getSource() instanceof TextBox) {
+						TextBox ta = (TextBox) event.getSource();
+						int index = ta.getCursorPos();
+						String text = ta.getText();
+						ta.setText(text.substring(0, index) 
+								+ "\t" + text.substring(index));
+						ta.setCursorPos(index + 1);
+					}
+				}
+			}
+		});
+		
+		
+		horizontalPanel_1.add(searchTextBox);
+		horizontalPanel_1.setCellWidth(searchTextBox, "60%");
+		horizontalPanel_1.setCellVerticalAlignment(searchTextBox,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		searchTextBox.setSize("200px", "18px");
+		final PushButton searchButton = new PushButton("Search");
+		searchButton.setTitle("Search users");
+		searchButton.setStyleName("grayButton shadow");
+		searchButton.setTitle("Search Users");
+
 		horizontalPanel_1.add(searchButton);
+		horizontalPanel_1.setCellWidth(searchButton, "20%");
 		horizontalPanel_1.setCellVerticalAlignment(searchButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_1.setCellHorizontalAlignment(searchButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		searchButton.setSize("55px", "18px");
+		searchButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				search();
+			}
+		});
+		
+		
 		final PushButton viewAllButton = new PushButton("View All");
+		viewAllButton.setTitle("View all users");
 		viewAllButton.setStyleName("grayButton shadow");
 		viewAllButton.setTitle("View All Users");
 		viewAllButton.addClickHandler(new ClickHandler() {
@@ -150,6 +203,7 @@ public class AdminUserListDialogBox extends DialogBox {
 			}
 		});
 		horizontalPanel_1.add(viewAllButton);
+		horizontalPanel_1.setCellWidth(viewAllButton, "20%");
 		horizontalPanel_1.setCellHorizontalAlignment(viewAllButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_1.setCellVerticalAlignment(viewAllButton,
@@ -164,11 +218,9 @@ public class AdminUserListDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		dockLayoutPanel.setSize("", "380px");
 		usersListTable = new UsersListPagingDataGrid<UserInfo>();
-		usersListTable.dataGrid.setFocus(false);
+		usersListTable.setTitle("Users list");
 		usersListTable.setPageSize(configInfo.getNumRowsUsersList());
 		usersListTable.dataGrid.setSize("370px", "342px");
-		usersListTable.dataGrid
-		.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 		usersListTable.dataGrid.setSelectionModel(usersSelectionModel);
 		dockLayoutPanel.add(usersListTable);
 		usersListTable.setWidth("");
@@ -179,11 +231,14 @@ public class AdminUserListDialogBox extends DialogBox {
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_2.setStyleName("buttonPanel");
 		verticalPanel.add(horizontalPanel_2);
+		horizontalPanel_2.setWidth("371px");
+		verticalPanel.setCellWidth(horizontalPanel_2, "365px");
 		verticalPanel.setCellVerticalAlignment(horizontalPanel_2,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel.setCellHorizontalAlignment(horizontalPanel_2,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		addUserButton = new PushButton("Add");
+		addUserButton.setTitle("Add user");
 		addUserButton.setStyleName("grayButton shadow");
 		addUserButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -193,12 +248,14 @@ public class AdminUserListDialogBox extends DialogBox {
 		});
 		addUserButton.setHTML("Add");
 		horizontalPanel_2.add(addUserButton);
+		horizontalPanel_2.setCellWidth(addUserButton, "25%");
 		horizontalPanel_2.setCellHorizontalAlignment(addUserButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_2.setCellVerticalAlignment(addUserButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		addUserButton.setSize("70px", "18px");
 		final PushButton editUserButton = new PushButton("Edit");
+		editUserButton.setTitle("Edit user");
 		editUserButton.setStyleName("grayButton shadow");
 		editUserButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -208,6 +265,7 @@ public class AdminUserListDialogBox extends DialogBox {
 		});
 		final PushButton deleteUserButton = new PushButton("Delete");
 		deleteUserButton.setStyleName("grayButton shadow");
+		deleteUserButton.setTitle("Delete user");
 		deleteUserButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -240,6 +298,7 @@ public class AdminUserListDialogBox extends DialogBox {
 		});
 		deleteUserButton.setHTML("Delete");
 		horizontalPanel_2.add(deleteUserButton);
+		horizontalPanel_2.setCellWidth(deleteUserButton, "25%");
 		horizontalPanel_2.setCellVerticalAlignment(deleteUserButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel_2.setCellHorizontalAlignment(deleteUserButton,
@@ -247,15 +306,18 @@ public class AdminUserListDialogBox extends DialogBox {
 		deleteUserButton.setSize("70px", "18px");
 		editUserButton.setHTML("Edit");
 		horizontalPanel_2.add(editUserButton);
+		horizontalPanel_2.setCellWidth(editUserButton, "25%");
 		horizontalPanel_2.setCellHorizontalAlignment(editUserButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_2.setCellVerticalAlignment(editUserButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		editUserButton.setSize("70px", "18px");
 		doneButton = new PushButton("Done");
+		doneButton.setTitle("Done");
 		doneButton.setStyleName("greenButton shadow");
 		doneButton.setHTML("Done");
 		horizontalPanel_2.add(doneButton);
+		horizontalPanel_2.setCellWidth(doneButton, "25%");
 		horizontalPanel_2.setCellHorizontalAlignment(doneButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_2.setCellVerticalAlignment(doneButton,
@@ -317,21 +379,86 @@ public class AdminUserListDialogBox extends DialogBox {
 		userAcctAdminDialogBox.submitButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-
+				// Verify last name
+				final String newLastName = userAcctAdminDialogBox.lastNameTextBox.getText();
+				if (!Validate.isAlpha(newLastName)) {
+					badField = BadFieldValue.last_name;
+					showMessageDialog("Account Setting Error", "Invalid last name",
+							true);
+					return;
+				}
+				// Verify first name
+				final String newFirstName = userAcctAdminDialogBox.firstNameTextBox.getText();
+				if (!Validate.isAlpha(newFirstName)) {
+					badField = BadFieldValue.first_name;
+					showMessageDialog("Account Setting Error", "Invalid first name",
+							true);
+					return;
+				}
+				// Verify username
+				final String newUserName = userAcctAdminDialogBox.userIdTextBox.getText();
+				if (!Validate.isValidUserName(newUserName)) {
+					badField = BadFieldValue.username;
+					showMessageDialog("Account Setting Error", "Invalid username", true);
+					return;
+				}
+				
+				// Verify email
+				final String newEmail = userAcctAdminDialogBox.emailTextBox.getText();
+				if (!Validate.isValidEmail(newEmail)) {
+					badField = BadFieldValue.email;
+					showMessageDialog("Account Setting Error", "Invalid email", true);
+					return;
+				}
+				// Verify organization (no need to check since organization can contain any characters)
+				final String orgMembership = userAcctAdminDialogBox.orgMembershipTextBox.getText();
+				
+				// Verify role and membership
+				final String newRoleAndMembership = userAcctAdminDialogBox.getRoleAndMembership(orgMembership);
+				if (newRoleAndMembership == null || newRoleAndMembership.isEmpty()) {
+					badField = BadFieldValue.role_memb;
+					showMessageDialog("Account Setting Error", "Invalid Role and/or Membership", true);
+					return;
+				}
+				
+				// Verify password
 				final String newPassword1 = userAcctAdminDialogBox.password1TextBox
 						.getValue();
 				final String newPassword2 = userAcctAdminDialogBox.password2TextBox
 						.getValue();
-				final String newUserName = userAcctAdminDialogBox.userIdTextBox.getText();
-				final String newLastName = userAcctAdminDialogBox.lastNameTextBox.getText();
-				final String newFirstName = userAcctAdminDialogBox.firstNameTextBox.getText();
-				final String newEmail = userAcctAdminDialogBox.emailTextBox.getText();
-				final String orgMembership = userAcctAdminDialogBox.orgMembershipTextBox.getText();
-				final String newRoleAndMembership = userAcctAdminDialogBox.getRoleAndMembership(orgMembership);
-				if (newRoleAndMembership == null || newRoleAndMembership.isEmpty()) {
-					return;
+				if (!ssoActive) {
+					// Password is required for NON-SSO mode
+					//String password = newPassword1;
+					//String passwordAgain = userInfo.getPasswordAgain();
+					if (newPassword1 != null && !newPassword1.isEmpty()
+							&& newPassword2 != null && !newPassword2.isEmpty()) {
+						if (!Validate.isValidPassword(newPassword1)) {
+							badField = BadFieldValue.password;
+							showMessageDialog("Account Setting Error",
+									"Invalid password", true);
+							return;
+						}
+						if (!newPassword1.equals(newPassword2)) {
+							badField = BadFieldValue.password;
+							showMessageDialog("Account Setting Error",
+									"Passwords do not match", true);
+							userAcctAdminDialogBox.password1TextBox.setFocus(true);
+							return;
+						}
+					} else {
+						if (newUser) {
+							badField = BadFieldValue.password;
+							showMessageDialog("Account Setting Error",
+									"Password is empty or null", true);
+							return;
+						}
+					}
+				} else {
+					// SSO is active so we ignore password fields (since passwords
+					// are handled by the organization's SSO environment).
 				}
-
+				
+				// If all fields valid, set userInfo object and submit
 				final UserInfo userInfo = new UserInfo();
 				userInfo.setUserName(newUserName);
 				userInfo.setPasswords(newPassword1, newPassword2);
@@ -342,11 +469,11 @@ public class AdminUserListDialogBox extends DialogBox {
 				if (newUser) {
 					userInfo.setNewUser(true);
 				}
-
-				// Validate new user info
-				if (!userInfoIsValid(userInfo, ssoActive)) {
-					return;
-				}
+//
+//				// Validate new user info
+//				if (!userInfoIsValid(userInfo, ssoActive)) {
+//					return;
+//				}
 
 				// Send updated user info to server
 				submitUserInfo(newUser, userInfo);
@@ -416,7 +543,7 @@ public class AdminUserListDialogBox extends DialogBox {
 		}
 		return 0;
 	}
-
+	
 	public void search() {
 		if (searchTextBox.getValue() == null || searchTextBox.getValue().isEmpty()) {
 			log.info("Search box is empty");
@@ -534,61 +661,69 @@ public class AdminUserListDialogBox extends DialogBox {
 		}
 	}
 
-	public boolean userInfoIsValid(UserInfo userInfo, boolean ssoActive) {
-
-		if (!Validate.isValidUserName(userInfo.getUserName())) {
-			showMessageDialog("Account Setting Error", "Invalid username", true);
-			return false;
-		}
-
-		if (!Validate.isAlpha(userInfo.getLastName())) {
-			showMessageDialog("Account Setting Error", "Invalid last name",
-					true);
-			return false;
-		}
-
-		if (!Validate.isAlpha(userInfo.getFirstName())) {
-			showMessageDialog("Account Setting Error", "Invalid first name",
-					true);
-			return false;
-		}
-
-		if (!Validate.isValidEmail(userInfo.getEmail())) {
-			showMessageDialog("Account Setting Error", "Invalid email", true);
-			return false;
-		}
-
-		if (!ssoActive) {
-			// Password is required for NON-SSO mode
-			String password = userInfo.getPassword();
-			String passwordAgain = userInfo.getPasswordAgain();
-			if (password != null && !password.isEmpty()
-					&& passwordAgain != null && !passwordAgain.isEmpty()) {
-				if (!Validate.isValidPassword(password)) {
-					showMessageDialog("Account Setting Error",
-							"Invalid password", true);
-					return false;
-				}
-				if (!password.equals(passwordAgain)) {
-					showMessageDialog("Account Setting Error",
-							"Passwords do not match", true);
-					return false;
-				}
-			} else {
-				if (userInfo.isNewUser()) {
-					showMessageDialog("Account Setting Error",
-							"Password is empty or null", true);
-					return false;
-				} else {
-					return true;
-				}
-			}
-		} else {
-			// SSO is active so we ignore password fields (since passwords
-			// are handled by the organization's SSO environment. Do nothing.
-		}
-		return true;
-	}
+//	public boolean userInfoIsValid(UserInfo userInfo, boolean ssoActive) {
+//
+////		if (!Validate.isValidUserName(userInfo.getUserName())) {
+////			dialog.userIdTextBox.setFocus(true);
+////			showMessageDialog("Account Setting Error", "Invalid username", true);
+////			return false;
+////		}
+//
+////		if (!Validate.isAlpha(userInfo.getLastName())) {
+////			dialog.lastNameTextBox.setFocus(true);
+////			showMessageDialog("Account Setting Error", "Invalid last name",
+////					true);
+////			return false;
+////		}
+//
+////		if (!Validate.isAlpha(userInfo.getFirstName())) {
+////			dialog.firstNameTextBox.setFocus(true);
+////			showMessageDialog("Account Setting Error", "Invalid first name",
+////					true);
+////			return false;
+////		}
+//
+////		if (!Validate.isValidEmail(userInfo.getEmail())) {
+////			dialog.emailTextBox.setFocus(true);
+////			showMessageDialog("Account Setting Error", "Invalid email", true);
+////			return false;
+////		}
+//
+////		if (!ssoActive) {
+////			// Password is required for NON-SSO mode
+////			String password = userInfo.getPassword();
+////			String passwordAgain = userInfo.getPasswordAgain();
+////			if (password != null && !password.isEmpty()
+////					&& passwordAgain != null && !passwordAgain.isEmpty()) {
+////				if (!Validate.isValidPassword(password)) {
+////					dialog.password1TextBox.setFocus(true);
+////					showMessageDialog("Account Setting Error",
+////							"Invalid password", true);
+////					return false;
+////				}
+////				if (!password.equals(passwordAgain)) {
+////					dialog.password1TextBox.setFocus(true);
+////					showMessageDialog("Account Setting Error",
+////							"Passwords do not match", true);
+////					return false;
+////				}
+////			} else {
+////				if (userInfo.isNewUser()) {
+////					dialog.password1TextBox.setFocus(true);
+////					showMessageDialog("Account Setting Error",
+////							"Password is empty or null", true);
+////					return false;
+////				} else {
+////					return true;
+////				}
+////			}
+////		} else {
+////			// SSO is active so we ignore password fields (since passwords
+////			// are handled by the organization's SSO environment).
+////		}
+////		dialog.submitButton.setFocus(true);
+////		return true;
+//	}
 
 	public void showMessageDialog(String windowTitle, String message,
 			boolean isError) {
@@ -600,7 +735,54 @@ public class AdminUserListDialogBox extends DialogBox {
 			public void onClick(ClickEvent event) {
 				messageDialogBox.hide();
 				messageDialogBox = null;
+				
+			    Scheduler.get().scheduleDeferred(new Command() {
+			        public void execute() {
+			        	if (badField == null) {
+			        		searchTextBox.setFocus(true);
+			        		return;
+			        	}
+			        	
+			        	switch (badField) {
+			        	case last_name: 
+			        		userAcctAdminDialogBox.lastNameTextBox.setFocus(true);
+			        		break;
+			        	case first_name:
+			        		userAcctAdminDialogBox.firstNameTextBox.setFocus(true);
+			        		break;
+			        	case username:
+			        		userAcctAdminDialogBox.userIdTextBox.setFocus(true);
+			        		break;	
+			        	case email:
+			        		userAcctAdminDialogBox.emailTextBox.setFocus(true);
+			        		break;	
+			        	case org:
+			        		userAcctAdminDialogBox.orgMembershipTextBox.setFocus(true);
+			        		break;	
+			        	case role_memb:
+			        		userAcctAdminDialogBox.adminRadioButton.setFocus(true);
+			        		break;	 		
+			        	case password:
+			        		userAcctAdminDialogBox.password1TextBox.setFocus(true);
+			        		break;	
+			        	default:
+			        		searchTextBox.setFocus(true);
+							break;
+			        	}
+			        }
+			    });
 			}
 		});
+	}
+	
+	/** This fixes focus for dialog boxes in Firefox and IE browsers */
+	@Override
+	public void show() {
+	    super.show();
+	    Scheduler.get().scheduleDeferred(new Command() {
+	        public void execute() {
+	        	searchTextBox.setFocus(true);
+	        }
+	    });
 	}
 }

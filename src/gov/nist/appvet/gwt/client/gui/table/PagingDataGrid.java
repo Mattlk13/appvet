@@ -31,13 +31,16 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.resources.client.CssResource.ImportedWithPrefix;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
+import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.view.client.CellPreviewEvent;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.CellPreviewEvent.Handler;
 
 /**
  * Abstract PaggingDataGrid class to set initial GWT DataGrid and Simple Pager
@@ -72,12 +75,11 @@ public abstract class PagingDataGrid<T> extends Composite {
 		//dataGrid = new DataGrid<T>();
 		DataGrid.Resources resource = GWT.create(CustomDataGridResource.class);
 	    dataGrid = new DataGrid<T>(3, resource);
-	    		
+	    dataGrid.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
 		dataGrid.setPageSize(3);
 		dataGrid.setWidth("100%");
 		final SimplePager.Resources pagerResources = GWT
 				.create(SimplePager.Resources.class);
-
 
 		pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0,
 				true);
@@ -100,7 +102,10 @@ public abstract class PagingDataGrid<T> extends Composite {
 		dock.setCellWidth(dataGrid, "100%");
 		dock.setCellWidth(pager, "100%");
 		
+
 	}
+	
+	
 
 	public void setPagerImageAltAndTitle() {
 		final NodeList<Element> tdElems = pager.getElement().getElementsByTagName("img");

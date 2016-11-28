@@ -19,6 +19,8 @@
  */
 package gov.nist.appvet.gwt.client.gui.dialog;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -105,6 +107,7 @@ public class MessageDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel.setWidth("320px");
 		closeButton = new PushButton("Ok");
+		closeButton.setTitle("Close");
 		closeButton.setStyleName("greenButton shadow");
 		horizontalPanel.add(closeButton);
 		dialogVPanel.setCellWidth(closeButton, "100%");
@@ -113,5 +116,16 @@ public class MessageDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		dialogVPanel.setCellHorizontalAlignment(closeButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
+	}
+	
+	/** This fixes focus for dialog boxes in Firefox and IE browsers */
+	@Override
+	public void show() {
+	    super.show();
+	    Scheduler.get().scheduleDeferred(new Command() {
+	        public void execute() {
+	        	closeButton.setFocus(true);
+	        }
+	    });
 	}
 }

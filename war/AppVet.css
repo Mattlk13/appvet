@@ -13,14 +13,16 @@
 } */
 /** Example rules used by the template application (remove for your app) */
 h1 {
-	margin-right: 0px;
-	margin-left: 0px;
-	padding-left: 10px;
+	margin-right: 5px;
+	margin-left: 5px;
 	border: outset;
 	font-size: 18em;
 	font-weight: bold text-align: center;
 }
-
+h3 {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
 h3 {
 	margin-top: 0px;
 	margin-bottom: 0px;
@@ -61,8 +63,7 @@ h3 {
 }
 
 .nistLogo {
-	color: White;
-	font-size: 6px;
+	margin-left: 10px;
 }
 
 .headerPanel {
@@ -156,6 +157,7 @@ searchPanel {
 	color: Navy;
 	background-color: White;
 }
+
 
 .appLogo {
 	color: dimgray;
@@ -335,15 +337,21 @@ searchPanel {
 
 .appInfoName {
 	color: darkslategray;
-	margin-left: 7px;
-	font-weight: bold font-size: 24px;
+	font-weight: bold;
+	font-size: 26px;
 }
-
+.appInfo {
+	margin-left: 5px;
+}
 .appInfoVersion {
 	color: darkslategrey;
-	font-size: 18px;
+	font-style: italic;
+	font-size: 14px;
 }
-
+.appInfoStatus {
+	color: darkslategrey;
+	font-size: 16px;
+}
 .moreInfo {
 	color: Blue;
 	padding-left: 5px;
@@ -375,6 +383,7 @@ searchPanel {
 	color: darkslategray;
 	margin-top: 5px;
 	margin-bottom: 5px;
+	margin-left: 5px;
 }
 
 .resultsPanel {
@@ -498,8 +507,8 @@ searchPanel {
 }
 
 .gwt-Image {
-	margin-right: 10px;
-	margin-left: 10px;
+	margin-right: 5px;
+	margin-left: 5px;
 }
 
 .taLogo {
@@ -687,7 +696,6 @@ searchPanel {
 .usersHorizPanel {
 	margin-bottom: 5px;
 	padding: 5px;
-	border: 1px solid Silver;
 }
 
 .messageDialogPanel {
@@ -735,34 +743,13 @@ searchPanel {
 
 .
 {
-padding-top
-:
- 
-3
-px
-;
-
 	
-padding-bottom
-:
- 
-3
-px
-;
-
 	
-border
-:
- 
-white
-;
-
 	
-background-color
-:
- 
-White
-;
+	margin-right: 5px;
+	margin-left: 5px;
+	border: white;
+	background-color: White;
 
 
 
@@ -955,12 +942,25 @@ White
 	padding-left: 5px;
 }
 
+.bottomPanel {
+	margin-top: 3px;
+	margin-bottom: 3px;
+	margin-left: 3px;
+	margin-right: 3px;
+}
+
 /*-------------- App List Button Panel ------------------*/
 .appListButtonPanel {
 	border-top: 1px;
 	border-right: 1px;
 	border-bottom: 1px black;
 	border-left: 1px;
+}
+
+#appsHeader {
+	color: darkslategrey;
+	font-size: 16px;
+	margin: 0px;
 }
 
 /*-------------- App Info Section ------------------*/
@@ -1183,7 +1183,7 @@ White
 /*---------------------- Green Dialog buttons ----------------------*/
 .greenButton {
 	color: white;
-	background: #2d8659;
+	background: #26714b;
 	vertical-align: middle;
 	padding: 3px 0px 3px 0px;
 	cursor: pointer; 
@@ -1203,7 +1203,7 @@ White
    gwt-PushButton-down,.gwt-PushButton-down-hovering,.gwt-PushButton-down-disabled */
    
 .greenAppUploadButton {
-	background: #2d8659;
+	background: #26714b;
 	color: white;
 	font-family: Sans-Serif;
 	font-weight: bold;
@@ -1227,7 +1227,9 @@ White
 	font-family: Sans-Serif;
 	color: white;
 	background: #015289;
-	margin: 4px;
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-bottom: 5px;
 	padding: 3px 0px 3px 0px;
 	vertical-align: middle;
 }
@@ -1270,6 +1272,9 @@ White
 /*---------------------- About Panel ----------------------*/
 .aboutPanel {
 	background: #015289 !important;
+}
+.appIconHtml {
+	margin-left: 10px;
 }
 
 .gwt-DialogBox .dialogContent {
@@ -1330,6 +1335,17 @@ margin-left: 10px;
 .appvetRadioButton {
 	padding-left: 20px;
 }
+.bluebutton shadow {
+}
+.blueButton shadow {
+}
+.bottomHorizPanel {
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
+
+
 
 
 

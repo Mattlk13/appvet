@@ -30,8 +30,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -68,8 +70,10 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		setAnimationEnabled(false);
 		saveButton.setStyleName("grayButton shadow");
 		saveButton.setEnabled(false);
+		saveButton.setTitle("Save authentication parameters");
 		editButton.setStyleName("grayButton shadow");
 		editButton.setEnabled(false);
+		editButton.setTitle("Edit authentication parameters");
 		final VerticalPanel verticalPanel = new VerticalPanel();
 		verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel
@@ -114,6 +118,8 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		toolListPanel.setContentWidget(toolsListBox);
 		toolsListBox.setSize("338px", "100px");
 		toolsListBox.setVisibleItemCount(5);
+		toolsListBox.setTitle("Tools list");
+		toolsListBox.setName("Tools list");
 		toolParamStatusLabel = new Label("");
 		toolParamStatusLabel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
@@ -131,6 +137,8 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		dockLayoutPanel.setStyleName("usersDockPanel");
 		dockLayoutPanel.setSize("", "50px");
 		toolParametersListBox = new ListBox();
+		toolParametersListBox.setTitle("Authentication parameters");
+		toolParametersListBox.setName("Authentication parameters");
 		toolParametersListBox.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
 				selectedParameterIndex = toolParametersListBox
@@ -246,6 +254,7 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		verticalPanel.add(horizontalPanel);
 		horizontalPanel.setSize("338px", "32px");
 		okButton = new PushButton("Ok");
+		okButton.setTitle("Ok");
 		okButton.setStyleName("greenButton shadow");
 		horizontalPanel.add(okButton);
 		okButton.setWidth("70px");
@@ -308,6 +317,17 @@ public class ToolAuthParamDialogBox extends DialogBox {
 				}
 			}
 		}
+	}
+	
+	/** This fixes focus for dialog boxes in Firefox and IE browsers */
+	@Override
+	public void show() {
+	    super.show();
+	    Scheduler.get().scheduleDeferred(new Command() {
+	        public void execute() {
+	        	toolsListBox.setFocus(true);
+	        }
+	    });
 	}
 
 	public UserToolCredentials getToolCredentials(String selectedToolListName) {

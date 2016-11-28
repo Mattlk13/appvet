@@ -19,12 +19,13 @@
  */
 package gov.nist.appvet.gwt.client.gui.dialog;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PushButton;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.Grid;
@@ -69,6 +70,7 @@ public class SetAlertDialogBox extends DialogBox {
 		grid.setWidth("100%");
 		
 		alertNormalRadioButton = new SimpleRadioButton("group1");
+		alertNormalRadioButton.setTitle("Normal message");
 		alertNormalRadioButton.setValue(true);
 		grid.setWidget(0, 0, alertNormalRadioButton);
 		
@@ -77,6 +79,7 @@ public class SetAlertDialogBox extends DialogBox {
 		grid.setWidget(0, 1, lblNormal);
 		
 		alertWarningRadioButton = new SimpleRadioButton("group1");
+		alertWarningRadioButton.setTitle("Warning message");
 		grid.setWidget(1, 0, alertWarningRadioButton);
 		
 		Label lblNewLabel = new Label("Warning");
@@ -84,6 +87,7 @@ public class SetAlertDialogBox extends DialogBox {
 		grid.setWidget(1, 1, lblNewLabel);
 		
 		alertCriticalRadioButton = new SimpleRadioButton("group1");
+		alertCriticalRadioButton.setTitle("Critical message");
 		grid.setWidget(2, 0, alertCriticalRadioButton);
 		
 		Label lblNewLabel_1 = new Label("Critical");
@@ -99,6 +103,8 @@ public class SetAlertDialogBox extends DialogBox {
 		grid.getCellFormatter().setVerticalAlignment(1, 0, HasVerticalAlignment.ALIGN_TOP);
 		
 		alertTextArea = new TextArea();
+		alertTextArea.setTitle("Alert message");
+		alertTextArea.setName("Alert message");
 		dockPanel.add(alertTextArea, DockPanel.CENTER);
 		alertTextArea.setSize("239px", "70px");
 		final HorizontalPanel horizontalButtonPanel = new HorizontalPanel();
@@ -116,6 +122,7 @@ public class SetAlertDialogBox extends DialogBox {
 		horizontalButtonPanel.setWidth("320px");
 		verticalPanel.setCellWidth(horizontalButtonPanel, "100%");
 		cancelButton = new PushButton("No");
+		cancelButton.setTitle("Cancel");
 		cancelButton.setStyleName("grayButton shadow");
 		cancelButton.setHTML("Cancel");
 		horizontalButtonPanel.add(cancelButton);
@@ -125,6 +132,7 @@ public class SetAlertDialogBox extends DialogBox {
 		horizontalButtonPanel.setCellHorizontalAlignment(cancelButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		okButton = new PushButton("Yes");
+		okButton.setTitle("Ok");
 		okButton.setStyleName("greenButton shadow");
 		okButton.setHTML("Ok");
 		horizontalButtonPanel.add(okButton);
@@ -133,5 +141,16 @@ public class SetAlertDialogBox extends DialogBox {
 		horizontalButtonPanel.setCellVerticalAlignment(okButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		okButton.setSize("70px", "18px");
+	}
+	
+	/** This fixes focus for dialog boxes in Firefox and IE browsers */
+	@Override
+	public void show() {
+	    super.show();
+	    Scheduler.get().scheduleDeferred(new Command() {
+	        public void execute() {
+	        	alertNormalRadioButton.setFocus(true);
+	        }
+	    });
 	}
 }

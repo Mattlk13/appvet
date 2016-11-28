@@ -57,16 +57,19 @@ import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -82,7 +85,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
@@ -111,11 +113,10 @@ public class AppVetPanel extends DockLayoutPanel {
 	private final GWTServiceAsync appVetServiceAsync = GWT
 			.create(GWTService.class);
 	private HTML appInfoName = null;
-	private HTML appInfoPackage = null;
 	private HTML appInfoVersion = null;
 	private HTML appStatusInfo = null;
-	private Image appIcon = null;
-	private Image appPlatformIcon = null;
+	private HTML appIconHtml = null;
+	private HTML appPlatformHtml = null;
 	private HTML toolResultsHtml = null;
 	private AppsListPagingDataGrid<AppInfoGwt> appsListTable = null;
 	private Date lastAppsListUpdate = null;
@@ -193,7 +194,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		public void onSubmitComplete(FormSubmitCompleteEvent event) {
 			String appFileName = appUploadDialogBox.fileUpload.getFilename();
 			appUploadDialog.mainLabel.setText("");
-			appUploadDialog.statusLabel.setText("");
 			killDialogBox(appUploadDialog);
 
 			showMessageDialog("App Submission", "App \"" + appFileName
@@ -302,58 +302,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		rootLayoutPanel.add(loginPanel);
 		// Clean up
 		System.gc();
-	}
-
-	public boolean userInfoIsValid(UserInfo userInfo, boolean ssoActive) {
-
-		if (!Validate.isValidUserName(userInfo.getUserName())) {
-			showMessageDialog("Account Setting Error", "Invalid username", true);
-			return false;
-		}
-
-		if (!Validate.isAlpha(userInfo.getLastName())) {
-			showMessageDialog("Account Setting Error", "Invalid last name",
-					true);
-			return false;
-		}
-
-		if (!Validate.isAlpha(userInfo.getFirstName())) {
-			showMessageDialog("Account Setting Error", "Invalid first name",
-					true);
-			return false;
-		}
-
-		if (!Validate.isValidEmail(userInfo.getEmail())) {
-			showMessageDialog("Account Setting Error", "Invalid email", true);
-			return false;
-		}
-
-		if (!ssoActive) {
-			// Password is required for NON-SSO mode
-			String password = userInfo.getPassword();
-			String passwordAgain = userInfo.getPasswordAgain();
-			if (password != null && !password.isEmpty()
-					&& passwordAgain != null && !passwordAgain.isEmpty()) {
-				if (!Validate.isValidPassword(password)) {
-					showMessageDialog("Account Setting Error",
-							"Invalid password", true);
-					return false;
-				}
-				if (!password.equals(passwordAgain)) {
-					showMessageDialog("Account Setting Error",
-							"Passwords do not match", true);
-					return false;
-				}
-			} else {
-				showMessageDialog("Account Setting Error",
-						"Password is empty or null", true);
-				return false;
-			}
-		} else {
-			// SSO is active so we ignore password fields (since passwords
-			// are handled by the organization's SSO environment. Do nothing.
-		}
-		return true;
 	}
 
 	public void showMessageDialog(String windowTitle, String message,
@@ -750,15 +698,10 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		topBannerPanel.setSize("100%", "");
 		northAppVetPanel.setCellWidth(topBannerPanel, "100%");
-
-		Image appvetLogoMain = new Image(
-				"../appvet_images/appvet_logo_main.png");
-		appvetLogoMain.setAltText("AppVet");
-		topBannerPanel.add(appvetLogoMain);
-		appvetLogoMain.setWidth("200px");
-		appvetLogoMain.setHeight("25px");
-		topBannerPanel.setCellVerticalAlignment(appvetLogoMain,
-				HasVerticalAlignment.ALIGN_BOTTOM);
+		
+		HTML mainLogoHtml = new HTML("<img style=\"margin-left:5px\" alt=\"AppVet\" width=\"200px\" height=\"25px\" src=\"../appvet_images/appvet_logo_main.png\">");
+		topBannerPanel.add(mainLogoHtml);
+		mainLogoHtml.setSize("200px", "25px");
 		final HorizontalPanel searchPanel = new HorizontalPanel();
 		searchPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		topBannerPanel.add(searchPanel);
@@ -769,7 +712,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		topBannerPanel.setCellVerticalAlignment(searchPanel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		searchTextBox = new TextBox();
-		searchTextBox.setText("Search");
+		searchTextBox.setText("");
 		searchTextBox.setStyleName("searchTextBox");
 		searchTextBox.setTitle("Search by app ID, name, release kit, etc.");
 		searchTextBox.addClickHandler(new ClickHandler() {
@@ -789,15 +732,34 @@ public class AppVetPanel extends DockLayoutPanel {
 					final int numFound = search();
 					if (numFound > 0) {
 						final SafeHtmlBuilder sb = new SafeHtmlBuilder();
-						sb.appendHtmlConstant("<h3>Found " + numFound
-								+ " results for \"" + searchString + "\"</h3>");
+						sb.appendHtmlConstant("<h2 title=\"Found apps\" id=\"appsHeader\">Found " + numFound
+								+ " results for \"" + searchString + "\"</h2>");
 						appsLabelHtml.setHTML(sb.toSafeHtml());
 					}
 				}
 			}
 		});
 
+		searchTextBox.addKeyDownHandler(new KeyDownHandler() {
+			@Override
+			public final void onKeyDown(KeyDownEvent event) {
+				if (event.getNativeKeyCode() == 9) {
+					event.preventDefault();
+					event.stopPropagation();
+					if(event.getSource() instanceof TextBox) {
+						TextBox ta = (TextBox) event.getSource();
+						int index = ta.getCursorPos();
+						String text = ta.getText();
+						ta.setText(text.substring(0, index) 
+								+ "\t" + text.substring(index));
+						ta.setCursorPos(index + 1);
+					}
+				}
+			}
+		});
+
 		searchTextBox.setSize("240px", "15px");
+		searchTextBox.setTabIndex(1);
 		searchPanel.add(searchTextBox);
 		searchPanel.setCellVerticalAlignment(searchTextBox,
 				HasVerticalAlignment.ALIGN_MIDDLE);
@@ -806,7 +768,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		searchButton.setTitle("Search by app ID, name, release kit, etc.");
 		searchButton.setSize("", "");
 		searchButton
-		.setHTML("<img width=\"18px\" height=\"18px\" src=\"images/icon-search.png\" alt=\"search\" />");
+		.setHTML("<img width=\"18px\" height=\"18px\" src=\"images/icon-search.png\" alt=\"Search\" />");
 		searchButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -814,8 +776,8 @@ public class AppVetPanel extends DockLayoutPanel {
 				final int numFound = search();
 				if (numFound > 0) {
 					final SafeHtmlBuilder sb = new SafeHtmlBuilder();
-					sb.appendHtmlConstant("<h3>Found " + numFound
-							+ " results for \"" + searchString + "\"</h3>");
+					sb.appendHtmlConstant("<h2 title=\"Apps list\" id=\"appsHeader\">Found " + numFound
+							+ " results for \"" + searchString + "\"</h2>");
 					appsLabelHtml.setHTML(sb.toSafeHtml());
 				}
 			}
@@ -901,7 +863,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				final int numFound = search();
 				if (numFound > 0) {
 					final SafeHtmlBuilder sb = new SafeHtmlBuilder();
-					sb.appendHtmlConstant("<h3>My Apps</h3>");
+					sb.appendHtmlConstant("<h2 title=\"My apps\" id=\"appsHeader\">My Apps</h2>");
 					appsLabelHtml.setHTML(sb.toSafeHtml());
 				}
 			}
@@ -1025,16 +987,17 @@ public class AppVetPanel extends DockLayoutPanel {
 		centerPanel.setWidget(mainHorizontalPanel);
 		mainHorizontalPanel.setSize("100%", "100%");
 		appsListTable = new AppsListPagingDataGrid<AppInfoGwt>();
+		appsListTable.dataGrid.setTabIndex(0);
+		appsListTable.dataGrid.setFocus(true);
 		appsListTable.pager.setHeight("");
-		appsListTable.dataGrid
-		.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
-		appsListTable.dataGrid.setFocus(false);
 		appsListTable.setPageSize(configInfo.getNumRowsAppsList());
 		appsListTable.dataGrid.setStyleName("dataGrid");
 		appsListTable.dataGrid.setSize("100%", "");
 		appsListTable.setDataList(initialApps.apps);
-		appsListTable.setSize("100%", "200px");
+		appsListTable.setSize("100%", "");
 		appsListTable.dataGrid.setSelectionModel(appSelectionModel);
+
+
 		final SimplePanel leftCenterPanel = new SimplePanel();
 		leftCenterPanel.setStyleName("leftCenterPanel");
 		mainHorizontalPanel.add(leftCenterPanel);
@@ -1060,7 +1023,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appsListButtonPanel.setSize("100%", "");
 
-		appsLabelHtml = new HTML("<h3>Apps</h3>", true);
+		appsLabelHtml = new HTML("<h2 title=\"Apps list\" id=\"appsHeader\">Apps</h2>", true);
 		appsLabelHtml.setStyleName("appsLabel");
 		appsListButtonPanel.add(appsLabelHtml);
 		final HorizontalPanel horizontalPanel = new HorizontalPanel();
@@ -1074,14 +1037,16 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsListButtonPanel.setCellHorizontalAlignment(horizontalPanel,
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		horizontalPanel.setSize("", "");
-		final PushButton submitButton = new PushButton("Upload App");
-		submitButton.setStyleName("greenAppUploadButton shadow");
+		final PushButton appUploadButton = new PushButton("Upload App");
+		appUploadButton.setTitle("Upload app");
+		appUploadButton.setStyleName("greenAppUploadButton shadow");
 
-		submitButton.addClickHandler(new ClickHandler() {
+		appUploadButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				appUploadDialogBox = new AppUploadDialogBox(sessionId,
 						SERVLET_URL);
+
 				appUploadDialogBox.setText("Submit App");
 				appUploadDialogBox.center();
 				appUploadDialogBox.cancelButton
@@ -1110,13 +1075,11 @@ public class AppVetPanel extends DockLayoutPanel {
 						.setEnabled(false);
 						String fileName = appUploadDialogBox.fileUpload
 								.getFilename();
-						appUploadDialogBox.statusLabel
-						.setText("Uploading " + fileName
-								+ "...");
 						appUploadDialogBox.uploadAppFileForm.submit();
 					}
 				});
 			}
+
 		});
 		viewAllButton = new PushButton("View All");
 		// viewAllButton.setStyleName("appvetButton shadow");
@@ -1139,20 +1102,19 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		viewAllButton.setSize("120px", "18px");
 		viewAllButton.setVisible(false);
-		horizontalPanel.add(submitButton);
-		horizontalPanel.setCellVerticalAlignment(submitButton,
+		horizontalPanel.add(appUploadButton);
+		horizontalPanel.setCellVerticalAlignment(appUploadButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel.setCellHorizontalAlignment(submitButton,
+		horizontalPanel.setCellHorizontalAlignment(appUploadButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		submitButton.setSize("120px", "18px");
+		appUploadButton.setSize("120px", "18px");
 
 		downloadAppButton = new PushButton("Download App");
 		downloadAppButton.setEnabled(false);
 		rightCenterPanel = new SimplePanel();
 		rightCenterPanel.setStyleName("rightCenterPanel");
 		mainHorizontalPanel.add(rightCenterPanel);
-		rightCenterPanel.setWidth("570px");
-		mainHorizontalPanel.setCellWidth(rightCenterPanel, "570px");
+		rightCenterPanel.setWidth("524px");
 		final VerticalPanel appInfoVerticalPanel = new VerticalPanel();
 		rightCenterPanel.setWidget(appInfoVerticalPanel);
 		appInfoVerticalPanel.setSize("100%", "");
@@ -1161,53 +1123,51 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoVerticalPanel.add(appInfoPanel);
 		appInfoVerticalPanel.setCellWidth(appInfoPanel, "100%");
 		appInfoPanel.setSize("", "");
-		appIcon = new Image("");
-		appIcon.setVisible(false);
-		appIcon.setAltText("");
-		appInfoPanel.add(appIcon);
-		appInfoPanel.setCellVerticalAlignment(appIcon,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		appIcon.setSize("87px", "87px");
+		
+		appIconHtml = new HTML("", false);
+		appIconHtml.setStyleName("appIconHtml");
+		appIconHtml.setVisible(false);
+		appInfoPanel.add(appIconHtml);
+		appIconHtml.setSize("80px", "80px");
+
 		final VerticalPanel verticalPanel = new VerticalPanel();
+		verticalPanel.setStyleName("appInfo");
 		verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
 		appInfoPanel.add(verticalPanel);
-		verticalPanel.setHeight("87px");
-		appInfoName = new HTML("", false);
+		verticalPanel.setHeight("80px");
+		appInfoName = new HTML("AppName", false);
+		appInfoName.setStyleName("appInfoName");
 		appInfoName.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		verticalPanel.add(appInfoName);
 		verticalPanel.setCellVerticalAlignment(appInfoName, HasVerticalAlignment.ALIGN_MIDDLE);
-		appInfoName.setSize("398px", "38px");
+		verticalPanel.setCellHeight(appInfoName, "100%");
+		appInfoName.setSize("388px", "38px");
 		appInfoPanel.setCellVerticalAlignment(appInfoName,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		appInfoPackage = new HTML("", true);
-		appInfoPackage
-		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		appInfoPackage.setStyleName("appInfoVersion");
-		// Remove package from app info panel
-		//verticalPanel.add(appInfoPackage);
-		appInfoPackage.setSize("500px", "14px");
-		appInfoVersion = new HTML("", true);
+
+		appInfoVersion = new HTML("Version N/A", true);
 		appInfoVersion
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		appInfoVersion.setStyleName("appInfoVersion");
 		verticalPanel.add(appInfoVersion);
 		verticalPanel.setCellVerticalAlignment(appInfoVersion, HasVerticalAlignment.ALIGN_MIDDLE);
-		appInfoVersion.setSize("398px", "24px");
+		verticalPanel.setCellHeight(appInfoVersion, "100%");
+		appInfoVersion.setSize("378px", "25px");
 
-		appStatusInfo = new HTML("", true);
+		appStatusInfo = new HTML("Status: N/A", true);
 		appStatusInfo.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		appStatusInfo.setStyleName("appInfoVersion");
+		appStatusInfo.setStyleName("appInfoStatus");
 		verticalPanel.add(appStatusInfo);
-		appStatusInfo.setSize("398px", "25px");
-		verticalPanel.setCellVerticalAlignment(appStatusInfo,
-				HasVerticalAlignment.ALIGN_BOTTOM);
+		verticalPanel.setCellVerticalAlignment(appStatusInfo, HasVerticalAlignment.ALIGN_BOTTOM);
+		verticalPanel.setCellHeight(appStatusInfo, "100%");
+		appStatusInfo.setSize("378px", "26px");
 		
-		appPlatformIcon = new Image("");
-		appPlatformIcon.setVisible(true);
-		appInfoPanel.add(appPlatformIcon);
-		appInfoPanel.setCellVerticalAlignment(appPlatformIcon, HasVerticalAlignment.ALIGN_MIDDLE);
-		appInfoPanel.setCellHorizontalAlignment(appPlatformIcon, HasHorizontalAlignment.ALIGN_RIGHT);
-		appPlatformIcon.setSize("50px", "50px");
+		appPlatformHtml = new HTML("", false);
+		appPlatformHtml.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+		appInfoPanel.add(appPlatformHtml);
+		appInfoPanel.setCellHorizontalAlignment(appPlatformHtml, HasHorizontalAlignment.ALIGN_CENTER);
+		appInfoPanel.setCellVerticalAlignment(appPlatformHtml, HasVerticalAlignment.ALIGN_MIDDLE);
+		appInfoPanel.setCellHeight(appPlatformHtml, "80px");
 
 		HorizontalPanel appButtonPanel = new HorizontalPanel();
 		appButtonPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
@@ -1217,6 +1177,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoVerticalPanel.setCellVerticalAlignment(appButtonPanel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		uploadReportButton = new PushButton("Upload Report");
+		uploadReportButton.setTitle("Upload report");
 		uploadReportButton.setStyleName("blueButton shadow");
 
 		appButtonPanel.add(uploadReportButton);
@@ -1256,8 +1217,9 @@ public class AppVetPanel extends DockLayoutPanel {
 				}
 			}
 		});
-		uploadReportButton.setSize("100px", "18px");
+		uploadReportButton.setSize("98px", "18px");
 		logButton = new PushButton("View Log");
+		logButton.setTitle("View log");
 		logButton.setStyleName("blueButton shadow");
 
 		appButtonPanel.add(logButton);
@@ -1273,8 +1235,9 @@ public class AppVetPanel extends DockLayoutPanel {
 				showAppLog(selectedApp.appId);
 			}
 		});
-		logButton.setSize("100px", "18px");
+		logButton.setSize("80px", "18px");
 		deleteButton = new PushButton("Delete App");
+		deleteButton.setTitle("Delete app");
 		// deleteButton.setStyleName("appvetButton  shadow");
 		deleteButton.setStyleName("blueButton shadow");
 
@@ -1315,8 +1278,9 @@ public class AppVetPanel extends DockLayoutPanel {
 				});
 			}
 		});
-		deleteButton.setSize("100px", "18px");
+		deleteButton.setSize("80px", "18px");
 		downloadReportsButton = new PushButton("Download Reports");
+		downloadReportsButton.setTitle("Download reports");
 		downloadReportsButton.setStyleName("blueButton shadow");
 
 		appButtonPanel.add(downloadReportsButton);
@@ -1346,7 +1310,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				}
 			}
 		});
-		downloadReportsButton.setSize("130px", "18px");
+		downloadReportsButton.setSize("118px", "18px");
 
 		// downloadAppButton.setStyleName("appvetButton shadow");
 		downloadAppButton.setStyleName("blueButton shadow");
@@ -1356,7 +1320,8 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appButtonPanel.setCellHorizontalAlignment(downloadAppButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		downloadAppButton.setSize("100px", "18px");
+		downloadAppButton.setSize("98px", "18px");
+		downloadAppButton.setTitle("Download app");
 		downloadAppButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1397,7 +1362,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		toolResultsHtml = new HTML("", true);
 		appInfoVerticalPanel.add(toolResultsHtml);
-		toolResultsHtml.setWidth("561px");
+		toolResultsHtml.setWidth("514px");
 		toolResultsHtml
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		toolResultsHtml.setStyleName("toolResultsHtml");
@@ -1405,51 +1370,52 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		SimplePanel southPanel = new SimplePanel();
 		southPanel.setStyleName("southPanel");
-		addSouth(southPanel, 40.0);
-		southPanel.setSize("", "");
+		addSouth(southPanel, 43.0);
+		southPanel.setSize("100%", "");
 
-		VerticalPanel verticalPanel_1 = new VerticalPanel();
-		verticalPanel_1.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		verticalPanel_1
-		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		southPanel.setWidget(verticalPanel_1);
-		verticalPanel_1.setSize("100%", "");
+//		VerticalPanel verticalPanel_1 = new VerticalPanel();
+//		verticalPanel_1.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+//		southPanel.setWidget(verticalPanel_1);
+//		verticalPanel_1.setSize("100%", "");
 
-		HorizontalPanel horizontalPanel_2 = new HorizontalPanel();
-		verticalPanel_1.add(horizontalPanel_2);
-		horizontalPanel_2.setSize("100%", "");
-		verticalPanel_1.setCellVerticalAlignment(horizontalPanel_2,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		verticalPanel_1.setCellWidth(horizontalPanel_2, "100%");
-		horizontalPanel_2
+		DockPanel bottomDockPanel = new DockPanel();
+		bottomDockPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		bottomDockPanel.setStyleName("bottomHorizPanel");
+		//verticalPanel_1.add(horizontalPanel_2);
+		southPanel.setWidget(bottomDockPanel);
+		bottomDockPanel.setSize("100%", "");
+//		verticalPanel_1.setCellVerticalAlignment(horizontalPanel_2,
+//				HasVerticalAlignment.ALIGN_MIDDLE);
+//		verticalPanel_1.setCellWidth(horizontalPanel_2, "100%");
+		bottomDockPanel
 		.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_2
-		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-
-		Image orgLogoMain = new Image("../appvet_images/org_logo_main.png");
-		orgLogoMain.setAltText("Org Logo");
-		horizontalPanel_2.add(orgLogoMain);
-		horizontalPanel_2.setCellWidth(orgLogoMain, "50%");
-		orgLogoMain.setSize("126px", "37px");
-		horizontalPanel_2.setCellVerticalAlignment(orgLogoMain,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_2.setCellHorizontalAlignment(orgLogoMain,
-				HasHorizontalAlignment.ALIGN_LEFT);
-
-		Image nistLogo = new Image("images/nist_logo_darkgrey.png");
-
-		nistLogo.setAltText("NIST logo");
-
-		// nistLogo.setTitle("NIST logo");
-		horizontalPanel_2.add(nistLogo);
-		horizontalPanel_2.setCellWidth(nistLogo, "50%");
-
-		horizontalPanel_2.setCellVerticalAlignment(nistLogo,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-
-		horizontalPanel_2.setCellHorizontalAlignment(nistLogo,
-				HasHorizontalAlignment.ALIGN_RIGHT);
-		nistLogo.setSize("65px", "17px");
+		
+		HTML htmlNewHtml = new HTML("<img alt=\"Org logo\" width=\"126px\" height=\"37px\" style=\"margin-left:5px;margin-top:3px;margin-bottom:3px\" src=\"../appvet_images/org_logo_main.png\">", true);
+		htmlNewHtml.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		bottomDockPanel.add(htmlNewHtml, DockPanel.WEST);
+		bottomDockPanel.setCellVerticalAlignment(htmlNewHtml, HasVerticalAlignment.ALIGN_MIDDLE);
+		
+		HTML htmlNewHtml_1 = new HTML("<img alt=\"NIST logo\" width=\"65px\" height=\"17px\" style=\"margin-right:5px;margin-top:3px;margin-bottom:3px\" src=\"images/nist_logo_darkgrey.png\">", true);
+		bottomDockPanel.add(htmlNewHtml_1, DockPanel.EAST);
+		bottomDockPanel.setCellVerticalAlignment(htmlNewHtml_1, HasVerticalAlignment.ALIGN_MIDDLE);
+		bottomDockPanel.setCellHorizontalAlignment(htmlNewHtml_1, HasHorizontalAlignment.ALIGN_RIGHT);
+		
+//		HTML orgLogoHtml = new HTML("<img alt=\"Org logo\" width=\"126px\" height=\"37px\" style=\"margin-left:5px\" src=\"../appvet_images/org_logo_main.png\">", false);
+//		orgLogoHtml.setStyleName("");
+//		orgLogoHtml.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+//		bottomDockPanel.add(orgLogoHtml);
+//		bottomDockPanel.setCellWidth(orgLogoHtml, "50%");
+//		bottomDockPanel.setCellVerticalAlignment(orgLogoHtml, HasVerticalAlignment.ALIGN_MIDDLE);
+//		orgLogoHtml.setSize("126px", "37px");
+//		
+//		HTML nistLogoHtml = new HTML("<img alt=\"NIST logo\" width=\"65px\" height=\"17px\" style=\"margin-right:5px\" src=\"images/nist_logo_darkgrey.png\">", false);
+//		nistLogoHtml.setStyleName("");
+//		nistLogoHtml.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+//		bottomDockPanel.add(nistLogoHtml);
+//		bottomDockPanel.setCellHorizontalAlignment(nistLogoHtml, HasHorizontalAlignment.ALIGN_RIGHT);
+//		bottomDockPanel.setCellWidth(nistLogoHtml, "50%");
+//		bottomDockPanel.setCellVerticalAlignment(nistLogoHtml, HasVerticalAlignment.ALIGN_MIDDLE);
+//		nistLogoHtml.setSize("65px", "17px");
 
 		if ((initialApps != null) && (initialApps.apps.size() > 0)) {
 			appSelectionModel.setSelected(initialApps.apps.get(0), true);
@@ -1471,73 +1437,73 @@ public class AppVetPanel extends DockLayoutPanel {
 		appVetServiceAsync.getTestToolsEnabledDisabled(
 				new AsyncCallback<List<ToolInfoGwt>>() {
 
-			@Override
-			public void onFailure(Throwable caught) {
-				showMessageDialog("AppVet Error",
-						"Could not access AppVet test tools", true);
-			}
-
-			@Override
-			public void onSuccess(final List<ToolInfoGwt> testTools) {
-				if (testTools == null || testTools.isEmpty()) {
-					showMessageDialog("AppVet Error",
-							"No test tools available", true);
-					return;
-				}
-
-				final ToolAdapterEnableDialogBox toolAdapterDialogBox = 
-						new ToolAdapterEnableDialogBox(testTools);
-				toolAdapterDialogBox.setText("Enabled/Disable Tool");
-				toolAdapterDialogBox.center();
-				toolAdapterDialogBox.cancelButton
-				.addClickHandler(new ClickHandler() {
 					@Override
-					public void onClick(ClickEvent event) {
-						killDialogBox(toolAdapterDialogBox);
-						return;
+					public void onFailure(Throwable caught) {
+						showMessageDialog("AppVet Error",
+								"Could not access AppVet test tools", true);
 					}
-				});
-				toolAdapterDialogBox.okButton.addClickHandler(new ClickHandler() {
+
 					@Override
-					public void onClick(ClickEvent event) {
-						ListBox listBox = toolAdapterDialogBox.listBox;
-						ArrayList<ToolInfoGwt> newToolInfoList = new ArrayList<ToolInfoGwt>();
-						
-						for (int i = 0; i < testTools.size(); i++) {
-							ToolInfoGwt testTool = testTools.get(i);
-
-							String toolStr = listBox.getItemText(i);
-							String[] toolStrArray = toolStr.split(": ");
-							String enabledStr = toolStrArray[1];
-							if (enabledStr.equals("enabled")) {
-								testTool.setDisabled(false);
-							} else if (enabledStr.equals("disabled")) {
-								testTool.setDisabled(true);
-							}
-							newToolInfoList.add(testTool);
+					public void onSuccess(final List<ToolInfoGwt> testTools) {
+						if (testTools == null || testTools.isEmpty()) {
+							showMessageDialog("AppVet Error",
+									"No test tools available", true);
+							return;
 						}
-						
-						killDialogBox(toolAdapterDialogBox);
-						
-						appVetServiceAsync.setTestToolsEnabledDisabled(
-								newToolInfoList, new AsyncCallback<Boolean>() {
 
+						final ToolAdapterEnableDialogBox toolAdapterDialogBox = 
+								new ToolAdapterEnableDialogBox(testTools);
+						toolAdapterDialogBox.setText("Enabled/Disable Tool");
+						toolAdapterDialogBox.center();
+						toolAdapterDialogBox.cancelButton
+						.addClickHandler(new ClickHandler() {
 							@Override
-							public void onFailure(Throwable caught) {
-								showMessageDialog("AppVet Error",
-										"Could not access AppVet test tools", true);
+							public void onClick(ClickEvent event) {
+								killDialogBox(toolAdapterDialogBox);
+								return;
 							}
-
+						});
+						toolAdapterDialogBox.okButton.addClickHandler(new ClickHandler() {
 							@Override
-							public void onSuccess(Boolean result) {
-								showMessageDialog("AppVet Info",
-										"Tool(s) enabled/disabled successfully", false);
+							public void onClick(ClickEvent event) {
+								ListBox listBox = toolAdapterDialogBox.listBox;
+								ArrayList<ToolInfoGwt> newToolInfoList = new ArrayList<ToolInfoGwt>();
+
+								for (int i = 0; i < testTools.size(); i++) {
+									ToolInfoGwt testTool = testTools.get(i);
+
+									String toolStr = listBox.getItemText(i);
+									String[] toolStrArray = toolStr.split(": ");
+									String enabledStr = toolStrArray[1];
+									if (enabledStr.equals("enabled")) {
+										testTool.setDisabled(false);
+									} else if (enabledStr.equals("disabled")) {
+										testTool.setDisabled(true);
+									}
+									newToolInfoList.add(testTool);
+								}
+
+								killDialogBox(toolAdapterDialogBox);
+
+								appVetServiceAsync.setTestToolsEnabledDisabled(
+										newToolInfoList, new AsyncCallback<Boolean>() {
+
+											@Override
+											public void onFailure(Throwable caught) {
+												showMessageDialog("AppVet Error",
+														"Could not access AppVet test tools", true);
+											}
+
+											@Override
+											public void onSuccess(Boolean result) {
+												showMessageDialog("AppVet Info",
+														"Tool(s) enabled/disabled successfully", false);
+											}
+										});
 							}
 						});
 					}
 				});
-			}
-		});
 	}
 
 	public void showAppLog(final String appId) {
@@ -1759,9 +1725,10 @@ public class AppVetPanel extends DockLayoutPanel {
 									true);
 						} else {
 							appInfoVersion.setHTML("");
-							appInfoPackage.setHTML("");
+//							appInfoPackage.setHTML("");
 							appStatusInfo.setHTML("");
-							appIcon.setVisible(false);
+							appIconHtml.setVisible(false);
+//							appIcon.setVisible(false);
 							appInfoName.setText("");
 							toolResultsHtml.setText("");
 							disableAllButtons();
@@ -1901,6 +1868,14 @@ public class AppVetPanel extends DockLayoutPanel {
 
 	}
 
+	public void setWidgetTabbingOn() {
+
+	}
+
+	public void setWidgetTabbingOff() {
+
+	}
+
 
 
 	@Override
@@ -1937,36 +1912,40 @@ public class AppVetPanel extends DockLayoutPanel {
 							// Icon has not yet been generated for this
 							// app
 							if (selectedApp.os == DeviceOS.ANDROID) {
-								iconPath = "images/android-icon-gray.png";
+								iconPath = "<img src=\"images/android-icon-gray.png\" width=\"80px\" height=\"80px\" alt=\"Android\">";
 								altText = "Android app";
 							} else if (selectedApp.os == DeviceOS.IOS) {
-								iconPath = "images/apple-icon-gray.png";
+								iconPath = "<img src=\"images/apple-icon-gray.png\" width=\"80px\" height=\"80px\" alt=\"Android\">";
 								altText = "iOS app";
 							}
 						} else {
 							// Icon has been generated for this app
-							iconPath = selectedApp.iconURL;
+							iconPath = "<img src=\"" + selectedApp.iconURL + "\" width=\"80px\" height=\"80px\" alt=\"" + selectedApp.os.name() + "\">";
 							altText = selectedApp.appName;
 						}
 
-						appIcon.setVisible(true);
-						appIcon.setUrl(iconPath);
-						appIcon.setAltText(altText);
-						
+						appIconHtml.setVisible(true);
+						appIconHtml.setHTML(iconPath);
+//						appIcon.setVisible(true);
+//						appIcon.setUrl(iconPath);
+//						appIcon.setAltText(altText);
+
 						// Display PLATFORM ICON
 						String platformIconPath = null;
 						String platformIconAlt = null;
 						if (selectedApp.os == DeviceOS.ANDROID) {
-							platformIconPath = "images/android-platform-logo.png";
+							platformIconPath = "<img src=\"images/android-platform-logo.png\" width=\"35px\" height=\"35px\" alt=\"Android\">";
 							platformIconAlt = "Android";
 						} else if (selectedApp.os == DeviceOS.IOS) {
-							platformIconPath = "images/ios-platform-logo.png";
+							platformIconPath = "<img src=\"images/ios-platform-logo.png\" width=\"35px\" height=\"35px\" alt=\"iOS\">";
 							platformIconAlt = "iOS";
 						}
 
-						appPlatformIcon.setVisible(true);
-						appPlatformIcon.setUrl(platformIconPath);
-						appPlatformIcon.setAltText(platformIconAlt);
+						appPlatformHtml.setVisible(true);
+						appPlatformHtml.setHTML(platformIconPath);
+//						appPlatformIcon.setVisible(true);
+//						appPlatformIcon.setUrl(platformIconPath);
+//						appPlatformIcon.setAltText(platformIconAlt);
 
 						// Display APP NAME
 						String appNameHtml = null;
@@ -1994,27 +1973,27 @@ public class AppVetPanel extends DockLayoutPanel {
 						}
 
 						appInfoName.setHTML(appNameHtml);
-						
-						// Display APP PACKAGE
-						if ((selectedApp.packageName == null)
-								|| selectedApp.packageName.equals("")) {
-							appInfoPackage
-							.setHTML("<b>Package: </b>N/A");
-						} else {
-							appInfoPackage.setHTML("<b>Package: </b>"
-									+ selectedApp.packageName);
-						}
+
+//						// Display APP PACKAGE
+//						if ((selectedApp.packageName == null)
+//								|| selectedApp.packageName.equals("")) {
+//							appInfoPackage
+//							.setHTML("<b>Package: </b>N/A");
+//						} else {
+//							appInfoPackage.setHTML("<b>Package: </b>"
+//									+ selectedApp.packageName);
+//						}
 
 						// Display VERSION
 						if ((selectedApp.versionName == null)
 								|| selectedApp.versionName.equals("")) {
 							appInfoVersion
-							.setHTML("<b>Version: </b>N/A");
+							.setHTML("Version N/A");
 						} else {
-							appInfoVersion.setHTML("<b>Version: </b>"
+							appInfoVersion.setHTML("Version "
 									+ selectedApp.versionName);
 						}
-					
+
 
 						// Display APP STATUS
 						String tag = null;
@@ -2079,7 +2058,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				public String getHtmlToolResults(String appId,
 						List<ToolStatusGwt> toolResults) {
 					// Get summary report
-					String statuses = "<h3 title=\"Overview\" id=\"appInfoSectionHeader\">Overview</h3>\n";
+					String statuses = "<h2 title=\"Overview\" id=\"appInfoSectionHeader\">Overview</h2>\n";
 					int summaryCount = 0;
 
 					for (int i = 0; i < toolResults.size(); i++) {
@@ -2107,7 +2086,7 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 
 					// Display pre-processing analysis results
-					statuses += "<h3 title=\"App Information\" id=\"appInfoSectionHeader\">App Information</h3>\n";
+					statuses += "<h2 title=\"App Information\" id=\"appInfoSectionHeader\">App Information</h2>\n";
 					int preprocessorToolCount = 0;
 
 					for (int i = 0; i < toolResults.size(); i++) {
@@ -2126,7 +2105,7 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 
 					// Display tool and manually-uploaded results.
-					statuses += "<h3 title=\"Report Type\"  id=\"appInfoSectionHeader\">Report Type</h3>\n";
+					statuses += "<h2 title=\"Report Type\"  id=\"appInfoSectionHeader\">Report Type</h2>\n";
 					int analysisToolCount = 0;
 
 					for (int i = 0; i < toolResults.size(); i++) {
@@ -2241,7 +2220,7 @@ public class AppVetPanel extends DockLayoutPanel {
 						String toolStatus, String toolReport) {
 					return "<table>" + "<tr>\n"
 							+ "<td>"
-							+ "<img class=\"toolimages\" src=\""
+							+ "<img width=\"18px\" class=\"toolimages\" src=\""
 							+ toolIconURL
 							+ "\" alt=\""
 							+ toolIconAltText
@@ -2316,7 +2295,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		// margin
 
 		// Set center panel height
-		final int MARGIN_HEIGHT = 0;
+		final int MARGIN_HEIGHT = 5;
 		final int centerPanelHeight = appVetPanelHeight
 				- (int) NORTH_PANEL_HEIGHT - (int) SOUTH_PANEL_HEIGHT
 				- MARGIN_HEIGHT;
@@ -2325,7 +2304,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		centerPanel.setHeight(adjustedCenterPanelHeight + "px");
 
 		// Set pager height to adjust appsListTable height inside center panel
-		int PAGER_HEIGHT = 58;
+		int PAGER_HEIGHT = 54;
 		final int appsListTableHeight = centerPanelHeight - PAGER_HEIGHT;
 		appsListTable.setHeight(appsListTableHeight + "px");
 		appsListTable.dataGrid.redraw();
@@ -2378,7 +2357,7 @@ public class AppVetPanel extends DockLayoutPanel {
 
 	public void setAllApps() {
 		final SafeHtmlBuilder sb = new SafeHtmlBuilder();
-		sb.appendHtmlConstant("<h3>Apps</h3>");
+		sb.appendHtmlConstant("<h2 title=\"Apps list\" id=\"appsHeader\">Apps</h2>");
 		appsLabelHtml.setHTML(sb.toSafeHtml());
 		appsListTable.setDataList(allApps);
 	}
@@ -2442,7 +2421,8 @@ public class AppVetPanel extends DockLayoutPanel {
 				appSelectionModel.setSelected(
 						allApps.get(currentlySelectedIndex), true);
 			} else {
-				appIcon.setVisible(false);
+				appIconHtml.setVisible(false);
+//				appIcon.setVisible(false);
 				appInfoName.setText("");
 				toolResultsHtml.setText("");
 				disableAllButtons();
@@ -2522,6 +2502,62 @@ public class AppVetPanel extends DockLayoutPanel {
 						.getValue();
 				final String newPassword2 = userAcctDialogBox.password2TextBox
 						.getValue();
+
+				// Validate password required for NON-SSO mode
+				if (newPassword1 != null && !newPassword1.isEmpty()
+						&& newPassword2 != null && !newPassword2.isEmpty()) {
+					if (!Validate.isValidPassword(newPassword1)) {
+						messageDialogBox = new MessageDialogBox("Invalid password", true);
+						messageDialogBox.setText("Account Setting Error");
+						messageDialogBox.center();
+						messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
+							@Override
+							public void onClick(ClickEvent event) {
+								killDialogBox(messageDialogBox);
+								Scheduler.get().scheduleDeferred(new Command() {
+									public void execute() {
+										userAcctDialogBox.password1TextBox.setFocus(true);
+									}
+								});
+							}
+						});
+						return;
+					}
+					if (!newPassword1.equals(newPassword2)) {
+						messageDialogBox = new MessageDialogBox("Passwords do not match", true);
+						messageDialogBox.setText("Account Setting Error");
+						messageDialogBox.center();
+						messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
+							@Override
+							public void onClick(ClickEvent event) {
+								killDialogBox(messageDialogBox);
+								Scheduler.get().scheduleDeferred(new Command() {
+									public void execute() {
+										userAcctDialogBox.password1TextBox.setFocus(true);
+									}
+								});
+							}
+						});
+						return;
+					}
+				} else {
+					messageDialogBox = new MessageDialogBox("Password is empty or null", true);
+					messageDialogBox.setText("Account Setting Error");
+					messageDialogBox.center();
+					messageDialogBox.closeButton.addClickHandler(new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent event) {
+							killDialogBox(messageDialogBox);
+							Scheduler.get().scheduleDeferred(new Command() {
+								public void execute() {
+									userAcctDialogBox.password1TextBox.setFocus(true);
+								}
+							});
+						}
+					});
+					return;
+				}
+
 				final UserInfo updatedUserInfo = new UserInfo();
 				updatedUserInfo.setUserName(userInfo.getUserName());
 				updatedUserInfo.setLastName(newLastName);
@@ -2530,10 +2566,6 @@ public class AppVetPanel extends DockLayoutPanel {
 				updatedUserInfo.setPasswords(newPassword1, newPassword2);
 				updatedUserInfo.setRoleAndOrgMembership(userInfo
 						.getRoleAndOrgMembership());
-				// Validate updated user info
-				if (!userInfoIsValid(updatedUserInfo, ssoActive)) {
-					return;
-				}
 
 				appVetServiceAsync.selfUpdatePassword(updatedUserInfo,
 						new AsyncCallback<Boolean>() {
@@ -2549,8 +2581,7 @@ public class AppVetPanel extends DockLayoutPanel {
 					public void onSuccess(Boolean result) {
 						final boolean updated = result.booleanValue();
 						if (updated) {
-							userMenuItem.setText(userInfo
-									.getNameWithLastNameInitial());
+
 							userInfo.setUserName(userInfo.getUserName());
 							userInfo.setLastName(updatedUserInfo
 									.getLastName());
@@ -2560,10 +2591,11 @@ public class AppVetPanel extends DockLayoutPanel {
 									.getEmail());
 							updatedUserInfo.setPassword("");
 
-							killDialogBox(userAcctDialogBox);
 							showMessageDialog("Account Update",
 									"Password updated successfully.",
 									false);
+							killDialogBox(userAcctDialogBox);
+
 						} else {
 							showMessageDialog(
 									"Update Error",

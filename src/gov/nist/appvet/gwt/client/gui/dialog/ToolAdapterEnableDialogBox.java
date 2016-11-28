@@ -5,6 +5,7 @@ import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -13,6 +14,7 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 
@@ -38,8 +40,9 @@ public class ToolAdapterEnableDialogBox extends DialogBox {
 		dockPanel.add(lblNewLabel, DockPanel.NORTH);
 		lblNewLabel.setHeight("23px");
 		listBox = new ListBox();
+		listBox.setTitle("Tool list");
+		listBox.setName("Tool list");
 		listBox.setStyleName("h1");
-		listBox.setFocus(true);
 
 		dockPanel.add(listBox, DockPanel.CENTER);
 		dockPanel.setCellHorizontalAlignment(listBox,
@@ -52,6 +55,7 @@ public class ToolAdapterEnableDialogBox extends DialogBox {
 		horizontalPanel.setSize("373px", "28px");
 
 		cancelButton = new PushButton("Cancel");
+		cancelButton.setTitle("Cancel");
 		cancelButton.setStyleName("grayButton shadow");
 		horizontalPanel.add(cancelButton);
 		cancelButton.setSize("70px", "18px");
@@ -61,6 +65,7 @@ public class ToolAdapterEnableDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 
 		editButton = new PushButton("Edit");
+		editButton.setTitle("Edit tool");
 		editButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
 				final int selectedIndex = listBox.getSelectedIndex();
@@ -120,6 +125,7 @@ public class ToolAdapterEnableDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 
 		okButton = new PushButton("Ok");
+		okButton.setTitle("Ok");
 		okButton.setEnabled(false);
 		okButton.setStyleName("greenButton shadow");
 		okButton.setHTML("Ok");
@@ -150,6 +156,17 @@ public class ToolAdapterEnableDialogBox extends DialogBox {
 		} catch (Exception e) {
 			log.severe(e.getMessage());
 		}
+	}
+	
+	/** This fixes focus for dialog boxes in Firefox and IE browsers */
+	@Override
+	public void show() {
+	    super.show();
+	    Scheduler.get().scheduleDeferred(new Command() {
+	        public void execute() {
+	        	listBox.setFocus(true);
+	        }
+	    });
 	}
 
 	public void killDialogBox(DialogBox dialogBox) {

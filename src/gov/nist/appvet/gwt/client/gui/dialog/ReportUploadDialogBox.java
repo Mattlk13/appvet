@@ -28,10 +28,12 @@ import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.ToolType;
 import gov.nist.appvet.shared.all.UserInfo;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -150,6 +152,7 @@ public class ReportUploadDialogBox extends DialogBox {
 		final TextBox analystTextBox = new TextBox();
 		analystTextBox.setName("User");
 		analystTextBox.setTitle("User is non-editable");
+		analystTextBox.setName("User is non-editable");
 		analystTextBox.setAlignment(TextAlignment.LEFT);
 		analystTextBox.setText(userInfo.getUserName());
 		analystTextBox.setEnabled(false);
@@ -168,6 +171,7 @@ public class ReportUploadDialogBox extends DialogBox {
 		final TextBox appIdTextBox = new TextBox();
 		appIdTextBox.setName("App ID");
 		appIdTextBox.setTitle("App ID is non-editable");
+		analystTextBox.setName("App ID is non-editable");
 		appIdTextBox.setAlignment(TextAlignment.LEFT);
 		appIdTextBox.setText(appid);
 		appIdTextBox.setEnabled(false);
@@ -465,6 +469,7 @@ public class ReportUploadDialogBox extends DialogBox {
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalButtonPanel.setSize("210px", "");
 		cancelButton = new PushButton("Cancel");
+		cancelButton.setTitle("Cancel");
 		cancelButton.setStyleName("grayButton shadow");
 		cancelButton.setHTML("Cancel");
 		horizontalButtonPanel.add(cancelButton);
@@ -478,6 +483,7 @@ public class ReportUploadDialogBox extends DialogBox {
 		horizontalButtonPanel.add(lblNewLabel);
 		lblNewLabel.setWidth("50px");
 		submitButton = new PushButton("Submit");
+		submitButton.setTitle("Submit");
 		submitButton.setStyleName("greenButton shadow");
 		submitButton.setEnabled(false);
 		horizontalButtonPanel.add(submitButton);
@@ -522,5 +528,16 @@ public class ReportUploadDialogBox extends DialogBox {
 			}
 		});
 		
+	}
+	
+	/** This fixes focus for dialog boxes in Firefox and IE browsers */
+	@Override
+	public void show() {
+	    super.show();
+	    Scheduler.get().scheduleDeferred(new Command() {
+	        public void execute() {
+	        	toolNamesComboBox.setFocus(true);
+	        }
+	    });
 	}
 }

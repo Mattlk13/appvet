@@ -5,6 +5,7 @@ import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -13,6 +14,7 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 
@@ -45,7 +47,7 @@ public class OrgLevelsDialogBox extends DialogBox {
 		dockPanel.add(lblNewLabel, DockPanel.NORTH);
 		String[] userMembershipLevels;
 		listBox = new ListBox();
-		listBox.setFocus(true);
+		listBox.setTitle("Organizational levels");
 		try {
 			if (orgMembership.isEmpty()) {
 				// New User
@@ -96,6 +98,7 @@ public class OrgLevelsDialogBox extends DialogBox {
 		horizontalPanel.setWidth("373px");
 		
 		cancelButton = new PushButton("Cancel");
+		cancelButton.setTitle("Cancel");
 		cancelButton.setStyleName("grayButton shadow");
 		horizontalPanel.add(cancelButton);
 		cancelButton.setSize("70px", "18px");
@@ -103,6 +106,7 @@ public class OrgLevelsDialogBox extends DialogBox {
 		horizontalPanel.setCellHorizontalAlignment(cancelButton, HasHorizontalAlignment.ALIGN_CENTER);
 		
 		editButton = new PushButton("Edit");
+		editButton.setTitle("Edit level");
 		editButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
 				final int selectedIndex = listBox.getSelectedIndex();
@@ -126,6 +130,12 @@ public class OrgLevelsDialogBox extends DialogBox {
 					@Override
 					public void onClick(ClickEvent event) {
 						killDialogBox(levelNameDialogBox);
+						
+					    Scheduler.get().scheduleDeferred(new Command() {
+					        public void execute() {
+					        	listBox.setFocus(true);
+					        }
+					    });
 					}
 				});
 				
@@ -151,12 +161,15 @@ public class OrgLevelsDialogBox extends DialogBox {
 							displayStr += levelNameDialogBox.suggestBox.getText();
 							listBox.setItemText(selectedIndex, displayStr);
 							killDialogBox(levelNameDialogBox);
+							
+						    Scheduler.get().scheduleDeferred(new Command() {
+						        public void execute() {
+						        	listBox.setFocus(true);
+						        }
+						    });
 						}
-						
-						
 					}
 				});
-				
 			}
 		});
 		editButton.setStyleName("grayButton shadow");
@@ -166,12 +179,25 @@ public class OrgLevelsDialogBox extends DialogBox {
 		horizontalPanel.setCellHorizontalAlignment(editButton, HasHorizontalAlignment.ALIGN_CENTER);
 		
 		okButton = new PushButton("Ok");
+		okButton.setTitle("Ok");
+
 		okButton.setStyleName("greenButton shadow");
 		okButton.setHTML("Ok");
 		horizontalPanel.add(okButton);
 		horizontalPanel.setCellVerticalAlignment(okButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel.setCellHorizontalAlignment(okButton, HasHorizontalAlignment.ALIGN_CENTER);
 		okButton.setSize("70px", "18px");		
+	}
+	
+	/** This fixes focus for dialog boxes in Firefox and IE browsers */
+	@Override
+	public void show() {
+	    super.show();
+	    Scheduler.get().scheduleDeferred(new Command() {
+	        public void execute() {
+	        	listBox.setFocus(true);
+	        }
+	    });
 	}
 	
 	public void killDialogBox(DialogBox dialogBox) {
@@ -191,6 +217,12 @@ public class OrgLevelsDialogBox extends DialogBox {
 			public void onClick(ClickEvent event) {
 				messageDialogBox.hide();
 				messageDialogBox = null;
+				
+			    Scheduler.get().scheduleDeferred(new Command() {
+			        public void execute() {
+			        	levelNameDialogBox.suggestBox.setFocus(true);
+			        }
+			    });
 			}
 		});
 	}

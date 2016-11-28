@@ -26,8 +26,10 @@ import gov.nist.appvet.shared.all.UserInfo;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -114,6 +116,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		horizontalPanel_1.setCellWidth(lblNewLabel, "50%");
 		lblNewLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		lastNameTextBox = new TextBox();
+		lastNameTextBox.setTitle("Last name");
+		lastNameTextBox.setName("Last name");
 		lastNameTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		lastNameTextBox.setAlignment(TextAlignment.LEFT);
 		horizontalPanel_1.add(lastNameTextBox);
@@ -139,6 +143,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		lblNewLabel_1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		firstNameTextBox = new TextBox();
+		firstNameTextBox.setTitle("First name");
+		firstNameTextBox.setName("First name");
 		firstNameTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		firstNameTextBox.setAlignment(TextAlignment.LEFT);
 		horizontalPanel_2.add(firstNameTextBox);
@@ -164,6 +170,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		horizontalPanel_3.setCellWidth(lblUserId, "50%");
 		lblUserId.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		userIdTextBox = new TextBox();
+		userIdTextBox.setTitle("Username");
+		userIdTextBox.setName("Username");
 		userIdTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		userIdTextBox.setAlignment(TextAlignment.LEFT);
 		horizontalPanel_3.add(userIdTextBox);
@@ -188,6 +196,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		horizontalPanel_7.setCellWidth(lblEmail, "50%");
 		lblEmail.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		emailTextBox = new TextBox();
+		emailTextBox.setTitle("Email");
+		emailTextBox.setName("Email");
 		emailTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		emailTextBox.setAlignment(TextAlignment.LEFT);
 		horizontalPanel_7.add(emailTextBox);
@@ -215,6 +225,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		lblRole.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 
 		adminRadioButton = new RadioButton("buttonGroup", "Admin");
+		adminRadioButton.setTitle("Administrator role");
+		adminRadioButton.setName("Administrator role");
 		horizontalPanel_8.add(adminRadioButton);
 		horizontalPanel_8.setCellHorizontalAlignment(adminRadioButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
@@ -229,6 +241,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		adminRadioButton.setWidth("140px");
 
 		toolRadioButton = new RadioButton("buttonGroup", "Tool");
+		toolRadioButton.setTitle("Test tool role");
+		toolRadioButton.setName("Test tool role");
 		horizontalPanel_8.add(toolRadioButton);
 		horizontalPanel_8.setCellHorizontalAlignment(toolRadioButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
@@ -236,13 +250,17 @@ public class AdminUserAcctDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 
 		analystRadioButton = new RadioButton("buttonGroup", "Analyst");
+		analystRadioButton.setTitle("Analyst role");
+		analystRadioButton.setName("Analyst role");
 		horizontalPanel_8.add(analystRadioButton);
 		horizontalPanel_8.setCellHorizontalAlignment(analystRadioButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_8.setCellVerticalAlignment(analystRadioButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 
-		userRadioButton = new RadioButton("buttongroup", "User");
+		userRadioButton = new RadioButton("buttonGroup", "User");
+		userRadioButton.setTitle("User role");
+		userRadioButton.setName("User role");
 		horizontalPanel_8.add(userRadioButton);
 		userRadioButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
@@ -297,6 +315,7 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		horizontalPanel_14.setCellVerticalAlignment(lblNewLabel_2, HasVerticalAlignment.ALIGN_MIDDLE);
 		
 		editLevelsButton = new PushButton("Edit");
+		editLevelsButton.setTitle("Edit organizational membership and role");
 		editLevelsButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
 				String orgMembership = orgMembershipTextBox.getText();
@@ -313,6 +332,12 @@ public class AdminUserAcctDialogBox extends DialogBox {
 					@Override
 					public void onClick(ClickEvent event) {
 						killDialogBox(orgLevelsDialogBox);
+						
+					    Scheduler.get().scheduleDeferred(new Command() {
+					        public void execute() {
+				        		editLevelsButton.setFocus(true);
+					        }
+					    });
 					}
 				});
 				
@@ -344,6 +369,12 @@ public class AdminUserAcctDialogBox extends DialogBox {
 						} else {
 							orgMembershipTextBox.setText(levelsStr);
 							killDialogBox(orgLevelsDialogBox);	
+							
+						    Scheduler.get().scheduleDeferred(new Command() {
+						        public void execute() {
+					        		editLevelsButton.setFocus(true);
+						        }
+						    });
 						}
 
 					}
@@ -353,6 +384,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		});
 		
 		orgMembershipTextBox = new TextBox();
+		orgMembershipTextBox.setTitle("Organizational membership and role");
+		orgMembershipTextBox.setName("Organizational membership and role");
 		orgMembershipTextBox.setReadOnly(true);
 		horizontalPanel_14.add(orgMembershipTextBox);
 		orgMembershipTextBox.setWidth("167");
@@ -369,6 +402,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		verticalPanel_1.setCellVerticalAlignment(horizontalPanel_5, HasVerticalAlignment.ALIGN_MIDDLE);
 		
 		changePasswordCheckBox = new SimpleCheckBox();
+		changePasswordCheckBox.setTitle("Change password");
+		changePasswordCheckBox.setName("Change password");
 		changePasswordCheckBox.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
 				boolean changePassword = changePasswordCheckBox.isChecked();
@@ -405,6 +440,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		passwordLabel.setWidth("115px");
 		password1TextBox = new PasswordTextBox();
+		password1TextBox.setTitle("Enter password");
+		password1TextBox.setName("Enter password");
 		horizontalPanel_13.add(password1TextBox);
 
 		password1TextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
@@ -425,6 +462,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		horizontalPanel_4.add(passwordLabel3);
 		passwordLabel3.setWidth("115px");
 		password2TextBox = new PasswordTextBox();
+		password2TextBox.setTitle("Enter password again");
+		password2TextBox.setName("Enter password again");
 		horizontalPanel_4.add(password2TextBox);
 
 		password2TextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
@@ -442,6 +481,7 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		horizontalPanel.setSize("200px", "50px");
 		horizontalPanel.setStyleName("buttonPanelStyle");
 		cancelButton = new PushButton("Cancel");
+		cancelButton.setTitle("Cancel");
 		cancelButton.setStyleName("grayButton shadow");
 		cancelButton.setHTML("Cancel");
 		horizontalPanel.add(cancelButton);
@@ -451,6 +491,7 @@ public class AdminUserAcctDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		cancelButton.setSize("70px", "18px");
 		submitButton = new PushButton("Submit");
+		submitButton.setTitle("Submit");
 		submitButton.setStyleName("greenButton shadow");
 		horizontalPanel.add(submitButton);
 		horizontalPanel.setCellHorizontalAlignment(submitButton,
@@ -545,6 +586,17 @@ public class AdminUserAcctDialogBox extends DialogBox {
 
 	}
 	
+	/** This fixes focus for dialog boxes in Firefox and IE browsers */
+	@Override
+	public void show() {
+	    super.show();
+	    Scheduler.get().scheduleDeferred(new Command() {
+	        public void execute() {
+	    		lastNameTextBox.setFocus(true);
+	        }
+	    });
+	}
+	
 	public void enableChangePassword(boolean enable) {
 		if (enable) {
 			changePasswordCheckBox.setChecked(true);
@@ -569,6 +621,11 @@ public class AdminUserAcctDialogBox extends DialogBox {
 				messageDialogBox.hide();
 				messageDialogBox = null;
 				log.info("out of closed button");
+			    Scheduler.get().scheduleDeferred(new Command() {
+			        public void execute() {
+			        	orgLevelsDialogBox.listBox.setFocus(true);
+			        }
+			    });
 			}
 		});
 	}
@@ -581,15 +638,15 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		boolean userRadioSelected = userRadioButton.getValue();
 		if (!adminRadioSelected && !toolRadioSelected && !analystRadioSelected
 				&& !userRadioSelected) {
-			showMessageDialog("AppVet User Account", "No user role selected",
-					true);
+//			showMessageDialog("AppVet User Account", "No user role selected",
+//					true);
 			return null;
 		}
 		
 		if (analystRadioSelected || userRadioSelected) {
 			if (orgMembership == null || orgMembership.isEmpty()) {
-				showMessageDialog("AppVet User Account", "Organization cannot be empty",
-						true);
+//				showMessageDialog("AppVet User Account", "Organization cannot be empty",
+//						true);
 				return null;
 			}
 		}
@@ -606,7 +663,6 @@ public class AdminUserAcctDialogBox extends DialogBox {
 			log.severe("Invalid role");
 			return null;
 		}
-
 	}
 
 	public void killDialogBox(DialogBox dialogBox) {

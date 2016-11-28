@@ -19,16 +19,18 @@
  */
 package gov.nist.appvet.gwt.client.gui.dialog;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.HTML;
 
 /**
  * @author steveq@nist.gov
@@ -59,15 +61,12 @@ public class AboutDialogBox extends DialogBox {
 		verticalPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.setSize("100%", "100%");
-		Image appvetLogoAbout = new Image("../appvet_images/appvet_logo_main.png");
-		appvetLogoAbout.setWidth("200px");
-		appvetLogoAbout.setHeight("25px");
-		//image.setTitle("AppVet Mobile App Vetting System");
-		appvetLogoAbout.setAltText("Carwash AppVet");
-		verticalPanel.add(appvetLogoAbout);
-		verticalPanel.setCellVerticalAlignment(appvetLogoAbout, HasVerticalAlignment.ALIGN_BOTTOM);
-		verticalPanel.setCellHorizontalAlignment(appvetLogoAbout,
-				HasHorizontalAlignment.ALIGN_CENTER);
+		
+		HTML appvetLogoAboutHtml = new HTML("<img alt=\"AppVet\" width=\"200px\" height=\"25px\" src=\"../appvet_images/appvet_about_logo.png\">", false);
+		verticalPanel.add(appvetLogoAboutHtml);
+		verticalPanel.setCellVerticalAlignment(appvetLogoAboutHtml, HasVerticalAlignment.ALIGN_BOTTOM);
+		verticalPanel.setCellHorizontalAlignment(appvetLogoAboutHtml, HasHorizontalAlignment.ALIGN_CENTER);
+		appvetLogoAboutHtml.setSize("200px", "25px");
 		final HorizontalPanel horizontalPanel = new HorizontalPanel();
 		verticalPanel.add(horizontalPanel);
 		verticalPanel.setCellWidth(horizontalPanel, "100%");
@@ -92,8 +91,20 @@ public class AboutDialogBox extends DialogBox {
 		dockPanel.setCellVerticalAlignment(simplePanel, HasVerticalAlignment.ALIGN_BOTTOM);
 		simplePanel.setHeight("44px");
 		closeButton = new PushButton("Close");
+		closeButton.setTitle("Close");
 		simplePanel.setWidget(closeButton);
 		closeButton.setSize("70px", "18px");
 		closeButton.setStyleName("greenButton shadow");
+	}
+	
+	/** This fixes focus for dialog boxes in Firefox and IE browsers */
+	@Override
+	public void show() {
+	    super.show();
+	    Scheduler.get().scheduleDeferred(new Command() {
+	        public void execute() {
+	        	closeButton.setFocus(true);
+	        }
+	    });
 	}
 }

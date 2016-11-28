@@ -25,6 +25,8 @@ import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.UserInfo;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -37,6 +39,8 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ChangeEvent;
 
 /**
  * @author steveq@nist.gov
@@ -87,6 +91,8 @@ public class UserAcctDialogBox extends DialogBox {
 		horizontalPanel_1.setCellVerticalAlignment(lblUserId,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		final TextBox userIdTextBox_1 = new TextBox();
+		userIdTextBox_1.setTitle("Username");
+		userIdTextBox_1.setName("Username");
 		userIdTextBox_1.setEnabled(false);
 		userIdTextBox_1.setAlignment(TextAlignment.LEFT);
 		userIdTextBox_1.setText(userInfo.getUserName());
@@ -118,6 +124,8 @@ public class UserAcctDialogBox extends DialogBox {
 		horizontalPanel_2.setCellWidth(lblNewLabel, "50%");
 		lblNewLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		lastNameTextBox = new TextBox();
+		lastNameTextBox.setTitle("Last name");
+		lastNameTextBox.setName("Last name");
 		lastNameTextBox.setEnabled(false);
 		lastNameTextBox.setAlignment(TextAlignment.LEFT);
 		horizontalPanel_2.add(lastNameTextBox);
@@ -148,6 +156,8 @@ public class UserAcctDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		lblNewLabel_1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		firstNameTextBox = new TextBox();
+		firstNameTextBox.setTitle("First name");
+		firstNameTextBox.setName("First name");
 		firstNameTextBox.setEnabled(false);
 		firstNameTextBox.setAlignment(TextAlignment.LEFT);
 		horizontalPanel_3.add(firstNameTextBox);
@@ -169,6 +179,8 @@ public class UserAcctDialogBox extends DialogBox {
 		label_1.setWidth("170px");
 		
 		roleTextBox = new TextBox();
+		roleTextBox.setTitle("Role");
+		roleTextBox.setName("Role");
 		String roleStr = userInfo.getRoleAndOrgMembership();
 		Role role = null;
 		try {
@@ -205,6 +217,8 @@ public class UserAcctDialogBox extends DialogBox {
 		lblDepartment
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		orgTextBox = new TextBox();
+		orgTextBox.setTitle("Organizational unit");
+		orgTextBox.setName("Organizational unit");
 		try {
 			if (role == Role.ADMIN) {
 				orgTextBox.setText("ALL");
@@ -245,6 +259,8 @@ public class UserAcctDialogBox extends DialogBox {
 		horizontalPanel_5.setCellWidth(lblEmail, "50%");
 		lblEmail.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		emailTextBox = new TextBox();
+		emailTextBox.setTitle("Email");
+		emailTextBox.setName("Email");
 		emailTextBox.setEnabled(false);
 		emailTextBox.setAlignment(TextAlignment.LEFT);
 		horizontalPanel_5.add(emailTextBox);
@@ -278,6 +294,8 @@ public class UserAcctDialogBox extends DialogBox {
 		horizontalPanel_6.setCellWidth(passwordLabel3, "50%");
 		passwordLabel3.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		password1TextBox = new PasswordTextBox();
+		password1TextBox.setTitle("Password");
+		password1TextBox.setName("Password");
 		password1TextBox.setTitle("Type new password");
 		
 		password1TextBox.setAlignment(TextAlignment.LEFT);
@@ -308,6 +326,8 @@ public class UserAcctDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		passwordLabel2.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		password2TextBox = new PasswordTextBox();
+		password2TextBox.setTitle("Password again");
+		password2TextBox.setName("Password again");
 		password2TextBox.setTitle("Type new password again");
 
 		password2TextBox.setAlignment(TextAlignment.LEFT);
@@ -324,6 +344,7 @@ public class UserAcctDialogBox extends DialogBox {
 		horizontalPanel.setSize("100%", "50px");
 		
 		cancelButton = new PushButton("Cancel");
+		cancelButton.setTitle("Cancel");
 		cancelButton.setStyleName("grayButton shadow");
 		horizontalPanel.add(cancelButton);
 		horizontalPanel.setCellVerticalAlignment(cancelButton, HasVerticalAlignment.ALIGN_MIDDLE);
@@ -332,6 +353,7 @@ public class UserAcctDialogBox extends DialogBox {
 		cancelButton.setSize("70px", "18px");
 		
 		okButton = new PushButton("Ok");
+		okButton.setTitle("Ok");
 		okButton.setStyleName("greenButton shadow");
 		okButton.setHTML("Ok");
 		horizontalPanel.add(okButton);
@@ -343,6 +365,8 @@ public class UserAcctDialogBox extends DialogBox {
 		okButton.setSize("70px", "18px");
 		
 		if (ssoActive) {
+			password1TextBox.setEnabled(false);
+			password2TextBox.setEnabled(false);
 			okButton.setEnabled(false);
 			okButton.setVisible(false);
 		}
@@ -411,5 +435,16 @@ public class UserAcctDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		dockPanel.setCellHorizontalAlignment(horizontalPanel,
 				HasHorizontalAlignment.ALIGN_CENTER);
+	}
+	
+	/** This fixes focus for dialog boxes in Firefox and IE browsers */
+	@Override
+	public void show() {
+	    super.show();
+	    Scheduler.get().scheduleDeferred(new Command() {
+	        public void execute() {
+	        	password1TextBox.setFocus(true);
+	        }
+	    });
 	}
 }

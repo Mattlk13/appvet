@@ -25,6 +25,8 @@ import gov.nist.appvet.shared.all.UserInfo;
 import java.util.Comparator;
 
 import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.DataGrid;
@@ -57,7 +59,9 @@ public class UsersListPagingDataGrid<T> extends PagingDataGrid<T> {
 						((UserInfo) o2).getLastName());
 			}
 		});
-		dataGrid.addColumn(lastNameColumn, "Last Name");
+		SafeHtml lastNameHeader = 
+				SafeHtmlUtils.fromTrustedString("<span title=\"Last name\">Last name</span>");
+		dataGrid.addColumn(lastNameColumn, lastNameHeader);
 		dataGrid.setColumnWidth(lastNameColumn, "50px");
 		
 		// First Name
@@ -76,7 +80,9 @@ public class UsersListPagingDataGrid<T> extends PagingDataGrid<T> {
 						((UserInfo) o2).getFirstName());
 			}
 		});
-		dataGrid.addColumn(firstNameColumn, "First Name");
+		SafeHtml firstNameHeader = 
+				SafeHtmlUtils.fromTrustedString("<span title=\"First name\">First name</span>");
+		dataGrid.addColumn(firstNameColumn, firstNameHeader);
 		dataGrid.setColumnWidth(firstNameColumn, "50px");
 		
 		// User ID
@@ -102,7 +108,9 @@ public class UsersListPagingDataGrid<T> extends PagingDataGrid<T> {
 						((UserInfo) o2).getUserName());
 			}
 		});
-		dataGrid.addColumn(userIdColumn, "User ID");
+		SafeHtml userIdHeader = 
+				SafeHtmlUtils.fromTrustedString("<span title=\"User ID\">User ID</span>");
+		dataGrid.addColumn(userIdColumn, userIdHeader);
 		dataGrid.setColumnWidth(userIdColumn, "50px");
 	}
 	

@@ -24,6 +24,7 @@ import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 
 import java.util.List;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -33,6 +34,7 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.i18n.client.HasDirection.Direction;
 import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 
@@ -68,6 +70,7 @@ public class ToolAdapterEnabledEditDialogBox extends DialogBox {
 		mainLabel.setSize("", "32px");
 		
 		enableRadioButton = new RadioButton("group1", "Enable");
+		enableRadioButton.setTitle("Enable tool");
 		enableRadioButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
 				okButton.setEnabled(true);
@@ -78,6 +81,7 @@ public class ToolAdapterEnabledEditDialogBox extends DialogBox {
 		enableRadioButton.setSize("229px", "20px");
 		
 		disableRadioButton = new RadioButton("group1", "Disable");
+		disableRadioButton.setTitle("Disable tool");
 		disableRadioButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
 				okButton.setEnabled(true);
@@ -109,6 +113,7 @@ public class ToolAdapterEnabledEditDialogBox extends DialogBox {
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
 		cancelButton = new PushButton("Cancel");
+		cancelButton.setTitle("Cancel");
 		cancelButton.setStyleName("grayButton shadow");
 		cancelButton.setHTML("Cancel");
 		horizontalButtonPanel.add(cancelButton);
@@ -116,6 +121,7 @@ public class ToolAdapterEnabledEditDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		cancelButton.setSize("70px", "18px");
 		okButton = new PushButton("Ok");
+		okButton.setTitle("Ok");
 		okButton.setEnabled(false);
 		okButton.setStyleName("greenButton shadow");
 		horizontalButtonPanel.add(okButton);
@@ -123,5 +129,16 @@ public class ToolAdapterEnabledEditDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		okButton.setSize("70px", "18px");
 
+	}
+	
+	/** This fixes focus for dialog boxes in Firefox and IE browsers */
+	@Override
+	public void show() {
+	    super.show();
+	    Scheduler.get().scheduleDeferred(new Command() {
+	        public void execute() {
+	        	enableRadioButton.setFocus(true);
+	        }
+	    });
 	}
 }
