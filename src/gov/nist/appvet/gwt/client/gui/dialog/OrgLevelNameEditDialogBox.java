@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.i18n.client.HasDirection.Direction;
 import com.google.gwt.user.client.ui.SuggestBox;
@@ -102,6 +103,8 @@ public class OrgLevelNameEditDialogBox extends DialogBox {
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
 		cancelButton = new PushButton("Cancel");
+		Roles.getButtonRole().setAriaLabelProperty(cancelButton.getElement(), "Cancel Button");
+
 		cancelButton.setTitle("Cancel");
 		cancelButton.setStyleName("grayButton shadow");
 		cancelButton.setHTML("Cancel");
@@ -114,6 +117,8 @@ public class OrgLevelNameEditDialogBox extends DialogBox {
 		horizontalButtonPanel.add(label);
 		label.setSize("30px", "");
 		okButton = new PushButton("Ok");
+		Roles.getButtonRole().setAriaLabelProperty(okButton.getElement(), "Ok Button");
+
 		okButton.setTitle("Ok");
 		okButton.setStyleName("greenButton shadow");
 		horizontalButtonPanel.add(okButton);

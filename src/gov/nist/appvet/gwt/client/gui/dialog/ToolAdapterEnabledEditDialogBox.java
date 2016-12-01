@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.i18n.client.HasDirection.Direction;
 import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -70,17 +71,21 @@ public class ToolAdapterEnabledEditDialogBox extends DialogBox {
 		mainLabel.setSize("", "32px");
 		
 		enableRadioButton = new RadioButton("group1", "Enable");
+		enableRadioButton.getElement().setId("enable-radiobutton");
+
 		enableRadioButton.setTitle("Enable tool");
 		enableRadioButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
 				okButton.setEnabled(true);
 			}
 		});
-		enableRadioButton.setStyleName("h1");
+		//enableRadioButton.setStyleName("h1");
 		mainPanel.add(enableRadioButton);
 		enableRadioButton.setSize("229px", "20px");
 		
 		disableRadioButton = new RadioButton("group1", "Disable");
+		disableRadioButton.getElement().setId("disable-radiobutton");
+
 		disableRadioButton.setTitle("Disable tool");
 		disableRadioButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
@@ -113,6 +118,8 @@ public class ToolAdapterEnabledEditDialogBox extends DialogBox {
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
 		cancelButton = new PushButton("Cancel");
+		Roles.getButtonRole().setAriaLabelProperty(cancelButton.getElement(), "Cancel Button");
+
 		cancelButton.setTitle("Cancel");
 		cancelButton.setStyleName("grayButton shadow");
 		cancelButton.setHTML("Cancel");
@@ -121,6 +128,8 @@ public class ToolAdapterEnabledEditDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		cancelButton.setSize("70px", "18px");
 		okButton = new PushButton("Ok");
+		Roles.getButtonRole().setAriaLabelProperty(okButton.getElement(), "Ok Button");
+
 		okButton.setTitle("Ok");
 		okButton.setEnabled(false);
 		okButton.setStyleName("greenButton shadow");

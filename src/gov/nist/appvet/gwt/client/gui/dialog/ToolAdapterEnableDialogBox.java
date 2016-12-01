@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -40,9 +41,11 @@ public class ToolAdapterEnableDialogBox extends DialogBox {
 		dockPanel.add(lblNewLabel, DockPanel.NORTH);
 		lblNewLabel.setHeight("23px");
 		listBox = new ListBox();
+		listBox.getElement().setId("tools-listbox");
+
 		listBox.setTitle("Tool list");
 		listBox.setName("Tool list");
-		listBox.setStyleName("h1");
+		//listBox.setStyleName("h1");
 
 		dockPanel.add(listBox, DockPanel.CENTER);
 		dockPanel.setCellHorizontalAlignment(listBox,
@@ -55,6 +58,8 @@ public class ToolAdapterEnableDialogBox extends DialogBox {
 		horizontalPanel.setSize("373px", "28px");
 
 		cancelButton = new PushButton("Cancel");
+		Roles.getButtonRole().setAriaLabelProperty(cancelButton.getElement(), "Cancel Button");
+
 		cancelButton.setTitle("Cancel");
 		cancelButton.setStyleName("grayButton shadow");
 		horizontalPanel.add(cancelButton);
@@ -65,6 +70,8 @@ public class ToolAdapterEnableDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 
 		editButton = new PushButton("Edit");
+		Roles.getButtonRole().setAriaLabelProperty(editButton.getElement(), "Edit Button");
+
 		editButton.setTitle("Edit tool");
 		editButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
@@ -125,6 +132,7 @@ public class ToolAdapterEnableDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 
 		okButton = new PushButton("Ok");
+		Roles.getButtonRole().setAriaLabelProperty(okButton.getElement(), "Ok Button");
 		okButton.setTitle("Ok");
 		okButton.setEnabled(false);
 		okButton.setStyleName("greenButton shadow");

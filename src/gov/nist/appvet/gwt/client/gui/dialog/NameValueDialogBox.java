@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Grid;
@@ -37,6 +38,8 @@ public class NameValueDialogBox extends DialogBox {
 		simplePanel.setWidget(horizontalPanel);
 		horizontalPanel.setSize("100%", "100%");
 		okButton = new PushButton("Ok");
+		Roles.getButtonRole().setAriaLabelProperty(okButton.getElement(), "Ok Button");
+
 		okButton.setTitle("Ok");
 		okButton.setStyleName("greenButton shadow");
 		okButton.setHTML("Ok");
@@ -48,17 +51,25 @@ public class NameValueDialogBox extends DialogBox {
 		dockLayoutPanel.add(grid);
 		grid.setWidth("372px\r\n");
 		Label lblNewLabel_1 = new Label("Name: ");
+		lblNewLabel_1.getElement().setAttribute("for", "name-textbox");
+
 		grid.setWidget(0, 0, lblNewLabel_1);
 		lblNewLabel_1.setSize("70px", "100%");
 		nameTextBox = new TextBox();
+		nameTextBox.getElement().setId("name-textbox");
+
 		nameTextBox.setTitle("Name");
 		grid.setWidget(0, 1, nameTextBox);
 		nameTextBox.setWidth("250px");
 		nameTextBox.setReadOnly(true);
 		Label lblNewLabel = new Label("Value:");
+		lblNewLabel.getElement().setAttribute("for", "value-textbox");
+
 		grid.setWidget(1, 0, lblNewLabel);
 		lblNewLabel.setSize("70px", "100%");
 		valueTextBox = new TextBox();
+		valueTextBox.getElement().setId("value-textbox");
+
 		valueTextBox.setTitle("Value");
 		grid.setWidget(1, 1, valueTextBox);
 		valueTextBox.setWidth("250px");

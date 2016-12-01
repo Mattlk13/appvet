@@ -73,8 +73,6 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.FormHandler;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormSubmitEvent;
 import com.google.gwt.user.client.ui.HTML;
@@ -449,6 +447,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		// Admin menubar
 		final MenuItem adminMenuItem = new MenuItem("Admin", true, adminMenuBar);
 		adminMenuItem.setTitle("Admin");
+		adminMenuItem.setText("Admin");
+		adminMenuItem.setHTML("Admin");
 		adminMenuItem.setStyleName("adminMenuItem");
 		adminMenuItem.setHTML("<img src=\"images/icon-gear.png\" width=\"16px\" height=\"16px\" alt=\"Admin\">");
 		// Set tab-able for 508 compliance
@@ -703,7 +703,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		topBannerPanel.setCellVerticalAlignment(searchPanel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		searchTextBox = new TextBox();
-		searchTextBox.setText("");
+		searchTextBox.setText("Search");
 		searchTextBox.setStyleName("searchTextBox");
 		searchTextBox.setTitle("Search by app ID, name, release kit, etc.");
 		searchTextBox.addClickHandler(new ClickHandler() {
@@ -756,8 +756,11 @@ public class AppVetPanel extends DockLayoutPanel {
 		searchPanel.setCellVerticalAlignment(searchTextBox,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		final PushButton searchButton = new PushButton("Search");
+		Roles.getButtonRole().setAriaLabelProperty(searchButton.getElement(), "Search Button");
+		searchButton.setText("Search Apps");
+		searchButton.setHTML("Search Apps");
 		searchButton.setStyleName("searchButton");
-		searchButton.setTitle("Search by app ID, name, release kit, etc.");
+		searchButton.setTitle("Search");
 		searchButton.setSize("", "");
 		searchButton
 		.setHTML("<img width=\"18px\" height=\"18px\" src=\"images/icon-search.png\" alt=\"Search\" />");
@@ -768,8 +771,8 @@ public class AppVetPanel extends DockLayoutPanel {
 				final int numFound = search();
 				if (numFound > 0) {
 					final SafeHtmlBuilder sb = new SafeHtmlBuilder();
-					sb.appendHtmlConstant("<h2 title=\"Apps list\" id=\"appsHeader\">Found " + numFound
-							+ " results for \"" + searchString + "\"</h2>");
+					sb.appendHtmlConstant("<h1 title=\"Apps list\" id=\"appsHeader\">Found " + numFound
+							+ " results for \"" + searchString + "\"</h1>");
 					appsLabelHtml.setHTML(sb.toSafeHtml());
 				}
 			}
@@ -856,7 +859,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				final int numFound = search();
 				if (numFound > 0) {
 					final SafeHtmlBuilder sb = new SafeHtmlBuilder();
-					sb.appendHtmlConstant("<h2 title=\"My apps\" id=\"appsHeader\">My Apps</h2>");
+					sb.appendHtmlConstant("<h1 title=\"My apps\" id=\"appsHeader\">My Apps</h1>");
 					appsLabelHtml.setHTML(sb.toSafeHtml());
 				}
 			}
@@ -1015,7 +1018,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		appsListButtonPanel.setSize("100%", "");
 
-		appsLabelHtml = new HTML("<h2 title=\"Apps list\" id=\"appsHeader\">Apps</h2>", true);
+		appsLabelHtml = new HTML("<h1 title=\"Apps list\" id=\"appsHeader\">Apps</h1>", true);
 		appsLabelHtml.setStyleName("appsLabel");
 		appsListButtonPanel.add(appsLabelHtml);
 		final HorizontalPanel horizontalPanel = new HorizontalPanel();
@@ -1030,6 +1033,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		horizontalPanel.setSize("", "");
 		final PushButton appUploadButton = new PushButton("Upload App");
+		Roles.getButtonRole().setAriaLabelProperty(appUploadButton.getElement(), "Upload App Button");
 		appUploadButton.setTitle("Upload app");
 		appUploadButton.setStyleName("greenAppUploadButton shadow");
 
@@ -1066,6 +1070,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		
 		viewAllButton = new PushButton("View All");
+		Roles.getButtonRole().setAriaLabelProperty(viewAllButton.getElement(), "View All Button");
+
 		// viewAllButton.setStyleName("appvetButton shadow");
 		viewAllButton.setStyleName("blueButton shadow");
 		// viewAllButton.setHTML("<img width=\"100px\" src=\"images/icon-view-all.png\" alt=\"View All Apps\" />");
@@ -1094,6 +1100,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		appUploadButton.setSize("120px", "18px");
 
 		downloadAppButton = new PushButton("Download App");
+		Roles.getButtonRole().setAriaLabelProperty(downloadAppButton.getElement(), "Download App Button");
+
 		downloadAppButton.setEnabled(false);
 		rightCenterPanel = new SimplePanel();
 		rightCenterPanel.setStyleName("rightCenterPanel");
@@ -1161,6 +1169,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoVerticalPanel.setCellVerticalAlignment(appButtonPanel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		uploadReportButton = new PushButton("Upload Report");
+		Roles.getButtonRole().setAriaLabelProperty(uploadReportButton.getElement(), "Upload Report Button");
+
 		uploadReportButton.setTitle("Upload report");
 		uploadReportButton.setStyleName("blueButton shadow");
 
@@ -1203,6 +1213,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		uploadReportButton.setSize("98px", "18px");
 		logButton = new PushButton("View Log");
+		Roles.getButtonRole().setAriaLabelProperty(logButton.getElement(), "View Log Button");
+
 		logButton.setTitle("View log");
 		logButton.setStyleName("blueButton shadow");
 
@@ -1221,6 +1233,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		logButton.setSize("80px", "18px");
 		deleteButton = new PushButton("Delete App");
+		Roles.getButtonRole().setAriaLabelProperty(deleteButton.getElement(), "Delete App Button");
+
 		deleteButton.setTitle("Delete app");
 		// deleteButton.setStyleName("appvetButton  shadow");
 		deleteButton.setStyleName("blueButton shadow");
@@ -1264,6 +1278,8 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		deleteButton.setSize("80px", "18px");
 		downloadReportsButton = new PushButton("Download Reports");
+		Roles.getButtonRole().setAriaLabelProperty(downloadReportsButton.getElement(), "Download Reports Button");
+
 		downloadReportsButton.setTitle("Download reports");
 		downloadReportsButton.setStyleName("blueButton shadow");
 
@@ -2341,7 +2357,7 @@ public class AppVetPanel extends DockLayoutPanel {
 
 	public void setAllApps() {
 		final SafeHtmlBuilder sb = new SafeHtmlBuilder();
-		sb.appendHtmlConstant("<h2 title=\"Apps list\" id=\"appsHeader\">Apps</h2>");
+		sb.appendHtmlConstant("<h1 title=\"Apps list\" id=\"appsHeader\">Apps</h1>");
 		appsLabelHtml.setHTML(sb.toSafeHtml());
 		appsListTable.setDataList(allApps);
 	}
@@ -2594,4 +2610,5 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 
 	}
+	
 }

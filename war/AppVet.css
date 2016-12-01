@@ -13,16 +13,19 @@
 } */
 /** Example rules used by the template application (remove for your app) */
 h1 {
-	margin-right: 5px;
-	margin-left: 5px;
-	border: outset;
-	font-size: 18em;
-	font-weight: bold text-align: center;
+	border: none;
 }
-h3 {
-	margin-top: 0px;
-	margin-bottom: 0px;
-}
+/* h1 { */
+/* 	margin-right: 5px; */
+/* 	margin-left: 5px; */
+/* 	border: outset; */
+/* 	font-size: 18em; */
+/* 	font-weight: bold text-align: center; */
+/* } */
+/* h3 { */
+/* 	margin-top: 0px; */
+/* 	margin-bottom: 0px; */
+/* } */
 h3 {
 	margin-top: 0px;
 	margin-bottom: 0px;

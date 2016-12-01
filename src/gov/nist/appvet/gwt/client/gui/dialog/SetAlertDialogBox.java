@@ -19,6 +19,7 @@
  */
 package gov.nist.appvet.gwt.client.gui.dialog;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -70,27 +71,38 @@ public class SetAlertDialogBox extends DialogBox {
 		grid.setWidth("100%");
 		
 		alertNormalRadioButton = new SimpleRadioButton("group1");
+		alertNormalRadioButton.getElement().setId("alert-normal-radiobutton");
+
 		alertNormalRadioButton.setTitle("Normal message");
 		alertNormalRadioButton.setValue(true);
 		grid.setWidget(0, 0, alertNormalRadioButton);
 		
 		Label lblNormal = new Label("Normal");
+		lblNormal.getElement().setAttribute("for", "alert-normal-radiobutton");
+
 		lblNormal.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		grid.setWidget(0, 1, lblNormal);
 		
 		alertWarningRadioButton = new SimpleRadioButton("group1");
+		alertWarningRadioButton.getElement().setId("alert-warning-radiobutton");
+
 		alertWarningRadioButton.setTitle("Warning message");
 		grid.setWidget(1, 0, alertWarningRadioButton);
 		
 		Label lblNewLabel = new Label("Warning");
+		lblNewLabel.getElement().setAttribute("for", "alert-warning-radiobutton");
 		lblNewLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		grid.setWidget(1, 1, lblNewLabel);
 		
 		alertCriticalRadioButton = new SimpleRadioButton("group1");
+		alertCriticalRadioButton.getElement().setId("alert-critical-radiobutton");
+
 		alertCriticalRadioButton.setTitle("Critical message");
 		grid.setWidget(2, 0, alertCriticalRadioButton);
 		
 		Label lblNewLabel_1 = new Label("Critical");
+		lblNewLabel_1.getElement().setAttribute("for", "alert-critical-radiobutton");
+
 		lblNewLabel_1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		grid.setWidget(2, 1, lblNewLabel_1);
 		grid.getCellFormatter().setVerticalAlignment(2, 1, HasVerticalAlignment.ALIGN_MIDDLE);
@@ -122,6 +134,8 @@ public class SetAlertDialogBox extends DialogBox {
 		horizontalButtonPanel.setWidth("320px");
 		verticalPanel.setCellWidth(horizontalButtonPanel, "100%");
 		cancelButton = new PushButton("No");
+		Roles.getButtonRole().setAriaLabelProperty(cancelButton.getElement(), "Cancel Button");
+
 		cancelButton.setTitle("Cancel");
 		cancelButton.setStyleName("grayButton shadow");
 		cancelButton.setHTML("Cancel");
@@ -132,6 +146,8 @@ public class SetAlertDialogBox extends DialogBox {
 		horizontalButtonPanel.setCellHorizontalAlignment(cancelButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		okButton = new PushButton("Yes");
+		Roles.getButtonRole().setAriaLabelProperty(okButton.getElement(), "Ok Button");
+
 		okButton.setTitle("Ok");
 		okButton.setStyleName("greenButton shadow");
 		okButton.setHTML("Ok");

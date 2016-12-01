@@ -70,7 +70,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 			}
 		});
 		appIdColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		SafeHtml idHeader = SafeHtmlUtils.fromTrustedString("<span title=\"App ID\">ID</span>");
+		SafeHtml idHeader = SafeHtmlUtils.fromTrustedString("<span id=\"appid\" title=\"App ID\">ID</span>");
 		dataGrid.addColumn(appIdColumn, idHeader);
 		dataGrid.setColumnWidth(appIdColumn, "40px");
 
@@ -97,7 +97,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 
 		osIconColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		osIconColumn.setSortable(false);
-		SafeHtml osHeader = SafeHtmlUtils.fromTrustedString("<span title=\"App operating system\">OS</span>");
+		SafeHtml osHeader = SafeHtmlUtils.fromTrustedString("<span  id=\"os\" title=\"App operating system\">OS</span>");
 		dataGrid.addColumn(osIconColumn, osHeader);
 		dataGrid.setColumnWidth(osIconColumn, "15px");
 
@@ -131,7 +131,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		
 		iconColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		iconColumn.setSortable(SORTING_ON);
-		SafeHtml appIconHeader = SafeHtmlUtils.fromTrustedString("<span title=\"App icon and name\">App</span>");
+		SafeHtml appIconHeader = SafeHtmlUtils.fromTrustedString("<span id=\"appicon\" title=\"App icon and name\">App</span>");
 		dataGrid.addColumn(iconColumn, appIconHeader);
 		dataGrid.setColumnWidth(iconColumn, "20px");
 		
@@ -154,7 +154,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		});
 		
 		appNameColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		SafeHtml appNameHeader = SafeHtmlUtils.fromTrustedString("<span title=\"App name\"> </span>");
+		SafeHtml appNameHeader = SafeHtmlUtils.fromTrustedString("<span  id=\"appname\" title=\"App name\"> </span>");
 		dataGrid.addColumn(appNameColumn, appNameHeader);
 		dataGrid.setColumnWidth(appNameColumn, "75px");
 
@@ -177,7 +177,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		});
 		
 		appVersionColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		SafeHtml appVersionHeader = SafeHtmlUtils.fromTrustedString("<span title=\"App version\">Version</span>");
+		SafeHtml appVersionHeader = SafeHtmlUtils.fromTrustedString("<span  id=\"appversion\" title=\"App version\">Version</span>");
 		dataGrid.addColumn(appVersionColumn, appVersionHeader);
 		dataGrid.setColumnWidth(appVersionColumn, "35px");		
 
@@ -232,7 +232,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 			}
 		});
 		SafeHtml statusRiskHeader = 
-				SafeHtmlUtils.fromTrustedString("<span title=\"App processing status or security risk\">Status/Risk</span>");
+				SafeHtmlUtils.fromTrustedString("<span  id=\"appstatus\"  title=\"App processing status or security risk\">Status/Risk</span>");
 		dataGrid.addColumn(statusColumn, statusRiskHeader);
 		dataGrid.setColumnWidth(statusColumn, "55px");
 
@@ -257,7 +257,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		submitterColumn
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		SafeHtml userHeader = 
-				SafeHtmlUtils.fromTrustedString("<span title=\"App owner\">User</span>");
+				SafeHtmlUtils.fromTrustedString("<span  id=\"appowner\"  title=\"App owner\">User</span>");
 		dataGrid.addColumn(submitterColumn, userHeader);
 		dataGrid.setColumnWidth(submitterColumn, "60px");
 
@@ -286,7 +286,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		submitTimeColumn
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		SafeHtml dateHeader = 
-				SafeHtmlUtils.fromTrustedString("<span title=\"App submission date and time\">Date/Time</span>");
+				SafeHtmlUtils.fromTrustedString("<span  id=\"appdatetime\"  title=\"App submission date and time\">Date/Time</span>");
 		dataGrid.addColumn(submitTimeColumn, dateHeader);
 		dataGrid.setColumnWidth(submitTimeColumn, "75px");
 	}

@@ -26,6 +26,7 @@ import gov.nist.appvet.shared.all.UserInfo;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -106,16 +107,18 @@ public class AdminUserAcctDialogBox extends DialogBox {
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_1
 				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		final Label lblNewLabel = new Label("Last Name: ");
-		horizontalPanel_1.add(lblNewLabel);
-		horizontalPanel_1.setCellHorizontalAlignment(lblNewLabel,
+		final Label lastNameLabel = new Label("Last Name: ");
+		lastNameLabel.getElement().setAttribute("for", "last-name-textbox");
+		horizontalPanel_1.add(lastNameLabel);
+		horizontalPanel_1.setCellHorizontalAlignment(lastNameLabel,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel_1.setCellVerticalAlignment(lblNewLabel,
+		horizontalPanel_1.setCellVerticalAlignment(lastNameLabel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		lblNewLabel.setWidth("115px");
-		horizontalPanel_1.setCellWidth(lblNewLabel, "50%");
-		lblNewLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		lastNameLabel.setWidth("115px");
+		horizontalPanel_1.setCellWidth(lastNameLabel, "50%");
+		lastNameLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		lastNameTextBox = new TextBox();
+		lastNameTextBox.getElement().setId("last-name-textbox");
 		lastNameTextBox.setTitle("Last name");
 		lastNameTextBox.setName("Last name");
 		lastNameTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
@@ -134,6 +137,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		horizontalPanel_2
 				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		final Label lblNewLabel_1 = new Label("First Name: ");
+		lastNameLabel.getElement().setAttribute("for", "first-name-textbox");
+
 		horizontalPanel_2.add(lblNewLabel_1);
 		lblNewLabel_1.setWidth("115px");
 		horizontalPanel_2.setCellWidth(lblNewLabel_1, "50%");
@@ -143,6 +148,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		lblNewLabel_1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		firstNameTextBox = new TextBox();
+		firstNameTextBox.getElement().setId("first-name-textbox");
+
 		firstNameTextBox.setTitle("First name");
 		firstNameTextBox.setName("First name");
 		firstNameTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
@@ -161,6 +168,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		horizontalPanel_3
 				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		final Label lblUserId = new Label("User ID:");
+		lblUserId.getElement().setAttribute("for", "user-id-textbox");
+
 		horizontalPanel_3.add(lblUserId);
 		lblUserId.setWidth("115px");
 		horizontalPanel_3.setCellVerticalAlignment(lblUserId,
@@ -170,6 +179,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		horizontalPanel_3.setCellWidth(lblUserId, "50%");
 		lblUserId.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		userIdTextBox = new TextBox();
+		userIdTextBox.getElement().setId("user-id-textbox");
+
 		userIdTextBox.setTitle("Username");
 		userIdTextBox.setName("Username");
 		userIdTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
@@ -189,6 +200,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		horizontalPanel_7
 				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		final Label lblEmail = new Label("Email: ");
+		lblUserId.getElement().setAttribute("for", "email-textbox");
+
 		horizontalPanel_7.add(lblEmail);
 		lblEmail.setWidth("115px");
 		horizontalPanel_7.setCellVerticalAlignment(lblEmail,
@@ -196,6 +209,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		horizontalPanel_7.setCellWidth(lblEmail, "50%");
 		lblEmail.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		emailTextBox = new TextBox();
+		emailTextBox.getElement().setId("email-textbox");
+
 		emailTextBox.setTitle("Email");
 		emailTextBox.setName("Email");
 		emailTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
@@ -217,6 +232,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		horizontalPanel_8
 				.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		final Label lblRole = new Label("Role: ");
+		lblUserId.getElement().setAttribute("for", "admin-radiobutton");
+
 		horizontalPanel_8.add(lblRole);
 		horizontalPanel_8.setCellWidth(lblRole, "150px");
 		lblRole.setWidth("50px");
@@ -225,6 +242,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		lblRole.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 
 		adminRadioButton = new RadioButton("buttonGroup", "Admin");
+		adminRadioButton.getElement().setId("admin-radiobutton");
+
 		adminRadioButton.setTitle("Administrator role");
 		adminRadioButton.setName("Administrator role");
 		horizontalPanel_8.add(adminRadioButton);
@@ -308,6 +327,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		verticalPanel_1.add(horizontalPanel_14);
 		
 		Label lblNewLabel_2 = new Label("Organization: ");
+		lblNewLabel_2.getElement().setAttribute("for", "org-memb-textbox");
+
 		lblNewLabel_2.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		horizontalPanel_14.add(lblNewLabel_2);
 		lblNewLabel_2.setWidth("115px");
@@ -315,6 +336,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		horizontalPanel_14.setCellVerticalAlignment(lblNewLabel_2, HasVerticalAlignment.ALIGN_MIDDLE);
 		
 		editLevelsButton = new PushButton("Edit");
+		Roles.getButtonRole().setAriaLabelProperty(editLevelsButton.getElement(), "Edit Org Membership Button");
+
 		editLevelsButton.setTitle("Edit organizational membership and role");
 		editLevelsButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
@@ -384,6 +407,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		});
 		
 		orgMembershipTextBox = new TextBox();
+		emailTextBox.getElement().setId("org-memb-textbox");
+
 		orgMembershipTextBox.setTitle("Organizational membership and role");
 		orgMembershipTextBox.setName("Organizational membership and role");
 		orgMembershipTextBox.setReadOnly(true);
@@ -415,10 +440,13 @@ public class AdminUserAcctDialogBox extends DialogBox {
 			}
 		});
 		changePasswordCheckBox.setName("Change Password");
+		changePasswordCheckBox.getElement().setId("changepassword");
+
 		horizontalPanel_5.add(changePasswordCheckBox);
 		horizontalPanel_5.setCellVerticalAlignment(changePasswordCheckBox, HasVerticalAlignment.ALIGN_MIDDLE);
 		
 		Label lblNewLabel_3 = new Label("Change Password");
+		lblNewLabel_3.getElement().setAttribute("for", "changepassword");
 		lblNewLabel_3.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		horizontalPanel_5.add(lblNewLabel_3);
 		horizontalPanel_5.setCellVerticalAlignment(lblNewLabel_3, HasVerticalAlignment.ALIGN_MIDDLE);
@@ -433,13 +461,18 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		horizontalPanel_13.setWidth("366px");
 
 		passwordLabel = new Label("Password: ");
+		passwordLabel.getElement().setAttribute("for", "password1-textbox");
+
 		passwordAgainLabel = new Label("Password (again): ");
+		passwordAgainLabel.getElement().setAttribute("for", "password2-textbox");
+
 		passwordLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		horizontalPanel_13.add(passwordLabel);
 		horizontalPanel_13.setCellVerticalAlignment(passwordLabel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		passwordLabel.setWidth("115px");
 		password1TextBox = new PasswordTextBox();
+		emailTextBox.getElement().setId("password1-textbox");
 		password1TextBox.setTitle("Enter password");
 		password1TextBox.setName("Enter password");
 		horizontalPanel_13.add(password1TextBox);
@@ -462,6 +495,7 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		horizontalPanel_4.add(passwordLabel3);
 		passwordLabel3.setWidth("115px");
 		password2TextBox = new PasswordTextBox();
+		emailTextBox.getElement().setId("password2-textbox");
 		password2TextBox.setTitle("Enter password again");
 		password2TextBox.setName("Enter password again");
 		horizontalPanel_4.add(password2TextBox);
@@ -481,6 +515,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		horizontalPanel.setSize("200px", "50px");
 		horizontalPanel.setStyleName("buttonPanelStyle");
 		cancelButton = new PushButton("Cancel");
+		Roles.getButtonRole().setAriaLabelProperty(cancelButton.getElement(), "Cancel Button");
+
 		cancelButton.setTitle("Cancel");
 		cancelButton.setStyleName("grayButton shadow");
 		cancelButton.setHTML("Cancel");
@@ -491,6 +527,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		cancelButton.setSize("70px", "18px");
 		submitButton = new PushButton("Submit");
+		Roles.getButtonRole().setAriaLabelProperty(submitButton.getElement(), "Submit Button");
+
 		submitButton.setTitle("Submit");
 		submitButton.setStyleName("greenButton shadow");
 		horizontalPanel.add(submitButton);

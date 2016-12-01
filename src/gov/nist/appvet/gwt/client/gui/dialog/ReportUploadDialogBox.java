@@ -28,6 +28,7 @@ import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.ToolType;
 import gov.nist.appvet.shared.all.UserInfo;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -145,11 +146,15 @@ public class ReportUploadDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.setCellWidth(grid, "100%");
 		final Label userLabel = new Label("User:");
+		userLabel.getElement().setAttribute("for", "analyst-textbox");
+
 		userLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		grid.setWidget(0, 0, userLabel);
 		grid.getCellFormatter().setWidth(0, 0, "300px");
 		userLabel.setSize("96px", "22px");
 		final TextBox analystTextBox = new TextBox();
+		analystTextBox.getElement().setId("analyst-textbox");
+
 		analystTextBox.setName("User");
 		analystTextBox.setTitle("User is non-editable");
 		analystTextBox.setName("User is non-editable");
@@ -163,12 +168,16 @@ public class ReportUploadDialogBox extends DialogBox {
 		grid.getCellFormatter().setStyleName(0, 1, "reportUploadWidget");
 		analystTextBox.setSize("220px", "18px");
 		final Label appIdLabel = new Label("App ID: ");
+		appIdLabel.getElement().setAttribute("for", "app-id-textbox");
+
 		appIdLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		grid.setWidget(1, 0, appIdLabel);
 		grid.getCellFormatter().setWidth(1, 0, "300px");
 		grid.getCellFormatter().setHeight(1, 1, "18px");
 		grid.getCellFormatter().setWidth(1, 1, "300px");
 		final TextBox appIdTextBox = new TextBox();
+		appIdTextBox.getElement().setId("app-id-textbox");
+
 		appIdTextBox.setName("App ID");
 		appIdTextBox.setTitle("App ID is non-editable");
 		analystTextBox.setName("App ID is non-editable");
@@ -180,11 +189,15 @@ public class ReportUploadDialogBox extends DialogBox {
 		grid.getCellFormatter().setStyleName(1, 1, "reportUploadWidget");
 		appIdTextBox.setSize("220px", "18px");
 		final Label toolNameLabel = new Label("Tool: ");
+		toolNameLabel.getElement().setAttribute("for", "tool-name-combobox");
+
 		toolNameLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		grid.setWidget(2, 0, toolNameLabel);
 		toolNameLabel.setWidth("90px");
 		grid.getCellFormatter().setWidth(2, 1, "200px");
 		toolNamesComboBox = new ListBox();
+		toolNamesComboBox.getElement().setId("tool-name-combobox");
+
 		toolNamesComboBox.setName("Tool");
 		toolNamesComboBox.setTitle("Select tool for uploaded report");
 		grid.setWidget(2, 1, toolNamesComboBox);
@@ -320,10 +333,15 @@ public class ReportUploadDialogBox extends DialogBox {
 		
 
 		final Label lblReport = new Label("Report: ");
+		lblReport.getElement().setAttribute("for", "report-upload-button");
+
 		lblReport.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		grid.setWidget(3, 0, lblReport);
 		grid.getCellFormatter().setWidth(3, 1, "200px");
 		fileUpload = new FileUpload();
+		fileUpload.getElement().setId("report-upload-button");
+		Roles.getButtonRole().setAriaLabelProperty(fileUpload.getElement(), "Select File Button");
+
 		fileUpload.addChangeHandler(new ChangeHandler() {
 			public void onChange(ChangeEvent arg0) {
 				submitButton.setEnabled(true);
@@ -337,6 +355,8 @@ public class ReportUploadDialogBox extends DialogBox {
 		fileUpload.setSize("189px", "22px");
 
 		riskLabel = new Label("Risk: ");
+		riskLabel.getElement().setAttribute("for", "tool-risk-listbox");
+
 		riskLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		grid.setWidget(4, 0, riskLabel);
 		grid.getCellFormatter().setWidth(4, 1, "300px");
@@ -365,6 +385,8 @@ public class ReportUploadDialogBox extends DialogBox {
 		grid.getCellFormatter().setVerticalAlignment(4, 1,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		toolRiskComboBox = new ListBox();
+		toolRiskComboBox.getElement().setId("tool-risk-listbox");
+
 		toolRiskComboBox.setName("Risk");
 		toolRiskComboBox.setTitle("Select security risk");
 		toolRiskComboBox.addItem("LOW");
@@ -469,6 +491,8 @@ public class ReportUploadDialogBox extends DialogBox {
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalButtonPanel.setSize("210px", "");
 		cancelButton = new PushButton("Cancel");
+		Roles.getButtonRole().setAriaLabelProperty(cancelButton.getElement(), "Cancel Button");
+
 		cancelButton.setTitle("Cancel");
 		cancelButton.setStyleName("grayButton shadow");
 		cancelButton.setHTML("Cancel");
@@ -483,6 +507,8 @@ public class ReportUploadDialogBox extends DialogBox {
 		horizontalButtonPanel.add(lblNewLabel);
 		lblNewLabel.setWidth("50px");
 		submitButton = new PushButton("Submit");
+		Roles.getButtonRole().setAriaLabelProperty(submitButton.getElement(), "Submit Button");
+
 		submitButton.setTitle("Submit");
 		submitButton.setStyleName("greenButton shadow");
 		submitButton.setEnabled(false);

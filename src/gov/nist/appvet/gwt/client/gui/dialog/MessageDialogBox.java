@@ -19,6 +19,7 @@
  */
 package gov.nist.appvet.gwt.client.gui.dialog;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -107,6 +108,8 @@ public class MessageDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel.setWidth("320px");
 		closeButton = new PushButton("Ok");
+		Roles.getButtonRole().setAriaLabelProperty(closeButton.getElement(), "Close Button");
+
 		closeButton.setTitle("Close");
 		closeButton.setStyleName("greenButton shadow");
 		horizontalPanel.add(closeButton);

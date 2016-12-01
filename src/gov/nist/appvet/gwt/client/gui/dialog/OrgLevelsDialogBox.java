@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -47,6 +48,8 @@ public class OrgLevelsDialogBox extends DialogBox {
 		dockPanel.add(lblNewLabel, DockPanel.NORTH);
 		String[] userMembershipLevels;
 		listBox = new ListBox();
+		listBox.getElement().setId("org-levels-listbox");
+
 		listBox.setTitle("Organizational levels");
 		try {
 			if (orgMembership.isEmpty()) {
@@ -98,6 +101,8 @@ public class OrgLevelsDialogBox extends DialogBox {
 		horizontalPanel.setWidth("373px");
 		
 		cancelButton = new PushButton("Cancel");
+		Roles.getButtonRole().setAriaLabelProperty(cancelButton.getElement(), "Cancel Button");
+
 		cancelButton.setTitle("Cancel");
 		cancelButton.setStyleName("grayButton shadow");
 		horizontalPanel.add(cancelButton);
@@ -106,6 +111,8 @@ public class OrgLevelsDialogBox extends DialogBox {
 		horizontalPanel.setCellHorizontalAlignment(cancelButton, HasHorizontalAlignment.ALIGN_CENTER);
 		
 		editButton = new PushButton("Edit");
+		Roles.getButtonRole().setAriaLabelProperty(editButton.getElement(), "Edit Button");
+
 		editButton.setTitle("Edit level");
 		editButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
@@ -179,6 +186,8 @@ public class OrgLevelsDialogBox extends DialogBox {
 		horizontalPanel.setCellHorizontalAlignment(editButton, HasHorizontalAlignment.ALIGN_CENTER);
 		
 		okButton = new PushButton("Ok");
+		Roles.getButtonRole().setAriaLabelProperty(okButton.getElement(), "Ok Button");
+
 		okButton.setTitle("Ok");
 
 		okButton.setStyleName("greenButton shadow");

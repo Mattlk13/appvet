@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style.Unit;
@@ -116,9 +117,11 @@ public class AdminUserListDialogBox extends DialogBox {
 		verticalPanel.setCellVerticalAlignment(horizontalPanel_1,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		searchTextBox = new TextBox();
+		searchTextBox.getElement().setId("search-textbox");
+
 		searchTextBox.setTitle("Search users");
 		searchTextBox.setName("Search users");
-		searchTextBox.setStyleName("h1");
+		//searchTextBox.setStyleName("h1");
 		searchTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		searchTextBox.setAlignment(TextAlignment.LEFT);
 
@@ -167,6 +170,8 @@ public class AdminUserListDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		searchTextBox.setSize("200px", "18px");
 		final PushButton searchButton = new PushButton("Search");
+		Roles.getButtonRole().setAriaLabelProperty(searchButton.getElement(), "Search Users Button");
+
 		searchButton.setTitle("Search users");
 		searchButton.setStyleName("grayButton shadow");
 		searchButton.setTitle("Search Users");
@@ -187,6 +192,8 @@ public class AdminUserListDialogBox extends DialogBox {
 		
 		
 		final PushButton viewAllButton = new PushButton("View All");
+		Roles.getButtonRole().setAriaLabelProperty(viewAllButton.getElement(), "View All Users Button");
+
 		viewAllButton.setTitle("View all users");
 		viewAllButton.setStyleName("grayButton shadow");
 		viewAllButton.setTitle("View All Users");
@@ -233,6 +240,8 @@ public class AdminUserListDialogBox extends DialogBox {
 		verticalPanel.setCellHorizontalAlignment(horizontalPanel_2,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		addUserButton = new PushButton("Add");
+		Roles.getButtonRole().setAriaLabelProperty(addUserButton.getElement(), "Add Users Button");
+
 		addUserButton.setTitle("Add user");
 		addUserButton.setStyleName("grayButton shadow");
 		addUserButton.addClickHandler(new ClickHandler() {
@@ -250,6 +259,8 @@ public class AdminUserListDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		addUserButton.setSize("70px", "18px");
 		final PushButton editUserButton = new PushButton("Edit");
+		Roles.getButtonRole().setAriaLabelProperty(editUserButton.getElement(), "Edit Users Button");
+
 		editUserButton.setTitle("Edit user");
 		editUserButton.setStyleName("grayButton shadow");
 		editUserButton.addClickHandler(new ClickHandler() {
@@ -259,6 +270,8 @@ public class AdminUserListDialogBox extends DialogBox {
 			}
 		});
 		final PushButton deleteUserButton = new PushButton("Delete");
+		Roles.getButtonRole().setAriaLabelProperty(deleteUserButton.getElement(), "Delete Users Button");
+
 		deleteUserButton.setStyleName("grayButton shadow");
 		deleteUserButton.setTitle("Delete user");
 		deleteUserButton.addClickHandler(new ClickHandler() {

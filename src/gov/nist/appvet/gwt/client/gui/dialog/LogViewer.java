@@ -1,5 +1,6 @@
 package gov.nist.appvet.gwt.client.gui.dialog;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -36,6 +37,7 @@ public class LogViewer extends DialogBox {
 		dockPanel.setHeight("28px");
 		
 		closeButton = new PushButton("Close");
+		Roles.getButtonRole().setAriaLabelProperty(closeButton.getElement(), "Cancel Button");
 		closeButton.setTitle("Close");
 		closeButton.setStyleName("greenButton shadow");
 		closeButton.setHTML("Close");

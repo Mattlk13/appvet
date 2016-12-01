@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -60,7 +61,6 @@ public class ToolAuthParamDialogBox extends DialogBox {
 	public ArrayList<UserToolCredentials> toolCredentials = null;
 	final PushButton editButton = new PushButton("Edit");
 	final PushButton saveButton = new PushButton("Save");
-	public PushButton doneButton = null;
 	public MessageDialogBox messageDialogBox = null;
 	final ListBox toolsListBox = new ListBox();
 
@@ -71,6 +71,9 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		saveButton.setStyleName("grayButton shadow");
 		saveButton.setEnabled(false);
 		saveButton.setTitle("Save authentication parameters");
+		Roles.getButtonRole().setAriaLabelProperty(editButton.getElement(), "Edit Button");
+		Roles.getButtonRole().setAriaLabelProperty(saveButton.getElement(), "Save Button");
+
 		editButton.setStyleName("grayButton shadow");
 		editButton.setEnabled(false);
 		editButton.setTitle("Edit authentication parameters");
@@ -116,6 +119,8 @@ public class ToolAuthParamDialogBox extends DialogBox {
 			}
 		});
 		toolListPanel.setContentWidget(toolsListBox);
+		toolsListBox.getElement().setId("tools-listbox");
+
 		toolsListBox.setSize("338px", "100px");
 		toolsListBox.setVisibleItemCount(5);
 		toolsListBox.setTitle("Tools list");
@@ -137,6 +142,8 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		dockLayoutPanel.setStyleName("usersDockPanel");
 		dockLayoutPanel.setSize("", "50px");
 		toolParametersListBox = new ListBox();
+		toolsListBox.getElement().setId("tool-auth-parameters-listbox");
+
 		toolParametersListBox.setTitle("Authentication parameters");
 		toolParametersListBox.setName("Authentication parameters");
 		toolParametersListBox.addClickHandler(new ClickHandler() {
@@ -254,6 +261,8 @@ public class ToolAuthParamDialogBox extends DialogBox {
 		verticalPanel.add(horizontalPanel);
 		horizontalPanel.setSize("338px", "32px");
 		okButton = new PushButton("Ok");
+		Roles.getButtonRole().setAriaLabelProperty(okButton.getElement(), "Ok Button");
+
 		okButton.setTitle("Ok");
 		okButton.setStyleName("greenButton shadow");
 		horizontalPanel.add(okButton);

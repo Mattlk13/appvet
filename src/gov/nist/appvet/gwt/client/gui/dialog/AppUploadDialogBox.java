@@ -32,6 +32,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -102,6 +103,8 @@ public class AppUploadDialogBox extends DialogBox {
 		hiddenParamsPanel.add(hiddenSessionId);
 		hiddenSessionId.setWidth("");
 		fileUpload = new FileUpload();
+		Roles.getButtonRole().setAriaLabelProperty(fileUpload.getElement(), "Select File Button");
+
 		fileUpload.setTitle("Choose app to upload");
 		hiddenParamsPanel.add(fileUpload);
 		hiddenParamsPanel.setCellWidth(fileUpload, "100%");
@@ -138,6 +141,8 @@ public class AppUploadDialogBox extends DialogBox {
 		horizontalButtonPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		cancelButton = new PushButton("Cancel");
+		Roles.getButtonRole().setAriaLabelProperty(cancelButton.getElement(), "Cancel Button");
+
 		cancelButton.setTitle("Cancel");
 		cancelButton.setTabIndex(0);
 		cancelButton.setStyleName("grayButton shadow");
@@ -148,6 +153,8 @@ public class AppUploadDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		cancelButton.setSize("70px", "18px");
 		submitButton = new PushButton("Submit");
+		Roles.getButtonRole().setAriaLabelProperty(submitButton.getElement(), "Submit Button");
+
 		submitButton.setTitle("Submit");
 		submitButton.setTabIndex(0);
 		submitButton.setStyleName("greenButton shadow");
