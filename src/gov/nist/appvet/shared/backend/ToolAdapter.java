@@ -36,6 +36,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -54,6 +55,9 @@ public class ToolAdapter implements Runnable {
 
 	/** Check if report was received every x milliseconds. */
 	private static final int REPORT_CHECK_INTERVAL = 2000;
+	
+	/** Defines the HTTP header for risk. Used for synchronous tools only */
+	private static final String RISK_HTTP_HEADER_NAME = "App-Risk";
 
 	/** This flag is set to true if AppVet times-out waiting for a report
 	 * from this tool. This flag is then used to determine if subsequent apps
@@ -91,7 +95,7 @@ public class ToolAdapter implements Runnable {
 	public String protocolXPath = null;
 	public XmlUtil xml = null;
 	public String configFileName = null;
-	
+
 	public ToolAdapter(File configFile) {
 		if (!configFile.exists()) {
 			log.error("Test service config file " + configFile.getName()
@@ -405,7 +409,7 @@ public class ToolAdapter implements Runnable {
 		if (!authParamNames.isEmpty()) {
 			appInfo.log.info("Authorization parameters: " + authParamNames.size());
 		}
-		
+
 		// Send app to tool. When app receives HTTP 202, the process ends.
 		Request appVetRequest = new Request(protocol, protocolXPath, xml, configFileName);
 		File fileOut = null;
@@ -417,8 +421,21 @@ public class ToolAdapter implements Runnable {
 			HttpParams httpParameters = new BasicHttpParams();
 			HttpConnectionParams.setConnectionTimeout(httpParameters,
 					AppVetProperties.CONNECTION_TIMEOUT);
-			HttpConnectionParams.setSoTimeout(httpParameters,
-					AppVetProperties.SO_TIMEOUT);
+			
+			/* Socket timeout for synchronous tools must be longer than that needed
+			 * for asynchronous tools because we need to wait for the report in
+			 * the message (whereas asynch tools respond immediately with an HTTP status.
+			 */
+			if (protocol == Protocol.SYNCHRONOUS) {
+				// Here, we use AppVetProperties.ToolServiceTimeout as the socket timeout
+				HttpConnectionParams.setSoTimeout(httpParameters,
+						AppVetProperties.ToolServiceTimeout);
+			} else if (protocol == Protocol.ASYNCHRONOUS) {
+				// Here, we use the socket timeout
+				HttpConnectionParams.setSoTimeout(httpParameters,
+						AppVetProperties.SO_TIMEOUT);
+			}
+
 			HttpClient httpclient = new DefaultHttpClient(httpParameters);
 			httpclient = SSLWrapper.wrapClient(httpclient);
 			MultipartEntity entity = getMultipartEntity(appVetRequest,
@@ -445,41 +462,126 @@ public class ToolAdapter implements Runnable {
 					appInfo.appId + " to tool '" + toolId + "'");
 
 			// Send the app to the tool
-			final HttpResponse httpResponse = httpclient.execute(httpPost);
-			httpPost = null;
-			appInfo.log.info(name + " adapter received: "
-					+ httpResponse.getStatusLine());
+			final HttpResponse toolHttpResponse = httpclient.execute(httpPost);
+			final String httpStatusLine = toolHttpResponse.getStatusLine().toString();
+			appInfo.log.info(name + " adapter received: " + httpStatusLine);
+			
+			switch (protocol) {
+			case SYNCHRONOUS: 
+				// First check HTTP status
+				if (httpStatusLine.indexOf("HTTP/1.1 200 OK") == -1) {
+					// Unexpected status received
+					appInfo.log.error("Unexpected status '" + httpStatusLine 
+							+ "' received by " + toolServiceURL + ". Setting '"
+							+ this.toolId + "' to ERROR status.");
+					ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.ERROR);
+					return;
+				} 
+				
+				// We only handle report from Synchronous tools here.
+				// Reports for asynchronous tools are handled by the AppVetServlet. Also
+				// note that only ASCII content is received from
+				// a tool, not an attached file. If the content ASCII
+				// content represents binary content, the content must
+				// written to a binary file (e.g., PDF file).
+				final HttpEntity responseEntity = toolHttpResponse.getEntity();
+				inputStream = responseEntity.getContent();
+				final String reportPath = appInfo.getReportsPath() + "/"
+						+ generateReportName();
+				fileOut = new File(reportPath);
+				fileOutputStream = new FileOutputStream(
+						fileOut, false);
+				int c;
+				while ((c = inputStream.read()) != -1) {
+					fileOutputStream.write(c);
+				}
+				fileOutputStream.flush();
+				inputStream.close();
+				fileOutputStream.close();
 
-			if (protocol == Protocol.ASYNCHRONOUS) {
-				final String httpResponseVal = httpResponse.getStatusLine()
-						.toString();
-				if ((httpResponseVal.indexOf("HTTP/1.1 202") > -1)
-						|| (httpResponseVal.indexOf("HTTP/1.1 200 OK") > -1)) {
+				log.debug("appvetRiskHeaderName: " + RISK_HTTP_HEADER_NAME);
+				String toolResult = toolHttpResponse.getFirstHeader(
+						RISK_HTTP_HEADER_NAME).getValue();
+
+				if (toolResult == null || toolResult.isEmpty()) {
+					appInfo.log.error("Tool result from '" + this.toolId + "' is null or empty");
+					ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.ERROR);
+
+				} else if (!toolResult.equals(ToolStatus.LOW.name()) &&
+						!toolResult.equals(ToolStatus.MODERATE.name()) &&
+						!toolResult.equals(ToolStatus.HIGH.name()) &&
+						!toolResult.equals(ToolStatus.ERROR.name())) {
+					appInfo.log.error("Tool result '" + toolResult + "' from '" + this.toolId + "' is invalid");
+					ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.ERROR);
+				} else {
+					appInfo.log.info("Received tool result: " + toolResult
+							+ " from " + this.toolId);
+					ToolStatus toolStatus = ToolStatus.getStatus(toolResult);
+					ToolStatusManager.setToolStatus(appInfo, this.toolId, toolStatus);
+				}
+				break;
+				
+			case ASYNCHRONOUS: 
+
+				if ((httpStatusLine.indexOf("HTTP/1.1 202") > -1)
+						|| (httpStatusLine.indexOf("HTTP/1.1 200 OK") > -1)) {
 					// Received 200 OK
-				} else if (httpResponseVal.indexOf("HTTP/1.1 404") > -1) {
+				} else if (httpStatusLine.indexOf("HTTP/1.1 404") > -1) {
 					appInfo.log.error("Received from " + toolId + ": "
-							+ httpResponseVal
+							+ httpStatusLine
 							+ ". Make sure tool service is running at: " + toolServiceURL);
 					ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.ERROR);
-				} else if (httpResponseVal.indexOf("HTTP/1.1 400") > -1) {
+				} else if (httpStatusLine.indexOf("HTTP/1.1 400") > -1) {
 					appInfo.log.error("Received from " + toolId + ": "
-							+ httpResponseVal
+							+ httpStatusLine
 							+ ". Make sure parameters sent to " + this.toolId + " are correct.");
 					ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.ERROR);
 				} else {
 					appInfo.log.error("Tool '" + toolId + "' received: "
-							+ httpResponseVal
+							+ httpStatusLine
 							+ ". Could not process app.");
 					// Let this tool remain in Submitted state until handled by the ToolMgr
 					ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.ERROR);
 				}
+				
+				// Wait for ASYNCHRONOUS report to come in (SYNCHRONOUS report should have already arrived)
+				try {
+					appInfo.log.debug("Tool " + toolId + " is WAITING FOR REPORT!");
+					Date timeout = new Date(System.currentTimeMillis() + 
+							AppVetProperties.ToolServiceTimeout);
+					for (;;) {
+						ToolStatus toolStatus = 
+								ToolStatusManager.getToolStatus(appInfo.os, appInfo.appId, toolId);
+						Date currentTime = new Date(System.currentTimeMillis());
+						if (toolStatus == ToolStatus.SUBMITTED && !currentTime.after(timeout)){
+							Thread.sleep(REPORT_CHECK_INTERVAL);
+						} else if (toolStatus != ToolStatus.SUBMITTED) {
+							appInfo.log.info("Tool adapter '" + toolId + "' for app " + appInfo.appId + " changed status from SUBMITTED to " + toolStatus.name() + " while waiting for report.");
+							break;
+						} else if (currentTime.after(timeout)) {
+							// Don't change SUBMITTED to ERROR -this will be done when checking final tool statuses.
+							break;
+						}
+					}
+					appInfo.log.info("Closing tool adapter '" + toolId + "' for app " + appInfo.appId);
+				} catch (final InterruptedException e) {
+					appInfo.log.error(toolId + " shut down prematurely after " + 
+							"AppVetProperties.ToolServiceProcessingTimeout = " + 
+							+ AppVetProperties.ToolServiceTimeout + "ms");
+					ToolStatusManager.setToolStatus(appInfo, toolId,
+							ToolStatus.ERROR);
+				}
+				
+			default: 
+				break;
 			}
 
+			httpPost = null;
 			entity = null;
 			httpclient = null;
 			httpParameters = null;
 		} catch (final Exception e) {
-			appInfo.log.error(e.toString());
+			appInfo.log.error("Tool '" + this.toolId + "' experienced an error: " + e.toString());
 			ToolStatusManager.setToolStatus(appInfo,
 					this.toolId, ToolStatus.ERROR);
 		} finally {
@@ -502,35 +604,9 @@ public class ToolAdapter implements Runnable {
 			fileOut = null;
 		}
 
-		// Wait for report to come in
-		try {
-			appInfo.log.debug("Tool " + toolId + " is WAITING FOR REPORT!");
-			Date timeout = new Date(System.currentTimeMillis() + 
-					AppVetProperties.ToolServiceTimeout);
-			for (;;) {
-				ToolStatus toolStatus = 
-						ToolStatusManager.getToolStatus(appInfo.os, appInfo.appId, toolId);
-				Date currentTime = new Date(System.currentTimeMillis());
-				if (toolStatus == ToolStatus.SUBMITTED && !currentTime.after(timeout)){
-					Thread.sleep(REPORT_CHECK_INTERVAL);
-				} else if (toolStatus != ToolStatus.SUBMITTED) {
-					appInfo.log.info("Tool adapter '" + toolId + "' for app " + appInfo.appId + " changed status from SUBMITTED to " + toolStatus.name() + " while waiting for report.");
-					break;
-				} else if (currentTime.after(timeout)) {
-					// Don't change SUBMITTED to ERROR -this will be done when checking final tool statuses.
-					break;
-				}
-			}
-			appInfo.log.info("Closing tool adapter '" + toolId + "' for app " + appInfo.appId);
-		} catch (final InterruptedException e) {
-			appInfo.log.error(toolId + " shut down prematurely after " + 
-					"AppVetProperties.ToolServiceProcessingTimeout = " + 
-					+ AppVetProperties.ToolServiceTimeout + "ms");
-			ToolStatusManager.setToolStatus(appInfo, toolId,
-					ToolStatus.ERROR);
-		}
-	}
 	
+	}
+
 	public void setAuthorizationParameters(ArrayList<String> authParamNames, ArrayList<String> authParamValues) {
 		// Add authentication parameters if they exist
 		if (authenticationRequired) {
