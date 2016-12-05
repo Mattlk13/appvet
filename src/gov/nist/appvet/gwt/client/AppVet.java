@@ -70,7 +70,7 @@ public class AppVet implements EntryPoint {
 				} else {
 					if (appvetConfig.getSSOActive()) {
 						if (appvetConfig.getUnauthorizedURL() != null) {
-							// An authentication error occured so redirect
+							// An authentication error occurred so redirect
 							Window.Location.assign(appvetConfig.getUnauthorizedURL()); 
 						} else {
 							// Display user's AppVet account

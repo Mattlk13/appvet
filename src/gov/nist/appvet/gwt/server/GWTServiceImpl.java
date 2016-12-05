@@ -90,7 +90,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 				configInfo.setUnauthorizedURL(ssoUnauthorizedURL);
 				return configInfo;
 			}
-			// Check if ssoUsername exists in database
+			// Check if ssoUsername exists in database or user has been de-activated
 			if (!Database.userExists(ssoUsername)) {
 				log.debug("User " + ssoUsername
 						+ " not authenticated for SSO. Directing to "

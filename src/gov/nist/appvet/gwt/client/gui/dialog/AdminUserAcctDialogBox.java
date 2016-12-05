@@ -55,6 +55,7 @@ public class AdminUserAcctDialogBox extends DialogBox {
 	private Logger log = Logger.getLogger("AdminUserAcctDialogBox");
 	public PushButton cancelButton = null;
 	public PushButton submitButton = null;
+	public PushButton reactivateButton = null;
 	public TextBox lastNameTextBox = null;
 	public TextBox firstNameTextBox = null;
 	public TextBox userIdTextBox = null;
@@ -77,6 +78,7 @@ public class AdminUserAcctDialogBox extends DialogBox {
 	public TextBox orgMembershipTextBox = null;
 	public List<String> allUsersOrgMemberships = null;
 	public ConfigInfoGwt confInfo = null;
+	public UserInfo selectedUser = null;
 
 	@SuppressWarnings("deprecation")
 	public AdminUserAcctDialogBox(final ConfigInfoGwt configInfo,
@@ -84,6 +86,8 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		confInfo = configInfo;
 		if (selectedUser == null) {
 			newUser = true;
+		} else {
+			this.selectedUser = selectedUser;
 		}
 
 		// Get orgs hierarchies
@@ -123,6 +127,9 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		lastNameTextBox.setName("Last name");
 		lastNameTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		lastNameTextBox.setAlignment(TextAlignment.LEFT);
+		if (selectedUser.getFromHost().equals("DEACTIVATED")) {
+			lastNameTextBox.setEnabled(false);
+		}
 		horizontalPanel_1.add(lastNameTextBox);
 		horizontalPanel_1.setCellHorizontalAlignment(lastNameTextBox,
 				HasHorizontalAlignment.ALIGN_CENTER);
@@ -154,6 +161,9 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		firstNameTextBox.setName("First name");
 		firstNameTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		firstNameTextBox.setAlignment(TextAlignment.LEFT);
+		if (selectedUser.getFromHost().equals("DEACTIVATED")) {
+			firstNameTextBox.setEnabled(false);
+		}
 		horizontalPanel_2.add(firstNameTextBox);
 		horizontalPanel_2.setCellWidth(firstNameTextBox, "50%");
 		horizontalPanel_2.setCellVerticalAlignment(firstNameTextBox,
@@ -185,6 +195,9 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		userIdTextBox.setName("Username");
 		userIdTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		userIdTextBox.setAlignment(TextAlignment.LEFT);
+		if (selectedUser.getFromHost().equals("DEACTIVATED")) {
+			userIdTextBox.setEnabled(false);
+		}
 		horizontalPanel_3.add(userIdTextBox);
 		horizontalPanel_3.setCellWidth(userIdTextBox, "50%");
 		horizontalPanel_3.setCellVerticalAlignment(userIdTextBox,
@@ -215,6 +228,9 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		emailTextBox.setName("Email");
 		emailTextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		emailTextBox.setAlignment(TextAlignment.LEFT);
+		if (selectedUser.getFromHost().equals("DEACTIVATED")) {
+			emailTextBox.setEnabled(false);
+		}
 		horizontalPanel_7.add(emailTextBox);
 		horizontalPanel_7.setCellVerticalAlignment(emailTextBox,
 				HasVerticalAlignment.ALIGN_MIDDLE);
@@ -246,6 +262,9 @@ public class AdminUserAcctDialogBox extends DialogBox {
 
 		adminRadioButton.setTitle("Administrator role");
 		adminRadioButton.setName("Administrator role");
+		if (selectedUser.getFromHost().equals("DEACTIVATED")) {
+			adminRadioButton.setEnabled(false);
+		}
 		horizontalPanel_8.add(adminRadioButton);
 		horizontalPanel_8.setCellHorizontalAlignment(adminRadioButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
@@ -263,6 +282,9 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		toolRadioButton.setTitle("Test tool role");
 		toolRadioButton.setName("Test tool role");
 		horizontalPanel_8.add(toolRadioButton);
+		if (selectedUser.getFromHost().equals("DEACTIVATED")) {
+			toolRadioButton.setEnabled(false);
+		}
 		horizontalPanel_8.setCellHorizontalAlignment(toolRadioButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel_8.setCellVerticalAlignment(toolRadioButton,
@@ -271,6 +293,9 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		analystRadioButton = new RadioButton("buttonGroup", "Analyst");
 		analystRadioButton.setTitle("Analyst role");
 		analystRadioButton.setName("Analyst role");
+		if (selectedUser.getFromHost().equals("DEACTIVATED")) {
+			analystRadioButton.setEnabled(false);
+		}
 		horizontalPanel_8.add(analystRadioButton);
 		horizontalPanel_8.setCellHorizontalAlignment(analystRadioButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
@@ -280,6 +305,9 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		userRadioButton = new RadioButton("buttonGroup", "User");
 		userRadioButton.setTitle("User role");
 		userRadioButton.setName("User role");
+		if (selectedUser.getFromHost().equals("DEACTIVATED")) {
+			userRadioButton.setEnabled(false);
+		}
 		horizontalPanel_8.add(userRadioButton);
 		userRadioButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
@@ -337,7 +365,9 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		
 		editLevelsButton = new PushButton("Edit");
 		Roles.getButtonRole().setAriaLabelProperty(editLevelsButton.getElement(), "Edit Org Membership Button");
-
+		if (selectedUser.getFromHost().equals("DEACTIVATED")) {
+			editLevelsButton.setEnabled(false);
+		}
 		editLevelsButton.setTitle("Edit organizational membership and role");
 		editLevelsButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
@@ -408,7 +438,9 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		
 		orgMembershipTextBox = new TextBox();
 		emailTextBox.getElement().setId("org-memb-textbox");
-
+		if (selectedUser.getFromHost().equals("DEACTIVATED")) {
+			orgMembershipTextBox.setEnabled(false);
+		}
 		orgMembershipTextBox.setTitle("Organizational membership and role");
 		orgMembershipTextBox.setName("Organizational membership and role");
 		orgMembershipTextBox.setReadOnly(true);
@@ -429,6 +461,9 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		changePasswordCheckBox = new SimpleCheckBox();
 		changePasswordCheckBox.setTitle("Change password");
 		changePasswordCheckBox.setName("Change password");
+		if (selectedUser.getFromHost().equals("DEACTIVATED")) {
+			changePasswordCheckBox.setEnabled(false);
+		}
 		changePasswordCheckBox.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
 				boolean changePassword = changePasswordCheckBox.isChecked();
@@ -472,7 +507,10 @@ public class AdminUserAcctDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		passwordLabel.setWidth("115px");
 		password1TextBox = new PasswordTextBox();
-		emailTextBox.getElement().setId("password1-textbox");
+		if (selectedUser.getFromHost().equals("DEACTIVATED")) {
+			password1TextBox.setEnabled(false);
+		}
+		password1TextBox.getElement().setId("password1-textbox");
 		password1TextBox.setTitle("Enter password");
 		password1TextBox.setName("Enter password");
 		horizontalPanel_13.add(password1TextBox);
@@ -495,6 +533,9 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		horizontalPanel_4.add(passwordLabel3);
 		passwordLabel3.setWidth("115px");
 		password2TextBox = new PasswordTextBox();
+		if (selectedUser.getFromHost().equals("DEACTIVATED")) {
+			password2TextBox.setEnabled(false);
+		}
 		emailTextBox.getElement().setId("password2-textbox");
 		password2TextBox.setTitle("Enter password again");
 		password2TextBox.setName("Enter password again");
@@ -525,11 +566,16 @@ public class AdminUserAcctDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		horizontalPanel.setCellVerticalAlignment(cancelButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel.setCellWidth(cancelButton, "33%");
+
 		cancelButton.setSize("70px", "18px");
 		submitButton = new PushButton("Submit");
 		Roles.getButtonRole().setAriaLabelProperty(submitButton.getElement(), "Submit Button");
 
 		submitButton.setTitle("Submit");
+		if (selectedUser.getFromHost().equals("DEACTIVATED")) {
+			submitButton.setEnabled(false);
+		}
 		submitButton.setStyleName("greenButton shadow");
 		horizontalPanel.add(submitButton);
 		horizontalPanel.setCellHorizontalAlignment(submitButton,
@@ -537,6 +583,27 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		horizontalPanel.setCellVerticalAlignment(submitButton,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		submitButton.setSize("70px", "18px");
+		horizontalPanel.setCellWidth(submitButton, "33%");
+
+		
+		reactivateButton = new PushButton("Re-activate");
+		Roles.getButtonRole().setAriaLabelProperty(reactivateButton.getElement(), "Reactivate Button");
+		// Only enable if DEACTIVATED
+		if (selectedUser.getFromHost().equals("DEACTIVATED")) {
+			reactivateButton.setEnabled(true);
+		} else {
+			reactivateButton.setEnabled(false);
+		}
+		
+		reactivateButton.setStyleName("greenButton shadow");
+		horizontalPanel.add(reactivateButton);
+		horizontalPanel.setCellHorizontalAlignment(reactivateButton,
+				HasHorizontalAlignment.ALIGN_CENTER);
+		horizontalPanel.setCellVerticalAlignment(reactivateButton,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		reactivateButton.setSize("70px", "18px");
+		horizontalPanel.setCellWidth(reactivateButton, "33%");
+
 
 		final SimplePanel simplePanel = new SimplePanel();
 		simplePanel.setStyleName("userFormPanel");
@@ -577,7 +644,9 @@ public class AdminUserAcctDialogBox extends DialogBox {
 				String lastLoginStr = dateTimeFormat.format(selectedUser
 						.getLastLogon());
 				emailTextBox.setText(selectedUser.getEmail());
-				if (userRole == Role.ADMIN) {
+				if (selectedUser.getFromHost().equals("DEACTIVATED")) {
+					editLevelsButton.setEnabled(false);
+				} else if (userRole == Role.ADMIN) {
 					adminRadioButton.setValue(true);
 					editLevelsButton.setEnabled(false);
 					orgMembershipTextBox.setText("");
@@ -636,7 +705,7 @@ public class AdminUserAcctDialogBox extends DialogBox {
 	}
 	
 	public void enableChangePassword(boolean enable) {
-		if (enable) {
+		if (enable && !selectedUser.getFromHost().equals("DEACTIVATED")) {
 			changePasswordCheckBox.setChecked(true);
 			password1TextBox.setEnabled(true);
 			password2TextBox.setEnabled(true);

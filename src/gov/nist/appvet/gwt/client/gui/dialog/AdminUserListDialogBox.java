@@ -22,7 +22,6 @@ package gov.nist.appvet.gwt.client.gui.dialog;
 import gov.nist.appvet.gwt.client.GWTService;
 import gov.nist.appvet.gwt.client.GWTServiceAsync;
 import gov.nist.appvet.gwt.client.gui.table.appslist.UsersListPagingDataGrid;
-import gov.nist.appvet.gwt.shared.AppInfoGwt;
 import gov.nist.appvet.gwt.shared.ConfigInfoGwt;
 import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.UserInfo;
@@ -38,13 +37,6 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -269,6 +261,8 @@ public class AdminUserListDialogBox extends DialogBox {
 				editUser(configInfo, false, useSSO);
 			}
 		});
+		
+		// We are not really deleting, just deactivating
 		final PushButton deleteUserButton = new PushButton("Delete");
 		Roles.getButtonRole().setAriaLabelProperty(deleteUserButton.getElement(), "Delete Users Button");
 
@@ -371,8 +365,15 @@ public class AdminUserListDialogBox extends DialogBox {
 			}
 			userAcctAdminDialogBox = 
 					new AdminUserAcctDialogBox(configInfo, selectedUser, ssoActive, allUsersOrgMemberships);
-			userAcctAdminDialogBox.setText(selectedUser.getFirstName() + " "
-					+ selectedUser.getLastName());
+			
+			if (selectedUser.getFromHost().equals("DEACTIVATED")) {
+				userAcctAdminDialogBox.setText(selectedUser.getFirstName() + " "
+						+ selectedUser.getLastName() + " (DEACTIVATED)");
+			} else {
+				userAcctAdminDialogBox.setText(selectedUser.getFirstName() + " "
+						+ selectedUser.getLastName());
+			}
+
 			userAcctAdminDialogBox.lastNameTextBox.setFocus(true);
 		}
 		userAcctAdminDialogBox.center();

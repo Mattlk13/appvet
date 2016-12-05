@@ -749,10 +749,12 @@ public class AppVetServlet extends HttpServlet {
 	/** This method authenticates a user based on username and password. */
 	private boolean authenticateUserNameAndPassword(String userName,
 			String password) {
+		// Make sure user is not DEACTIVATED (i.e., deleted)
 		boolean userExists = Database
-				.exists("SELECT * FROM users WHERE username='" + userName + "'");
+				.exists("SELECT * FROM users WHERE username='" 
+						+ userName + "' AND fromhost!='DEACTIVATED'");
 		if (!userExists) {
-			log.error("No such user: " + userName + ". ");
+			log.error("User " + userName + " does not exist or has been de-activated. ");
 			return false;
 		}
 		if (Authenticate.isAuthenticated(userName, password)) {

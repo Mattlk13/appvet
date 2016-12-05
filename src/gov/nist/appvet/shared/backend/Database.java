@@ -89,8 +89,8 @@ public class Database {
 //	/************** AppVet specific methods **************/
 
 	public static boolean userExists(String username) {
-		String sql = "SELECT * FROM users " + "WHERE username='" + username
-				+ "'";
+		String sql = "SELECT * FROM users WHERE username='" 
+				+ username + "' AND fromhost!='DEACTIVATED'";
 		return exists(sql);
 	}
 
@@ -511,9 +511,16 @@ public class Database {
 				+ appId + "'");
 	}
 
+	/** As of 2.4.5, we do not delete the user but instead set the user
+	 * as DEACTIVATED.
+	 * @param username
+	 * @return
+	 */
 	public synchronized static boolean deleteUser(String username) {
-		return update("DELETE FROM users " + "WHERE username='" + username
-				+ "'");
+		return update("UPDATE users SET fromhost='DEACTIVATED' WHERE username = '" 
+				+ username + "'");
+//		return update("DELETE FROM users " + "WHERE username='" + username
+//				+ "'");
 	}
 
 	public static AppsListGwt getApps(String username, 
