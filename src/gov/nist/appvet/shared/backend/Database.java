@@ -522,6 +522,11 @@ public class Database {
 //		return update("DELETE FROM users " + "WHERE username='" + username
 //				+ "'");
 	}
+	
+	public synchronized static boolean reactivateUser(String username) {
+		return update("UPDATE users SET fromhost='' WHERE username = '" 
+				+ username + "'");
+	}
 
 	public static AppsListGwt getApps(String username, 
 			Date lastClientUpdateDate) {

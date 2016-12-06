@@ -82,7 +82,9 @@ public interface GWTService extends RemoteService {
 	Boolean deleteApp(DeviceOS os, String appId, String username)
 			throws IllegalArgumentException;
 
-	Boolean deleteUser(String username) throws IllegalArgumentException;
+	List<UserInfo> deleteUser(String username) throws IllegalArgumentException;
+	
+	List<UserInfo> reactivateUser(String username) throws IllegalArgumentException;
 
 	List<UserInfo> getAllUsers() throws IllegalArgumentException;
 

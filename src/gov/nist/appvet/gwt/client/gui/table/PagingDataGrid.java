@@ -138,7 +138,9 @@ public abstract class PagingDataGrid<T> extends Composite {
 		list.add(index, element);
 	}
 
-	public List<T> deleteUser(String username) {
+	// This is removed so that users are not actually deleted but 
+	// defined as DEACTIVATED
+/*	public List<T> deleteUser(String username) {
 		final List<T> list = dataProvider.getList();
 		for (int i = 0; i < list.size(); i++) {
 			final UserInfo userInfoGwt = (UserInfo) list.get(i);
@@ -148,7 +150,7 @@ public abstract class PagingDataGrid<T> extends Composite {
 			}
 		}
 		return list;
-	}
+	}*/
 
 	public ListDataProvider<T> getDataProvider() {
 		return dataProvider;

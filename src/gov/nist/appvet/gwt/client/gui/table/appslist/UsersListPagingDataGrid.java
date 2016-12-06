@@ -90,13 +90,17 @@ public class UsersListPagingDataGrid<T> extends PagingDataGrid<T> {
 				new TextCell()) {
 			@Override
 			public String getValue(T object) {
+				String userName = ((UserInfo) object).getUserName();
 				String roleStr = ((UserInfo)object).getRoleAndOrgMembership();
+				String activatedStr = ((UserInfo)object).getFromHost();
 				if (roleStr.equals("NEW")) {
 					// A role of NEW indicates that a new role and org unit
 					// must be set for the user
-					return ((UserInfo) object).getUserName() + "*";
+					return userName + "*";
+				} else if (activatedStr.equals("DEACTIVATED")) {
+					return userName + "-";
 				} else {
-					return ((UserInfo) object).getUserName();
+					return userName;
 				}
 			}
 		};

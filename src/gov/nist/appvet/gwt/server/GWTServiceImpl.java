@@ -502,8 +502,21 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		}
 	}
 
-	public Boolean deleteUser(String username) throws IllegalArgumentException {
-		return Database.deleteUser(username);
+	/** AppVet no longer deletes users. Instead, they are marked as DEACTIVATED
+	 * in the 'fromhost' field of the 'users' table.
+	 */
+	public List<UserInfo> deleteUser(String username) throws IllegalArgumentException {
+		// Deactivate user
+		Database.deleteUser(username);
+		// Send updated list of all users (in case modifications were made by other admins)
+		return Database.getAllUsers(null);
+	}
+	
+	public List<UserInfo> reactivateUser(String username) throws IllegalArgumentException {
+		// Reactivate user
+		Database.reactivateUser(username);
+		// Send updated list of all users (in case modifications were made by other admins)
+		return Database.getAllUsers(null);
 	}
 
 	public AppsListGwt getAllApps(String username)

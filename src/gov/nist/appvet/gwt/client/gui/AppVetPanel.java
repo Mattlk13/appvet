@@ -756,10 +756,10 @@ public class AppVetPanel extends DockLayoutPanel {
 		searchPanel.setCellVerticalAlignment(searchTextBox,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		final PushButton searchButton = new PushButton("Search");
+		searchButton.setStyleName("searchButton");
 		Roles.getButtonRole().setAriaLabelProperty(searchButton.getElement(), "Search Button");
 		searchButton.setText("Search Apps");
 		searchButton.setHTML("Search Apps");
-		searchButton.setStyleName("searchButton");
 		searchButton.setTitle("Search");
 		searchButton.setSize("", "");
 		searchButton
@@ -1033,9 +1033,10 @@ public class AppVetPanel extends DockLayoutPanel {
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		horizontalPanel.setSize("", "");
 		final PushButton appUploadButton = new PushButton("Upload App");
+		// Make sure style is set immediately after button instantiation otherwise css might not work
+		appUploadButton.setStyleName("greenAppUploadButton shadow");  
 		Roles.getButtonRole().setAriaLabelProperty(appUploadButton.getElement(), "Upload App Button");
 		appUploadButton.setTitle("Upload app");
-		appUploadButton.setStyleName("greenAppUploadButton shadow");
 
 		appUploadButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -1070,10 +1071,10 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		
 		viewAllButton = new PushButton("View All");
+		viewAllButton.setStyleName("blueButton shadow");
 		Roles.getButtonRole().setAriaLabelProperty(viewAllButton.getElement(), "View All Button");
 
 		// viewAllButton.setStyleName("appvetButton shadow");
-		viewAllButton.setStyleName("blueButton shadow");
 		// viewAllButton.setHTML("<img width=\"100px\" src=\"images/icon-view-all.png\" alt=\"View All Apps\" />");
 		viewAllButton.setHTML("View All");
 		viewAllButton.setTitle("View All Apps");
@@ -1100,6 +1101,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		appUploadButton.setSize("120px", "18px");
 
 		downloadAppButton = new PushButton("Download App");
+		downloadAppButton.setStyleName("blueButton shadow");
 		Roles.getButtonRole().setAriaLabelProperty(downloadAppButton.getElement(), "Download App Button");
 
 		downloadAppButton.setEnabled(false);
@@ -1169,10 +1171,10 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoVerticalPanel.setCellVerticalAlignment(appButtonPanel,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		uploadReportButton = new PushButton("Upload Report");
+		uploadReportButton.setStyleName("blueButton shadow");
 		Roles.getButtonRole().setAriaLabelProperty(uploadReportButton.getElement(), "Upload Report Button");
 
 		uploadReportButton.setTitle("Upload report");
-		uploadReportButton.setStyleName("blueButton shadow");
 
 		appButtonPanel.add(uploadReportButton);
 		appButtonPanel.setCellVerticalAlignment(uploadReportButton,
@@ -1213,10 +1215,10 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		uploadReportButton.setSize("98px", "18px");
 		logButton = new PushButton("View Log");
+		logButton.setStyleName("blueButton shadow");
 		Roles.getButtonRole().setAriaLabelProperty(logButton.getElement(), "View Log Button");
 
 		logButton.setTitle("View log");
-		logButton.setStyleName("blueButton shadow");
 
 		appButtonPanel.add(logButton);
 		appButtonPanel.setCellVerticalAlignment(logButton,
@@ -1233,11 +1235,11 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		logButton.setSize("80px", "18px");
 		deleteButton = new PushButton("Delete App");
+		deleteButton.setStyleName("blueButton shadow");
 		Roles.getButtonRole().setAriaLabelProperty(deleteButton.getElement(), "Delete App Button");
 
 		deleteButton.setTitle("Delete app");
 		// deleteButton.setStyleName("appvetButton  shadow");
-		deleteButton.setStyleName("blueButton shadow");
 
 		appButtonPanel.add(deleteButton);
 		appButtonPanel.setCellVerticalAlignment(deleteButton,
@@ -1278,10 +1280,10 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		deleteButton.setSize("80px", "18px");
 		downloadReportsButton = new PushButton("Download Reports");
+		downloadReportsButton.setStyleName("blueButton shadow");
 		Roles.getButtonRole().setAriaLabelProperty(downloadReportsButton.getElement(), "Download Reports Button");
 
 		downloadReportsButton.setTitle("Download reports");
-		downloadReportsButton.setStyleName("blueButton shadow");
 
 		appButtonPanel.add(downloadReportsButton);
 		appButtonPanel.setCellVerticalAlignment(downloadReportsButton,
@@ -1312,8 +1314,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 		downloadReportsButton.setSize("118px", "18px");
 
-		// downloadAppButton.setStyleName("appvetButton shadow");
-		downloadAppButton.setStyleName("blueButton shadow");
 
 		appButtonPanel.add(downloadAppButton);
 		appButtonPanel.setCellVerticalAlignment(downloadAppButton,

@@ -162,10 +162,10 @@ public class AdminUserListDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		searchTextBox.setSize("200px", "18px");
 		final PushButton searchButton = new PushButton("Search");
+		searchButton.setStyleName("grayButton shadow");
 		Roles.getButtonRole().setAriaLabelProperty(searchButton.getElement(), "Search Users Button");
 
 		searchButton.setTitle("Search users");
-		searchButton.setStyleName("grayButton shadow");
 		searchButton.setTitle("Search Users");
 
 		horizontalPanel_1.add(searchButton);
@@ -184,10 +184,10 @@ public class AdminUserListDialogBox extends DialogBox {
 		
 		
 		final PushButton viewAllButton = new PushButton("View All");
+		viewAllButton.setStyleName("grayButton shadow");
 		Roles.getButtonRole().setAriaLabelProperty(viewAllButton.getElement(), "View All Users Button");
 
 		viewAllButton.setTitle("View all users");
-		viewAllButton.setStyleName("grayButton shadow");
 		viewAllButton.setTitle("View All Users");
 		viewAllButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -212,7 +212,7 @@ public class AdminUserListDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		dockLayoutPanel.setSize("", "380px");
 		usersListTable = new UsersListPagingDataGrid<UserInfo>();
-		usersListTable.setTitle("Users list");
+		usersListTable.setTitle("Users list. '-' denotes deactivated user, '*' denotes incomplete user info.");
 		usersListTable.setPageSize(configInfo.getNumRowsUsersList());
 		usersListTable.dataGrid.setSize("370px", "342px");
 		usersListTable.dataGrid.setSelectionModel(usersSelectionModel);
@@ -232,13 +232,14 @@ public class AdminUserListDialogBox extends DialogBox {
 		verticalPanel.setCellHorizontalAlignment(horizontalPanel_2,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		addUserButton = new PushButton("Add");
+		addUserButton.setStyleName("grayButton shadow");
 		Roles.getButtonRole().setAriaLabelProperty(addUserButton.getElement(), "Add Users Button");
 
 		addUserButton.setTitle("Add user");
-		addUserButton.setStyleName("grayButton shadow");
 		addUserButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				log.info("trace 1");
 				editUser(configInfo, true, useSSO);
 			}
 		});
@@ -251,22 +252,24 @@ public class AdminUserListDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		addUserButton.setSize("70px", "18px");
 		final PushButton editUserButton = new PushButton("Edit");
+		editUserButton.setStyleName("grayButton shadow");
 		Roles.getButtonRole().setAriaLabelProperty(editUserButton.getElement(), "Edit Users Button");
 
 		editUserButton.setTitle("Edit user");
-		editUserButton.setStyleName("grayButton shadow");
 		editUserButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				log.info("trace 2");
+
 				editUser(configInfo, false, useSSO);
 			}
 		});
 		
 		// We are not really deleting, just deactivating
 		final PushButton deleteUserButton = new PushButton("Delete");
+		deleteUserButton.setStyleName("grayButton shadow");
 		Roles.getButtonRole().setAriaLabelProperty(deleteUserButton.getElement(), "Delete Users Button");
 
-		deleteUserButton.setStyleName("grayButton shadow");
 		deleteUserButton.setTitle("Delete user");
 		deleteUserButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -292,7 +295,7 @@ public class AdminUserListDialogBox extends DialogBox {
 					public void onClick(ClickEvent event) {
 						killDialogBox(deleteConfirmDialogBox);
 						if (selected != null) {
-							deleteUser(selectedUser.getUserName());
+							deleteUser(selectedUser);
 						}
 					}
 				});
@@ -315,8 +318,8 @@ public class AdminUserListDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		editUserButton.setSize("70px", "18px");
 		doneButton = new PushButton("Done");
-		doneButton.setTitle("Done");
 		doneButton.setStyleName("greenButton shadow");
+		doneButton.setTitle("Done");
 		doneButton.setHTML("Done");
 		horizontalPanel_2.add(doneButton);
 		horizontalPanel_2.setCellWidth(doneButton, "25%");
@@ -328,20 +331,24 @@ public class AdminUserListDialogBox extends DialogBox {
 		getUsersList();
 	}
 
-	public void deleteUser(final String username) {
-		appVetServiceAsync.deleteUser(username, new AsyncCallback<Boolean>() {
+	public void deleteUser(final UserInfo selectedUser) {
+		appVetServiceAsync.deleteUser(selectedUser.getUserName(), new AsyncCallback<List<UserInfo>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				showMessageDialog("AppVet Error", "User deletion error", true);
 			}
 
 			@Override
-			public void onSuccess(Boolean result) {
-				if (result) {
-					allUsers = usersListTable.deleteUser(username);
+			public void onSuccess(List<UserInfo> result) {
+				if (result != null && !result.isEmpty()) {
+					// Reset data (which includes deactivated user)
+					allUsers = result;
+					setAllUsers(allUsers);
+					showMessageDialog("AppVet Info", "User '" + selectedUser.getUserName() + "' deactivated successfully", false);
+
 				} else {
 					showMessageDialog("AppVet Error", "Error deleting user "
-							+ username, true);
+							+ selectedUser.getUserName(), true);
 				}
 			}
 		});
@@ -349,27 +356,43 @@ public class AdminUserListDialogBox extends DialogBox {
 
 	public void editUser(final ConfigInfoGwt configInfo, 
 			final boolean newUser, final boolean ssoActive) {
+		log.info("trace 3");
 
 		if (newUser) {
+			log.info("trace 4");
+
 			userAcctAdminDialogBox = 
 					new AdminUserAcctDialogBox(configInfo, null, ssoActive, allUsersOrgMemberships);
 			userAcctAdminDialogBox.setText("Add User");
 			userAcctAdminDialogBox.lastNameTextBox.setFocus(true);
 
 		} else {
+			log.info("trace 5");
+
 			selectedUser = usersSelectionModel.getSelectedObject();
+			log.info("trace 6");
+
 			if (selectedUser.isDefaultAdmin()) {
+				log.info("trace 7");
+
 				showMessageDialog("Account Info", "Cannot change info for "
 						+ "default AppVet administrator", false);
 				return;
 			}
+			log.info("trace 8");
+
 			userAcctAdminDialogBox = 
 					new AdminUserAcctDialogBox(configInfo, selectedUser, ssoActive, allUsersOrgMemberships);
-			
+			log.info("trace 9");
+
 			if (selectedUser.getFromHost().equals("DEACTIVATED")) {
+				log.info("trace 10");
+
 				userAcctAdminDialogBox.setText(selectedUser.getFirstName() + " "
 						+ selectedUser.getLastName() + " (DEACTIVATED)");
 			} else {
+				log.info("trace 11");
+
 				userAcctAdminDialogBox.setText(selectedUser.getFirstName() + " "
 						+ selectedUser.getLastName());
 			}
@@ -385,6 +408,34 @@ public class AdminUserListDialogBox extends DialogBox {
 			}
 		});
 
+		userAcctAdminDialogBox.reactivateButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				final String selectedUsername = userAcctAdminDialogBox.selectedUser.getUserName();
+				appVetServiceAsync.reactivateUser(selectedUsername, new AsyncCallback<List<UserInfo>>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						showMessageDialog("AppVet Error", "User reactivation error", true);
+					}
+
+					@Override
+					public void onSuccess(List<UserInfo> result) {
+						if (result != null && !result.isEmpty()) {
+							// Reset data (which includes reactivated user)
+							allUsers = result;
+							setAllUsers(allUsers);
+							killDialogBox(userAcctAdminDialogBox);
+							showMessageDialog("AppVet Info", "User '" + selectedUsername + "' reactivated successfully", false);
+						} else {
+							killDialogBox(userAcctAdminDialogBox);
+							showMessageDialog("AppVet Error", "Error reactivating user "
+									+ selectedUser.getUserName(), true);
+						}
+					}
+				});
+			}
+		});
+		
 		userAcctAdminDialogBox.submitButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

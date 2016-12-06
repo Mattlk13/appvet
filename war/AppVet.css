@@ -1182,7 +1182,11 @@ searchPanel {
 	background: #f7f8f9;
 	cursor: not-allowed !important;
 }
-
+.grayButton-down-disabled {
+	color: gray;
+	background: #f7f8f9;
+	cursor: not-allowed !important;
+}
 /*---------------------- Green Dialog buttons ----------------------*/
 .greenButton {
 	color: white;
@@ -1198,6 +1202,10 @@ searchPanel {
 	background: #3aaf75;
 }
 .greenButton-up-disabled {
+	background: #b4e7cd;
+	cursor: not-allowed !important;
+}
+.greenButton-down-disabled {
 	background: #b4e7cd;
 	cursor: not-allowed !important;
 }
@@ -1225,6 +1233,10 @@ searchPanel {
 	background: #b4e7cd;
 	cursor: not-allowed !important;
 }
+.greenAppUploadButton-down-disabled {
+	background: #b4e7cd;
+	cursor: not-allowed !important;
+}
 /*---------------------- Blue buttons ----------------------*/
 .blueButton {
 	font-family: Sans-Serif;
@@ -1247,6 +1259,11 @@ searchPanel {
 	background: #d2edff;
 	cursor: not-allowed !important;
 }
+.blueButton-down-disabled {
+	background: #d2edff;
+	cursor: not-allowed !important;
+}
+
 /*---------------------- Main Banner ----------------------*/
 .mainBanner {
 	background: #015289;

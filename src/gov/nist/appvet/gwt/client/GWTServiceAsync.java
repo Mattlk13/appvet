@@ -82,7 +82,10 @@ public interface GWTServiceAsync {
 	void deleteApp(DeviceOS os, String appId, String username,
 			AsyncCallback<Boolean> callback) throws IllegalArgumentException;
 
-	void deleteUser(String username, AsyncCallback<Boolean> callback)
+	void deleteUser(String username, AsyncCallback<List<UserInfo>> callback)
+			throws IllegalArgumentException;
+	
+	void reactivateUser(String username, AsyncCallback<List<UserInfo>> callback)
 			throws IllegalArgumentException;
 
 	void getAllApps(String username, AsyncCallback<AppsListGwt> callback)
