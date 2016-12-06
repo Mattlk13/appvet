@@ -239,7 +239,6 @@ public class AdminUserListDialogBox extends DialogBox {
 		addUserButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				log.info("trace 1");
 				editUser(configInfo, true, useSSO);
 			}
 		});
@@ -259,8 +258,6 @@ public class AdminUserListDialogBox extends DialogBox {
 		editUserButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				log.info("trace 2");
-
 				editUser(configInfo, false, useSSO);
 			}
 		});
@@ -356,42 +353,30 @@ public class AdminUserListDialogBox extends DialogBox {
 
 	public void editUser(final ConfigInfoGwt configInfo, 
 			final boolean newUser, final boolean ssoActive) {
-		log.info("trace 3");
 
 		if (newUser) {
-			log.info("trace 4");
-
 			userAcctAdminDialogBox = 
 					new AdminUserAcctDialogBox(configInfo, null, ssoActive, allUsersOrgMemberships);
 			userAcctAdminDialogBox.setText("Add User");
 			userAcctAdminDialogBox.lastNameTextBox.setFocus(true);
 
 		} else {
-			log.info("trace 5");
-
 			selectedUser = usersSelectionModel.getSelectedObject();
-			log.info("trace 6");
 
 			if (selectedUser.isDefaultAdmin()) {
-				log.info("trace 7");
-
 				showMessageDialog("Account Info", "Cannot change info for "
 						+ "default AppVet administrator", false);
 				return;
 			}
-			log.info("trace 8");
 
 			userAcctAdminDialogBox = 
 					new AdminUserAcctDialogBox(configInfo, selectedUser, ssoActive, allUsersOrgMemberships);
-			log.info("trace 9");
 
 			if (selectedUser.getFromHost().equals("DEACTIVATED")) {
-				log.info("trace 10");
 
 				userAcctAdminDialogBox.setText(selectedUser.getFirstName() + " "
 						+ selectedUser.getLastName() + " (DEACTIVATED)");
 			} else {
-				log.info("trace 11");
 
 				userAcctAdminDialogBox.setText(selectedUser.getFirstName() + " "
 						+ selectedUser.getLastName());
@@ -611,43 +596,27 @@ public class AdminUserListDialogBox extends DialogBox {
 			log.info("Searching");
 			final String[] tokens = searchTextBox.getValue().split("\\s+");
 			if (tokens != null) {
-				log.info("trace 1");
 				final ArrayList<UserInfo> searchList = new ArrayList<UserInfo>();
-				log.info("trace 2");
 
 				for (int i = 0; i < tokens.length; i++) {
-					log.info("trace 3");
 
 					if (Validate.isLegalSearchString(tokens[i])) {
-						log.info("trace 4");
 
 						for (int j = 0; j < allUsers.size(); j++) {
-							log.info("trace 5");
 
 							final UserInfo userInfo = allUsers.get(j);
-							log.info("trace 6");
 
 							if (userInfo.tokenMatch(tokens[i])) {
-								log.info("trace 7");
-
 								searchList.add(userInfo);
-								log.info("trace 8");
-
 							}
 						}
 					}
 				}
-				log.info("trace 9");
 
 				usersListTable.setDataList(searchList);
-				log.info("trace 10");
 
 				if (searchList.size() > 0) {
-					log.info("trace 11");
-
 					usersSelectionModel.setSelected(searchList.get(0), true);
-					log.info("trace 12");
-
 				}
 			}
 		}

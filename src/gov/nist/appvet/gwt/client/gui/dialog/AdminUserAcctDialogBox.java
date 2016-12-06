@@ -83,16 +83,12 @@ public class AdminUserAcctDialogBox extends DialogBox {
 	@SuppressWarnings("deprecation")
 	public AdminUserAcctDialogBox(final ConfigInfoGwt configInfo,
 			final UserInfo selectedUser, boolean useSSO, List<String> allUsersOrgLevels) {
-		log.info("trace a");
 		confInfo = configInfo;
 		if (selectedUser == null) {
 			newUser = true;
 		} else {
-			log.info("trace b");
-
 			this.selectedUser = selectedUser;
 		}
-		log.info("trace c");
 
 		// Get orgs hierarchies
 		if (allUsersOrgLevels == null) {
@@ -100,19 +96,11 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		} else {
 			allUsersOrgMemberships = allUsersOrgLevels;
 		}
-		log.info("trace d");
 
 		setWidth("386px");
-		log.info("trace d1");
-
 
 		passwordAgainLabel = new Label("Password (again): ");
-		
 		passwordAgainLabel.getElement().setAttribute("for", "password2-textbox");
-		
-
-		log.info("trace e");
-
 		passwordAgainLabel.setWidth("170px");
 		passwordAgainLabel
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
@@ -140,22 +128,14 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		submitButton = new PushButton("Submit");
 		submitButton.setStyleName("greenButton shadow");
 		Roles.getButtonRole().setAriaLabelProperty(submitButton.getElement(), "Submit Button");
-		log.info("trace f");
 
 		submitButton.setTitle("Submit");
-		log.info("trace fa");
 
 		if (selectedUser != null && selectedUser.getFromHost().equals("DEACTIVATED")) {
-			log.info("trace fb");
-
 			submitButton.setEnabled(false);
 		} else {
-			log.info("trace fc");
-
 			submitButton.setEnabled(true);
 		}
-		log.info("trace f1");
-
 		horizontalPanel.add(submitButton);
 		horizontalPanel.setCellHorizontalAlignment(submitButton,
 				HasHorizontalAlignment.ALIGN_CENTER);
@@ -163,8 +143,6 @@ public class AdminUserAcctDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		submitButton.setSize("70px", "18px");
 		horizontalPanel.setCellWidth(submitButton, "33%");
-		log.info("trace f2");
-
 
 		reactivateButton = new PushButton("Re-activate");
 		reactivateButton.setStyleName("greenButton shadow");
@@ -178,7 +156,6 @@ public class AdminUserAcctDialogBox extends DialogBox {
 			reactivateButton.setEnabled(false);
 			//reactivateButton.setVisible(false);
 		}
-		log.info("trace f3");
 
 		horizontalPanel.add(reactivateButton);
 		horizontalPanel.setCellHorizontalAlignment(reactivateButton,
@@ -187,13 +164,11 @@ public class AdminUserAcctDialogBox extends DialogBox {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		reactivateButton.setSize("70px", "18px");
 		horizontalPanel.setCellWidth(reactivateButton, "33%");
-		log.info("trace f4");
 
 		final DockPanel dockPanel = new DockPanel();
 		dockPanel.setStyleName("gwt-DialogBox");
 		setWidget(dockPanel);
 		dockPanel.setSize("386px", "");
-		log.info("trace g");
 
 		final VerticalPanel verticalPanel_1 = new VerticalPanel();
 		verticalPanel_1.setSize("100%", "100%");
@@ -238,7 +213,6 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		final Label lblNewLabel_1 = new Label("First Name: ");
 		lastNameLabel.getElement().setAttribute("for", "first-name-textbox");
-		log.info("trace h");
 
 		horizontalPanel_2.add(lblNewLabel_1);
 		lblNewLabel_1.setWidth("115px");
@@ -293,7 +267,6 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		horizontalPanel_3.setCellHorizontalAlignment(userIdTextBox,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		userIdTextBox.setWidth("234px");
-		log.info("trace i");
 
 		final HorizontalPanel horizontalPanel_7 = new HorizontalPanel();
 		verticalPanel_1.add(horizontalPanel_7);
@@ -360,7 +333,6 @@ public class AdminUserAcctDialogBox extends DialogBox {
 			}
 		});
 		adminRadioButton.setWidth("140px");
-		log.info("trace j");
 
 		toolRadioButton = new RadioButton("buttonGroup", "Tool");
 		toolRadioButton.setTitle("Test tool role");
@@ -425,8 +397,6 @@ public class AdminUserAcctDialogBox extends DialogBox {
 				orgMembershipTextBox.setText("");
 			}
 		});
-		log.info("trace k");
-
 		HorizontalPanel horizontalPanel_14 = new HorizontalPanel();
 		verticalPanel_1.add(horizontalPanel_14);
 
@@ -508,7 +478,6 @@ public class AdminUserAcctDialogBox extends DialogBox {
 
 			}
 		});
-		log.info("trace l");
 
 		orgMembershipTextBox = new TextBox();
 		emailTextBox.getElement().setId("org-memb-textbox");
@@ -605,8 +574,6 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		password2TextBox.setTextAlignment(TextBoxBase.ALIGN_LEFT);
 		password2TextBox.setAlignment(TextAlignment.LEFT);
 		password2TextBox.setSize("234px", "");
-		log.info("trace m");
-
 
 		final SimplePanel simplePanel = new SimplePanel();
 		simplePanel.setStyleName("userFormPanel");
@@ -659,7 +626,6 @@ public class AdminUserAcctDialogBox extends DialogBox {
 		if (selectedUser != null && selectedUser.getFromHost().equals("DEACTIVATED")) {
 			password2TextBox.setEnabled(false);
 		}
-		log.info("trace n");
 
 		/* Set all data at the end of constructor */
 		if (newUser) {
@@ -672,7 +638,6 @@ public class AdminUserAcctDialogBox extends DialogBox {
 			password1TextBox.setEnabled(false);
 			password2TextBox.setEnabled(false);
 		} else {
-			log.info("trace o");
 
 			Role userRole = null;
 			try {
@@ -710,27 +675,18 @@ public class AdminUserAcctDialogBox extends DialogBox {
 				}
 				password1TextBox.setEnabled(false);
 				password2TextBox.setEnabled(false);
-				log.info("trace p");
 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
 		}
-		log.info("trace q");
 
 		if (useSSO) {
-			log.info("trace q1");
 			changePasswordCheckBox.setEnabled(false);
-
 		} else {
-			log.info("trace q2");
-
 			changePasswordCheckBox.setEnabled(true);
-
 		}
-		log.info("trace r");
-
 	}
 
 	/** This fixes focus for dialog boxes in Firefox and IE browsers */
