@@ -463,53 +463,98 @@ public class AppVetProperties {
 		}
 		listOfFiles = null;
 		folder = null;
-		ArrayList<String> tableColumnNames = null;
+		ArrayList<String> toolStatusTableColumnNames = null;
+		ArrayList<String> reportTimeTableColumnNames = null; // Added in v2.4.5
 		if (os == DeviceOS.ANDROID) {
 			folder = new File(TOOLS_CONF_ROOT + "/android");
-			tableColumnNames = Database
+			toolStatusTableColumnNames = Database
 					.getTableColumnNames("androidtoolstatus");
+			reportTimeTableColumnNames = Database
+					.getTableColumnNames("androidreporttimes");
+			
 			// Check that all Android tools have a column in the
 			// androidtoolstatus table.
-			if (tableColumnNames == null) {
-				log.error("Could not get androidtoolstatus column names");
+			if (toolStatusTableColumnNames == null) {
+				log.error("Could not get table 'androidtoolstatus' column names");
+				return;
+			}
+			if (reportTimeTableColumnNames == null) {
+				log.error("Could not get table 'androidreporttimes' column names");
 				return;
 			}
 			for (int i = 0; i < androidTools.size(); i++) {
 				final ToolAdapter tool = androidTools.get(i);
-				if (!tableColumnNames.contains(tool.toolId)) {
+				if (!toolStatusTableColumnNames.contains(tool.toolId)) {
 					// Add to table "androidtoolstatus"
-					tableColumnNames.add(tool.toolId);
+					toolStatusTableColumnNames.add(tool.toolId);
 					if (!Database.addTableColumn("androidtoolstatus", tool.toolId,
 							"VARCHAR (120) DEFAULT \"NA\"")) {
 						log.error("Could not add Android tool '" + tool.toolId
-								+ "' to androidtoolstatus table");
+								+ "' to 'androidtoolstatus' table");
+					} else {
+						log.info("Added new Android tool to 'androidtoolstatus' table: " + tool.toolId);
+					}
+				}
+				// Also get columns for report table
+				if (!reportTimeTableColumnNames.contains(tool.toolId)) {
+					// Add to table "androidreporttimes"
+					reportTimeTableColumnNames.add(tool.toolId);
+					if (!Database.addTableColumn("androidreporttimes", tool.toolId,
+							"timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'")) {
+						log.error("Could not add Android tool '" + tool.toolId
+								+ "' to 'androidreporttimes' table");
+					} else {
+						log.info("Added new Android tool '" + tool.toolId + "' to 'androidreporttimes' table");
 					}
 				}
 			}
-			tableColumnNames = null;
+			toolStatusTableColumnNames = null;
+			reportTimeTableColumnNames = null;
 			log.debug("Found " + androidTools.size() + " Android tools");
+
 		} else if (os == DeviceOS.IOS) {
 			folder = new File(TOOLS_CONF_ROOT + "/ios");
-			tableColumnNames = Database.getTableColumnNames("iostoolstatus");
+			toolStatusTableColumnNames = Database.getTableColumnNames("iostoolstatus");
+			reportTimeTableColumnNames = Database.getTableColumnNames("iosreporttimes");
 			// Check that all iOS tools have a column in the iostoolstatus
 			// table.
-			if (tableColumnNames == null) {
+			if (toolStatusTableColumnNames == null) {
 				log.error("Could not get iostoolstatus column names");
 				return;
 			}
+			if (reportTimeTableColumnNames == null) {
+				log.error("Could not get table 'iosreporttimes' column names");
+				return;
+			}
+			
 			for (int i = 0; i < iosTools.size(); i++) {
 				final ToolAdapter tool = iosTools.get(i);
-				if (!tableColumnNames.contains(tool.toolId)) {
+				if (!toolStatusTableColumnNames.contains(tool.toolId)) {
 					// Add to table "iostools"
-					tableColumnNames.add(tool.toolId);
+					toolStatusTableColumnNames.add(tool.toolId);
 					if (!Database.addTableColumn("iostoolstatus", tool.toolId,
 							"VARCHAR (120)")) {
 						log.error("Could not add iOS tool '" + tool.toolId
 								+ "' to iostoolstatus table");
+					} else {
+						log.info("Added new iOS tool to 'iostoolstatus' table: " + tool.toolId);
+					}
+				}
+				// Also get columns for report table
+				if (!reportTimeTableColumnNames.contains(tool.toolId)) {
+					// Add to table "iosreporttimes"
+					reportTimeTableColumnNames.add(tool.toolId);
+					if (!Database.addTableColumn("iosreporttimes", tool.toolId,
+							"timestamp NOT NULL DEFAULT \'0000-00-00 00:00:00\'")) {
+						log.error("Could not add iOS tool '" + tool.toolId
+								+ "' to 'iosreporttimes' table");
+					} else {
+						log.info("Added new iOS tool '" + tool.toolId + "' to 'iosreporttimes' table");
 					}
 				}
 			}
-			tableColumnNames = null;
+			toolStatusTableColumnNames = null;
+			reportTimeTableColumnNames = null;
 			log.debug("Found " + iosTools.size() + " iOS tools");
 		}
 	}
