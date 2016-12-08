@@ -45,7 +45,7 @@
 
 	<!-- Use default xsdiframe linker. This linker generates an iFrame that is visible when CSS is turned off. 
 	To remove this iFrame, use xs linker (which may increase risk of Javascript security issues) -->
-	<add-linker name="xsiframe" />
+ 	<add-linker name="xsiframe" /> 
 	
 	<!-- THE FOLLOWING DOES NOT WORK! IT GIVES AN ERROR THAT SSO MUST HAVE EXACTLY 
 		ONE DISTINCT PERMUTATION, BUT THIS HAS MORE THAN 4. -->

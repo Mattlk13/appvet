@@ -70,7 +70,11 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 			}
 		});
 		appIdColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		
+		
 		SafeHtml idHeader = SafeHtmlUtils.fromTrustedString("<span id=\"appid\" title=\"App ID\">ID</span>");
+		//SafeHtml idHeader = SafeHtmlUtils.fromTrustedString("<th align=\"left\" colspan=\"1\" scope=\"col\">ID</th>");
+		
 		dataGrid.addColumn(appIdColumn, idHeader);
 		dataGrid.setColumnWidth(appIdColumn, "40px");
 
@@ -98,6 +102,9 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		osIconColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		osIconColumn.setSortable(false);
 		SafeHtml osHeader = SafeHtmlUtils.fromTrustedString("<span  id=\"os\" title=\"App operating system\">OS</span>");
+		//SafeHtml osHeader = SafeHtmlUtils.fromTrustedString("<th align=\"left\" colspan=\"1\" scope=\"col\">OS</th>");
+
+		
 		dataGrid.addColumn(osIconColumn, osHeader);
 		dataGrid.setColumnWidth(osIconColumn, "15px");
 
@@ -132,6 +139,8 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		iconColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		iconColumn.setSortable(SORTING_ON);
 		SafeHtml appIconHeader = SafeHtmlUtils.fromTrustedString("<span id=\"appicon\" title=\"App icon and name\">App</span>");
+		//SafeHtml appIconHeader = SafeHtmlUtils.fromTrustedString("<th align=\"left\" colspan=\"1\" scope=\"col\">App</th>");
+
 		dataGrid.addColumn(iconColumn, appIconHeader);
 		dataGrid.setColumnWidth(iconColumn, "20px");
 		
@@ -155,6 +164,8 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		
 		appNameColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		SafeHtml appNameHeader = SafeHtmlUtils.fromTrustedString("<span  id=\"appname\" title=\"App name\"> </span>");
+		//SafeHtml appNameHeader = SafeHtmlUtils.fromTrustedString("<th align=\"left\" colspan=\"1\" scope=\"col\"> </th>");
+
 		dataGrid.addColumn(appNameColumn, appNameHeader);
 		dataGrid.setColumnWidth(appNameColumn, "75px");
 
@@ -178,6 +189,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		
 		appVersionColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		SafeHtml appVersionHeader = SafeHtmlUtils.fromTrustedString("<span  id=\"appversion\" title=\"App version\">Version</span>");
+		//SafeHtml appVersionHeader = SafeHtmlUtils.fromTrustedString("<th align=\"left\" colspan=\"1\" scope=\"col\">Version</th>");
 		dataGrid.addColumn(appVersionColumn, appVersionHeader);
 		dataGrid.setColumnWidth(appVersionColumn, "35px");		
 
@@ -233,6 +245,7 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		});
 		SafeHtml statusRiskHeader = 
 				SafeHtmlUtils.fromTrustedString("<span  id=\"appstatus\"  title=\"App processing status or security risk\">Status/Risk</span>");
+		//SafeHtml statusRiskHeader = SafeHtmlUtils.fromTrustedString("<th align=\"left\" colspan=\"1\" scope=\"col\">Status/Risk</th>");
 		dataGrid.addColumn(statusColumn, statusRiskHeader);
 		dataGrid.setColumnWidth(statusColumn, "55px");
 
@@ -258,6 +271,8 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		SafeHtml userHeader = 
 				SafeHtmlUtils.fromTrustedString("<span  id=\"appowner\"  title=\"App owner\">User</span>");
+		//SafeHtml userHeader = SafeHtmlUtils.fromTrustedString("<th colspan=\"1\" scope=\"col\">User</th>");
+
 		dataGrid.addColumn(submitterColumn, userHeader);
 		dataGrid.setColumnWidth(submitterColumn, "60px");
 
@@ -287,6 +302,8 @@ public class AppsListPagingDataGrid<T> extends PagingDataGrid<T> {
 		.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		SafeHtml dateHeader = 
 				SafeHtmlUtils.fromTrustedString("<span  id=\"appdatetime\"  title=\"App submission date and time\">Date/Time</span>");
+		//SafeHtml dateHeader = SafeHtmlUtils.fromTrustedString("<th colspan=\"1\" scope=\"col\">Date/Time</th>");
+
 		dataGrid.addColumn(submitTimeColumn, dateHeader);
 		dataGrid.setColumnWidth(submitTimeColumn, "75px");
 	}

@@ -31,6 +31,13 @@ h3 {
 	margin-bottom: 0px;
 }
 
+th {
+	color: red;
+	background: blue;
+	text-align: left;
+	width: 100%;
+}
+
 /* .sendButton {
 	background: white;
 	display: block;
@@ -1363,6 +1370,7 @@ margin-left: 10px;
 	margin-right: 5px;
 	margin-left: 5px;
 }
+
 
 
 
