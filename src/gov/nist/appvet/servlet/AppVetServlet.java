@@ -751,11 +751,14 @@ public class AppVetServlet extends HttpServlet {
 			String password) {
 		// Make sure user is not DEACTIVATED (i.e., deleted)
 		boolean userExists = Database
-				.exists("SELECT * FROM users WHERE username='" 
-						+ userName + "' AND fromhost!='DEACTIVATED'");
+				.exists("SELECT * FROM users WHERE username = '" 
+						+ userName + "' AND fromhost <> 'DEACTIVATED' or fromhost is null");
 		if (!userExists) {
 			log.error("User " + userName + " does not exist or has been de-activated. ");
 			return false;
+		} else {
+			log.debug("User " + userName + " exists. ");
+
 		}
 		if (Authenticate.isAuthenticated(userName, password)) {
 			Database.updateUserLogonTime(userName);

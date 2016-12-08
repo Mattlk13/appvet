@@ -90,7 +90,7 @@ public class Database {
 
 	public static boolean userExists(String username) {
 		String sql = "SELECT * FROM users WHERE username='" 
-				+ username + "' AND fromhost!='DEACTIVATED'";
+				+ username + "' AND fromhost <> 'DEACTIVATED' or fromhost is null";
 		return exists(sql);
 	}
 
