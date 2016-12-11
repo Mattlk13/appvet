@@ -71,6 +71,39 @@ public abstract class PagingDataGrid<T> extends Composite {
 	}
 
 	public PagingDataGrid() {
+		
+/*		// From 2.3.0
+		initWidget(dock);
+		dataGrid = new DataGrid<T>();
+		dataGrid.setPageSize(3);
+		dataGrid.setWidth("100%");
+		final SimplePager.Resources pagerResources = GWT
+				.create(SimplePager.Resources.class);
+
+
+		pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0,
+				true);
+		setPagerImageAltAndTitle();
+
+		pager.setDisplay(dataGrid);
+		dataProvider = new ListDataProvider<T>();
+		dataProvider.setList(new ArrayList<T>());
+		dataGrid.setEmptyTableWidget(new HTML("No Data to Display"));
+		final ListHandler<T> sortHandler = new ListHandler<T>(
+				dataProvider.getList());
+		initTableColumns(dataGrid, sortHandler);
+		dataGrid.addColumnSortHandler(sortHandler);
+		dataProvider.addDataDisplay(dataGrid);
+		pager.setVisible(true);
+		dataGrid.setVisible(true);
+		dock.add(dataGrid, DockPanel.CENTER);
+		dock.add(pager, DockPanel.SOUTH);
+		dock.setWidth("100%");
+		dock.setCellWidth(dataGrid, "100%");
+		dock.setCellWidth(pager, "100%");*/
+		
+		
+		// From 2.5.4
 		initWidget(dock);
 		//dataGrid = new DataGrid<T>();
 		DataGrid.Resources resource = GWT.create(CustomDataGridResource.class);
@@ -102,7 +135,6 @@ public abstract class PagingDataGrid<T> extends Composite {
 		dock.setCellWidth(dataGrid, "100%");
 		dock.setCellWidth(pager, "100%");
 		
-
 	}
 	
 	

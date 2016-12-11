@@ -69,7 +69,8 @@ public enum Role {
 				}
 			}
 		} else {
-			throw new Exception("roleStr is null");
+			//throw new Exception("roleStr is null");
+			return null;
 		}
 	}
 	

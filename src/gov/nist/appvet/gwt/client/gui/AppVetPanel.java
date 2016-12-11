@@ -64,6 +64,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -151,6 +152,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	public boolean ssoActive = false;
 	public String ssoLogoutURL = null;
 	public boolean keepApps = false;
+	//public AppInfoGwt selectedAppObject = null;
 
 	class AppListHandler implements SelectionChangeEvent.Handler {
 		ConfigInfoGwt configInfo = null;
@@ -163,6 +165,10 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		@Override
 		public void onSelectionChange(SelectionChangeEvent event) {
+//			Object obj = event.getSource();
+//			String eventObjStr = obj.toString();
+//			log.info("Selection from " + eventObjStr);
+			
 			final AppInfoGwt selectedApp = appSelectionModel
 					.getSelectedObject();
 			displaySelectedAppInfo(selectedApp);
@@ -651,7 +657,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		Role role;
 		try {
 			role = Role.getRole(userInfo.getRoleAndOrgMembership());
-			if (role == Role.ADMIN) {
+			if (role != null && role == Role.ADMIN) {
 				appVetMenuBar.addItem(adminMenuItem);
 			}
 		} catch (Exception e) {
@@ -662,13 +668,7 @@ public class AppVetPanel extends DockLayoutPanel {
 			// Hide download app button if KEEP_APPS is false
 			downloadAppButton.setVisible(false);
 		}
-
-		/*
-		 * The appsListTable must be set to a height in pixels (not percent) and
-		 * must be adjusted during run-time using the resizeComponent() method.
-		 */
-		pollServer(userName);
-
+		
 		SimplePanel northPanel = new SimplePanel();
 		addNorth(northPanel, 54.0);
 		northPanel.setHeight("");
@@ -991,7 +991,10 @@ public class AppVetPanel extends DockLayoutPanel {
 		appsListTable.setDataList(initialApps.apps);
 		appsListTable.setSize("100%", "");
 		appsListTable.dataGrid.setSelectionModel(appSelectionModel);
-
+		// The following seems to be what causes the selected app to jump to
+		// the last added app in the apps list table whenever the apps list
+		// is updated. Keep to DISABLED.
+		appsListTable.dataGrid.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 
 		final SimplePanel leftCenterPanel = new SimplePanel();
 		leftCenterPanel.setStyleName("leftCenterPanel");
@@ -1074,8 +1077,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		viewAllButton.setStyleName("blueButton shadow");
 		Roles.getButtonRole().setAriaLabelProperty(viewAllButton.getElement(), "View All Button");
 
-		// viewAllButton.setStyleName("appvetButton shadow");
-		// viewAllButton.setHTML("<img width=\"100px\" src=\"images/icon-view-all.png\" alt=\"View All Apps\" />");
 		viewAllButton.setHTML("View All");
 		viewAllButton.setTitle("View All Apps");
 		viewAllButton.addClickHandler(new ClickHandler() {
@@ -1239,7 +1240,6 @@ public class AppVetPanel extends DockLayoutPanel {
 		Roles.getButtonRole().setAriaLabelProperty(deleteButton.getElement(), "Delete App Button");
 
 		deleteButton.setTitle("Delete app");
-		// deleteButton.setStyleName("appvetButton  shadow");
 
 		appButtonPanel.add(deleteButton);
 		appButtonPanel.setCellVerticalAlignment(deleteButton,
@@ -1373,20 +1373,13 @@ public class AppVetPanel extends DockLayoutPanel {
 		addSouth(southPanel, 43.0);
 		southPanel.setSize("100%", "");
 
-//		VerticalPanel verticalPanel_1 = new VerticalPanel();
-//		verticalPanel_1.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-//		southPanel.setWidget(verticalPanel_1);
-//		verticalPanel_1.setSize("100%", "");
-
 		DockPanel bottomDockPanel = new DockPanel();
 		bottomDockPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		bottomDockPanel.setStyleName("bottomHorizPanel");
 		//verticalPanel_1.add(horizontalPanel_2);
 		southPanel.setWidget(bottomDockPanel);
 		bottomDockPanel.setSize("100%", "");
-//		verticalPanel_1.setCellVerticalAlignment(horizontalPanel_2,
-//				HasVerticalAlignment.ALIGN_MIDDLE);
-//		verticalPanel_1.setCellWidth(horizontalPanel_2, "100%");
+
 		bottomDockPanel
 		.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		
@@ -1399,25 +1392,10 @@ public class AppVetPanel extends DockLayoutPanel {
 		bottomDockPanel.add(htmlNewHtml_1, DockPanel.EAST);
 		bottomDockPanel.setCellVerticalAlignment(htmlNewHtml_1, HasVerticalAlignment.ALIGN_MIDDLE);
 		bottomDockPanel.setCellHorizontalAlignment(htmlNewHtml_1, HasHorizontalAlignment.ALIGN_RIGHT);
-		
-//		HTML orgLogoHtml = new HTML("<img alt=\"Org logo\" width=\"126px\" height=\"37px\" style=\"margin-left:5px\" src=\"../appvet_images/org_logo_main.png\">", false);
-//		orgLogoHtml.setStyleName("");
-//		orgLogoHtml.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-//		bottomDockPanel.add(orgLogoHtml);
-//		bottomDockPanel.setCellWidth(orgLogoHtml, "50%");
-//		bottomDockPanel.setCellVerticalAlignment(orgLogoHtml, HasVerticalAlignment.ALIGN_MIDDLE);
-//		orgLogoHtml.setSize("126px", "37px");
-//		
-//		HTML nistLogoHtml = new HTML("<img alt=\"NIST logo\" width=\"65px\" height=\"17px\" style=\"margin-right:5px\" src=\"images/nist_logo_darkgrey.png\">", false);
-//		nistLogoHtml.setStyleName("");
-//		nistLogoHtml.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-//		bottomDockPanel.add(nistLogoHtml);
-//		bottomDockPanel.setCellHorizontalAlignment(nistLogoHtml, HasHorizontalAlignment.ALIGN_RIGHT);
-//		bottomDockPanel.setCellWidth(nistLogoHtml, "50%");
-//		bottomDockPanel.setCellVerticalAlignment(nistLogoHtml, HasVerticalAlignment.ALIGN_MIDDLE);
-//		nistLogoHtml.setSize("65px", "17px");
 
 		if ((initialApps != null) && (initialApps.apps.size() > 0)) {
+			//log.info("Setting initial selected index to " + initialApps.apps.get(0).appId);
+			//selectedAppObject = initialApps.apps.get(0);
 			appSelectionModel.setSelected(initialApps.apps.get(0), true);
 		} else {
 			disableAllButtons();
@@ -1431,6 +1409,9 @@ public class AppVetPanel extends DockLayoutPanel {
 		if (!ssoActive) {
 			showDontRefreshWarning();
 		}
+		
+		// Poll for app updates
+		pollServer(userName);
 	}
 
 	public void showToolEnableDialog() {
@@ -1720,19 +1701,17 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 					if (!searchMode) {
 						if (allApps.size() > 0) {
-							appSelectionModel.setSelected(
-									allApps.get(currentlySelectedIndex),
+							//log.info("Delete app setting selected index to " + currentlySelectedIndex);
+							//selectedAppObject = allApps.get(currentlySelectedIndex);
+							appSelectionModel.setSelected(allApps.get(currentlySelectedIndex),
 									true);
 						} else {
 							appInfoVersion.setHTML("");
-//							appInfoPackage.setHTML("");
 							appStatusInfo.setHTML("");
 							appIconHtml.setVisible(false);
-//							appIcon.setVisible(false);
 							appInfoName.setText("");
 							toolResultsHtml.setText("");
 							disableAllButtons();
-
 						}
 					}
 				}
@@ -1769,6 +1748,7 @@ public class AppVetPanel extends DockLayoutPanel {
 					log.severe("Error updating server packet.");
 					removeSession(true);
 				} else {
+
 					// Get session expiration
 					Date newSessionExpiration = serverPacket
 							.getSessionExpiration();
@@ -1850,6 +1830,7 @@ public class AppVetPanel extends DockLayoutPanel {
 					// Get updated apps
 					AppsListGwt updatedAppsList = serverPacket
 							.getUpdatedAppsList();
+					
 					if (updatedAppsList == null) {
 						showMessageDialog("AppVet Database Error",
 								"Could not retrieve updated apps", true);
@@ -1974,16 +1955,6 @@ public class AppVetPanel extends DockLayoutPanel {
 
 						appInfoName.setHTML(appNameHtml);
 
-//						// Display APP PACKAGE
-//						if ((selectedApp.packageName == null)
-//								|| selectedApp.packageName.equals("")) {
-//							appInfoPackage
-//							.setHTML("<b>Package: </b>N/A");
-//						} else {
-//							appInfoPackage.setHTML("<b>Package: </b>"
-//									+ selectedApp.packageName);
-//						}
-
 						// Display VERSION
 						if ((selectedApp.versionName == null)
 								|| selectedApp.versionName.equals("")) {
@@ -2065,7 +2036,7 @@ public class AppVetPanel extends DockLayoutPanel {
 						ToolType analysisType = toolResults.get(i)
 								.getToolType();
 
-						if (analysisType == ToolType.SUMMARY) { // TODO:
+						if (analysisType == ToolType.SUMMARY) { 
 							// For
 							// AV3,
 							// SUMMARY
@@ -2249,11 +2220,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		pollingTimer = new Timer() {
 			@Override
 			public void run() {
-				// The following methods hit the database. To increase
-				// performance,
-				// it might be good to combine the functionality of these three
-				// methods into a single method call to the server (and
-				// database).
+				// The following method retrieves updates from the server
 				getServerUpdates(username);
 			}
 		};
@@ -2348,6 +2315,8 @@ public class AppVetPanel extends DockLayoutPanel {
 			return 0;
 		} else {
 			appsListTable.setDataList(searchList);
+			//log.info("Search setting selected index to " + searchList.get(0).appId);
+			//selectedAppObject = searchList.get(0);
 			appSelectionModel.setSelected(searchList.get(0), true);
 			// Set View All to visible
 			viewAllButton.setVisible(true);
@@ -2376,8 +2345,11 @@ public class AppVetPanel extends DockLayoutPanel {
 			if (matchIndex > -1) {
 				// overwrites existing app
 				allApps.set(matchIndex, updatedAppInfo);
+
 				if (!searchMode) {
+
 					appsListTable.set(matchIndex, updatedAppInfo);
+
 				}
 				// Check if updated app status indicates an error with a tool
 				if (updatedAppInfo.appStatus == AppStatus.LOW_WITH_ERROR
@@ -2397,6 +2369,7 @@ public class AppVetPanel extends DockLayoutPanel {
 				// adds new app
 				allApps.add(0, updatedAppInfo);
 				if (!searchMode) {
+					//log.info("Adding new item at index 0");
 					appsListTable.add(0, updatedAppInfo);
 				}
 			}
@@ -2418,8 +2391,9 @@ public class AppVetPanel extends DockLayoutPanel {
 
 		if (!searchMode) {
 			if (allApps.size() > 0) {
-				appSelectionModel.setSelected(
-						allApps.get(currentlySelectedIndex), true);
+				//log.info("App updates setting selected index to " + currentlySelectedIndex);
+				//selectedAppObject = allApps.get(currentlySelectedIndex);
+				appSelectionModel.setSelected(allApps.get(currentlySelectedIndex), true);
 			} else {
 				appIconHtml.setVisible(false);
 //				appIcon.setVisible(false);

@@ -642,7 +642,10 @@ public class Database {
 		Role userRole = null;
 		try {
 			userRole = Role.getRole(userRoleStr);
-			if (userRole == Role.ADMIN){
+			if (userRole == null) {
+				log.warn("Role is null for user '" + userName + "'");
+				return false;
+			} else if (userRole == Role.ADMIN){
 				return true;
 			}
 		} catch (Exception e) {
@@ -661,16 +664,20 @@ public class Database {
 		// Check if app was uploaded by an owner that is a member of an org unit
 		// accessible to the user if the user is an ANALYST.
 		String appOwnerRoleStr = Database.getRoleStr(ownerName);
-
+		
 		// Check if app is owned by an ADMIN. If so, users cannot access
 		// apps owned by ADMINs (unless the user is also an ADMIN).
 		try {
 			Role appOwnerRole = Role.getRole(appOwnerRoleStr);
-			if (appOwnerRole == Role.ADMIN) {
+			if (appOwnerRole == null) {
+				log.debug("Role is null for app owner '" + ownerName + "'");
+				return false;
+			} else if (appOwnerRole == Role.ADMIN) {
 				return false;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
 
 		// Check if owner's hierarchy is null
@@ -678,11 +685,12 @@ public class Database {
 		try {
 			appOwnerHierarchyStr = Role.getOrgMembershipLevelsStr(appOwnerRoleStr);
 			if (appOwnerHierarchyStr == null || appOwnerHierarchyStr.isEmpty()) {
-				log.warn("App owner's hierarchy string is null or empty");
+				//log.debug("App owner's hierarchy string is null or empty");
 				return false;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
 
 		// Check if user's hierarchy is null
@@ -690,11 +698,12 @@ public class Database {
 		try {
 			userHierarchyStr = Role.getOrgMembershipLevelsStr(userRoleStr);
 			if (userHierarchyStr == null || userHierarchyStr.isEmpty()) {
-				log.warn("User's hierarchy string is null or empty");
+				//log.debug("User's hierarchy string is null or empty");
 				return false;
 			}
 		} catch (Exception e1) {
 			e1.printStackTrace();
+			return false;
 		}
 
 		//log.debug("ACCESSIBLE?: " + userHierarchyStr + " in " + appOwnerHierarchyStr);
