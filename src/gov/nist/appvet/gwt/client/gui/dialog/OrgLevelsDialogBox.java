@@ -121,11 +121,13 @@ public class OrgLevelsDialogBox extends DialogBox {
 				String selectedLevelDisplay = listBox.getItemText(selectedIndex);
 				String[] selectedLevelDisplayArray = selectedLevelDisplay.split(": ");
 				String selectedLevelName = null;
+
 				if (selectedLevelDisplayArray[1] != null && !selectedLevelDisplayArray[1].isEmpty()) {
 					selectedLevelName = selectedLevelDisplayArray[1];
 				} else {
 					selectedLevelName = "";
 				}
+
 				levelNameDialogBox = new OrgLevelNameEditDialogBox(allUserOrgLevels, orgMembership, selectedIndex, selectedLevelName);
 
 				levelNameDialogBox.setText("Organization Level");

@@ -59,6 +59,7 @@ public class OrgLevelNameEditDialogBox extends DialogBox {
 	public OrgLevelNameEditDialogBox(List<String> allUserOrgLevels, final String orgMembership, 
 			int selectedIndex, String selectedLevelName) {
 		super(false, true);
+
 		this.orgMembership = orgMembership;
 		setWidth("408px");
 		setAnimationEnabled(false);
@@ -126,6 +127,7 @@ public class OrgLevelNameEditDialogBox extends DialogBox {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		okButton.setSize("70px", "18px");
 
+
 	}
 	
 	/** This fixes focus for dialog boxes in Firefox and IE browsers */
@@ -170,10 +172,14 @@ public class OrgLevelNameEditDialogBox extends DialogBox {
 						break;
 					}
 				}
-				
-				if (onHeirarchyPath) {
 
-					oracle.add(otherUserMembership[selectedIndex]);
+				if (onHeirarchyPath) {
+					
+					String otherMembership = otherUserMembership[selectedIndex];
+					if (otherMembership != null && !otherMembership.isEmpty()) {
+						oracle.add(otherUserMembership[selectedIndex]);
+					}
+
 				}
 			}
 

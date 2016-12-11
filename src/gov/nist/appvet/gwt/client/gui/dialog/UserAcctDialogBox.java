@@ -50,6 +50,7 @@ public class UserAcctDialogBox extends DialogBox {
 	public UserInfo userInfo = null;
 	public PushButton okButton = null;
 	public PushButton cancelButton = null;
+	public PushButton ssoCloseButton = null;
 	public TextBox lastNameTextBox = null;
 	public TextBox firstNameTextBox = null;
 	public TextBox userIdTextBox = null;
@@ -387,10 +388,17 @@ public class UserAcctDialogBox extends DialogBox {
 		cancelButton.setSize("70px", "18px");
 		
 		okButton = new PushButton("Ok");
+		okButton.setStyleName("greenButton shadow");
 		Roles.getButtonRole().setAriaLabelProperty(okButton.getElement(), "Ok Button");
+		
+		ssoCloseButton = new PushButton("Close");
+		okButton.setStyleName("greenButton shadow");
+		Roles.getButtonRole().setAriaLabelProperty(okButton.getElement(), "Close");
+
+		ssoCloseButton.setHTML("Close");
+		horizontalPanel.add(ssoCloseButton);
 
 		okButton.setTitle("Ok");
-		okButton.setStyleName("greenButton shadow");
 		okButton.setHTML("Ok");
 		horizontalPanel.add(okButton);
 		horizontalPanel.setCellWidth(okButton, "50%");
@@ -403,8 +411,21 @@ public class UserAcctDialogBox extends DialogBox {
 		if (ssoActive) {
 			password1TextBox.setEnabled(false);
 			password2TextBox.setEnabled(false);
+			ssoCloseButton.setEnabled(true);
+			ssoCloseButton.setVisible(true);
+			cancelButton.setEnabled(false);
+			cancelButton.setVisible(false);
 			okButton.setEnabled(false);
 			okButton.setVisible(false);
+		} else {
+			password1TextBox.setEnabled(true);
+			password2TextBox.setEnabled(true);
+			ssoCloseButton.setEnabled(false);
+			ssoCloseButton.setVisible(false);
+			cancelButton.setEnabled(true);
+			cancelButton.setVisible(true);
+			okButton.setEnabled(true);
+			okButton.setVisible(true);
 		}
 
 		verticalPanel.setCellVerticalAlignment(horizontalPanel,

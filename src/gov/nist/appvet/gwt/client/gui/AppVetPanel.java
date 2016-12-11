@@ -2461,6 +2461,14 @@ public class AppVetPanel extends DockLayoutPanel {
 				killDialogBox(userAcctDialogBox);
 			}
 		});
+		
+		userAcctDialogBox.ssoCloseButton.addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				killDialogBox(userAcctDialogBox);
+			}
+		});
+		
 		userAcctDialogBox.okButton.addClickHandler(new ClickHandler() {
 
 			@Override
