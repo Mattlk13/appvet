@@ -392,8 +392,9 @@ public class UserAcctDialogBox extends DialogBox {
 		Roles.getButtonRole().setAriaLabelProperty(okButton.getElement(), "Ok Button");
 		
 		ssoCloseButton = new PushButton("Close");
-		okButton.setStyleName("greenButton shadow");
+		ssoCloseButton.setStyleName("greenButton shadow");
 		Roles.getButtonRole().setAriaLabelProperty(okButton.getElement(), "Close");
+		ssoCloseButton.setSize("70px", "18px");
 
 		ssoCloseButton.setHTML("Close");
 		horizontalPanel.add(ssoCloseButton);
