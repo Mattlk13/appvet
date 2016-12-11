@@ -280,18 +280,18 @@ public class AndroidMetadata {
 				// Process has waited and exited within the timeout
 				exitValue = process.exitValue();
 				if (exitValue == 0) {
-					StringBuilder resultOut = outputHandler.getOutput();
+					StringBuffer resultOut = outputHandler.getOutput();
 					output.append(resultOut);
 					return true;
 				} else {
-					StringBuilder resultError = errorHandler.getOutput();
+					StringBuffer resultError = errorHandler.getOutput();
 					output.append(resultError);
 					return false;
 				}
 			} else {
 				// Process exceed timeout or was interrupted
-				StringBuilder resultOutput = outputHandler.getOutput();
-				StringBuilder resultError = errorHandler.getOutput();
+				StringBuffer resultOutput = outputHandler.getOutput();
+				StringBuffer resultError = errorHandler.getOutput();
 				if (resultOutput != null) {
 					output.append(resultOutput);
 				} else if (resultError != null) {
@@ -331,7 +331,7 @@ public class AndroidMetadata {
 
 	private class IOThreadHandler extends Thread {
 		private InputStream inputStream;
-		private StringBuilder output = new StringBuilder();
+		private StringBuffer output = new StringBuffer();
 		private final String lineSeparator = 
 				System.getProperty("line.separator");;
 
@@ -341,21 +341,16 @@ public class AndroidMetadata {
 
 		public void run() {
 			Scanner br = null;
-			try {
 				br = new Scanner(new InputStreamReader(inputStream));
 				String line = null;
 				while (br.hasNextLine()) {
 					line = br.nextLine();
 					output.append(line + lineSeparator);
 				}
-			} finally {
-				if (br != null) {
-					br.close();
-				}
-			}
+				br.close();
 		}
 
-		public StringBuilder getOutput() {
+		public StringBuffer getOutput() {
 			return output;
 		}
 	}
