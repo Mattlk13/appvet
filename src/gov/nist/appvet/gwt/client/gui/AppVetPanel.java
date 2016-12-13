@@ -664,10 +664,7 @@ public class AppVetPanel extends DockLayoutPanel {
 			e.printStackTrace();
 		}
 
-		if (!keepApps) {
-			// Hide download app button if KEEP_APPS is false
-			downloadAppButton.setVisible(false);
-		}
+
 		
 		SimplePanel northPanel = new SimplePanel();
 		addNorth(northPanel, 54.0);
@@ -1106,6 +1103,10 @@ public class AppVetPanel extends DockLayoutPanel {
 		Roles.getButtonRole().setAriaLabelProperty(downloadAppButton.getElement(), "Download App Button");
 
 		downloadAppButton.setEnabled(false);
+		if (!keepApps) {
+			// Hide download app button if KEEP_APPS is false
+			downloadAppButton.setVisible(false);
+		}
 		rightCenterPanel = new SimplePanel();
 		rightCenterPanel.setStyleName("rightCenterPanel");
 		mainHorizontalPanel.add(rightCenterPanel);
