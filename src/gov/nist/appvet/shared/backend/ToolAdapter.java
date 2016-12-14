@@ -502,6 +502,9 @@ public class ToolAdapter implements Runnable {
 				log.debug("appvetRiskHeaderName: " + RISK_HTTP_HEADER_NAME);
 				String toolResult = toolHttpResponse.getFirstHeader(
 						RISK_HTTP_HEADER_NAME).getValue();
+				
+				// Update report time
+				Database.setReportTime(appInfo.appId, appInfo.os, this.toolId);
 
 				if (toolResult == null || toolResult.isEmpty()) {
 					appInfo.log.error("Tool result from '" + this.toolId + "' is null or empty");

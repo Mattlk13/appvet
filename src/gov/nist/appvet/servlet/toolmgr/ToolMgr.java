@@ -283,6 +283,8 @@ public class ToolMgr implements Runnable {
 					}
 				}
 			}
+			statement.close();
+			connection.close();
 		} catch (final SQLException e) {
 			appInfo.log.error(e.toString());
 		} finally {
@@ -339,6 +341,8 @@ public class ToolMgr implements Runnable {
 					}
 				}
 			}
+			statement.close();
+			connection.close();
 		} catch (final SQLException e) {
 			appInfo.log.error(e.toString());
 		} finally {

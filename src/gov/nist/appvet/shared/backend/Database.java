@@ -55,39 +55,6 @@ public class Database {
 
 	private static final Logger log = AppVetProperties.log;
 
-//	/***************************************/
-//
-//	/**
-//	 * Fortify security recommendation to resolve SQL query injections. query
-//	 * must be of the form "SELECT * FROM items WHERE thing1=? AND thing2=? This
-//	 * is impractical for AppVet.
-//	 */
-//	public static String selectString(String query, String item1, String item2) {
-//		// Add alert message
-//		Connection connection = null;
-//		PreparedStatement preparedStatement = null;
-//		try {
-//			connection = getConnection();
-//			preparedStatement = connection.prepareStatement(query);
-//			preparedStatement.setString(1, item1);
-//			preparedStatement.setString(2, item2);
-//			preparedStatement.executeUpdate();
-//			ResultSet rs = preparedStatement.executeQuery();
-//			while (rs.next()) {
-//				// Return first (and should be only) alert message
-//				return rs.getString(1);
-//			}
-//		} catch (final SQLException e) {
-//			log.error(e.toString());
-//		} finally {
-//			cleanUpPreparedStatement(preparedStatement);
-//			cleanUpConnection(connection);
-//		}
-//		return null;
-//	}
-//
-//	/************** AppVet specific methods **************/
-
 	public static boolean userExists(String username) {
 		String sql = "SELECT * FROM users WHERE username='" 
 				+ username + "' AND fromhost <> 'DEACTIVATED' or fromhost is null";
@@ -499,9 +466,22 @@ public class Database {
 			return false;
 		}
 	}
+	
+	public synchronized static boolean setReportTime(String appId, DeviceOS os, 
+			String toolId) {
+		String reportTableName = null;
+		if (os == DeviceOS.ANDROID) {
+			reportTableName = "androidreporttimes";
+		} else if (os == DeviceOS.IOS) {
+			reportTableName = "iosreporttimes";
+		}
+		
+		return update("UPDATE " + reportTableName + " SET " + toolId + " = NOW() WHERE appid='"
+				+ appId + "'");	
+	}
 
 	public synchronized static boolean setLastUpdatedTime(String appId) {
-		// To prevent race condition, wait n ms
+		// To ensure update changes are acquired by UIs, wait n ms
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {

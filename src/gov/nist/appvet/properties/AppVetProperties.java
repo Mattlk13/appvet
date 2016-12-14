@@ -585,6 +585,8 @@ public class AppVetProperties {
 				appInfo.log.error("App was stuck in PROCESSING state upon startup of AppVet. Setting app state to ERROR.");
 				AppStatusManager.setAppStatus(appInfo, AppStatus.ERROR);
 			}
+			statement.close();
+			connection.close();
 		} catch (final SQLException e) {
 			log.error(e.toString());
 		} finally {
