@@ -37,13 +37,19 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -55,7 +61,7 @@ public class ToolAdapter implements Runnable {
 
 	/** Check if report was received every x milliseconds. */
 	private static final int REPORT_CHECK_INTERVAL = 2000;
-	
+
 	/** Defines the HTTP header for risk. Used for synchronous tools only */
 	private static final String RISK_HTTP_HEADER_NAME = "App-Risk";
 
@@ -411,7 +417,8 @@ public class ToolAdapter implements Runnable {
 		}
 
 		// Send app to tool. When app receives HTTP 202, the process ends.
-		Request appVetRequest = new Request(protocol, protocolXPath, xml, configFileName);
+		Request appVetRequest = 
+				new Request(protocol, protocolXPath, xml, configFileName, appInfo, toolId);
 		File fileOut = null;
 		FileOutputStream fileOutputStream = null;
 		InputStream inputStream = null;
@@ -421,7 +428,7 @@ public class ToolAdapter implements Runnable {
 			HttpParams httpParameters = new BasicHttpParams();
 			HttpConnectionParams.setConnectionTimeout(httpParameters,
 					AppVetProperties.CONNECTION_TIMEOUT);
-			
+
 			/* Socket timeout for synchronous tools must be longer than that needed
 			 * for asynchronous tools because we need to wait for the report in
 			 * the message (whereas asynch tools respond immediately with an HTTP status.
@@ -436,48 +443,100 @@ public class ToolAdapter implements Runnable {
 						AppVetProperties.SO_TIMEOUT);
 			}
 
-			HttpClient httpclient = new DefaultHttpClient(httpParameters);
-			httpclient = SSLWrapper.wrapClient(httpclient);
-			MultipartEntity entity = getMultipartEntity(appVetRequest,
-					authParamNames, authParamValues);
-			if (entity == null) {
-				appInfo.log.error("MultipartEntity is null. Aborting "
-						+ name);
-				appInfo.log.error("Error creating message for tool service. Setting tool to ERROR.");
-				ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.ERROR);
-				return;
+			
+			HttpResponse toolHttpResponse = null;
+			log.info("Trace 1");
+			// Set up proxy host if defined in ToolAdapter.xml file
+			if (appVetRequest.proxyHost != null && !appVetRequest.proxyHost.isEmpty() &&
+					appVetRequest.proxyPort != null && !appVetRequest.proxyPort.isEmpty()) {
+				log.info("Trace 2");
+
+				appInfo.log.debug(toolId + " setting up proxy message");
+				//CloseableHttpClient httpclient = HttpClients.createDefault();
+				HttpClient httpclient = new DefaultHttpClient(httpParameters);
+				httpclient = SSLWrapper.wrapClient(httpclient);
+				MultipartEntity entity = getMultipartEntity(appVetRequest,
+						authParamNames, authParamValues);
+				log.info("Trace 3");
+
+				HttpHost target = null;
+				int targetPort = new Integer(AppVetProperties.PORT).intValue();
+				if (AppVetProperties.SSL) {
+					target = new HttpHost(AppVetProperties.HOST, targetPort, "https");
+				} else {
+					target = new HttpHost(AppVetProperties.HOST, targetPort, "http");
+				}
+				log.info("Trace 4");
+
+				HttpHost proxy = null;
+				int proxyPort = new Integer(appVetRequest.proxyPort).intValue();
+				if (appVetRequest.proxySSL) {
+					proxy = new HttpHost(appVetRequest.proxyHost, proxyPort, "https");
+				} else {
+					proxy = new HttpHost(appVetRequest.proxyHost, proxyPort, "http");
+				}
+				log.info("Trace 5");
+
+				RequestConfig config = RequestConfig.custom().setProxy(proxy).build();
+				// TODO: What is the "/" for in the following?
+				//HttpGet request = new HttpGet("/");
+				HttpPost request = new HttpPost("/");
+				request.setConfig(config);
+				request.setEntity(entity);
+				log.info("Trace 6");
+
+				//System.out.println("Executing request " + request.getRequestLine() + " to " + target + " via " + proxy);
+
+				//CloseableHttpResponse response = httpclient.execute(target, request);
+				toolHttpResponse = httpclient.execute(target, request);
+				log.info("Trace 7");
+
+			} else {
+				// Send normal HTTP message
+				HttpClient httpclient = new DefaultHttpClient(httpParameters);
+				httpclient = SSLWrapper.wrapClient(httpclient);
+				MultipartEntity entity = getMultipartEntity(appVetRequest,
+						authParamNames, authParamValues);
+				if (entity == null) {
+					appInfo.log.error("MultipartEntity is null. Aborting "
+							+ name);
+					appInfo.log.error("Error creating message for tool service. Setting tool to ERROR.");
+					ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.ERROR);
+					return;
+				}
+
+				String toolServiceURL = appVetRequest.URL;
+
+				/* Need special case for RRF tool that appends appID to URL path */
+				if (toolId.equals("androidrrf") || toolId.equals("rrf")) {
+					toolServiceURL += "/" + appInfo.appId;
+					appInfo.log.info("RRF tool using modified target URL: " + toolServiceURL);
+				}
+
+				HttpPost httpPost = new HttpPost(toolServiceURL);
+				httpPost.setEntity(entity);
+				appInfo.log.info("Sending app " + 
+						appInfo.appId + " to tool '" + toolId + "'");
+
+				toolHttpResponse = httpclient.execute(httpPost);
 			}
-
-			String toolServiceURL = appVetRequest.URL;
-
-			/* Need special case for RRF tool that appends appID to URL path */
-			if (toolId.equals("androidrrf") || toolId.equals("rrf")) {
-				toolServiceURL += "/" + appInfo.appId;
-				appInfo.log.info("RRF tool using modified target URL: " + toolServiceURL);
-			}
-
-			HttpPost httpPost = new HttpPost(toolServiceURL);
-			httpPost.setEntity(entity);
-			appInfo.log.info("Sending app " + 
-					appInfo.appId + " to tool '" + toolId + "'");
 
 			// Send the app to the tool
-			final HttpResponse toolHttpResponse = httpclient.execute(httpPost);
 			final String httpStatusLine = toolHttpResponse.getStatusLine().toString();
 			appInfo.log.info(name + " adapter received: " + httpStatusLine);
-			
+
 			switch (protocol) {
 			case SYNCHRONOUS: 
 				// First check HTTP status
 				if (httpStatusLine.indexOf("HTTP/1.1 200 OK") == -1) {
 					// Unexpected status received
 					appInfo.log.error("Unexpected status '" + httpStatusLine 
-							+ "' received by " + toolServiceURL + ". Setting '"
+							+ "' received from " + toolId + ". Setting '"
 							+ this.toolId + "' to ERROR status.");
 					ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.ERROR);
 					return;
 				} 
-				
+
 				// We only handle report from Synchronous tools here.
 				// Reports for asynchronous tools are handled by the AppVetServlet. Also
 				// note that only ASCII content is received from
@@ -502,7 +561,7 @@ public class ToolAdapter implements Runnable {
 				log.debug("appvetRiskHeaderName: " + RISK_HTTP_HEADER_NAME);
 				String toolResult = toolHttpResponse.getFirstHeader(
 						RISK_HTTP_HEADER_NAME).getValue();
-				
+
 				// Update report time
 				Database.setReportTime(appInfo.appId, appInfo.os, this.toolId);
 
@@ -523,7 +582,7 @@ public class ToolAdapter implements Runnable {
 					ToolStatusManager.setToolStatus(appInfo, this.toolId, toolStatus);
 				}
 				break;
-				
+
 			case ASYNCHRONOUS: 
 
 				if ((httpStatusLine.indexOf("HTTP/1.1 202") > -1)
@@ -532,7 +591,7 @@ public class ToolAdapter implements Runnable {
 				} else if (httpStatusLine.indexOf("HTTP/1.1 404") > -1) {
 					appInfo.log.error("Received from " + toolId + ": "
 							+ httpStatusLine
-							+ ". Make sure tool service is running at: " + toolServiceURL);
+							+ ". Make sure tool service is running at: " + appVetRequest.URL);
 					ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.ERROR);
 				} else if (httpStatusLine.indexOf("HTTP/1.1 400") > -1) {
 					appInfo.log.error("Received from " + toolId + ": "
@@ -546,7 +605,7 @@ public class ToolAdapter implements Runnable {
 					// Let this tool remain in Submitted state until handled by the ToolMgr
 					ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.ERROR);
 				}
-				
+
 				// Wait for ASYNCHRONOUS report to come in (SYNCHRONOUS report should have already arrived)
 				try {
 					appInfo.log.debug("Tool " + toolId + " is WAITING FOR REPORT!");
@@ -574,14 +633,14 @@ public class ToolAdapter implements Runnable {
 					ToolStatusManager.setToolStatus(appInfo, toolId,
 							ToolStatus.ERROR);
 				}
-				
+
 			default: 
 				break;
 			}
 
-			httpPost = null;
-			entity = null;
-			httpclient = null;
+//			httpPost = null;
+//			entity = null;
+//			httpclient = null;
 			httpParameters = null;
 		} catch (final Exception e) {
 			appInfo.log.error("Tool '" + this.toolId + "' experienced an error: " + e.toString());
@@ -607,7 +666,7 @@ public class ToolAdapter implements Runnable {
 			fileOut = null;
 		}
 
-	
+
 	}
 
 	public void setAuthorizationParameters(ArrayList<String> authParamNames, ArrayList<String> authParamValues) {

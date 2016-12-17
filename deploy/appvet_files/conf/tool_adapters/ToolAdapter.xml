@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:ToolAdapter xmlns:p="https://appsec.nist.gov/appvet" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://appsec.nist.gov/appvet ToolAdapter.xsd ">
+  <p:Description>
+    <p:Name>p:Name</p:Name>
+    <p:Id>asdf</p:Id>
+    <p:Category>PREPROCESSOR</p:Category>
+    <p:OS>ANDROID</p:OS>
+    <p:VendorName>p:VendorName</p:VendorName>
+    <p:VendorWebsite>http://tempuri.org</p:VendorWebsite>
+    <p:AppSubmit>APP_FILE</p:AppSubmit>
+    <p:AuthenticationRequired>true</p:AuthenticationRequired>
+    <p:AuthenticationParameters>p:AuthenticationParameters</p:AuthenticationParameters>
+    <p:ReportFile>TXT</p:ReportFile>
+  </p:Description>
+  <p:Protocol>
+    <p:Synchronous>
+      <p:Request>
+        <p:URL>http://tempuri.org</p:URL>
+        <p:Method>POST</p:Method>
+        <p:AuthenticationRequired>true</p:AuthenticationRequired>
+        <p:AuthenticationParameter>
+          <p:Name>p:Name</p:Name>
+          <p:Value>DEFINED_AT_RUNTIME</p:Value>
+        </p:AuthenticationParameter>
+        <p:Parameter>
+          <p:Name>p:Name</p:Name>
+          <p:Value>DEFINED_AT_RUNTIME</p:Value>
+        </p:Parameter>
+        <p:Polling>
+          <p:MaxIterations>0</p:MaxIterations>
+          <p:Sleep>0</p:Sleep>
+        </p:Polling>
+        <p:Proxy>
+          <p:ProxyHost>p:ProxyHost</p:ProxyHost>
+          <p:ProxyPort>p:ProxyPort</p:ProxyPort>
+          <p:SSL>true</p:SSL>
+        </p:Proxy>
+      </p:Request>
+      <p:Response>
+        <p:AppVetRiskHeaderName>APPVET_TOOL_RESULT</p:AppVetRiskHeaderName>
+        <p:ReportPayload>true</p:ReportPayload>
+        <p:PayloadType>p:PayloadType</p:PayloadType>
+        <p:StatusCode>p:StatusCode</p:StatusCode>
+      </p:Response>
+    </p:Synchronous>
+  </p:Protocol>
+</p:ToolAdapter>

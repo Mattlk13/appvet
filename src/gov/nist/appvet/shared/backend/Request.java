@@ -24,15 +24,21 @@ public class Request {
 	public ArrayList<String> formParameterValues = null;
 	public int pollingMaxIterations = 0;
 	public int pollingSleep = 0;
+	public String proxyHost = null;
+	public String proxyPort = null;
+	public boolean proxySSL = false;
+	public AppInfo appInfo = null;
+	public String toolId = null;
 
 	public Request(Protocol protocol, String protocolXPath,
-			XmlUtil xml, String configFileName) {
+			XmlUtil xml, String configFileName, AppInfo appInfo, String toolId) {
 
 		this.protocol = protocol;
 		this.protocolXPath = protocolXPath;
 		this.xml = xml;
 		this.configFileName = configFileName;
-
+		this.appInfo = appInfo;
+		this.toolId = toolId;
 		loadRequest();
 	}
 
@@ -76,9 +82,27 @@ public class Request {
 					intStr);
 			pollingSleep = new Integer(intStr).intValue();
 			//log.debug("Polling sleep: " + pollingSleep);
-
 		}
+		
+		if (xml.xpathExists(protocolXPath + "/Request/Proxy")) {
+			proxyHost = xml.getXPathValue(protocolXPath
+					+ "/Request/Proxy/ProxyHost");
+			checkNullString(configFileName, "proxyHost",
+					proxyHost);
+			appInfo.log.debug(toolId + " Proxy Host: " + proxyHost);
 
+			proxyPort = xml.getXPathValue(protocolXPath
+					+ "/Request/Proxy/ProxyPort");
+			checkNullString(configFileName, "proxyPort",
+					proxyPort);
+			appInfo.log.debug(toolId + " Proxy Port: " + proxyPort);
+
+			String proxyUseSSLStr = xml.getXPathValue(protocolXPath
+					+ "/Request/Proxy/SSL");
+			
+			proxySSL = new Boolean(proxyUseSSLStr).booleanValue();
+			appInfo.log.debug(toolId + " Proxy SSL: " + proxySSL);
+		}
 	}
 
 	public void checkNullString(String configFile, String parameter, String value) {
