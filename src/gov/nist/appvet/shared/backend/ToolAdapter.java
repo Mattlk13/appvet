@@ -63,7 +63,7 @@ public class ToolAdapter implements Runnable {
 	private static final int REPORT_CHECK_INTERVAL = 2000;
 
 	/** Defines the HTTP header for risk. Used for synchronous tools only */
-	private static final String RISK_HTTP_HEADER_NAME = "App-Risk";
+	private static final String RISK_HTTP_HEADER_NAME = "apprisk";
 
 	/** This flag is set to true if AppVet times-out waiting for a report
 	 * from this tool. This flag is then used to determine if subsequent apps
@@ -558,27 +558,27 @@ public class ToolAdapter implements Runnable {
 				inputStream.close();
 				fileOutputStream.close();
 
-				log.debug("appvetRiskHeaderName: " + RISK_HTTP_HEADER_NAME);
-				String toolResult = toolHttpResponse.getFirstHeader(
+				log.debug("apprisk header: " + RISK_HTTP_HEADER_NAME);
+				String appRisk = toolHttpResponse.getFirstHeader(
 						RISK_HTTP_HEADER_NAME).getValue();
 
 				// Update report time
 				Database.setReportTime(appInfo.appId, appInfo.os, this.toolId);
 
-				if (toolResult == null || toolResult.isEmpty()) {
-					appInfo.log.error("Tool result from '" + this.toolId + "' is null or empty");
+				if (appRisk == null || appRisk.isEmpty()) {
+					appInfo.log.error("App risk header from '" + this.toolId + "' is null or empty");
 					ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.ERROR);
 
-				} else if (!toolResult.equals(ToolStatus.LOW.name()) &&
-						!toolResult.equals(ToolStatus.MODERATE.name()) &&
-						!toolResult.equals(ToolStatus.HIGH.name()) &&
-						!toolResult.equals(ToolStatus.ERROR.name())) {
-					appInfo.log.error("Tool result '" + toolResult + "' from '" + this.toolId + "' is invalid");
+				} else if (!appRisk.equals(ToolStatus.LOW.name()) &&
+						!appRisk.equals(ToolStatus.MODERATE.name()) &&
+						!appRisk.equals(ToolStatus.HIGH.name()) &&
+						!appRisk.equals(ToolStatus.ERROR.name())) {
+					appInfo.log.error("App risk '" + appRisk + "' from '" + this.toolId + "' is invalid");
 					ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.ERROR);
 				} else {
-					appInfo.log.info("Received tool result: " + toolResult
+					appInfo.log.info("Received app risk: " + appRisk
 							+ " from " + this.toolId);
-					ToolStatus toolStatus = ToolStatus.getStatus(toolResult);
+					ToolStatus toolStatus = ToolStatus.getStatus(appRisk);
 					ToolStatusManager.setToolStatus(appInfo, this.toolId, toolStatus);
 				}
 				break;
