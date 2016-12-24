@@ -236,9 +236,9 @@ searchPanel {
 }
 
 .toolimages {
-	vertical-align: middle;
-	height: 18px;
-	width: 18px;
+	vertical-align: top;
+	height: 14px;
+	width: 14px;
 	margin-left: 5px;
 	margin-right: 5px;
 }
@@ -345,22 +345,23 @@ searchPanel {
 	font-size: 12px;
 }
 
-.appInfoName {
-	color: darkslategray;
-	font-weight: bold;
-	font-size: 26px;
-}
+
 .appInfo {
 	margin-left: 5px;
 }
 .appInfoVersion {
-	color: darkslategrey;
+	color: darkslategray;
 	font-style: italic;
-	font-size: 14px;
+	font-size: 12px;
 }
 .appInfoStatus {
-	color: darkslategrey;
-	font-size: 16px;
+	color: darkslategray;
+	font-size: 14px;
+}
+.appInfoNameFont {
+	color: darkslategray;
+	font-weight: bold;
+	font-size: 22px;
 }
 .moreInfo {
 	color: Blue;
@@ -959,6 +960,12 @@ searchPanel {
 	margin-right: 3px;
 }
 
+.appInfoName {
+	color: darkslategray;
+	font-weight: bold;
+	font-size: 20px;
+}
+
 /*-------------- App List Button Panel ------------------*/
 .appListButtonPanel {
 	border-top: 1px;
@@ -1370,6 +1377,7 @@ margin-left: 10px;
 	margin-right: 5px;
 	margin-left: 5px;
 }
+
 
 
 

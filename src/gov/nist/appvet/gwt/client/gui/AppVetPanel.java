@@ -1130,14 +1130,13 @@ public class AppVetPanel extends DockLayoutPanel {
 		verticalPanel.setStyleName("appInfo");
 		verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
 		appInfoPanel.add(verticalPanel);
+		appInfoPanel.setCellHeight(verticalPanel, "80px");
 		verticalPanel.setHeight("80px");
 		appInfoName = new HTML("AppName", false);
-		appInfoName.setStyleName("appInfoName");
+		appInfoName.setStyleName("appInfoNameFont");
 		appInfoName.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		verticalPanel.add(appInfoName);
-		verticalPanel.setCellVerticalAlignment(appInfoName, HasVerticalAlignment.ALIGN_MIDDLE);
-		verticalPanel.setCellHeight(appInfoName, "100%");
-		appInfoName.setSize("388px", "38px");
+		appInfoName.setSize("395px", "30px");
 		appInfoPanel.setCellVerticalAlignment(appInfoName,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 
@@ -1147,16 +1146,14 @@ public class AppVetPanel extends DockLayoutPanel {
 		appInfoVersion.setStyleName("appInfoVersion");
 		verticalPanel.add(appInfoVersion);
 		verticalPanel.setCellVerticalAlignment(appInfoVersion, HasVerticalAlignment.ALIGN_MIDDLE);
-		verticalPanel.setCellHeight(appInfoVersion, "100%");
-		appInfoVersion.setSize("378px", "25px");
+		appInfoVersion.setSize("378px", "18px");
 
 		appStatusInfo = new HTML("Status: N/A", true);
 		appStatusInfo.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		appStatusInfo.setStyleName("appInfoStatus");
 		verticalPanel.add(appStatusInfo);
-		verticalPanel.setCellVerticalAlignment(appStatusInfo, HasVerticalAlignment.ALIGN_BOTTOM);
-		verticalPanel.setCellHeight(appStatusInfo, "100%");
-		appStatusInfo.setSize("378px", "26px");
+		verticalPanel.setCellVerticalAlignment(appStatusInfo, HasVerticalAlignment.ALIGN_MIDDLE);
+		appStatusInfo.setSize("378px", "23px");
 		
 		appPlatformHtml = new HTML("", false);
 		appPlatformHtml.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
@@ -1897,7 +1894,7 @@ public class AppVetPanel extends DockLayoutPanel {
 								iconPath = "<img src=\"images/android-icon-gray.png\" width=\"80px\" height=\"80px\" alt=\"Android\">";
 								altText = "Android app";
 							} else if (selectedApp.os == DeviceOS.IOS) {
-								iconPath = "<img src=\"images/apple-icon-gray.png\" width=\"80px\" height=\"80px\" alt=\"Android\">";
+								iconPath = "<img src=\"images/apple-icon-gray.png\" width=\"80px\" height=\"80px\" alt=\"iOS\">";
 								altText = "iOS app";
 							}
 						} else {
@@ -1916,10 +1913,10 @@ public class AppVetPanel extends DockLayoutPanel {
 						String platformIconPath = null;
 						String platformIconAlt = null;
 						if (selectedApp.os == DeviceOS.ANDROID) {
-							platformIconPath = "<img src=\"images/android-platform-logo.png\" width=\"35px\" height=\"35px\" alt=\"Android\">";
+							platformIconPath = "<img src=\"images/android-logo-green.png\" height=\"18px\" alt=\"Android\">";
 							platformIconAlt = "Android";
 						} else if (selectedApp.os == DeviceOS.IOS) {
-							platformIconPath = "<img src=\"images/ios-platform-logo.png\" width=\"35px\" height=\"35px\" alt=\"iOS\">";
+							platformIconPath = "<img src=\"images/ios-logo-blue.png\" height=\"18px\" alt=\"iOS\">";
 							platformIconAlt = "iOS";
 						}
 
@@ -1939,12 +1936,14 @@ public class AppVetPanel extends DockLayoutPanel {
 								|| (selectedApp.appStatus == AppStatus.MODERATE_WITH_ERROR)
 								|| (selectedApp.appStatus == AppStatus.LOW)
 								|| (selectedApp.appStatus == AppStatus.LOW_WITH_ERROR)) {
-							appNameHtml = "<div id=\"appNameInfo\">"
+							
+							// TODO
+							appNameHtml = "<div>"
 									+ selectedApp.appName + "</div>";
 							enableAllButtons();
 
 						} else {
-							appNameHtml = "<div id=\"appNameInfo\">"
+							appNameHtml = "<div>"
 									+ selectedApp.appName + "</div>";
 							uploadReportButton.setEnabled(false);
 							logButton.setEnabled(true);
@@ -2192,7 +2191,7 @@ public class AppVetPanel extends DockLayoutPanel {
 						String toolStatus, String toolReport) {
 					return "<table>" + "<tr>\n"
 							+ "<td>"
-							+ "<img width=\"18px\" class=\"toolimages\" src=\""
+							+ "<img width=\"14px\" class=\"toolimages\" src=\""
 							+ toolIconURL
 							+ "\" alt=\""
 							+ toolIconAltText
