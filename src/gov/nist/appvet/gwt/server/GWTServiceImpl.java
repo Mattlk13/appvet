@@ -706,7 +706,17 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		}
 		final String reportsPath = AppVetProperties.APPS_ROOT + "/" + appId
 				+ "/reports";
+		
 		File reportFile = new File(reportsPath + "/" + tool.reportName);
+		
+		// TODO: REMOVE
+		if (reportFile.exists()) {
+			log.debug("FOUND REPORT FILE: " + reportsPath + "/" + tool.reportName);
+		} else {
+			log.warn("DID NOT FIND REPORT FILE: " + reportsPath + "/" + tool.reportName);
+			
+		}
+
 		if (toolStatus == null || toolStatus == ToolStatus.NA
 				|| !reportFile.exists()) {
 			toolStatusGwt

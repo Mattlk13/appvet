@@ -77,7 +77,7 @@ public class ToolStatusManager {
 			appInfo.log.error("Could not set " + toolId + " status to " + toolStatus.name());
 			return;
 		} else {
-			appInfo.log.info("Setting tool '" + toolId + "' status to " + toolStatus.name());
+			appInfo.log.debug("Setting tool '" + toolId + "' status to " + toolStatus.name());
 		}
 		// Set last-updated time due to tool status change
 		Database.setLastUpdatedTime(appInfo.appId);

@@ -4,6 +4,7 @@ package gov.nist.appvet.shared.backend;
  * @author steveq@nist.gov
  */
 public enum Protocol {
+
 	SYNCHRONOUS ("Synchronous"), 
 	ASYNCHRONOUS ("Asynchronous"), 
 	PUSH ("Push"), 

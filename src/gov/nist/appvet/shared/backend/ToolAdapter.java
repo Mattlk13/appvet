@@ -36,12 +36,12 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
@@ -204,10 +204,18 @@ public class ToolAdapter implements Runnable {
 				break;
 			}
 		}
+		if (protocol == null) {
+			log.error("Protocol for '" + toolId + "' is incorrect. Aborting");
+			return;
+		}
 
 		protocolXPath = "/ToolAdapter/Protocol";
 		checkNullString(configFileName, "protocolXPath", protocolXPath);
 		protocolXPath += "/" + protocol.xmlTag;
+		
+		if (protocolXPath == null) {
+			log.error("Protocol X Path is null");
+		}
 
 		log.debug("Adding Tool Adapter: " + configFileName + ":\n" 
 				+ "-Name: " + name + "\n" 
@@ -301,7 +309,7 @@ public class ToolAdapter implements Runnable {
 	/**
 	 * This method is used to POST binary files.
 	 */
-	public MultipartEntity getMultipartEntity(Request request,
+	public MultipartEntity getMultipartEntity(RequestParams request,
 			ArrayList<String> authParamNames, ArrayList<String> authParamValues) {
 		final MultipartEntity entity = new MultipartEntity();
 		File apkFile = null;
@@ -417,8 +425,8 @@ public class ToolAdapter implements Runnable {
 		}
 
 		// Send app to tool. When app receives HTTP 202, the process ends.
-		Request appVetRequest = 
-				new Request(protocol, protocolXPath, xml, configFileName, appInfo, toolId);
+		RequestParams appVetRequest = 
+				new RequestParams(protocol, protocolXPath, xml, configFileName, appInfo, toolId);
 		File fileOut = null;
 		FileOutputStream fileOutputStream = null;
 		InputStream inputStream = null;
@@ -442,14 +450,12 @@ public class ToolAdapter implements Runnable {
 				HttpConnectionParams.setSoTimeout(httpParameters,
 						AppVetProperties.SO_TIMEOUT);
 			}
-
 			
 			HttpResponse toolHttpResponse = null;
-			log.info("Trace 1");
+			
 			// Set up proxy host if defined in ToolAdapter.xml file
 			if (appVetRequest.proxyHost != null && !appVetRequest.proxyHost.isEmpty() &&
 					appVetRequest.proxyPort != null && !appVetRequest.proxyPort.isEmpty()) {
-				log.info("Trace 2");
 
 				appInfo.log.debug(toolId + " setting up proxy message");
 				//CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -457,7 +463,6 @@ public class ToolAdapter implements Runnable {
 				httpclient = SSLWrapper.wrapClient(httpclient);
 				MultipartEntity entity = getMultipartEntity(appVetRequest,
 						authParamNames, authParamValues);
-				log.info("Trace 3");
 
 				HttpHost target = null;
 				int targetPort = new Integer(AppVetProperties.PORT).intValue();
@@ -466,7 +471,6 @@ public class ToolAdapter implements Runnable {
 				} else {
 					target = new HttpHost(AppVetProperties.HOST, targetPort, "http");
 				}
-				log.info("Trace 4");
 
 				HttpHost proxy = null;
 				int proxyPort = new Integer(appVetRequest.proxyPort).intValue();
@@ -475,7 +479,6 @@ public class ToolAdapter implements Runnable {
 				} else {
 					proxy = new HttpHost(appVetRequest.proxyHost, proxyPort, "http");
 				}
-				log.info("Trace 5");
 
 				RequestConfig config = RequestConfig.custom().setProxy(proxy).build();
 				// TODO: What is the "/" for in the following?
@@ -483,13 +486,11 @@ public class ToolAdapter implements Runnable {
 				HttpPost request = new HttpPost("/");
 				request.setConfig(config);
 				request.setEntity(entity);
-				log.info("Trace 6");
 
 				//System.out.println("Executing request " + request.getRequestLine() + " to " + target + " via " + proxy);
 
 				//CloseableHttpResponse response = httpclient.execute(target, request);
 				toolHttpResponse = httpclient.execute(target, request);
-				log.info("Trace 7");
 
 			} else {
 				// Send normal HTTP message
@@ -523,10 +524,12 @@ public class ToolAdapter implements Runnable {
 
 			// Send the app to the tool
 			final String httpStatusLine = toolHttpResponse.getStatusLine().toString();
+			
 			appInfo.log.info(name + " adapter received: " + httpStatusLine);
 
 			switch (protocol) {
 			case SYNCHRONOUS: 
+				
 				// First check HTTP status
 				if (httpStatusLine.indexOf("HTTP/1.1 200 OK") == -1) {
 					// Unexpected status received
@@ -538,11 +541,6 @@ public class ToolAdapter implements Runnable {
 				} 
 
 				// We only handle report from Synchronous tools here.
-				// Reports for asynchronous tools are handled by the AppVetServlet. Also
-				// note that only ASCII content is received from
-				// a tool, not an attached file. If the content ASCII
-				// content represents binary content, the content must
-				// written to a binary file (e.g., PDF file).
 				final HttpEntity responseEntity = toolHttpResponse.getEntity();
 				inputStream = responseEntity.getContent();
 				final String reportPath = appInfo.getReportsPath() + "/"
@@ -557,10 +555,34 @@ public class ToolAdapter implements Runnable {
 				fileOutputStream.flush();
 				inputStream.close();
 				fileOutputStream.close();
-
-				log.debug("apprisk header: " + RISK_HTTP_HEADER_NAME);
-				String appRisk = toolHttpResponse.getFirstHeader(
-						RISK_HTTP_HEADER_NAME).getValue();
+				
+				///////// LOOK AT ALL HEADERS //////////////
+				//get all headers
+				Header[] headers = toolHttpResponse.getAllHeaders();
+				if (headers == null || headers.length == 0) {
+					appInfo.log.warn("No headers for incoming sychronous message");
+				}
+				String appRisk = null;
+				for (Header header : headers) {
+					String h = header.getName();
+					String val = header.getValue();
+					appInfo.log.debug("Header Key: " + header.getName()
+					      + " = " + header.getValue());
+					
+					if (val.equals("LOW")) { 
+						appInfo.log.debug("Found LOW: Breaking.");
+						appRisk = "LOW";
+						break;
+					} else if (val.equals("MODERATE")) {
+						appInfo.log.debug("Found MODERATE: Breaking.");
+						appRisk = "MODERATE";
+						break;
+					} else if (val.equals("HIGH")) {
+						appInfo.log.debug("Found HIGH: Breaking.");
+						appRisk = "HIGH";
+						break;
+					}
+				}
 
 				// Update report time
 				Database.setReportTime(appInfo.appId, appInfo.os, this.toolId);
@@ -568,11 +590,9 @@ public class ToolAdapter implements Runnable {
 				if (appRisk == null || appRisk.isEmpty()) {
 					appInfo.log.error("App risk header from '" + this.toolId + "' is null or empty");
 					ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.ERROR);
-
 				} else if (!appRisk.equals(ToolStatus.LOW.name()) &&
 						!appRisk.equals(ToolStatus.MODERATE.name()) &&
-						!appRisk.equals(ToolStatus.HIGH.name()) &&
-						!appRisk.equals(ToolStatus.ERROR.name())) {
+						!appRisk.equals(ToolStatus.HIGH.name())) {
 					appInfo.log.error("App risk '" + appRisk + "' from '" + this.toolId + "' is invalid");
 					ToolStatusManager.setToolStatus(appInfo, this.toolId, ToolStatus.ERROR);
 				} else {
@@ -638,9 +658,6 @@ public class ToolAdapter implements Runnable {
 				break;
 			}
 
-//			httpPost = null;
-//			entity = null;
-//			httpclient = null;
 			httpParameters = null;
 		} catch (final Exception e) {
 			appInfo.log.error("Tool '" + this.toolId + "' experienced an error: " + e.toString());

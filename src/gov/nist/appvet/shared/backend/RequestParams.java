@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * 
  * @author steveq@nist.gov
  */
-public class Request {
+public class RequestParams {
 
 	private static final Logger log = AppVetProperties.log;
 
@@ -30,7 +30,7 @@ public class Request {
 	public AppInfo appInfo = null;
 	public String toolId = null;
 
-	public Request(Protocol protocol, String protocolXPath,
+	public RequestParams(Protocol protocol, String protocolXPath,
 			XmlUtil xml, String configFileName, AppInfo appInfo, String toolId) {
 
 		this.protocol = protocol;
@@ -74,14 +74,14 @@ public class Request {
 			checkNullString(configFileName, "intStr",
 					intStr);
 			pollingMaxIterations = new Integer(intStr).intValue();
-			//log.debug("Polling max iterations: " + pollingMaxIterations);
+			log.debug("Polling max iterations: " + pollingMaxIterations);
 
 			intStr = xml.getXPathValue(protocolXPath
 					+ "/Request/Polling/Sleep");
 			checkNullString(configFileName, "intStr",
 					intStr);
 			pollingSleep = new Integer(intStr).intValue();
-			//log.debug("Polling sleep: " + pollingSleep);
+			log.debug("Polling sleep: " + pollingSleep);
 		}
 		
 		if (xml.xpathExists(protocolXPath + "/Request/Proxy")) {

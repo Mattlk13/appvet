@@ -152,8 +152,6 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="MultiSynchronous" type="MultiSynchronousType"
-				maxOccurs="1" minOccurs="1"></xs:element>
 			<xs:element name="Asynchronous" type="AsynchronousType"
 				maxOccurs="1" minOccurs="1">
 				<xs:annotation>
@@ -258,6 +256,30 @@ AppVet containing its report and risk assessment.</xs:documentation>
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
+	
+		<xs:complexType name="CustomType">
+		<xs:annotation>
+			<xs:documentation>A protocol that requires custom tool adapter code to work.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Request" type="HTTPRequestType"
+				minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>The Request element defines an HTML Form to be sent
+						to an AppVet tool service via an HTTP Request message.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Response" type="HTTPResponseType"
+				maxOccurs="1" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>The Response element defines properties for the
+						response from an AppVet synchronous tool service.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 
 
 	<xs:complexType name="PollingType">
@@ -306,7 +328,7 @@ AppVet containing its report and risk assessment.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="SSL" type="xs:boolean" maxOccurs="1"
-				minOccurs="1">
+				minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>
 						True if the proxy port uses SSL (i.e, https), false
