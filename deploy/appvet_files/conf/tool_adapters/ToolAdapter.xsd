@@ -309,7 +309,10 @@ AppVet containing its report and risk assessment.</xs:documentation>
 	</xs:complexType>
 	
 	<xs:complexType name="ProxyType">
-		<xs:sequence>
+        <xs:annotation>
+        	<xs:documentation>Proxy should only be used if the tool service is only available using a proxy. If the tool service is available not using a proxy, but the tool service must connect to another service using a proxy, then the tool's ToolProperties.xml file must be set to use a proxy.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
 			<!-- Support PROXY (Optional)-->
 			<xs:element name="ProxyHost" type="xs:string" maxOccurs="1"
 				minOccurs="1">
