@@ -2076,7 +2076,7 @@ public class AppVetPanel extends DockLayoutPanel {
 					}
 
 					// Display tool and manually-uploaded results.
-					statuses += "<h2 title=\"Report Type\"  id=\"appInfoSectionHeader\">Report Type</h2>\n";
+					statuses += "<h2 title=\"Analysis Tool\"  id=\"appInfoSectionHeader\">Analysis Tool</h2>\n";
 					int analysisToolCount = 0;
 
 					for (int i = 0; i < toolResults.size(); i++) {
