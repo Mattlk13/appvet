@@ -1549,6 +1549,7 @@ public class AppVetPanel extends DockLayoutPanel {
 	}
 
 	public void disableAllButtons() {
+		uploadReportButton.setEnabled(false);
 		logButton.setEnabled(false);
 		deleteButton.setEnabled(false);
 		downloadReportsButton.setEnabled(false);
