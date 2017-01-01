@@ -297,9 +297,9 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 		// Get tool credentials
 		ArrayList<UserToolCredentials> toolCredentials = configInfo
 				.getUserInfo().getToolCredentials();
-		if (toolCredentials == null) {
-			log.error("toolCredentials is null in GWTServiceImpl");
-		}
+//		if (toolCredentials == null) {
+//			log.warn("toolCredentials is null in GWTServiceImpl");
+//		}
 		return configInfo;
 	}
 	
@@ -322,12 +322,12 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					if (toolInfo.requiresAuthentication()) {
 						toolInfo.setAuthenticationParameterNames(androidTool.authenticationParams);
 					}
-					if (androidTool.reportTemplateURL == null) {
-						log.error("Report template for " + androidTool.toolId + " is null!");
-					} else {
-						log.debug("Report template for " + androidTool.toolId + " is good!");
-					}
-					toolInfo.setReportTemplateURL(androidTool.reportTemplateURL);
+//					if (androidTool.reportTemplateURL == null) {
+//						log.error("Report template for " + androidTool.toolId + " is null!");
+//					} else {
+//						log.debug("Report template for " + androidTool.toolId + " is good!");
+//					}
+//					toolInfo.setReportTemplateURL(androidTool.reportTemplateURL);
 					toolInfo.setIconURL(androidTool.iconURL);
 					toolInfo.setIconAltText(androidTool.iconAltText);
 					toolInfo.setReportFileType(androidTool.reportFileType
@@ -358,7 +358,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 					if (toolInfo.requiresAuthentication()) {
 						toolInfo.setAuthenticationParameterNames(iosTool.authenticationParams);
 					}
-					toolInfo.setReportTemplateURL(iosTool.reportTemplateURL);
+//					toolInfo.setReportTemplateURL(iosTool.reportTemplateURL);
 					toolInfo.setIconURL(iosTool.iconURL);
 					toolInfo.setIconAltText(iosTool.iconAltText);
 					toolInfo.setReportFileType(iosTool.reportFileType.name());
@@ -708,14 +708,6 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 				+ "/reports";
 		
 		File reportFile = new File(reportsPath + "/" + tool.reportName);
-		
-		// TODO: REMOVE
-		if (reportFile.exists()) {
-			log.debug("FOUND REPORT FILE: " + reportsPath + "/" + tool.reportName);
-		} else {
-			log.warn("DID NOT FIND REPORT FILE: " + reportsPath + "/" + tool.reportName);
-			
-		}
 
 		if (toolStatus == null || toolStatus == ToolStatus.NA
 				|| !reportFile.exists()) {

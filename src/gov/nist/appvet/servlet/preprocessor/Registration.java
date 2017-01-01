@@ -211,23 +211,6 @@ public class Registration {
 				// Update registration status to LOW (i.e., COMPLETED).
 				ToolStatusManager.setToolStatus(appInfo,
 						registrationTool.toolId, ToolStatus.LOW);
-				
-				// Set registration report time
-				connection = Database.getConnection();
-				if (appInfo.os == DeviceOS.ANDROID) {
-					preparedStatement = connection
-							.prepareStatement("REPLACE INTO androidreporttimes "
-									+ "(appid, registration) values (?,?)");
-				} else if (appInfo.os == DeviceOS.IOS) {
-					preparedStatement = connection
-							.prepareStatement("REPLACE INTO iosreporttimes "
-									+ "(appid, registration) values (?,?)");
-				}
-				preparedStatement.setString(1, appInfo.appId);
-				timestamp = new Timestamp(new Date().getTime());
-				preparedStatement.setTimestamp(2, timestamp);
-				preparedStatement.executeUpdate();
-				preparedStatement.close();
 
 				// Email notify
 				if (AppVetProperties.emailEnabled) {

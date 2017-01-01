@@ -1087,9 +1087,6 @@ public class AppVetServlet extends HttpServlet {
 		final boolean reportSaved = FileUtil.saveReportUpload(appInfo.appId,
 				tool.reportName, appInfo.fileItem);
 		
-		// Update report time
-		Database.setReportTime(appInfo.appId, appInfo.os, tool.toolId);
-		
 		if (reportSaved) {
 			// Override reports with final LOW/MODERATE/HIGH risk decision.
 			if (appInfo.toolRisk == null) {

@@ -7,5 +7,5 @@ mysql> exit;
 
 Next, load the appvet tables:
 
-mysql --user=username --password=password appvet < file.sql
+mysql --user=username --password=password appvet < appvet_x.y.z_init_db.sql
 

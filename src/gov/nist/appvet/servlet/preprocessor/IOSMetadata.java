@@ -97,9 +97,6 @@ public class IOSMetadata {
 		updateDbMetadata(appInfo);
 		writeReport(appInfo, null);
 		
-		// Update report time
-		Database.setReportTime(appInfo.appId, appInfo.os, "appinfo");
-		
 		// Set metadata processing to LOW.
 		ToolStatusManager.setToolStatus(appInfo,
 				appinfoTool.toolId, ToolStatus.LOW);

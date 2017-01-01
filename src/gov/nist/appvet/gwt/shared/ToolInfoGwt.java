@@ -38,7 +38,7 @@ public class ToolInfoGwt implements IsSerializable {
 	// TODO Change toolType to type ToolType since it is added as a GWT module
 	private ToolType toolType = null;
 	private String restrictionType = null;
-	private String reportTemplateURL = null;
+//	private String reportTemplateURL = null;
 	private String iconURL = null;
 	private String iconAltText = null;
 
@@ -110,13 +110,13 @@ public class ToolInfoGwt implements IsSerializable {
 		this.restrictionType = restrictionType;
 	}
 
-	public String getReportTemplateURL() {
-		return reportTemplateURL;
-	}
-
-	public void setReportTemplateURL(String reportTemplateURL) {
-		this.reportTemplateURL = reportTemplateURL;
-	}
+//	public String getReportTemplateURL() {
+//		return reportTemplateURL;
+//	}
+//
+//	public void setReportTemplateURL(String reportTemplateURL) {
+//		this.reportTemplateURL = reportTemplateURL;
+//	}
 
 	public String getIconURL() {
 		return iconURL;

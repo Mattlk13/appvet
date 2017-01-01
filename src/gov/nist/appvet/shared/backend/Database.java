@@ -466,19 +466,6 @@ public class Database {
 			return false;
 		}
 	}
-	
-	public synchronized static boolean setReportTime(String appId, DeviceOS os, 
-			String toolId) {
-		String reportTableName = null;
-		if (os == DeviceOS.ANDROID) {
-			reportTableName = "androidreporttimes";
-		} else if (os == DeviceOS.IOS) {
-			reportTableName = "iosreporttimes";
-		}
-		
-		return update("UPDATE " + reportTableName + " SET " + toolId + " = NOW() WHERE appid='"
-				+ appId + "'");	
-	}
 
 	public synchronized static boolean setLastUpdatedTime(String appId) {
 		// To ensure update changes are acquired by UIs, wait n ms

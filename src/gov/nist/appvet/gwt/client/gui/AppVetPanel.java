@@ -41,6 +41,7 @@ import gov.nist.appvet.gwt.shared.SystemAlert;
 import gov.nist.appvet.gwt.shared.SystemAlertType;
 import gov.nist.appvet.gwt.shared.ToolInfoGwt;
 import gov.nist.appvet.gwt.shared.ToolStatusGwt;
+import gov.nist.appvet.properties.AppVetProperties;
 import gov.nist.appvet.shared.all.AppStatus;
 import gov.nist.appvet.shared.all.AppVetParameter;
 import gov.nist.appvet.shared.all.AppVetServletCommand;
@@ -1173,7 +1174,7 @@ public class AppVetPanel extends DockLayoutPanel {
 		uploadReportButton.setStyleName("blueButton shadow");
 		Roles.getButtonRole().setAriaLabelProperty(uploadReportButton.getElement(), "Upload Report Button");
 
-		uploadReportButton.setTitle("Upload report");
+		uploadReportButton.setTitle("Upload report for an analysis tool or overview report");
 
 		appButtonPanel.add(uploadReportButton);
 		appButtonPanel.setCellVerticalAlignment(uploadReportButton,
@@ -1535,9 +1536,11 @@ public class AppVetPanel extends DockLayoutPanel {
 		});
 	}
 
+	/** Enable all buttons except report upload which is done in getHtmlToolResults.
+	 * @param os
+	 */
 	public void enableAllButtons() {
 		logButton.setEnabled(true);
-		uploadReportButton.setEnabled(true);
 		if (keepApps)
 			deleteButton.setEnabled(true);
 		downloadReportsButton.setEnabled(true);
@@ -1547,7 +1550,6 @@ public class AppVetPanel extends DockLayoutPanel {
 
 	public void disableAllButtons() {
 		logButton.setEnabled(false);
-		uploadReportButton.setEnabled(false);
 		deleteButton.setEnabled(false);
 		downloadReportsButton.setEnabled(false);
 		downloadReportsButton.setEnabled(false);
@@ -2093,6 +2095,11 @@ public class AppVetPanel extends DockLayoutPanel {
 
 					if (analysisToolCount == 0) {
 						statuses += getNAStatus();
+						
+						// Can't upload reports if not analysis tools available
+						uploadReportButton.setEnabled(false);
+					} else {
+						uploadReportButton.setEnabled(true);
 					}
 
 					/* Get audit results */

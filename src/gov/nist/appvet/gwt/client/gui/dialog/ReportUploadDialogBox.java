@@ -312,18 +312,18 @@ public class ReportUploadDialogBox extends DialogBox {
 							}
 						}
 						
-						String reportTemplateURL = selectedTool.getReportTemplateURL();
-						if (reportTemplateURL != null) {
-							// There is a report template available for download
-							statusLabel.setHTML(selectedToolName
-									+ " requires a " + reportFileType
-									+ " report. Download <a href=\"" + reportTemplateURL + "\" target=\"_blank\"><b>template</b>.</a>");
-						} else {
-							log.warning("Report template for " + selectedTool.getId() + " is null");
-							statusLabel.setHTML(selectedToolName
-									+ " requires a " + reportFileType
-									+ " report.");
-						}
+//						String reportTemplateURL = selectedTool.getReportTemplateURL();
+//						if (reportTemplateURL != null) {
+//							// There is a report template available for download
+//							statusLabel.setHTML(selectedToolName
+//									+ " requires a " + reportFileType
+//									+ " report. Download <a href=\"" + reportTemplateURL + "\" target=\"_blank\"><b>template</b>.</a>");
+//						} else {
+//							log.warning("Report template for " + selectedTool.getId() + " is null");
+//							statusLabel.setHTML(selectedToolName
+//									+ " requires a " + reportFileType
+//									+ " report.");
+//						}
 						
 						break;
 					}
@@ -452,17 +452,17 @@ public class ReportUploadDialogBox extends DialogBox {
 					}
 				}
 				
-				String reportTemplateURL = tool3.getReportTemplateURL();
-				if (reportTemplateURL != null) {
-					// There is a report template available for download
-					statusLabel.setHTML(selectedToolName
-							+ " requires a " + reportFileType
-							+ " report. Download <a href=\"" + reportTemplateURL + "\" target=\"_blank\"><b>template</b>.</a>");
-				} else {
-					statusLabel.setHTML(selectedToolName
-							+ " requires a " + reportFileType
-							+ " report.");
-				}
+//				String reportTemplateURL = tool3.getReportTemplateURL();
+//				if (reportTemplateURL != null) {
+//					// There is a report template available for download
+//					statusLabel.setHTML(selectedToolName
+//							+ " requires a " + reportFileType
+//							+ " report. Download <a href=\"" + reportTemplateURL + "\" target=\"_blank\"><b>template</b>.</a>");
+//				} else {
+//					statusLabel.setHTML(selectedToolName
+//							+ " requires a " + reportFileType
+//							+ " report.");
+//				}
 				break;
 			}
 		}

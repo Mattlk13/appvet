@@ -15,6 +15,7 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
 --
 -- Table structure for table `alerts`
 --
@@ -50,15 +51,6 @@ CREATE TABLE `androidtoolstatus` (
   `appid` varchar(32) NOT NULL DEFAULT '',
   `registration` varchar(120) DEFAULT NULL,
   `appinfo` varchar(120) DEFAULT NULL,
-  `audit` varchar(120) DEFAULT NULL,
-  `androidsummary` varchar(120) DEFAULT 'NA',
-  `androwarn` varchar(120) DEFAULT 'NA',
-  `sigverifier` varchar(120) DEFAULT 'NA',
-  `mkef` varchar(120) DEFAULT 'NA',
-  `appollo` varchar(120) DEFAULT 'NA',
-  `approval` varchar(120) DEFAULT 'NA',
-  `golive` varchar(120) DEFAULT 'NA',
-  `fireeye` varchar(120) DEFAULT 'NA',
   PRIMARY KEY (`appid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -67,20 +59,6 @@ CREATE TABLE `androidtoolstatus` (
 -- Dumping data for table `androidtoolstatus`
 --
 LOCK TABLES `androidtoolstatus` WRITE;
-/*!40000 ALTER TABLE `androidtoolstatus` DISABLE KEYS */;
-/*!40000 ALTER TABLE `androidtoolstatus` ENABLE KEYS */;
-UNLOCK TABLES;
-
-DROP TABLE IF EXISTS `androidreporttimes`;
-CREATE TABLE `androidreporttimes` (
-  `appid` varchar(32) NOT NULL DEFAULT '',
-  `registration` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `appinfo` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`appid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-LOCK TABLES `androidreporttimes` WRITE;
 /*!40000 ALTER TABLE `androidtoolstatus` DISABLE KEYS */;
 /*!40000 ALTER TABLE `androidtoolstatus` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -129,11 +107,6 @@ CREATE TABLE `iostoolstatus` (
   `appid` varchar(32) NOT NULL DEFAULT '',
   `registration` varchar(120) DEFAULT NULL,
   `appinfo` varchar(120) DEFAULT NULL,
-  `audit` varchar(120) DEFAULT NULL,
-  `androidsummary` varchar(120) DEFAULT NULL,
-  `approval` varchar(120) DEFAULT NULL,
-  `golive` varchar(120) DEFAULT NULL,
-  `iossummary` varchar(120) DEFAULT NULL,
   PRIMARY KEY (`appid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -147,19 +120,6 @@ LOCK TABLES `iostoolstatus` WRITE;
 /*!40000 ALTER TABLE `iostoolstatus` ENABLE KEYS */;
 UNLOCK TABLES;
 
-DROP TABLE IF EXISTS `iosreporttimes`;
-CREATE TABLE `iosreporttimes` (
-  `appid` varchar(32) NOT NULL DEFAULT '',
-  `registration` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `appinfo` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`appid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-LOCK TABLES `iosreporttimes` WRITE;
-/*!40000 ALTER TABLE `androidtoolstatus` DISABLE KEYS */;
-/*!40000 ALTER TABLE `androidtoolstatus` ENABLE KEYS */;
-UNLOCK TABLES;
 --
 -- Table structure for table `sessions`
 --

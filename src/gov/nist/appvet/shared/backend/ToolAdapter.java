@@ -95,7 +95,7 @@ public class ToolAdapter implements Runnable {
 	public Protocol protocol = null;
 	public Thread thread = null;
 	public AppInfo appInfo = null;
-	public String reportTemplateURL = null;
+//	public String reportTemplateURL = null;
 	public String iconURL = null;
 	public String iconAltText = null;
 	public String protocolXPath = null;
@@ -137,13 +137,13 @@ public class ToolAdapter implements Runnable {
 				.getXPathValue("/ToolAdapter/Description/AuthenticationRequired");
 		authenticationRequired = new Boolean(booleanStringValue).booleanValue();
 
-		// Report template download URL (optional)
-		reportTemplateURL = xml.getXPathValue("/ToolAdapter/Description/ReportTemplateURL"); 
-		if (reportTemplateURL != null) {
-			log.debug("Report template URL: " + reportTemplateURL);
-		} else {
-			log.warn("Report template URL for tool '" + toolId + "' is null");
-		}
+//		// Report template download URL (optional)
+//		reportTemplateURL = xml.getXPathValue("/ToolAdapter/Description/ReportTemplateURL"); 
+//		if (reportTemplateURL != null) {
+//			log.debug("Report template URL: " + reportTemplateURL);
+//		} else {
+//			log.warn("Report template URL for tool '" + toolId + "' is null");
+//		}
 
 		// Report icon (optional
 		iconURL = xml.getXPathValue("/ToolAdapter/Description/Icon/URL");
@@ -583,9 +583,6 @@ public class ToolAdapter implements Runnable {
 						break;
 					}
 				}
-
-				// Update report time
-				Database.setReportTime(appInfo.appId, appInfo.os, this.toolId);
 
 				if (appRisk == null || appRisk.isEmpty()) {
 					appInfo.log.error("App risk header from '" + this.toolId + "' is null or empty");
