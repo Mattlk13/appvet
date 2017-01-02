@@ -8,6 +8,9 @@
 <body>
 
 	<h1>AppVet Installation</h1>
+	
+	The following instructions describe the installation of AppVet for CentOS/RedHat, 
+	but should be similar for other Linux (and Windows) platforms
 
 	<ul>
 		<li class="big"><a href="#dependencies" target="rightframe">Step
@@ -162,8 +165,8 @@
 	
 	<h3>Admin</h3>
 	The <code>&lt;Admin&gt;</code> property defines an administrative username and password for
-	AppVet and must be set before running AppVet
-	for the first time.
+	AppVet <i>that should be set before running AppVet
+	for the first time </i>.
 		<p>
 	<pre>
 		<code>
@@ -178,7 +181,7 @@
 	<h3>Host</h3>
 	The <code>&lt;Host&gt;</code> property defines the URL of the AppVet host. Note that
 	the parameters defined here must be identical to those defined in your 
-	Tomcat server configuration file located in $CATALINA_HOME/conf/server.xml.
+	Tomcat server configuration file located in <code>$CATALINA_HOME/conf/server.xml</code>.
 			<p>
 	<pre>
 		<code>
@@ -229,15 +232,14 @@
 	 
 	<br>
 	<br> 
-	After AppVet loads, log into AppVet using the username and password you 
-	defined in your <code>AppVetProperties.xml</code> file. When logging into 
-	AppVet for the first time, the screen will be dislayed as shown in Figure 1.
+	The AppVet login page will appear as shown in Figure 1.
+	
 	
 		<br>
 	<br>
 	<br>
 	<center>
-		<img src="images/initial-login.png" alt="AppVet initial login" style="height: 400px;">
+		<img src="images/ss-login.png" alt="AppVet login login" style="height: 400px;">
 		<br> <br>
 		<p class="cap">Figure 1. AppVet initial screen.</p>
 	</center>
@@ -245,10 +247,29 @@
 	<br>
 	<br>
 	
-	and submit an Android or iOS app file 
-	using the Upload (<img src="images/button_upload_app.png" width="20px">) button.
-	<br><br>
-	After testing an app, shut down AppVet by
+	 
+	Next, log into AppVet using the username and password you 
+	defined in your <code>AppVetProperties.xml</code> file. When logging into 
+	AppVet for the first time, the screen will be displayed as shown in Figure 2.
+	
+			<br>
+	<br>
+	<br>
+	<center>
+		<img src="images/ss-first-time.png" alt="AppVet" style="height: 400px;">
+		<br> <br>
+		<p class="cap">Figure 2. AppVet main screen.</p>
+	</center>
+	<br>
+	<br>
+	<br>
+	
+	Note that that upon initial login, you will see a warning 
+	that describes AppVet as a dynamic web page <i>that does not need to be refreshed</i>. 
+	<br>
+	<br>
+
+	Next, shut down AppVet by
 	running:
 	<br>
 	<br>
@@ -257,20 +278,7 @@
 	</p>
 	<br>
 	<h2 id="logos">Step 7. Logos (Optional)</h2>
-	
-	Figure 2 shows logos that may be modified for AppVet.
-	
-			<br>
-	<br>
-	<br>
-	<center>
-		<img src="images/logos.png" alt="Logos" style="height: 400px;">
-		<br> <br>
-		<p class="cap">Figure 2. Modifiable logos.</p>
-	</center>
-	<br>
-	<br>
-	<br>
+		
 	<h3>Browser Icon</h3>
 	
 	To change the AppVet icon in the browser tab, replace the <code>favicon.ico</code> file in 
@@ -278,24 +286,18 @@
 	in <code>$CATALINA_HOME/webapps/appvet</code> and restart Tomcat. If the new icon does not display, clear the browser's cache 
 	and reload the AppVet page.
 	
-	<h3>Organizational Logo</h3>
+	<h3>Organizational Logos</h3>
 	
-	To change the default logo to your organization's logo, create a square image in <code>.png</code> format 
-	with the name <code>org_logo.png</code>. Next, replace the <code>org_logo.png</code> file in 
-	<code>$CATALINA_HOME/webapps/appvet/images</code> with your new <code>org_logo.png</code> file and 
-	restart Tomcat. If the new logo does not display, clear the browser's cache 
+	To add your organization's logo to both the login and main pages of AppVet, replace the <code>org_logo_login.png</code> and <code> 
+	org_logo_main.png</code> files in 
+	<code>$CATALINA_HOME/webapps/appvet/images</code> <i>with PNG images using the same dimensions</i> and 
+	restart Tomcat. If the new logos do not display, clear the browser's cache 
 	and reload the AppVet page.
 	
 	<h2 id="tools">Step 8. Add Tools</h2>
 	AppVet requires the integration of online tools to analyze and test uploaded apps. For
 	available AppVet-compatible tools, see
 	<a href="tools_and_adapters.html">Tools</a>.
-
-	<h2 id="sso">Step 9. Install Single Sign-On (Optional)</h2>
-
-	Some organizations may support a single sign-on (SSO) environment for
-	applications. To integrate AppVet in an SSO environment, see
-	<a href="sso_install.html">AppVet SSO Installation</a>.
 
 	<br>
 	<br>
