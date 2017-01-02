@@ -228,11 +228,11 @@
 			<xs:documentation>A synchronous protocol will send an HTTP Request to a tool service
 and receive a HTTP Response from the tool service. If successfull,
 the HTTP Response will include the tool service's report and risk
-assessment. This differs from an asynchronous protocol that 
+score. This differs from an asynchronous protocol that 
 sends an HTTP Request to a tool service, but the HTTP Response
 only includes an acknowledge HTTP code. After the tool service
 has completed its analysis, it will then send a new HTTP Request to
-AppVet containing its report and risk assessment.</xs:documentation>
+AppVet containing its report and risk score.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="Request" type="HTTPRequestType"
@@ -289,12 +289,12 @@ AppVet containing its report and risk assessment.</xs:documentation>
 sends an HTTP Request to a tool service and receives an HTTP Response
 that includes only an acknowledgement HTTP code. After the tool service
 has completed its analysis, it will then send a new HTTP Request to
-AppVet containing its report and risk assessment.
+AppVet containing its report and risk score.
 
 This differs from a synchronous protocol will send an HTTP Request to a tool service
 and receive a HTTP Response from the tool service. If successfull,
 the HTTP Response will include the tool service's report and risk
-assessment. </xs:documentation>
+score. </xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="Request" type="HTTPRequestType"
@@ -352,7 +352,7 @@ assessment. </xs:documentation>
 				password: The AppVet
 				password
 				file: The report file
-				toolrisk: The risk assessment generated
+				toolrisk: The risk score generated
 				by the tool (i.e., 'LOW', 'MODERATE',
 				'HIGH', 'ERROR')
 
@@ -498,7 +498,7 @@ assessment. </xs:documentation>
 						HTTP
 						Response Header name for a synchronous tool
 						service's risk
-						assessment category (ERROR, HIGH,
+						score category (ERROR, HIGH,
 						MODERATE, or LOW). For
 						synchronous services, the
 						AppVetResultHeaderName value should be

@@ -65,8 +65,8 @@
 		protocol between AppVet and a tool is asynchronous. When an app is
 		sent to a tool from AppVet, the sends an acknowledgement back to
 		AppVet before testing the app. After the tool is done testing the app,
-		it authenticates with AppVet and submits a report and risk assessment
-		for the app. After AppVet receives the report and risk assessment, it
+		it authenticates with AppVet and submits a report and risk score
+		for the app. After AppVet receives the report and risk score, it
 		returns an acknowledgement back to the tool.
 	</p>
 	<p>
@@ -77,7 +77,7 @@
 		file. The
 		<code>ToolProperties.xml</code>
 		file defines information used by the tool to process apps (e.g.,
-		report strings to scan for determining risk assessment) as well as to
+		report strings to scan for determining risk score) as well as to
 		authenticate with AppVet (e.g., username and password). Thus, AppVet
 		must have an account for each tool that it integrates with and each
 		tool must include its AppVet account information in its
@@ -112,7 +112,7 @@
 		<code>myonlinetool</code>
 		then executes
 		<code>mytool</code>
-		on the received app and generates a report and risk assessment which
+		on the received app and generates a report and risk score which
 		are fed back to
 		<code>myonlinetool</code>
 		and submitted to AppVet.
