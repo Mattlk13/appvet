@@ -1,61 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:AppVet xmlns:p="http://appvet.github.io/appvet/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://appvet.github.io/appvet/schemas ../../appvet/deploy/appvet_files/conf/AppVetProperties.xsd ">
-  <p:Admin>
-    <p:Username>p:Username</p:Username>
-    <p:Password>p:Password</p:Password>
-  </p:Admin>
-  <p:Host>
-    <p:Hostname>p:Hostname</p:Hostname>
-    <p:SSL>true</p:SSL>
-    <p:Port>p:Port</p:Port>
-  </p:Host>
-  <p:Proxy>p:Proxy</p:Proxy>
-  <p:Logging>
-    <p:Level>DEBUG</p:Level>
-    <p:ToConsole>true</p:ToConsole>
-  </p:Logging>
-  <p:SSO>
-    <p:Active>true</p:Active>
-    <p:UnauthorizedURL>http://tempuri.org</p:UnauthorizedURL>
-    <p:LogoutURL>http://tempuri.org</p:LogoutURL>
-    <p:UserParams/>
-  </p:SSO>
-  <p:OrgLogoAltText>p:OrgLogoAltText</p:OrgLogoAltText>
-  <p:Sessions>
-    <p:Timeout>0</p:Timeout>
-    <p:GetUpdatesDelay>0</p:GetUpdatesDelay>
-  </p:Sessions>
-  <p:Database>
-    <p:URL>http://tempuri.org</p:URL>
-    <p:UserName>p:UserName</p:UserName>
-    <p:Password>p:Password</p:Password>
-  </p:Database>
-  <p:Email>
-    <p:SMTPHost>p:SMTPHost</p:SMTPHost>
-    <p:SMTPPort>p:SMTPPort</p:SMTPPort>
-    <p:EnableTLS>true</p:EnableTLS>
-    <p:SenderEmail>p:SenderEmail</p:SenderEmail>
-    <p:SenderName>p:SenderName</p:SenderName>
-    <p:SMTPAuth>true</p:SMTPAuth>
-    <p:SenderEmailPassword>p:SenderEmailPassword</p:SenderEmailPassword>
-  </p:Email>
-  <p:ToolServices>
-    <p:PollingInterval>0</p:PollingInterval>
-    <p:StaggerInterval>0</p:StaggerInterval>
-    <p:ConnectionTimeout>0</p:ConnectionTimeout>
-    <p:SocketTimeout>0</p:SocketTimeout>
-    <p:Timeout>0</p:Timeout>
-  </p:ToolServices>
-  <p:Apps>
-    <p:KeepApps>false</p:KeepApps>
-  </p:Apps>
-  <p:Display>
-    <p:NumRowsAppsList>p:NumRowsAppsList</p:NumRowsAppsList>
-    <p:NumRowsUsersList>p:NumRowsUsersList</p:NumRowsUsersList>
-  </p:Display>
-  <p:DocumentationURL>p:DocumentationURL</p:DocumentationURL>
-  <p:OrgHierarchy>
-    <p:MinOrgLevelsRequired>0</p:MinOrgLevelsRequired>
-    <p:MaxOrgLevels>0</p:MaxOrgLevels>
-  </p:OrgHierarchy>
-</p:AppVet>
+<AppVet xmlns="http://appvet.github.io/appvet/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://appvet.github.io/appvet/schemas AppVetProperties.xsd">
+
+	<Admin>
+		<!-- Initial credentials to launch AppVet for the first time. Does not 
+			have to be 'admin'. -->
+		<Username>johndoe</Username>
+		<Password>JoHnDoE</Password>
+	</Admin>
+
+	<Host>
+		<!-- Hostname examples: 'myhost.example.gov' or '123.45.6.7'. For local 
+			development, use 'localhost'. Make sure that these parameters match your 
+			Tomcat configuration. -->
+		<Hostname>127.0.0.1</Hostname>
+		<SSL>false</SSL>
+		<Port>8080</Port>
+	</Host>
+	<Logging>
+		<Level>INFO</Level>
+		<!-- For development, set ToConsole to true to view logging in Eclipse 
+			console. For production deployment, set to false. -->
+		<ToConsole>false</ToConsole>
+	</Logging>
+
+	<SSO>
+		<!-- To login and add users manually, set Active=false. If Active==false, 
+			all other SSO elements will be ignored by AppVet. -->
+		<Active>false</Active>
+		<UnauthorizedURL>sso_unauthorized.html</UnauthorizedURL>
+		<LogoutURL>sso_logout.html</LogoutURL>
+		<UserParams>
+			<!-- Set the authentication parameters used by the organization. Only 
+				EmailParamName is required and is used as the username if UserNameParamName 
+				is not available. -->
+			<EmailParamName>CAS_Email-Address</EmailParamName>
+		</UserParams>
+	</SSO>
+
+	<OrgLogoAltText>My org logo ALT text!</OrgLogoAltText>
+
+	<Sessions>
+		<Timeout>300000</Timeout>
+		<GetUpdatesDelay>5000</GetUpdatesDelay>
+	</Sessions>
+
+	<Database>
+		<URL>jdbc:mysql://localhost</URL>
+		<UserName>root</UserName>
+		<Password>appvet123</Password>
+	</Database>
+
+	<!-- <Email> <SMTPHost>smtp.test.com</SMTPHost> <SMTPPort>25</SMTPPort> 
+		<EnableTLS>true</EnableTLS> <SenderEmail>joe@test.com</SenderEmail> <SenderName>My 
+		AppVet</SenderName> <SMTPAuth>false</SMTPAuth> <SenderEmailPassword>MyEmailPassword</SenderEmailPassword> 
+		</Email> -->
+
+	<ToolServices>
+		<PollingInterval>1000</PollingInterval>
+		<StaggerInterval>1000</StaggerInterval>
+
+		<!-- ConnectionTimeout is the maximum time (in milliseconds) that AppVet 
+			waits until a connection is established with a tool (service). If a connection 
+			is not established, the tool service or the server it is running on is probably 
+			down. -->
+		<ConnectionTimeout>10000</ConnectionTimeout>
+		<!-- SocketTimeout is the maximum time (in milliseconds) that AppVet waits 
+			for data during an interuption of continuous data flow from the tool service. -->
+		<SocketTimeout>10000</SocketTimeout>
+		<!-- Timeout is the maximum time (in milliseconds) that AppVet waits for 
+			a report from a tool. Since AppVet will not know how long it will take for 
+			a tool to complete its processing of an app, it is required that AppVet be 
+			configured by an administrator to wait longer than the expected time it takes 
+			for the longest-running tool to complete its processing and return results. 
+			For example, 4 hours = 14400000 ms -->
+		<Timeout>14400000</Timeout>
+	</ToolServices>
+
+	<Apps>
+		<KeepApps>true</KeepApps>
+	</Apps>
+
+	<Display>
+		<NumRowsAppsList>20</NumRowsAppsList>
+		<NumRowsUsersList>20</NumRowsUsersList>
+	</Display>
+
+	<DocumentationURL>http://appvet.github.io/appvet/</DocumentationURL>
+
+	<OrgHierarchy>
+		<MinOrgLevelsRequired>4</MinOrgLevelsRequired>
+		<MaxOrgLevels>7</MaxOrgLevels>
+	</OrgHierarchy>
+
+</AppVet>

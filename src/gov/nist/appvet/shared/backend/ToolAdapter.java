@@ -261,7 +261,8 @@ public class ToolAdapter implements Runnable {
 			return null;
 		}
 		if (toolId == null) {
-			log.error("Cannot get tool adapter for null tool ID.");
+			// Note that tool may have been removed
+			log.warn("Cannot get tool adapter for null tool ID.");
 			return null;
 		}
 
@@ -274,8 +275,8 @@ public class ToolAdapter implements Runnable {
 					return adapter;
 				}
 			}
-
-			log.error("Could not find Android tool adapter '" + toolId + "'.");
+			// Warn since tool may have been removed
+			log.warn("Could not find Android tool adapter '" + toolId + "'.");
 			return null;
 
 		} else if (os == DeviceOS.IOS) {
@@ -287,8 +288,8 @@ public class ToolAdapter implements Runnable {
 					return adapter;
 				}
 			}
-
-			log.error("Could not find iOS tool adapter '" + toolId + "'.");
+			// Warn since tool may have been removed
+			log.warn("Could not find iOS tool adapter '" + toolId + "'.");
 			return null;
 
 		} else {
