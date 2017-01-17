@@ -10,122 +10,123 @@
 	<h1>APIs</h1>
 
 	<ul>
-		<li class="big"><a href="#clientapi">AppVet Client API</a></li>
-		<li class="big"><a href="#toolapi">Tool API</a></li>
-
+		<li class="big">Client API</li>
+		<ul>
+			<li><a href="#AUTHENTICATE">AUTHENTICATE</a></li>
+			<li><a href="#SUBMIT_APP">SUBMIT_APP</a></li>
+			<li><a href="#GET_APP_STATUS">GET_APP_STATUS</a></li>
+			<li><a href="#GET_APP_TOOL_IDS">GET_APP_TOOL_IDS</a></li>
+			<li><a href="#GET_APP_STATUS">GET_APP_STATUS</a></li>
+			<li><a href="#GET_TOOL_REPORT">GET_TOOL_REPORT</a></li>
+			<li><a href="#SUBMIT_REPORT">SUBMIT_REPORT</a></li>
+		</ul>
 	</ul>
 	<hr>
 	<h2 id="clientapi">Client API</h2>
-	
-	The AppVet client API is intended to for use by third-party clients including app stores, continuous integration environments, etc. 
+
+	The AppVet client API is intended to for use by third-party clients
+	including app stores, continuous integration environments, etc. See <a href="https://github.com/AppVet/appvet/blob/master/src/gov/nist/appvet/test/AppVetClientTester.java">AppVetClientTester.java</a> for an example of how to use the AppVet Client API.
 
 	<h3 id="AUTHENTICATE">AUTHENTICATE</h3>
-
 	The
 	<code>AUTHENTICATE</code>
 	service accepts a username and password for authenticating a client
 	with AppVet and returns an AppVet session ID. This session ID may then
 	be used by the client for further interaction with AppVet until the
 	session expires.
-	
+
 	<ul>
-	
-	<li>URL</li>
-	<br><br>
-	<code>/appvet/AppVetServlet</code>
-	<br><br>
-	
-	<li>Method</li>
-	<br><br>
-	<code>GET</code>
-	<br><br>
-	
-    <li>HTTP Headers</li>
-	<br><br>
-	HTTP header <code>Authorization</code> must be set to the base64 encoding of the string <code>[username]:[password]</code>.  <b>Example</b>: <code>Authorization</code> for user <code>joe</code> with password <code>mYpAssWord</code> (i.e., <code>joe:mYpAssWord</code>) will have a base64 value of <code>c3RldmVxOmFzZGY=</code>.
-	<br><br>
-
-	<li>URL Parameters</li>
-	<br><br>
-	N/A
-	<br><br>
-	
-	<li>Form Parameters</li>
-	<br><br>
-	N/A
-	<br><br>
-	
-	<li>Success Response</li>
-	<br><br>
+		<li><b>URL:</b> <code>/appvet/AppVetServlet</code></li>
+		<li><b>Method:</b> <code>GET | POST</code></li>
+		<li><b>HTTP Headers:</b></li> HTTP header
+		<code>Authorization</code>
+		must be set to the base64 encoding of the string
+		<code>[username]:[password]</code>
+		.
+		<b>Example</b>:
+		<code>Authorization</code>
+		for user
+		<code>joe</code>
+		with password
+		<code>mYpAssWord</code>
+		(i.e.,
+		<code>joe:mYpAssWord</code>
+		) will have a base64 value of
+		<code>c3RldmVxOmFzZGY=</code>
+		.
+		<li><b>URL Parameters:</b> None</li>
+		<li><b>Form Parameters:</b> None</li>
+		<li><b>Success Response:</b></li>
 		<ul>
-		<li>HTTP Code: <code>200 OK</code>
-		<li>Payload: <code>[session_id]</code></li>
+			<li>HTTP Code: <code>200 OK</code>
+			</li>
+			<li>Payload (UTF-8): <code>[session_id]</code></li>
 		</ul>
-	<br><br>
-	
-	<li>Error Response</li>
-	<br><br>
+		<li><b>Error Response:</b></li>
 		<ul>
-		<li>HTTP Code: <code>401 UNAUTHORIZED</code>
-		<li>Payload: <code>[error_message]</code></li>
+			<li>HTTP Code: <code>401 UNAUTHORIZED</code>
+			</li>
+			<li>Payload (UTF-8): <code>[error_message]</code></li>
 		</ul>
-	<br><br>
+		<li><b>Code Snippet (Java using Apache HTTP client
+				libraries):</b></li>
+		<pre>
+			<code>
+HttpPost httpPost = new HttpPost(appvetURL);
+String encoding = Base64.getEncoder().encodeToString(("johndoe":"mYPassWord").getBytes());
+httpPost.setHeader("Authorization", "Basic " + encoding);
+...
 	
+final HttpResponse response = httpClient.execute(httpPost);
+	</code>
+		</pre>
 	</ul>
-	
 	<h3 id="SUBMIT_APP">SUBMIT_APP</h3>
-
-		The
+	The
 	<code>SUBMIT_APP</code>
 	service submits an Android or iOS app to AppVet.
-	
-	<ul>
-	
-	<li>URL</li>
-	<br><br>
-	<code>/appvet/AppVetServlet</code>
-	<br><br>
-	
-	<li>Method</li>
-	<br><br>
-	<code>PUT</code>
-	<br><br>
-	
-    <li>HTTP Headers</li>
-	<br><br>
-    N/A
-  	<br><br>
-  	
-  	<li>URL Parameters</li>
-	<br><br>
-	N/A
-	<br><br>
 
-	<li>Form Parameters</li>
-	<br><br>
+	<ul>
+		<li><b>URL:</b> <code>/appvet/AppVetServlet</code></li>
+		<li><b>Method:</b> <code>POST</code></li>
+		<li><b>HTTP Headers:</b> None</li>
+		<li><b>URL Parameters:</b> None</li>
+		<li><b>Form Parameters</b></li>
 		<ul>
-		<li><code>command=SUBMIT_APP</code></li>
-		<li><code>sessionid=[session_id]</code></li>
-		<li><code>fileupload=[app_file]</code></li>
+			<li><code>command=SUBMIT_APP</code></li>
+			<li><code>sessionid=[session_id]</code></li>
+			<li><code>fileupload=[app_file]</code></li>
 		</ul>
-	<br><br>
-	
-	<li>Success Response</li>
-	<br><br>
+		<li><b>Success Response:</b></li>
 		<ul>
-		<li>HTTP Code: <code>202 ACCEPTED</code></li>
-		<li>Payload: <code>[app_id]</code></li>
+			<li>HTTP Code: <code>202 ACCEPTED</code></li>
+			<li>Payload (UTF-8): <code>[app_id]</code></li>
 		</ul>
-	<br><br>
-	
-	<li>Error Response</li>
-	<br><br>
+
+		<li><b>Error Response:</b></li>
 		<ul>
-		<li>HTTP Code: <code>400 BAD REQUEST</code>
-		<li>Payload: [error_message]</li>
+			<li>HTTP Code: <code>400 BAD REQUEST</code>
+			</li>
+			<li>Payload (UTF-8): [error_message]</li>
 		</ul>
-	<br><br>
+		<li><b>Code Snippet (Java using Apache HTTP client
+				libraries):</b></li>
+		<pre>
+			<code>
+MultipartEntity entity = new MultipartEntity();
+entity.addPart("command", new StringBody("SUBMIT_APP", Charset.forName("UTF-8")));
+entity.addPart("sessionid", new StringBody(sessionId, Charset.forName("UTF-8")));
+File appFile = new File(appPath);
+FileBody fileBody = new FileBody(appFile);
+entity.addPart("fileupload", fileBody);
+
+HttpPost httpPost = new HttpPost(appvetURL);
+httpPost.setEntity(entity);
+...
 	
+final HttpResponse response = httpClient.execute(httpPost);
+	</code>
+		</pre>
 	</ul>
 
 
@@ -134,272 +135,275 @@
 	The
 	<code>GET_APP_STATUS</code>
 	service retrieves the current status or risk score of an app.
-	
-		<ul>
-	
-	<li>URL</li>
-	<br><br>
-	<code>/appvet/AppVetServlet</code>
-	<br><br>
-	
-	<li>Method</li>
-	<br><br>
-	<code>GET</code>
-	<br><br>
-	
-    <li>HTTP Headers</li>
-	<br><br>
-	N/A
-	<br><br>
 
-	<li>URL Parameters</li>
-	<br><br>
+	<ul>
+		<li><b>URL:</b> <code>/appvet/AppVetServlet</code></li>
+		<li><b>Method:</b> <code>GET</code></li>
+		<li><b>HTTP Headers:</b> None</li>
+		<li><b>URL Parameters</b></li>
 		<ul>
-		<li><code>command=GET_APP_STATUS</code></li>
-		<li><code>appid=[app_id]</code></li>
-		<li><code>sessionid=[session_id]</code></li>
+			<li><code>command=GET_APP_STATUS</code></li>
+			<li><code>appid=[app_id]</code></li>
+			<li><code>sessionid=[session_id]</code></li>
 		</ul>
-	<br><br>
-	
-	<li>Form Parameters</li>
-	<br><br>
-	N/A
-	<br><br>
-	
-	<li>Success Response</li>
-	<br><br>
 
+		<li><b>Form Parameters:</b> None</li>
+
+		<li><b>Success Response:</b></li>
 		<ul>
-		<li>HTTP Code: <code>200 OK</code>
-		<li>Payload: <code>[app_status]</code></li>
-		</ul>
-	<br><br>
-		A returned <code>app_status</code> will have a value of: 
-		<br><br> 
+			<li>HTTP Code: <code>200 OK</code></li>
+			<li>Payload (UTF-8): <code>[app_status]</code> having a value of:</li>
 		<ul>
-		<li><code>REGISTERING</code>: The app is currently being registered.</li>
-		<li><code>PENDING</code>: The app is in the queue waiting to be processed.</li>
-		<li><code>PROCESSING</code>: The app is being analyzed.</li>
-		<li><code>ERROR</code>: A tool has failed to analyze the app.</li>
-		<li><code>LOW</code>: All tools have assessed the app as low risk.</li>
-		<li><code>MODERATE</code>: At least one tool has assessed the app as moderate risk but no tool assessed the app as high risk.</li>
-		<li><code>HIGH</code>: At least one tool has assessed the app as high risk.</li>
-		<li><code>NA</code>: No tools were available to process the app.</li>
+			<li><code>REGISTERING</code>: The app is currently being
+				registered.</li>
+			<li><code>PENDING</code>: The app is in the queue waiting to be
+				processed.</li>
+			<li><code>PROCESSING</code>: The app is being analyzed.</li>
+			<li><code>ERROR</code>: A tool has failed to analyze the app.</li>
+			<li><code>LOW</code>: All tools have assessed the app as low
+				risk.</li>
+			<li><code>MODERATE</code>: At least one tool has assessed the
+				app as moderate risk but no tool assessed the app as high risk.</li>
+			<li><code>HIGH</code>: At least one tool has assessed the app as
+				high risk.</li>
+			<li><code>NA</code>: No tools were available to process the app.</li>
 		</ul>
-	<br><br>
-	<li>Error Response</li>
-	<br><br>
+				</ul>
+		
+		<li><b>Error Response:</b></li>
 		<ul>
-		<li>HTTP Code: <code>401 UNAUTHORIZED</code>
-		<li>Payload: <code>[error_message]</code></li>
+			<li>HTTP Code: <code>401 UNAUTHORIZED</code>
+			</li>
+			<li>Payload (UTF-8): <code>[error_message]</code></li>
 		</ul>
-	<br><br>
-	
+		<li><b>Code Snippet:</b></li>
+				<pre>
+			<code>
+http://127.0.0.1/appvet/AppVetServlet?command=GET_APP_STATUS&appid=1234&sessionid=1234567890abcdefg
+	</code>
+		</pre>
 	</ul>
 	
+	<h3 id="GET_APP_TOOL_IDS">GET_APP_TOOL_IDS</h3>
+
+
+	The
+	<code>GET_APP_TOOL_IDS</code>
+	service retrieves the IDs of the tools used to process a specific app.
+
+	<ul>
+
+			<li><b>URL:</b> <code>/appvet/AppVetServlet</code></li>
+		<li><b>Method:</b> <code>GET</code></li>
+		<li><b>HTTP Headers:</b> None</li>
+		<li><b>URL Parameters</b></li>
+		<ul>
+			<li><code>command=GET_APP_TOOL_IDS</code></li>
+			<li><code>appid=[app_id]</code></li>
+			<li><code>sessionid=[session_id]</code></li>
+		</ul>
+
+		<li><b>Form Parameters:</b> None</li>
+
+		<li><b>Success Response:</b></li>
+		<ul>
+			<li>HTTP Code: <code>200 OK</code></li>
+			<li>Payload (UTF-8): <code>[app_status]</code></li>
+		</ul>
+		<li><b>Success Response:</b></li>
+		<ul>
+			<li>HTTP Code: <code>200 OK</code>
+			</li>
+			<li>Payload: <code>[tool_ids]</code>
+		A returned
+		<code>tool_ids</code>
+		will be a commda-delimitted string containing a set of tool IDs. 
+		</li>
+		</ul>
+		<li><b>Error Response</b></li>
+		<ul>
+			<li>HTTP Code: <code>401 UNAUTHORIZED</code>
+			</li>
+			<li>Payload: <code>[error_message]</code></li>
+		</ul>
+		<li><b>Code Snippet:</b></li>
+				<pre>
+			<code>
+http://127.0.0.1/appvet/AppVetServlet?command=GET_APP_TOOL_IDS&appid=1234&sessionid=1234567890abcdefg
+	</code>
+		</pre>
+	</ul>
+	
+	
+	
+
 	<h3 id="GET_APP_TOOLS_STATUS">GET_APP_TOOLS_STATUS</h3>
-	
-	
-		The
+
+
+	The
 	<code>GET_APP_TOOLS_STATUS</code>
-	service retrieves the current status or risk score of a tool for an app.
-	
-		<ul>
-	
-	<li>URL</li>
-	<br><br>
-	<code>/appvet/AppVetServlet</code>
-	<br><br>
-	
-	<li>Method</li>
-	<br><br>
-	<code>GET</code>
-	<br><br>
-	
-    <li>HTTP Headers</li>
-	<br><br>
-	N/A
-	<br><br>
+	service retrieves the current status or risk score of a tool for an
+	app.
 
-	<li>URL Parameters</li>
-	<br><br>
-		<ul>
-		<li><code>command=GET_APP_TOOLS_STATUS</code></li>
-		<li><code>appid=[app_id]</code></li>
-		<li><code>sessionid=[session_id]</code></li>
-		</ul>
-	<br><br>
-	
-	<li>Form Parameters</li>
-	<br><br>
-	N/A
-	<br><br>
-	
-	<li>Success Response</li>
-	<br><br>
+	<ul>
 
+			<li><b>URL:</b> <code>/appvet/AppVetServlet</code></li>
+		<li><b>Method:</b> <code>GET</code></li>
+		<li><b>HTTP Headers:</b> None</li>
+		<li><b>URL Parameters</b></li>
 		<ul>
-		<li>HTTP Code: <code>200 OK</code>
-		<li>Payload: <code>[app_tools_status]</code></li>
+			<li><code>command=GET_APP_TOOLS_STATUS</code></li>
+			<li><code>appid=[app_id]</code></li>
+			<li><code>sessionid=[session_id]</code></li>
 		</ul>
-	<br><br>
-		A returned <code>app_tools_status</code> will be a string that defines the status 
-		for each tool. The format of <code>app_tools_status</code> will be of the form: <code>app_tools_status = [tool1=tool1_status,tool2=tool2_status,...]</code>
-		<br><br> 
-		where <code>tool<i>n</i>_status</code> will be one of:
-		<br><br>
+
+		<li><b>Form Parameters:</b> None</li>
+
+		<li><b>Success Response:</b></li>
 		<ul>
-		<li><code>SUBMITTED</code>: The app was submitted to the tool but no result has been generated.</li>
-		<li><code>ERROR</code>: The tool has failed to analyze the app.</li>
-		<li><code>LOW</code>: The tool has assessed the app as low risk.</li>
-		<li><code>MODERATE</code>: The tool has assessed the app as moderate risk.</li>
-		<li><code>HIGH</code>: The tool has assessed the app as high risk.</li>
-		<li><code>NA</code>: The tool was not available to process the app.</li>
+			<li>HTTP Code: <code>200 OK</code></li>
+			<li>Payload (UTF-8): <code>[app_status]</code></li>
 		</ul>
-	<br><br>
-	<li>Error Response</li>
-	<br><br>
+		<li><b>Success Response:</b></li>
 		<ul>
-		<li>HTTP Code: <code>401 UNAUTHORIZED</code>
-		<li>Payload: <code>[error_message]</code></li>
+			<li>HTTP Code: <code>200 OK</code>
+			</li>
+			<li>Payload: <code>[app_tools_status]</code> having a format of 
+		<code>app_tools_status =
+			[tool1=tool1_status,tool2=tool2_status,...]</code> where
+		<code>
+			tool<i>n</i>_status
+		</code>
+		will be one of:
+		<ul>
+			<li><code>SUBMITTED</code>: The app was submitted to the tool
+				but no result has been generated.</li>
+			<li><code>ERROR</code>: The tool has failed to analyze the app.</li>
+			<li><code>LOW</code>: The tool has assessed the app as low risk.</li>
+			<li><code>MODERATE</code>: The tool has assessed the app as
+				moderate risk.</li>
+			<li><code>HIGH</code>: The tool has assessed the app as high
+				risk.</li>
+			<li><code>NA</code>: The tool was not available to process the
+				app.</li>
 		</ul>
-	<br><br>
-	
+		<li><b>Error Response</b></li>
+		<ul>
+			<li>HTTP Code: <code>401 UNAUTHORIZED</code>
+			</li>
+			<li>Payload: <code>[error_message]</code></li>
+		</ul>
+		<li><b>Code Snippet:</b></li>
+				<pre>
+			<code>
+http://127.0.0.1/appvet/AppVetServlet?command=GET_APP_TOOLS_STATUS&appid=1234&sessionid=1234567890abcdefg
+	</code>
+		</pre>
 	</ul>
-	
-	<h3 id="DOWNLOAD_REPORTS">DOWNLOAD_REPORTS</h3>
-	
-	
-		The
-	<code>DOWNLOAD_REPORTS</code>
-	service retrieves the available reports for an app in a single zip file.
-	
-		<ul>
-	
-	<li>URL</li>
-	<br><br>
-	<code>/appvet/AppVetServlet</code>
-	<br><br>
-	
-	<li>Method</li>
-	<br><br>
-	<code>GET</code>
-	<br><br>
-	
-    <li>HTTP Headers</li>
-	<br><br>
-	N/A
-	<br><br>
-
-	<li>URL Parameters</li>
-	<br><br>
-		<ul>
-		<li><code>command=DOWNLOAD_REPORTS</code></li>
-		<li><code>appid=[app_id]</code></li>
-		<li><code>sessionid=[session_id]</code></li>
-		</ul>
-	<br><br>
-	
-	<li>Form Parameters</li>
-	<br><br>
-	N/A
-	<br><br>
-	
-	<li>Success Response</li>
-	<br><br>
-
-		<ul>
-		<li>HTTP Code: <code>200 OK</code>
-		<li>Payload: <code>[app_reports]</code></li>
-		</ul>
-	<br><br>
-		A returned <code>app_reports</code> will be a binary zip file containing all available reports for the app.
-	<br><br>
-	<li>Error Response</li>
-	<br><br>
-		<ul>
-		<li>HTTP Code: <code>401 UNAUTHORIZED</code>
-		<li>Payload: <code>[error_message]</code></li>
-		</ul>
-	<br><br>
-	
 	</ul>
+
+	<h3 id="GET_TOOL_REPORT">GET_TOOL_REPORT</h3>
+
+	The
+	<code>GET_TOOL_REPORT</code>
+	service retrieves a specific tool report for a specific app.
+
+	<ul>
+		<li><b>URL:</b> <code>/appvet/AppVetServlet</code></li>
+		<li><b>Method:</b> <code>GET</code></li>
+		<li><b>HTTP Headers:</b> None</li>
+		<li><b>URL Parameters</b></li>
+		<ul>
+			<li><code>command=GET_TOOL_REPORT</code></li>
+			<li><code>appid=[app_id]</code></li>
+			<li><code>toolid=[toolid]</code></li>
+			<li><code>sessionid=[session_id]</code></li>
+		</ul>
+
+		<li><b>Form Parameters:</b> None</li>
+
+		<li><b>Success Response:</b></li>
+		<ul>
+			<li>HTTP Code: <code>200 OK</code></li>
+			<li>Payload (Dependent on MIME Type): <code>[report]</code> having a MIME content type of:</li>
+		<ul>
+			<li><code>text/plain</code>: A plain text report.</li>
+			<li><code>text/html</code>: An HTML report.</li>
+			<li><code>application/pdf</code>: A PDF report.</li>
+			<li><code>application/rtf</code>: An RTF report.</li>
+		</ul>
+				</ul>
 		
-	<h2 id="toolapi">Tool API</h2>
-	
-	The AppVet tool API is intended for use by third-party tools to submit analysis reports and risk scores back to AppVet.
-	<br><br>
-		<h3 id="SUBMIT_REPORT">SUBMIT_REPORT</h3>
-	
-	
-		The
+		<li><b>Error Response:</b></li>
+		<ul>
+			<li>HTTP Code: <code>401 UNAUTHORIZED</code>
+			</li>
+			<li>Payload (UTF-8): <code>[error_message]</code></li>
+		</ul>
+		<li><b>Code Snippet:</b></li>
+				<pre>
+			<code>
+http://127.0.0.1/appvet/AppVetServlet?command=GET_TOOL_REPORT&appid=1234&toolid=appinfo&sessionid=1234567890abcdefg
+	</code>
+		</pre>
+	</ul>
+
+	<h3 id="SUBMIT_REPORT">SUBMIT_REPORT</h3>
+
+
+	The
 	<code>SUBMIT_REPORT</code>
-	service submits an app analysis report for a specific tool.
-	
-		<ul>
-	
-	<li>URL</li>
-	<br><br>
-	<code>/appvet/AppVetServlet</code>
-	<br><br>
-	
-	<li>Method</li>
-	<br><br>
-	<code>PUT</code>
-	<br><br>
-	
-    <li>HTTP Headers</li>
-	<br><br>
-	N/A
-	<br><br>
+	service submits a tool or analysis report for a specific app.
 
-	<li>URL Parameters</li>
-	<br><br>
-	N/A
-	<br><br>
-	
-	<li>Form Parameters</li>
-	<br><br>
-		<ul>
-		<li><code>command=SUBMIT_REPORT</code></li>
-		<li><code>username=[username]</code></li>
-		<li><code>password=[password]</code></li>
-		<li><code>sessionid=[session_id]</code> (Optional in lieu of username/password)</li>
-		<li><code>appid=[app_id]</code></li>
-		<li><code>toolid=[tool_id]</code></li>	
-		<li><code>toolrisk=[tool_risk]</code></li>	
-		<li><code>fileupload=[report_file]</code></li>
-		</ul>
-			<br><br> 
-		where <code>tool_risk</code> will be one of:
-		<br><br>
-		<ul>
-		<li><code>ERROR</code>: The tool has failed to analyze the app.</li>
-		<li><code>LOW</code>: The tool has assessed the app as low risk.</li>
-		<li><code>MODERATE</code>: The tool has assessed the app as moderate risk.</li>
-		<li><code>HIGH</code>: The tool has assessed the app as high risk.</li>
-		</ul>
-			<br><br>
-		
-	<li>Success Response</li>
-	<br><br>
+	<ul>
 
+		<li><b>URL:</b> <code>/appvet/AppVetServlet</code></li>
+		<li><b>Method:</b> <code>POST</code></li>
+		<li><b>HTTP Headers:</b> None</li>
+		<li><b>URL Parameters:</b> None</li>
+		<li><b>Form Parameters</b></li>
 		<ul>
-		<li>HTTP Code: <code>200 OK</code>
-		<li>Payload: <code>[app_reports]</code></li>
+			<li><code>command=SUBMIT_REPORT</code></li>
+			<li><code>sessionid=[session_id]</code></li>
+			<li><code>appid=[app_id]</code></li>
+			<li><code>toolid=[tool_id]</code></li>
+			<li><code>file=[app_file]</code></li>
 		</ul>
-	<br><br>
-		A returned <code>app_reports</code> will be a binary zip file containing all available reports for the app.
-	<br><br>
-	<li>Error Response</li>
-	<br><br>
+		<li><b>Success Response:</b></li>
 		<ul>
-		<li>HTTP Code: <code>400 BAD REQUEST</code>
-		<li>Payload: <code>[error_message]</code></li>
+			<li>HTTP Code: <code>202 ACCEPTED</code></li>
+			<li>Payload: None</li>
 		</ul>
-	<br><br>
+
+		<li><b>Error Response:</b></li>
+		<ul>
+			<li>HTTP Code: <code>400 BAD REQUEST</code>
+			</li>
+			<li>Payload (UTF-8): [error_message]</li>
+		</ul>
+		<li><b>Code Snippet (Java using Apache HTTP client
+				libraries):</b></li>
+		<pre>
+			<code>
+MultipartEntity entity = new MultipartEntity();
+entity.addPart("command", new StringBody("SUBMIT_REPORT", Charset.forName("UTF-8")));
+entity.addPart("sessionid", new StringBody(sessionId, Charset.forName("UTF-8")));
+entity.addPart("appid", new StringBody(appId, Charset.forName("UTF-8")));
+entity.addPart("toolid", new StringBody(toolId, Charset.forName("UTF-8")));
+entity.addPart("toolrisk", new StringBody(toolStatus.name(), Charset.forName("UTF-8")));
+File report = new File(reportPath);
+FileBody fileBody = new FileBody(report);
+entity.addPart("file", fileBody);
+
+HttpPost httpPost = new HttpPost(appvetURL);
+httpPost.setEntity(entity);
+...
 	
+final HttpResponse response = httpClient.execute(httpPost);
+	</code>
+		</pre>
 	</ul>
+	
 
 </body>
 
