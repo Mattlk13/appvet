@@ -42,15 +42,17 @@ public class HttpBasicAuthentication {
 		// Add Authorization and Basic keywords
 		return "Authorization: Basic " + base64encodedString;
 	}
-
+	
+	// TODO mod1
 	public static String[] getUsernameAndPassword(String authorizationHeaderValue) {
 		try {
 			// Requester is attempting to authenticate
 			System.out.println("authHeaderValue is " + authorizationHeaderValue);
-			// Authorization header value will have the form: "Authorization: Basic <base64EncodedUsernamePassword>"
+			// Authorization header value will have the form: "Basic <base64EncodedUsernamePassword>"
+			// Split authorization value on whitespace
 			String[] tokens = authorizationHeaderValue.split("\\s");
-			// Encoded username and password will be in token at index 2
-			String encodedUsernamePassword = tokens[2];
+			// Get encoded username and password
+			String encodedUsernamePassword = tokens[1];
 			// Decode Base64
 			byte[] base64decodedBytes = Base64.getDecoder().decode(encodedUsernamePassword);
 			String userNamePassword = new String(base64decodedBytes, "utf-8");

@@ -704,17 +704,23 @@ public class Database {
 			//		+ "Cannot authenticate session.");
 			return false;
 		}
+
 		if (clientIpAddress == null || clientIpAddress.isEmpty()) {
 			log.debug("Client IP is null -- cannot authenticate session.");
 			return false;
 		}
+
 		final Date sessionExpiration = getSessionExpiration(sessionId,
 				clientIpAddress);
+
 		Date currentDate = new Date(System.currentTimeMillis());
+
 		if (sessionExpiration == null) {
+
 			log.debug("Session " + sessionId + " expired");
 			return false;
 		} else if (currentDate.after(sessionExpiration)) {
+
 			// Session expired
 			log.debug("Session " + sessionId + " has expired");
 			update("DELETE FROM sessions WHERE sessionid='" + sessionId + "'");

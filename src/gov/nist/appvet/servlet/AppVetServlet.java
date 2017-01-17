@@ -80,51 +80,28 @@ public class AppVetServlet extends HttpServlet {
 	/** Handler for HTTP GET messages.*/
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) {
-				
+						
+		// Not sure if this is expected for GETs
 		String authHeaderValue = request.getHeader("Authorization");
 		if (authHeaderValue != null) {
 			// Requester is attempting to authenticate
-			String[] usernameAndPassword = HttpBasicAuthentication.getUsernameAndPassword(authHeaderValue);
-			String username = usernameAndPassword[0];
-			String password = usernameAndPassword[1];
-			if (!authenticateUserNameAndPassword(username, password)) {
-				// Authentication error
-				sendHttpResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
-						ErrorMessage.AUTHENTICATION_ERROR.getDescription(),
-						true);
-				return;
-			} else {
-				// Username and password authenticated so return session ID
-
-				// Client IP address of the request.
-				String clientIpAddress = request.getRemoteAddr();
-
-				// On CentOS, clientIpAddress will be '0:0:0:0:0:0:0:1' if on
-				// localhost, so change to '127.0.0.1'
-				if (clientIpAddress.equals("0:0:0:0:0:0:0:1")) {
-					clientIpAddress = "127.0.0.1";
-				}
-				// Clear all expired sessions
-				Database.clearExpiredSessions();
-				final String sessionId = Database.createNewSession(username,
-						clientIpAddress);
-				log.debug("AUTHENTICATION SESSIONID: " + sessionId);
-				sendHttpResponse(response, HttpServletResponse.SC_OK,
-						sessionId, false);
-				return;
-			}
+			handleBasicAuthentication(request, response);
+			return;
 		}		
 		
 		// AppVet-generated session ID.
 		String sessionId = request
 				.getParameter(AppVetParameter.SESSIONID.value);
+
 		// Client IP address of the request.
 		String clientIpAddress = request.getRemoteAddr();
+		
 		// On CentOS, clientIpAddress will be '0:0:0:0:0:0:0:1' if on
 		// localhost, so change to '127.0.0.1'
 		if (clientIpAddress.equals("0:0:0:0:0:0:0:1")) {
 			clientIpAddress = "127.0.0.1";
 		}
+		
 		// Requesting username.
 		String requesterUserName = request
 				.getParameter(AppVetParameter.USERNAME.value);
@@ -144,7 +121,7 @@ public class AppVetServlet extends HttpServlet {
 			// Session authenticated
 			requesterUserName = Database.getSessionUser(sessionId);
 		}
-		
+				
 		// Validate AppVet command
 		String commandStr = request.getParameter(AppVetParameter.COMMAND.value);
 		
@@ -192,12 +169,12 @@ public class AppVetServlet extends HttpServlet {
 			}
 		}
 		
-/*		log.debug("Incoming GET message:\n" + "sessionId: " + sessionId + "\n"
-				+ "clientIpAddress: " + clientIpAddress + "\n"
-				+ "requesterUserName: " + requesterUserName + "\n"
-				+ "commandStr: " + commandStr + "\n" + "appId: " + appId + "\n"
-				+ "toolId: " + toolId);
-*/
+//		log.debug("Incoming GET message:\n" + "sessionId: " + sessionId + "\n"
+//				+ "clientIpAddress: " + clientIpAddress + "\n"
+//				+ "requesterUserName: " + requesterUserName + "\n"
+//				+ "commandStr: " + commandStr + "\n" + "appId: " + appId + "\n"
+//				+ "toolId: " + toolId);
+
 		
 		// Handle AppVet command
 		try {
@@ -323,6 +300,14 @@ public class AppVetServlet extends HttpServlet {
 		if (clientIpAddress.equals("0:0:0:0:0:0:0:1")) {
 			clientIpAddress = "127.0.0.1";
 		}
+		
+		String authHeaderValue = request.getHeader("Authorization");
+		if (authHeaderValue != null) {
+			// Requester is attempting to authenticate
+			handleBasicAuthentication(request, response);
+			return;
+		}	
+		
 		FileItemFactory factory = null;
 		ServletFileUpload upload = null;
 		List<FileItem> items = null;
@@ -537,6 +522,44 @@ public class AppVetServlet extends HttpServlet {
 		}
 	}
 	
+	/** Process requests with Authorization header */
+	public void handleBasicAuthentication(HttpServletRequest request,
+			HttpServletResponse response) {
+		String authHeaderValue = request.getHeader("Authorization");
+		if (authHeaderValue != null) {
+			// Requester is attempting to authenticate
+			String[] usernameAndPassword = HttpBasicAuthentication.getUsernameAndPassword(authHeaderValue);
+			String username = usernameAndPassword[0];
+			String password = usernameAndPassword[1];
+			if (!authenticateUserNameAndPassword(username, password)) {
+				// Authentication error
+				sendHttpResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
+						ErrorMessage.AUTHENTICATION_ERROR.getDescription(),
+						true);
+				return;
+			} else {
+				// Username and password authenticated so return session ID
+
+				// Client IP address of the request.
+				String clientIpAddress = request.getRemoteAddr();
+
+				// On CentOS, clientIpAddress will be '0:0:0:0:0:0:0:1' if on
+				// localhost, so change to '127.0.0.1'
+				if (clientIpAddress.equals("0:0:0:0:0:0:0:1")) {
+					clientIpAddress = "127.0.0.1";
+				}
+				// Clear all expired sessions
+				Database.clearExpiredSessions();
+				final String sessionId = Database.createNewSession(username,
+						clientIpAddress);
+				log.debug("AUTHENTICATION SESSIONID: " + sessionId);
+				sendHttpResponse(response, HttpServletResponse.SC_OK,
+						sessionId, false);
+				return;
+			}
+		}
+	}
+	
 	public boolean requesterAuthorizedToAccessAppId(String appId, String requesterUsername) {
 		// Check if the owner is the requester
 		String ownerName = Database.getOwner(appId);
@@ -731,15 +754,19 @@ public class AppVetServlet extends HttpServlet {
 	private boolean authenticateSession(String sessionId, String clientIpAddress) {
 		// Clear all expired sessions
 		Database.clearExpiredSessions();
-		
+
 		// Verify session ID. 
 		if (Database.sessionIsGood(sessionId, clientIpAddress)) {
+
 			// If session ID is valid, get user based on session ID only. Don't
 			// use userName since this might not correlate to the session ID.
 			String user = Database.getSessionUser(sessionId);
+
 			Database.updateUserLogonTime(user);
+
 			return true;
 		} else {
+
 			//log.debug("Session " + sessionId + " expired");
 			return false;
 		}
