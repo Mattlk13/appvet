@@ -28,7 +28,6 @@ import gov.nist.appvet.shared.all.AppStatus;
 import gov.nist.appvet.shared.all.AppVetParameter;
 import gov.nist.appvet.shared.all.AppVetServletCommand;
 import gov.nist.appvet.shared.all.DeviceOS;
-import gov.nist.appvet.shared.all.HttpBasicAuthentication;
 import gov.nist.appvet.shared.all.ReportFileType;
 import gov.nist.appvet.shared.all.Role;
 import gov.nist.appvet.shared.all.ToolType;
@@ -49,9 +48,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -528,7 +529,36 @@ public class AppVetServlet extends HttpServlet {
 		String authHeaderValue = request.getHeader("Authorization");
 		if (authHeaderValue != null) {
 			// Requester is attempting to authenticate
-			String[] usernameAndPassword = HttpBasicAuthentication.getUsernameAndPassword(authHeaderValue);
+			String[] usernameAndPassword = null;
+			try {
+				// Requester is attempting to authenticate
+				System.out.println("authHeaderValue is " + authHeaderValue);
+				// Authorization header value will have the form: "Basic <base64EncodedUsernamePassword>"
+				// Split authorization value on whitespace
+				String[] tokens = authHeaderValue.split("\\s");
+				// MAKE SURE THAT TOKENS HAS EXACTLY TWO ELEMENTS, THE FIRST BEING "Basic " (with a space). 
+				// IF NOT, RETURN AN APPROPRIATE INVALID FORMAT MESSAGE. 
+				if (tokens.length != 2 || !tokens[0].equals("Basic ")) {
+					sendHttpResponse(response, HttpServletResponse.SC_BAD_REQUEST,
+							"Invalid Authorization Header. Be sure to use the form "
+							+ "\"Authorization\":\"Basic \" + [base64_username_password].",
+							true);
+					return;
+				}
+
+				// Get encoded username and password
+				String encodedUsernamePassword = tokens[1];
+				// Decode Base64
+				byte[] base64decodedBytes = Base64.getDecoder().decode(encodedUsernamePassword);
+				String userNamePassword = new String(base64decodedBytes, "utf-8");
+				// Username and password string will be delimitted by a colon
+				usernameAndPassword = userNamePassword.split(":");
+				
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+				return;
+			}			
+			
 			String username = usernameAndPassword[0];
 			String password = usernameAndPassword[1];
 			if (!authenticateUserNameAndPassword(username, password)) {
