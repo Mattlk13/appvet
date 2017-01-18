@@ -34,14 +34,14 @@ import org.apache.http.params.HttpParams;
  */
 public class AppVetClientTester {
 
-	private String username = "steveq";
-	private String password = "asdf";
+	private String username = "johndoe";
+	private String password = "mYpAssword";
 	private String appvetURL = "http://127.0.0.1:8080/appvet/AppVetServlet";
-	private String appPath = "/home/carwash/test-apps/android/DHS/com.druidlab.mymeasures_2.8.2.apk";
-	private String reportPath = "/home/carwash/test-reports/test-report.html";
+	private String appPath = "/home/test-apps/android/com.example.apk";
+	private String reportPath = "/home/test-reports/test-report.html";
 	private String getStatusURL = 
 			appvetURL + "?command=GET_APP_STATUS;appid=xxx;sessionid=yyy";
-	private static String reportsDirectory = "/home/carwash";
+	private static String reportsDirectory = "/home/reports";
 
 	public void AppVetClientTeseter() {}
 
