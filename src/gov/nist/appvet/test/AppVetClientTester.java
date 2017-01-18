@@ -1,12 +1,10 @@
 package gov.nist.appvet.test;
 
 
-import gov.nist.appvet.shared.all.ReportFileType;
 import gov.nist.appvet.shared.backend.ToolStatus;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +28,8 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
 /** This class tests the 
- * <a href="http://appvet.github.io/appvet/">AppVet Client API</a>.
+ * <a href="http://appvet.github.io/appvet/">AppVet Client API</a>. To run
+ * within Eclipse, select Run As -> Java Application.
  */
 public class AppVetClientTester {
 
@@ -39,8 +38,6 @@ public class AppVetClientTester {
 	private String appvetURL = "http://127.0.0.1:8080/appvet/AppVetServlet";
 	private String appPath = "/home/test-apps/android/com.example.apk";
 	private String reportPath = "/home/test-reports/test-report.html";
-	private String getStatusURL = 
-			appvetURL + "?command=GET_APP_STATUS;appid=xxx;sessionid=yyy";
 	private static String reportsDirectory = "/home/reports";
 
 	public void AppVetClientTeseter() {}
