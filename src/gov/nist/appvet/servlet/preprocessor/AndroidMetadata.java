@@ -227,6 +227,11 @@ public class AndroidMetadata {
 			apktoolCommand += APKTOOL_WINDOWS_COMMAND;
 		} else if (appvetOS.toUpperCase().indexOf("NUX") > -1) {
 			apktoolCommand += APKTOOL_LINUX_COMMAND;
+		} else if (appvetOS.toUpperCase().indexOf("MAC") > -1) {
+			apktoolCommand += APKTOOL_LINUX_COMMAND;
+		} else {
+			appInfo.log.error("Unsupported OS encountered: " + appvetOS);
+			return false;
 		}
 		
 		final String decodeCmd = apktoolCommand + " d "
